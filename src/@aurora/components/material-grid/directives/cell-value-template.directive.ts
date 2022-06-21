@@ -5,7 +5,7 @@ import { Directive, Input, TemplateRef } from '@angular/core';
 })
 export class CellValueTemplateDirective
 {
-    @Input() target: string;
+    @Input() field: string;
 
     constructor(
         public templateRef: TemplateRef<unknown>,

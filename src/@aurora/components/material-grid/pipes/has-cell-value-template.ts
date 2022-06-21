@@ -14,8 +14,8 @@ export class HasCellValueTemplatePipe implements PipeTransform
     {
         return cellValuesTemplate
             .some(
-                cellValueTemplate => cellValueTemplate.target === undefined
-                || cellValueTemplate.target === columnConfig.field,
+                cellValueTemplate => cellValueTemplate.field === undefined
+                || cellValueTemplate.field === columnConfig.field,
             );
     }
 }

@@ -27,7 +27,7 @@ import { ActionTranslationObjectPipe } from './pipes/action-translation-object.p
 import { CheckTranslationObjectPipe } from './pipes/check-translation-object.pipe';
 import { GetActionsPipe } from './get-actions.pipe';
 import { GetPipe } from './pipes/get.pipe';
-import { HasCellValueWithTargetTemplatePipe } from './pipes/has-cell-value-with-target-template';
+import { HasCellValueWithFieldTemplatePipe } from './pipes/has-cell-value-with-field-template';
 import { TransformDataCellPipe } from './pipes/transform-data-cell.pipe';
 
 // components & directives
@@ -73,7 +73,7 @@ import { HasCellValueTemplatePipe } from './pipes/has-cell-value-template';
         GetActionsPipe,
         GetPipe,
         HasCellValueTemplatePipe,
-        HasCellValueWithTargetTemplatePipe,
+        HasCellValueWithFieldTemplatePipe,
         MaterialGridComponent,
         TransformDataCellPipe,
         TranslationMenuComponent,
