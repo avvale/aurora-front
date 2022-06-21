@@ -21,7 +21,7 @@ export class GridComponent extends ViewBaseComponent
     columnsConfig: ColumnConfig[] = [
         {
             type       : ColumnDataType.ACTIONS,
-            field      : 'Actions',
+            field      : 'actions',
             headerClass: 'w-32',
             sticky     : true,
             actions    : () =>
@@ -39,6 +39,12 @@ export class GridComponent extends ViewBaseComponent
                     },
                 ];
             },
+            hidden: false,
+        },
+        {
+            type  : ColumnDataType.CHECKBOX,
+            field : 'select',
+            sticky: true,
             hidden: false,
         },
         {

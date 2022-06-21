@@ -118,6 +118,28 @@
                             </td>
                         </ng-container>
 
+                        <!-- CHECKBOX -->
+                        <ng-container *ngSwitchCase="columnConfigType.CHECKBOX">
+                            <th mat-header-cell
+                                *matHeaderCellDef
+                                [disabled]="!columnConfig.sort"
+                                [ngClass]="columnConfig.headerClass"
+                                [mat-sort-header]="columnConfig.sort">
+                                <mat-checkbox
+                                    (change)="null"
+                                    [checked]=""
+                                    [indeterminate]=""
+                                    [aria-label]="">
+                                </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <mat-checkbox (click)="$event.stopPropagation()"
+                                                (change)="null"
+                                                [checked]=""
+                                                [aria-label]="">
+                                </mat-checkbox>
+                            </td>
+                        </ng-container>
                     </ng-container>
                     <!-- / ngSwitch for grid cell -->
 

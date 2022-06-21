@@ -83,6 +83,7 @@ export interface ColumnConfigAction
 export enum ColumnDataType
 {
     ACTIONS,
+    CHECKBOX,
     DATE,
     NUMBER,
     STRING,
