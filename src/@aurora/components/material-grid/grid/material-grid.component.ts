@@ -1,6 +1,7 @@
 // angular
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList, ViewChild } from '@angular/core';
 import { CommonLang } from '@aurora/modules';
+import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -47,6 +48,9 @@ export class MaterialGridComponent implements OnInit, AfterViewInit
     @Output() closeColumnDialog = new EventEmitter<void>();
     @Output() columnsConfigChanged = new EventEmitter<ColumnConfig[]>();
     @Output() filtersChange = new EventEmitter<FilterEvent>();
+
+    // selection checkbox column
+    selection = new SelectionModel<any>(true, []);
 
     // set columns types for render each web component
     columnConfigType = ColumnDataType;
@@ -231,5 +235,29 @@ export class MaterialGridComponent implements OnInit, AfterViewInit
 
             this.changeDetection.detectChanges();
         });
+    }
+
+    /**
+     * selection checkbox column methods
+     */
+    isAllSelected(): boolean
+    {
+        return this.data.rows.length === this.selection.selected.length;
+    }
+
+    masterToggle(): void
+    {
+        if (this.isAllSelected())
+        {
+            this.selection.clear();
+            return;
+        }
+        this.selection.select(...this.data.rows);
+    }
+
+    checkboxLabel(row?: any): string
+    {
+        if (!row) return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
     }
 }
