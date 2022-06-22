@@ -35,6 +35,7 @@
             (pageChange)="onRunAction({ id: 'pagination', data: { event: $event }})"
             (filtersChange)="onRunAction({ id: 'pagination', data: { event: $event }})"
             (columnsConfigChanged)="handleColumnsConfigChanged($event)"
+            (rowsSelectionChange)="handleRowsSelectionChange($event)"
         >
             <ng-template
                 auCellValueTemplate

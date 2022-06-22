@@ -120,6 +120,11 @@ export class GridComponent extends ViewBaseComponent
         //
     }
 
+    handleRowsSelectionChange($event): void
+    {
+        //
+    }
+
     onRunAction(action: Action): void
     {
         this.currentActionId = action.id;
