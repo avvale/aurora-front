@@ -158,8 +158,8 @@
                             >
                                 <mat-checkbox
                                     (change)="$event ? masterToggle() : null"
-                                    [checked]="selection.hasValue() && isAllSelected()"
-                                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                    [checked]="rowsSelection.hasValue() && isAllSelected()"
+                                    [indeterminate]="isSomeSelected() && !isAllSelected()"
                                     [aria-label]="checkboxLabel()">
                                 </mat-checkbox>
                             </th>
@@ -170,8 +170,8 @@
                             >
                                 <mat-checkbox
                                     (click)="$event.stopPropagation()"
-                                    (change)="$event ? selection.toggle(row) : null"
-                                    [checked]="selection.isSelected(row)"
+                                    (change)="$event ? rowsSelection.toggle(row) : null"
+                                    [checked]="rowsSelection.isSelected(row)"
                                     [aria-label]="checkboxLabel(row)"
                                 >
                                 </mat-checkbox>

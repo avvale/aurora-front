@@ -1,7 +1,6 @@
 // angular
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList, ViewChild } from '@angular/core';
 import { CommonLang } from '@aurora/modules';
-import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,6 +10,7 @@ import { ActionEvent, ColumnConfig, ColumnConfigAction, ColumnDataType, GridData
 import { CellValueTemplateDirective } from '../directives/cell-value-template.directive';
 import { ColumnsDialogComponent } from '../columns-dialog/columns-dialog.component';
 import { FullFilterDialogComponent } from '../full-filter-dialog/full-filter-dialog.component';
+import { SelectionChange, SelectionModel } from '../selection-model/selection-model';
 
 // third party libraries
 import { merge, Subject, tap } from 'rxjs';
@@ -48,9 +48,10 @@ export class MaterialGridComponent implements OnInit, AfterViewInit
     @Output() closeColumnDialog = new EventEmitter<void>();
     @Output() columnsConfigChanged = new EventEmitter<ColumnConfig[]>();
     @Output() filtersChange = new EventEmitter<FilterEvent>();
+    @Output() rowsSelectionChange = new EventEmitter<SelectionChange<any>>();
 
     // selection checkbox column
-    selection = new SelectionModel<any>(true, []);
+    rowsSelection = new SelectionModel<any>(true, [], true, (a: any, b: any) => a.id === b.id);
 
     // set columns types for render each web component
     columnConfigType = ColumnDataType;
@@ -94,6 +95,10 @@ export class MaterialGridComponent implements OnInit, AfterViewInit
     {
         this.changeColumnsConfig$
             .subscribe(columnsConfig => this.columnsConfigChanged.emit(columnsConfig));
+
+        this.rowsSelection
+            .changed
+            .subscribe(selectionChange => this.rowsSelectionChange.emit(selectionChange));
     }
 
     ngAfterViewInit(): void
@@ -242,22 +247,27 @@ export class MaterialGridComponent implements OnInit, AfterViewInit
      */
     isAllSelected(): boolean
     {
-        return this.data.rows.length === this.selection.selected.length;
+        return this.rowsSelection.isAllSelected(this.data.rows);
+    }
+
+    isSomeSelected(): boolean
+    {
+        return this.rowsSelection.isSomeSelected(this.data.rows);
     }
 
     masterToggle(): void
     {
         if (this.isAllSelected())
         {
-            this.selection.clear();
+            this.rowsSelection.deselect(...this.data.rows);
             return;
         }
-        this.selection.select(...this.data.rows);
+        this.rowsSelection.select(...this.data.rows);
     }
 
     checkboxLabel(row?: any): string
     {
         if (!row) return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+        return `${this.rowsSelection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
     }
 }
