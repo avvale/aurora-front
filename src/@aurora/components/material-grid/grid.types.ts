@@ -54,6 +54,7 @@ export interface ColumnConfig
     sort?: string | string[];
     filterable?: boolean;
     headerClass?: string | string[];
+    bodyClass?: string | string[];
     sticky?: boolean;
     actions?: (item: any) => ColumnConfigAction[];
     transform?: (item: any) => any;
@@ -87,7 +88,7 @@ export enum ColumnDataType
     DATE,
     NUMBER,
     STRING,
-    TRANSLATIONS_MENU
+    TRANSLATIONS_MENU,
 }
 
 export interface PageChangeEvent

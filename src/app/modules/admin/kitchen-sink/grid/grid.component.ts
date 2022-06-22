@@ -20,11 +20,10 @@ export class GridComponent extends ViewBaseComponent
     gridTranslations$: Observable<any>;
     columnsConfig: ColumnConfig[] = [
         {
-            type       : ColumnDataType.ACTIONS,
-            field      : 'actions',
-            headerClass: 'w-32',
-            sticky     : true,
-            actions    : () =>
+            type   : ColumnDataType.ACTIONS,
+            field  : 'actions',
+            sticky : true,
+            actions: () =>
             {
                 return [
                     {
@@ -50,6 +49,7 @@ export class GridComponent extends ViewBaseComponent
         {
             type       : ColumnDataType.STRING,
             field      : 'code',
+            headerClass: 'w-32',
             sort       : 'code',
             translation: 'Code',
             transform  : data => data + ' (data transformed with colum config)',

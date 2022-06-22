@@ -39,9 +39,21 @@
                 auCellValueTemplate
                 let-value
                 let-columnConfig="columnConfig"
-                field="customCode">
+                field="customCode"
+            >
                 {{ value }} (data transformed with template)
             </ng-template>
+
+            <!--
+            // without field property filter apply to all columns
+            <ng-template
+                auCellValueTemplate
+                let-value
+                let-columnConfig="columnConfig"
+            >
+                {{ value }} (data transformed with template all fields)
+            </ng-template>
+            -->
         </au-material-grid>
         <!-- / Grid -->
 
