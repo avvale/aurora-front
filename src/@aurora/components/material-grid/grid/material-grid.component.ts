@@ -34,6 +34,8 @@ export class MaterialGridComponent implements OnInit, AfterViewInit
         Delete : 'Delete',
         Edit   : 'Edit',
     };
+    // set rows selection
+    @Input() selectedRows: any[] = [];
 
     // view children
     @ViewChild(MatPaginator) private paginator: MatPaginator;
@@ -99,6 +101,9 @@ export class MaterialGridComponent implements OnInit, AfterViewInit
         this.rowsSelection
             .changed
             .subscribe(selectionChange => this.rowsSelectionChange.emit(selectionChange));
+
+        // if exist selectedRows items, set rows selection
+        if (this.selectedRows.length > 0) this.rowsSelection.select(...this.selectedRows);
     }
 
     ngAfterViewInit(): void

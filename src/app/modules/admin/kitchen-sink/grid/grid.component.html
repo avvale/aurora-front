@@ -30,6 +30,7 @@
             [columnsConfig]="columnsConfig"
             [data]="gridData$ | async"
             [translations]="gridTranslations$ | async"
+            [selectedRows]="[{ id: '8a9251b2-4a49-4bd2-88e2-462445247e3c'}]"
             (action)="onRunAction({ id: $event.action.id, data: { event: $event }})"
             (pageChange)="onRunAction({ id: 'pagination', data: { event: $event }})"
             (filtersChange)="onRunAction({ id: 'pagination', data: { event: $event }})"
