@@ -36,6 +36,8 @@ export class MaterialGridComponent implements OnInit, AfterViewInit
     };
     // set rows selection
     @Input() selectedRows: any[] = [];
+    // selection checkbox column
+    @Input() rowsSelection = new SelectionModel<any>(true, [], true, (a: any, b: any) => a.id === b.id);
 
     // view children
     @ViewChild(MatPaginator) private paginator: MatPaginator;
@@ -51,9 +53,6 @@ export class MaterialGridComponent implements OnInit, AfterViewInit
     @Output() columnsConfigChanged = new EventEmitter<ColumnConfig[]>();
     @Output() filtersChange = new EventEmitter<FilterEvent>();
     @Output() rowsSelectionChange = new EventEmitter<SelectionChange<any>>();
-
-    // selection checkbox column
-    rowsSelection = new SelectionModel<any>(true, [], true, (a: any, b: any) => a.id === b.id);
 
     // set columns types for render each web component
     columnConfigType = ColumnDataType;
