@@ -156,7 +156,11 @@ export class GridComponent implements OnInit, AfterViewInit
         columnsConfigPropertiesDialogRef
             .componentInstance
             .columnsConfigChange
-            .subscribe($event => this.columnsConfigChange.emit($event.columnsConfig));
+            .subscribe($event =>
+            {
+                this.columnsConfigChange.emit($event.columnsConfig);
+                this.changeDetection.markForCheck();
+            });
 
         //
         columnsConfigPropertiesDialogRef.afterClosed().subscribe(res => this.closeColumnDialog.emit());

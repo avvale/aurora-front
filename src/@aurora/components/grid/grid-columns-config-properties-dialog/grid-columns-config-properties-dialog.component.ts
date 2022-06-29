@@ -79,7 +79,7 @@ export class GridColumnsConfigPropertiesDialogComponent implements OnInit
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private _dialogRef: MatDialogRef<GridColumnsConfigPropertiesDialogComponent>,
+        private dialogRef: MatDialogRef<GridColumnsConfigPropertiesDialogComponent>,
     ) { }
 
     ngOnInit(): void
