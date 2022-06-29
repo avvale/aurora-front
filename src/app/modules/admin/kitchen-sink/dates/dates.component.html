@@ -70,6 +70,42 @@
                     >
                     </au-datepicker>
 
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>{{ t('kitchenSink.Example4') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="example4"
+                            [matDatepicker]="dp4"
+                            [auDatepicker]
+                        >
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="dp4"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #dp4></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>{{ t('kitchenSink.Example5') }} (With auDatepickerSqlFormat directive)</mat-label>
+                        <input
+                            matInput
+                            [auDatepickerSqlFormat]
+                            formControlName="example5"
+                            [matDatepicker]="dp5"
+                        >
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="dp5"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #dp5></mat-datepicker>
+                    </mat-form-field>
+
                 </div>
 
             </form>

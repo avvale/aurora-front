@@ -123,13 +123,20 @@
                             >
                                 <mat-label>{{ 'value' | gridTranslate }}</mat-label>
                                 <input
-                                    type="number"
                                     autocomplete="off"
                                     formControlName="value"
                                     matInput
+                                    [auDatepickerSqlFormat]
+                                    [matDatepicker]="picker"
                                 />
+                                <mat-datepicker-toggle
+                                    matSuffix
+                                    [for]="picker"
+                                ></mat-datepicker-toggle>
 
-                                <div *ngIf="arrayColumnFilters | hasRenderOutbox:formFilter.value" class="outbox">
+                                <mat-datepicker #picker></mat-datepicker>
+
+                                <div *ngIf="arrayColumnFilters | hasRenderOutbox:formFilter.value" class="outbox--datepicker">
                                     <span>{{ formFilter.get('type').value | getContactOperator | gridTranslate }}</span>
                                 </div>
                             </mat-form-field>

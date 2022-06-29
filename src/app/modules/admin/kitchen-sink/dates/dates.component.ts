@@ -2,6 +2,7 @@
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { Crumb, log, ViewDetailComponent } from '@aurora';
+import * as dayjs from 'dayjs';
 
 @Component({
     selector       : 'kitchen-sink-dates',
@@ -53,6 +54,8 @@ export class DatesComponent extends ViewDetailComponent
             example1: ['', [Validators.required]],
             example2: ['', [Validators.required]],
             example3: ['', [Validators.required]],
+            example4: ['2022-06-07', [Validators.required]],
+            example5: ['2022-06-08', [Validators.required]],
         });
     }
 }

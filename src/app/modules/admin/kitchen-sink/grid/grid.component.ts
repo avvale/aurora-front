@@ -60,13 +60,19 @@ export class GridComponent extends ViewBaseComponent
             translation: 'CustomCode',
         },
         {
-            type       : ColumnDataType.STRING,
+            type       : ColumnDataType.DATE,
+            field      : 'createdAt',
+            sort       : 'createdAt',
+            translation: 'CreatedAt',
+        },
+        {
+            type       : ColumnDataType.NUMBER,
             field      : 'latitude',
             sort       : 'latitude',
             translation: 'Latitude',
         },
         {
-            type       : ColumnDataType.STRING,
+            type       : ColumnDataType.NUMBER,
             field      : 'longitude',
             sort       : 'longitude',
             translation: 'Longitude',

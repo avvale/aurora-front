@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import { FuseConfirmationModule } from '@fuse/services/confirmation';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
-import { DatePickerDayjsAdapter, DatePickerDayjsFormats, DatepickerModule, ValidationMessagesModule, DecimalModule } from '@aurora';
+import { DatePickerDayjsAdapter, DatePickerDayjsFormats, DatepickerModule, ValidationMessagesModule, DecimalModule, DatepickerSqlFormatModule } from '@aurora';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { SharedModule } from 'app/shared/shared.module';
@@ -60,6 +60,7 @@ import { DatesComponent } from './dates/dates.component';
 
         // @Aurora
         DatepickerModule,
+        DatepickerSqlFormatModule,
         DecimalModule,
     ],
     declarations: [

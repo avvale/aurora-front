@@ -34,25 +34,7 @@
 	position: relative;
 }
 
-// .xx:not(:last-of-type):before{
-//     content: "AND";
-//     font-size: 8px;
-//     padding: 4px;
-//     display: flex;
-//     justify-content: flex-end;
-//     align-items: center;
-//     position: absolute;
-//     width: 8px;
-//     height: 70px;
-//     z-index: 99;
-//     left: 101%;
-//     top: 60%;
-//     border-top: solid 1px slategray;
-//     border-right: solid 1px slategray;
-//     border-bottom: solid 1px slategray;
-// }
-
-.outbox{
+.outbox {
     color: #64748b;
     font-size: 8px;
     display: flex;
@@ -68,6 +50,11 @@
     border-top: solid 1px slategray;
     border-right: solid 1px slategray;
     border-bottom: solid 1px slategray;
+
+    &--datepicker {
+        @extend .outbox;
+        left: 119%;
+    }
 
     span {
         position: absolute;

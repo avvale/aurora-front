@@ -10,6 +10,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +20,9 @@ import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginato
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+
+// @aurora
+import { DatepickerSqlFormatModule } from '@aurora/components/datepicker-sql-format/datepicker-sql-format.module';
 
 // pipes
 import { ActionTranslationObjectPipe } from './pipes/action-translation-object.pipe';
@@ -51,6 +55,7 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
     ],
     imports: [
         CommonModule,
+        DatepickerSqlFormatModule,
         DragDropModule,
         FormsModule,
         MatAutocompleteModule,
@@ -58,6 +63,7 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
         MatButtonModule,
         MatCheckboxModule,
         MatCheckboxModule,
+        MatDatepickerModule,
         MatDialogModule,
         MatFormFieldModule,
         MatIconModule,

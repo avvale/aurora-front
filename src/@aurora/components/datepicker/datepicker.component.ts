@@ -99,5 +99,6 @@ export class DatepickerComponent implements ControlValueAccessor
         this.propagateChange = fn;
     }
 
-    registerOnTouched(): void { /**/ }
+    registerOnTouched(): void
+    { /**/ }
 }

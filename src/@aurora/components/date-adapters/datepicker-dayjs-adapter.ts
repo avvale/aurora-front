@@ -7,7 +7,10 @@ import 'dayjs/locale/es';
 
 export class DatePickerDayjsAdapter extends NativeDateAdapter
 {
-    constructor(matDateLocale: string, platform: Platform)
+    constructor(
+        matDateLocale: string,
+        platform: Platform,
+    )
     {
         super(matDateLocale, platform);
 
@@ -21,7 +24,8 @@ export class DatePickerDayjsAdapter extends NativeDateAdapter
         return dayjs(value, 'DD-MM-YYYY').toDate();
     }
 
-    format(date: Date, displayFormat: any): string
+    // change format value on display, display format come from MAT_DATE_FORMATS
+    format(date: Date, displayFormat: string): string
     {
         return dayjs(date).format(displayFormat);
     }
