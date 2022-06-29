@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { KitchenSinkComponent } from './kitchen-sink.component';
 import { DecimalsComponent } from './decimals/decimals.component';
 import { GridComponent } from './grid/grid.component';
+import { DatesComponent } from './dates/dates.component';
 
 export const kitchenSinkRoutes: Route[] = [
     {
@@ -10,6 +11,7 @@ export const kitchenSinkRoutes: Route[] = [
         children : [
             { path: 'decimals', component: DecimalsComponent },
             { path: 'grid',     component: GridComponent },
+            { path: 'dates',    component: DatesComponent },
         ],
     },
 ];
