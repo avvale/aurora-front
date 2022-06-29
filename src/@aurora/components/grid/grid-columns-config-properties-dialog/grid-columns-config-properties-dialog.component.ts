@@ -4,8 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ColumnConfig, ColumnDataType, ColumnsConfigChange } from '../grid.types';
 
 @Component({
-    selector : 'au-columns-config-properties-dialog',
-    styleUrls: ['./columns-config-properties-dialog.component.scss'],
+    selector : 'au-grid-columns-config-properties-dialog',
+    styleUrls: ['./grid-columns-config-properties-dialog.component.scss'],
     template : `
         <div mat-dialog-title class="dialog-header relative">
             <p class="title">
@@ -56,7 +56,7 @@ import { ColumnConfig, ColumnDataType, ColumnsConfigChange } from '../grid.types
         </div>
     `,
 })
-export class ColumnsConfigPropertiesDialogComponent implements OnInit
+export class GridColumnsConfigPropertiesDialogComponent implements OnInit
 {
     columnsConfig: ColumnConfig[];
     columnsConfigChange = new EventEmitter<ColumnsConfigChange>();
@@ -79,7 +79,7 @@ export class ColumnsConfigPropertiesDialogComponent implements OnInit
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private _dialogRef: MatDialogRef<ColumnsConfigPropertiesDialogComponent>,
+        private _dialogRef: MatDialogRef<GridColumnsConfigPropertiesDialogComponent>,
     ) { }
 
     ngOnInit(): void

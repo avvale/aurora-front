@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ColumnDataType } from '../grid.types';
+import { ColumnDataType } from '../../grid.types';
 
 /**
  * Get contact operator that we need

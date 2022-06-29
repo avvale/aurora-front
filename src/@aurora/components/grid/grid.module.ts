@@ -23,21 +23,21 @@ import { MatTableModule } from '@angular/material/table';
 // pipes
 import { ActionTranslationObjectPipe } from './pipes/action-translation-object.pipe';
 import { CheckTranslationObjectPipe } from './pipes/check-translation-object.pipe';
-import { FilterOperatorsPipe } from './grid-filter-dialog/filter-operators.pipe';
+import { FilterOperatorsPipe } from './grid-filters-dialog/pipes/filter-operators.pipe';
 import { GetActionsPipe } from './pipes/get-actions.pipe';
-import { GetContactOperatorPipe } from './grid-filter-dialog/get-concat-operator.pipe';
+import { GetContactOperatorPipe } from './grid-filters-dialog/pipes/get-concat-operator.pipe';
 import { GetPipe } from './pipes/get.pipe';
 import { GridTranslatePipe } from './grid-translations/grid-translate.pipe';
 import { HasCellValueTemplatePipe } from './pipes/has-cell-value-template.pipe';
 import { HasCellValueWithFieldTemplatePipe } from './pipes/has-cell-value-with-field-template.pipe';
-import { HasRenderOutboxPipe } from './grid-filter-dialog/has-render-outbox.pipe';
+import { HasRenderOutboxPipe } from './grid-filters-dialog/pipes/has-render-outbox.pipe';
 import { TransformDataCellPipe } from './pipes/transform-data-cell.pipe';
 
 // components & directives
 import { CellValueTemplateDirective } from './directives/cell-value-template.directive';
-import { ColumnsConfigPropertiesDialogComponent } from './columns-config-properties-dialog/columns-config-properties-dialog.component';
+import { GridColumnsConfigPropertiesDialogComponent } from './grid-columns-config-properties-dialog/grid-columns-config-properties-dialog.component';
 import { GridColumnTranslationComponent } from './grid-translations/grid-column-translation.component';
-import { GridFilterDialogComponent } from './grid-filter-dialog/grid-filter-dialog.component';
+import { GridFiltersDialogComponent } from './grid-filters-dialog/grid-filters-dialog.component';
 import { GridTranslationsComponent } from './grid-translations/grid-translations.component';
 import { GridTranslationsService } from './grid-translations/grid-translations.service';
 import { GridComponent } from './grid/grid.component';
@@ -46,8 +46,8 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
 
 @NgModule({
     entryComponents: [
-        ColumnsConfigPropertiesDialogComponent,
-        GridFilterDialogComponent,
+        GridColumnsConfigPropertiesDialogComponent,
+        GridFiltersDialogComponent,
     ],
     imports: [
         CommonModule,
@@ -81,14 +81,14 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
         ActionTranslationObjectPipe,
         CellValueTemplateDirective,
         CheckTranslationObjectPipe,
-        ColumnsConfigPropertiesDialogComponent,
+        GridColumnsConfigPropertiesDialogComponent,
         FilterOperatorsPipe,
         GetActionsPipe,
         GetContactOperatorPipe,
         GetPipe,
         GridColumnTranslationComponent,
         GridComponent,
-        GridFilterDialogComponent,
+        GridFiltersDialogComponent,
         GridTranslatePipe,
         GridTranslationsComponent,
         HasCellValueTemplatePipe,

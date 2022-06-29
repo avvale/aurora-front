@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { FilterColumnDataType, FilterCriteriaOperator } from '../grid.types';
+import { FilterColumnDataType, FilterCriteriaOperator } from '../../grid.types';
 
 /**
  * filter operator accord column type

@@ -8,11 +8,11 @@ import { GridTranslationsService } from '../grid-translations/grid-translations.
 import { map, Observable, startWith } from 'rxjs';
 
 @Component({
-    selector   : 'au-grid-filter-dialog',
-    templateUrl: 'grid-filter-dialog.component.html',
-    styleUrls  : ['grid-filter-dialog.component.scss'],
+    selector   : 'au-grid-filters-dialog',
+    templateUrl: 'grid-filters-dialog.component.html',
+    styleUrls  : ['grid-filters-dialog.component.scss'],
 })
-export class GridFilterDialogComponent implements OnInit
+export class GridFiltersDialogComponent implements OnInit
 {
     columnsConfig: ColumnConfig[] = [];
     // form control picking for fields search from autocomplete
@@ -37,7 +37,7 @@ export class GridFilterDialogComponent implements OnInit
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private _dialogRef: MatDialogRef<GridFilterDialogComponent>,
+        private _dialogRef: MatDialogRef<GridFiltersDialogComponent>,
         private fb: FormBuilder,
         private gridTranslationsService: GridTranslationsService,
     )

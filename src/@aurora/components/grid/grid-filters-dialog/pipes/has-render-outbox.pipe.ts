@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { GridColumnFilter } from '../grid.types';
+import { GridColumnFilter } from '../../grid.types';
 
 /**
  * Check if in has draw field linking brackets

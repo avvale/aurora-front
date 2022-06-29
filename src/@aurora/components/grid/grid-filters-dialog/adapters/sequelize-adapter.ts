@@ -1,4 +1,4 @@
-import { ColumnDataType, GridColumnFilter, GridState } from '../grid.types';
+import { ColumnDataType, GridColumnFilter, GridState } from '../../grid.types';
 import { Operator, QueryStatement } from '@aurora';
 import * as _ from 'lodash';
 

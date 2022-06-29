@@ -8,8 +8,8 @@ import { MatSort } from '@angular/material/sort';
 // aurora
 import { ActionEvent, ColumnConfig, ColumnConfigAction, ColumnDataType, GridData, GridColumnFilter, GridState } from '../grid.types';
 import { CellValueTemplateDirective } from '../directives/cell-value-template.directive';
-import { ColumnsConfigPropertiesDialogComponent } from '../columns-config-properties-dialog/columns-config-properties-dialog.component';
-import { GridFilterDialogComponent } from '../grid-filter-dialog/grid-filter-dialog.component';
+import { GridColumnsConfigPropertiesDialogComponent } from '../grid-columns-config-properties-dialog/grid-columns-config-properties-dialog.component';
+import { GridFiltersDialogComponent } from '../grid-filters-dialog/grid-filters-dialog.component';
 import { SelectionChange, SelectionModel } from '../selection-model/selection-model';
 
 // third party libraries
@@ -53,8 +53,8 @@ export class GridComponent implements OnInit, AfterViewInit
 
     // set columns types for render each web component
     columnConfigType = ColumnDataType;
-    columnsConfigPropertiesDialog = ColumnsConfigPropertiesDialogComponent;     // dialog to sort columns
-    gridFilterDialog = GridFilterDialogComponent;   // dialog to filter columns
+    columnsConfigPropertiesDialog = GridColumnsConfigPropertiesDialogComponent;     // dialog to sort columns
+    gridFilterDialog = GridFiltersDialogComponent;   // dialog to filter columns
     changeColumnsConfig$: Subject<ColumnConfig[]> = new Subject();
 
     // clone columnsConfig to can reset columnsConfig to original status
