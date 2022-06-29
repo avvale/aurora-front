@@ -1,8 +1,9 @@
 // angular
-import { CommonModule } from '@angular/common';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ObserversModule } from '@angular/cdk/observers';
 
 // material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -14,34 +15,39 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 
-// fuse
-import { TranslocoModule } from '@ngneat/transloco';
-
 // pipes
 import { ActionTranslationObjectPipe } from './pipes/action-translation-object.pipe';
 import { CheckTranslationObjectPipe } from './pipes/check-translation-object.pipe';
-import { GetActionsPipe } from './get-actions.pipe';
+import { FilterOperatorsPipe } from './grid-filter-dialog/filter-operators.pipe';
+import { GetActionsPipe } from './pipes/get-actions.pipe';
+import { GetContactOperatorPipe } from './grid-filter-dialog/get-concat-operator.pipe';
 import { GetPipe } from './pipes/get.pipe';
-import { HasCellValueWithFieldTemplatePipe } from './pipes/has-cell-value-with-field-template';
+import { GridTranslatePipe } from './grid-translations/grid-translate.pipe';
+import { HasCellValueTemplatePipe } from './pipes/has-cell-value-template.pipe';
+import { HasCellValueWithFieldTemplatePipe } from './pipes/has-cell-value-with-field-template.pipe';
+import { HasRenderOutboxPipe } from './grid-filter-dialog/has-render-outbox.pipe';
 import { TransformDataCellPipe } from './pipes/transform-data-cell.pipe';
 
 // components & directives
 import { CellValueTemplateDirective } from './directives/cell-value-template.directive';
-import { ColumnsDialogComponent } from './columns-dialog/columns-dialog.component';
-import { FullFilterDialogComponent } from './full-filter-dialog/full-filter-dialog.component';
-import { MaterialGridComponent } from './grid/material-grid.component';
+import { ColumnsConfigPropertiesDialogComponent } from './columns-config-properties-dialog/columns-config-properties-dialog.component';
+import { GridColumnTranslationComponent } from './grid-translations/grid-column-translation.component';
+import { GridFilterDialogComponent } from './grid-filter-dialog/grid-filter-dialog.component';
+import { GridTranslationsComponent } from './grid-translations/grid-translations.component';
+import { GridTranslationsService } from './grid-translations/grid-translations.service';
+import { GridComponent } from './grid/grid.component';
+import { PaginatorIntlService } from './grid/paginator-intl.service';
 import { TranslationMenuComponent } from './translations-menu/translations-menu.component';
-import { HasCellValueTemplatePipe } from './pipes/has-cell-value-template';
 
 @NgModule({
     entryComponents: [
-        ColumnsDialogComponent,
-        FullFilterDialogComponent,
+        ColumnsConfigPropertiesDialogComponent,
+        GridFilterDialogComponent,
     ],
     imports: [
         CommonModule,
@@ -61,26 +67,41 @@ import { HasCellValueTemplatePipe } from './pipes/has-cell-value-template';
         MatSelectModule,
         MatSortModule,
         MatTableModule,
+        ObserversModule,
         ReactiveFormsModule,
-        TranslocoModule,
+    ],
+    providers: [
+        GridTranslationsService,
+        {
+            provide : MatPaginatorIntl,
+            useClass: PaginatorIntlService,
+        },
     ],
     declarations: [
         ActionTranslationObjectPipe,
         CellValueTemplateDirective,
         CheckTranslationObjectPipe,
-        ColumnsDialogComponent,
-        FullFilterDialogComponent,
+        ColumnsConfigPropertiesDialogComponent,
+        FilterOperatorsPipe,
         GetActionsPipe,
+        GetContactOperatorPipe,
         GetPipe,
+        GridColumnTranslationComponent,
+        GridComponent,
+        GridFilterDialogComponent,
+        GridTranslatePipe,
+        GridTranslationsComponent,
         HasCellValueTemplatePipe,
         HasCellValueWithFieldTemplatePipe,
-        MaterialGridComponent,
+        HasRenderOutboxPipe,
         TransformDataCellPipe,
         TranslationMenuComponent,
     ],
     exports: [
         CellValueTemplateDirective,
-        MaterialGridComponent,
+        GridColumnTranslationComponent,
+        GridTranslationsComponent,
+        GridComponent,
     ],
 })
-export class MaterialGridModule {}
+export class GridModule {}

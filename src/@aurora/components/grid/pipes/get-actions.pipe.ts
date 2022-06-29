@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ColumnConfigAction } from './grid.types';
+import { ColumnConfigAction } from '../grid.types';
 
 @Pipe({
     name: 'getActions',
