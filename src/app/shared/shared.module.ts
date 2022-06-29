@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BreadcrumbModule, MaterialGridModule, TitleModule } from '@aurora';
+import { BreadcrumbModule, GridModule, TitleModule } from '@aurora';
 
 @NgModule({
     imports: [
@@ -11,7 +11,7 @@ import { BreadcrumbModule, MaterialGridModule, TitleModule } from '@aurora';
 
         // @aurora
         BreadcrumbModule,
-        MaterialGridModule,
+        GridModule,
         TitleModule,
     ],
     exports: [
@@ -21,7 +21,7 @@ import { BreadcrumbModule, MaterialGridModule, TitleModule } from '@aurora';
 
         // @aurora
         BreadcrumbModule,
-        MaterialGridModule,
+        GridModule,
         TitleModule,
     ],
 })

@@ -31,6 +31,7 @@ import { KitchenSinkComponent } from './kitchen-sink.component';
 import { DecimalsComponent } from './decimals/decimals.component';
 import { GridComponent } from './grid/grid.component';
 import { kitchenSink } from './kitchen-sink.menu';
+import { DatesComponent } from './dates/dates.component';
 
 
 @NgModule({
@@ -62,9 +63,10 @@ import { kitchenSink } from './kitchen-sink.menu';
         DecimalModule,
     ],
     declarations: [
-        KitchenSinkComponent,
+        DatesComponent,
         DecimalsComponent,
         GridComponent,
+        KitchenSinkComponent,
     ],
     providers: [
         {

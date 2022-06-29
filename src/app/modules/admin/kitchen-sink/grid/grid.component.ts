@@ -1,7 +1,7 @@
 
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { Action, ColumnConfig, ColumnDataType, Crumb, GridData, ViewBaseComponent } from '@aurora';
-import { combineLatest, map, Observable, of } from 'rxjs';
+import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnFilter, GridData, Operator, setQueryFilters, ViewBaseComponent } from '@aurora';
+import { Observable, of } from 'rxjs';
 import { gridData } from './grid-data';
 
 @Component({
@@ -17,7 +17,6 @@ export class GridComponent extends ViewBaseComponent
         { translation: 'kitchenSink.Grid' },
     ];
     gridData$: Observable<GridData<any>>;
-    gridTranslations$: Observable<any>;
     columnsConfig: ColumnConfig[] = [
         {
             type   : ColumnDataType.ACTIONS,
@@ -73,7 +72,7 @@ export class GridComponent extends ViewBaseComponent
             translation: 'Longitude',
         },
         {
-            type       : ColumnDataType.STRING,
+            type       : ColumnDataType.NUMBER,
             field      : 'zoom',
             sort       : 'zoom',
             translation: 'Zoom',
@@ -93,6 +92,15 @@ export class GridComponent extends ViewBaseComponent
     ];
 
     dataEvent: any = undefined;
+    defaultFilters: GridColumnFilter[] = [
+        {
+            id      : '1bf1fce9-8d4d-400c-a4ac-a87d5ef1fbbc',
+            field   : 'code',
+            type    : ColumnDataType.STRING,
+            operator: Operator.substring,
+            value   : 'hola mundo',
+        },
+    ];
 
     constructor(
         protected injector: Injector,
@@ -105,24 +113,31 @@ export class GridComponent extends ViewBaseComponent
     {
         /**/
         this.gridData$ = of(gridData);
-        this.gridTranslations$ = combineLatest(
-            {
-                a: this.translocoService.selectTranslation(),
-                b: this.translocoService.selectTranslation('kitchen-sink'),
-            })
-            .pipe(
-                map(res => ({ ...res.a, ...res.b })),
-            );
     }
 
-    handleColumnsConfigChanged($event): void
+    handleColumnsConfigChange($event): void
     {
-        //
+        console.log($event);
     }
 
     handleRowsSelectionChange($event): void
     {
-        //
+        console.log($event);
+    }
+
+    handleFiltersChange($event): void
+    {
+        console.log($event);
+    }
+
+    handlePageChange($event): void
+    {
+        console.log($event);
+    }
+
+    handleStateChange($event): void
+    {
+        this.onRunAction({ id: 'pagination', data: { event: setQueryFilters($event) }});
     }
 
     onRunAction(action: Action): void

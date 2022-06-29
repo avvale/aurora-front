@@ -5,7 +5,7 @@
 
         <div class="flex-1 min-w-0">
             <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
-            <au-title><mat-icon svgIcon="heroicons_solid:tag" class="icon-size-10 mr-2"></mat-icon> {{ t('kitchenSink.Decimals') }}</au-title>
+            <au-title><mat-icon svgIcon="heroicons_solid:tag" class="icon-size-10 mr-2"></mat-icon> {{ t('kitchenSink.Dates') }}</au-title>
         </div>
 
         <!-- Actions -->
@@ -38,50 +38,37 @@
 
                 <div class="layout__container">
 
-                    <mat-form-field
+                    <au-datepicker
                         appearance="outline"
+                        formControlName="example1"
                         class="col-4"
+                        required
+                        [label]="t('kitchenSink.Example1')"
+                        [error]="formErrors?.example1 | async"
                     >
-                        <mat-label>{{ t('kitchenSink.Example1') }}</mat-label>
-                        <input
-                            matInput
-                            auDecimal
-                            integerNumberAmount="3"
-                            decimalNumberAmount="3"
-                            formControlName="example1"
-                            required
-                        >
-                        <mat-error>{{ formErrors?.example1 | async }}</mat-error>
-                    </mat-form-field>
+                    </au-datepicker>
 
-
-                    <mat-form-field
+                    <au-datepicker
                         appearance="outline"
+                        formControlName="example2"
                         class="col-4"
+                        required
+                        [label]="t('kitchenSink.Example2')"
+                        [error]="formErrors?.example2 | async"
                         small
                     >
-                        <mat-label>{{ t('kitchenSink.Example2') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="example2"
-                            required
-                        >
-                        <mat-error>{{ formErrors?.example2 | async }}</mat-error>
-                    </mat-form-field>
+                    </au-datepicker>
 
-                    <mat-form-field
+                    <au-datepicker
                         appearance="outline"
+                        formControlName="example3"
                         class="col-4"
+                        required
+                        [label]="t('kitchenSink.Example3')"
+                        [error]="formErrors?.example3 | async"
                         tiny
                     >
-                        <mat-label>{{ t('kitchenSink.Example3') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="example3"
-                            required
-                        >
-                        <mat-error>{{ formErrors?.example3 | async }}</mat-error>
-                    </mat-form-field>
+                    </au-datepicker>
 
                 </div>
 

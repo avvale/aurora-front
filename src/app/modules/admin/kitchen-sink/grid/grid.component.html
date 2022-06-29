@@ -17,7 +17,7 @@
     <!-- / Header -->
 
     <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
-        {{ dataEvent | json}}
+        {{ dataEvent | json}}
     </div>
 
     <!-- Main -->
@@ -26,16 +26,17 @@
         cdkScrollable>
 
         <!-- Grid -->
-        <au-material-grid
+        <au-grid
             [columnsConfig]="columnsConfig"
             [data]="gridData$ | async"
-            [translations]="gridTranslations$ | async"
             [selectedRows]="[{ id: '8a9251b2-4a49-4bd2-88e2-462445247e3c'}]"
+            [activatedColumnFilters]="defaultFilters"
             (action)="onRunAction({ id: $event.action.id, data: { event: $event }})"
-            (pageChange)="onRunAction({ id: 'pagination', data: { event: $event }})"
-            (filtersChange)="onRunAction({ id: 'pagination', data: { event: $event }})"
-            (columnsConfigChanged)="handleColumnsConfigChanged($event)"
+            (columnsConfigChange)="handleColumnsConfigChange($event)"
             (rowsSelectionChange)="handleRowsSelectionChange($event)"
+            (stateChange)="handleStateChange($event)"
+            (pageChange)="handlePageChange($event)"
+            (filtersChange)="handleFiltersChange($event)"
         >
             <ng-template
                 auCellValueTemplate
@@ -56,7 +57,7 @@
                 {{ value }} (data transformed with template all fields)
             </ng-template>
             -->
-        </au-material-grid>
+        </au-grid>
         <!-- / Grid -->
 
     </div>

@@ -1,17 +1,15 @@
 
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { Crumb, log } from '@aurora';
-import { ViewDetailComponent } from '@aurora/foundations';
-
+import { Crumb, log, ViewDetailComponent } from '@aurora';
 
 @Component({
-    selector       : 'kitchen-sink-decimals',
-    templateUrl    : './decimals.component.html',
+    selector       : 'kitchen-sink-dates',
+    templateUrl    : './dates.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DecimalsComponent extends ViewDetailComponent
+export class DatesComponent extends ViewDetailComponent
 {
     // custom data
     currentActionId: string;
@@ -19,7 +17,7 @@ export class DecimalsComponent extends ViewDetailComponent
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
         { translation: 'App' },
-        { translation: 'kitchenSink.Decimals' },
+        { translation: 'kitchenSink.Dates' },
     ];
 
     constructor(
