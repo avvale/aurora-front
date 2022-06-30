@@ -1,8 +1,26 @@
 import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
+import * as utc from 'dayjs/plugin/utc';
+import * as timezone from 'dayjs/plugin/timezone';
+import * as advancedFormat from 'dayjs/plugin/advancedFormat';
+import * as weekOfYear from 'dayjs/plugin/weekOfYear';
+import * as isoWeek from 'dayjs/plugin/isoWeek';
+import * as dayjs from 'dayjs';
+
+// dayjs configuration
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(advancedFormat);
+dayjs.extend(weekOfYear);
+dayjs.extend(isoWeek);
 
 export class Utils
 {
+    static now(): dayjs.Dayjs
+    {
+        return dayjs();
+    }
+
     static uuid(): string
     {
         return uuidv4();
