@@ -29,4 +29,9 @@ export class DatePickerDayjsAdapter extends NativeDateAdapter
     {
         return dayjs(date).format(displayFormat);
     }
+
+    getFirstDayOfWeek(): number
+    {
+        return 1;
+    }
 }
