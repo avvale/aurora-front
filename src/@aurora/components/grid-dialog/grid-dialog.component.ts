@@ -5,12 +5,12 @@ import { Action } from '@aurora/aurora.types';
 import { ColumnConfig, GridData, GridState } from '../grid';
 
 @Component({
-    selector       : 'au-select-element-grid-dialog',
-    templateUrl    : './select-element-grid-dialog.component.html',
-    styleUrls      : ['select-element-grid-dialog.component.scss'],
+    selector       : 'au-grid-dialog',
+    templateUrl    : './grid-dialog.component.html',
+    styleUrls      : ['grid-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectElementGridDialogComponent
+export class GridDialogComponent
 {
     set gridData(gridData: GridData)
     {
@@ -39,7 +39,7 @@ export class SelectElementGridDialogComponent
             selectedRows: any[];
         },
         private changeDetection: ChangeDetectorRef,
-        public dialogRef: MatDialogRef<SelectElementGridDialogComponent>,
+        public dialogRef: MatDialogRef<GridDialogComponent>,
     )
     {
         // when create dialog set data from constructor

@@ -1,26 +1,29 @@
 import { NgModule } from '@angular/core';
-import { SelectElementGridComponent } from './select-element-grid.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { GridDialogModule } from '../grid-dialog';
+import { GridDialogComponent } from './grid-dialog.component';
+import { GridModule } from '../grid';
 
 @NgModule({
+    entryComponents: [
+        GridDialogComponent,
+    ],
     imports: [
         MatButtonModule,
         MatDialogModule,
         MatIconModule,
 
         // @aurora
-        GridDialogModule,
+        GridModule,
     ],
     declarations: [
-        SelectElementGridComponent,
+        GridDialogComponent,
     ],
     exports: [
-        SelectElementGridComponent,
+        GridDialogComponent,
     ],
 })
 
-export class SelectElementGridModule
+export class GridDialogModule
 { }

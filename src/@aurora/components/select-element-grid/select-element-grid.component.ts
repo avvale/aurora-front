@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SelectionChange } from '@angular/cdk/collections';
 import { Action } from '@aurora/aurora.types';
 import { ColumnConfig, GridData, GridState } from '../grid';
-import { SelectElementGridDialogComponent } from './select-element-grid-dialog.component';
+import { GridDialogComponent } from '../grid-dialog/grid-dialog.component';
 
 @Component({
     selector       : 'au-select-element-grid',
@@ -35,7 +35,7 @@ export class SelectElementGridComponent
     @Output() rowsSelectionChange = new EventEmitter<SelectionChange<any>>();
 
     private _data: GridData;
-    dialogRef: MatDialogRef<SelectElementGridDialogComponent>;
+    dialogRef: MatDialogRef<GridDialogComponent>;
 
     constructor(
         private changeDetection: ChangeDetectorRef,
@@ -44,7 +44,7 @@ export class SelectElementGridComponent
 
     openDialog(): void
     {
-        this.dialogRef = this.matDialog.open(SelectElementGridDialogComponent,
+        this.dialogRef = this.matDialog.open(GridDialogComponent,
             {
                 width    : '90vw',
                 maxWidth : '1024px',
