@@ -35,6 +35,8 @@ export class GridComponent implements OnInit, AfterViewInit
     @Input() rowsSelection = new SelectionModel<any>(true, [], true, (a: any, b: any) => a.id === b.id);
     // column filters activated
     @Input() activatedColumnFilters: GridColumnFilter[] = [];
+    @Input() hasFilterButton: boolean = true;
+    @Input() hasColumnsConfigPropertiesButton: boolean = true;
 
     // view children
     @ViewChild(MatPaginator) private paginator: MatPaginator;

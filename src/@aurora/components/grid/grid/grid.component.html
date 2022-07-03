@@ -3,9 +3,10 @@
 
         <!-- filter dialog -->
         <button
+            *ngIf="hasFilterButton"
             mat-icon-button
-            (click)="handleFiltersDialog()"
             class="mr-2"
+            (click)="handleFiltersDialog()"
         >
             <mat-icon
                 [matBadge]="activatedColumnFilters.length"
@@ -21,9 +22,10 @@
 
         <!-- columns configurator -->
         <button
+            *ngIf="hasColumnsConfigPropertiesButton"
             mat-icon-button
-            (click)="handleColumnsConfigPropertiesDialog()"
             class="mr-2"
+            (click)="handleColumnsConfigPropertiesDialog()"
         >
             <mat-icon class="icon-size-6">table_chart</mat-icon>
         </button>
@@ -32,9 +34,9 @@
     <div class="overflow-auto">
         <table
             mat-table
-            [dataSource]="data?.rows"
             matSort
             class="w-full flex-1"
+            [dataSource]="data?.rows"
         >
             <ng-container *ngFor="let columnConfig of columnsConfig">
 

@@ -31,6 +31,8 @@
             [data]="gridData$ | async"
             [selectedRows]="[{ id: '8a9251b2-4a49-4bd2-88e2-462445247e3c'}]"
             [activatedColumnFilters]="defaultFilters"
+            [hasFilterButton]="true"
+            [hasColumnsConfigPropertiesButton]="true"
             (action)="onRunAction($event)"
             (columnsConfigChange)="handleColumnsConfigChange($event)"
             (rowsSelectionChange)="handleRowsSelectionChange($event)"
