@@ -39,6 +39,7 @@ import { TransformDataCellPipe } from './pipes/transform-data-cell.pipe';
 
 // components & directives
 import { CellValueTemplateDirective } from './directives/cell-value-template.directive';
+import { CustomGridHeaderTemplateDirective } from './directives/custom-grid-header-template.directive';
 import { GridColumnsConfigPropertiesDialogComponent } from './grid-columns-config-properties-dialog/grid-columns-config-properties-dialog.component';
 import { GridColumnTranslationComponent } from './grid-translations/grid-column-translation.component';
 import { GridFiltersDialogComponent } from './grid-filters-dialog/grid-filters-dialog.component';
@@ -87,6 +88,7 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
         ActionTranslationObjectPipe,
         CellValueTemplateDirective,
         CheckTranslationObjectPipe,
+        CustomGridHeaderTemplateDirective,
         GridColumnsConfigPropertiesDialogComponent,
         FilterOperatorsPipe,
         GetActionsPipe,
@@ -105,6 +107,7 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
     ],
     exports: [
         CellValueTemplateDirective,
+        CustomGridHeaderTemplateDirective,
         GridColumnTranslationComponent,
         GridTranslationsComponent,
         GridComponent,

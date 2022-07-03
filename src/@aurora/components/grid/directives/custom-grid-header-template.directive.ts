@@ -5,7 +5,7 @@ import { Directive, Input, TemplateRef } from '@angular/core';
 })
 export class CustomGridHeaderTemplateDirective
 {
-    @Input() position: string;
+    @Input() position: 'left' | 'right' | 'beforeGriButtons';
 
     constructor(
         public templateRef: TemplateRef<unknown>,
