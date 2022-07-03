@@ -6,7 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 // aurora
-import { ActionEvent, ColumnConfig, ColumnConfigAction, ColumnDataType, GridData, GridColumnFilter, GridState } from '../grid.types';
+import { ColumnConfig, ColumnConfigAction, ColumnDataType, GridData, GridColumnFilter, GridState } from '../grid.types';
 import { CellValueTemplateDirective } from '../directives/cell-value-template.directive';
 import { GridColumnsConfigPropertiesDialogComponent } from '../grid-columns-config-properties-dialog/grid-columns-config-properties-dialog.component';
 import { GridFiltersDialogComponent } from '../grid-filters-dialog/grid-filters-dialog.component';
@@ -15,6 +15,7 @@ import { SelectionChange, SelectionModel } from '../selection-model/selection-mo
 // third party libraries
 import { merge, Subject, tap } from 'rxjs';
 import cloneDeep from 'lodash-es/cloneDeep';
+import { Action } from '@aurora';
 
 @Component({
     selector       : 'au-grid',
@@ -46,15 +47,13 @@ export class GridComponent implements OnInit, AfterViewInit
     @Output() pageChange = new EventEmitter<GridState>();
     @Output() filtersChange = new EventEmitter<GridState>();
     @Output() stateChange = new EventEmitter<GridState>();
-    @Output() action = new EventEmitter<ActionEvent>();
+    @Output() action = new EventEmitter<Action>();
     @Output() closeColumnDialog = new EventEmitter<void>();
     @Output() columnsConfigChange = new EventEmitter<ColumnConfig[]>();
     @Output() rowsSelectionChange = new EventEmitter<SelectionChange<any>>();
 
     // set columns types for render each web component
     columnConfigType = ColumnDataType;
-    columnsConfigPropertiesDialog = GridColumnsConfigPropertiesDialogComponent;     // dialog to sort columns
-    gridFilterDialog = GridFiltersDialogComponent;   // dialog to filter columns
     changeColumnsConfig$: Subject<ColumnConfig[]> = new Subject();
 
     // clone columnsConfig to can reset columnsConfig to original status
@@ -133,7 +132,7 @@ export class GridComponent implements OnInit, AfterViewInit
         event: PointerEvent,
     ): void
     {
-        this.action.emit({ action, row, event });
+        this.action.emit({ id: action.id, data: { row, action, event }});
     }
 
     /**
@@ -141,7 +140,7 @@ export class GridComponent implements OnInit, AfterViewInit
      */
     handleColumnsConfigPropertiesDialog(): void
     {
-        const columnsConfigPropertiesDialogRef = this.dialog.open(this.columnsConfigPropertiesDialog,
+        const columnsConfigPropertiesDialogRef = this.dialog.open(GridColumnsConfigPropertiesDialogComponent,
             {
                 width    : '90vw',
                 maxWidth : '420px',
@@ -171,7 +170,7 @@ export class GridComponent implements OnInit, AfterViewInit
     */
     handleFiltersDialog(): void
     {
-        const gridFilterDialogRef = this.dialog.open(this.gridFilterDialog,
+        const gridFilterDialogRef = this.dialog.open(GridFiltersDialogComponent,
             {
                 width    : '90vw',
                 maxWidth : '600px',

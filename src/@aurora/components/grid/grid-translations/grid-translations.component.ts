@@ -1,5 +1,5 @@
 // angular
-import { ChangeDetectionStrategy, Component, Host, Input, OnInit, Optional } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Host, Input, Optional } from '@angular/core';
 import { GridComponent } from '../grid/grid.component';
 import { GridTranslationsService } from './grid-translations.service';
 import { GridActionsMenuMessages, GridOperatorsMessages, GridPaginatorMessages } from '../grid.types';
@@ -9,7 +9,7 @@ import { GridActionsMenuMessages, GridOperatorsMessages, GridPaginatorMessages }
     template       : '',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GridTranslationsComponent implements OnInit
+export class GridTranslationsComponent
 {
     // operators
     @Input() set operators(operatorsMessages: GridOperatorsMessages)
@@ -83,22 +83,4 @@ export class GridTranslationsComponent implements OnInit
         @Optional() @Host() private parent: GridComponent,
         private gridTranslationsService: GridTranslationsService,
     ) { }
-
-    ngOnInit(): void
-    {
-        if (this.parent === null)
-        {
-            throw new Error(`
-                <au-grid-translations></au-grid-translations>
-                Has to be declared inside an <au-grid></au-grid>
-
-                Please create this hierarchical structure
-
-                <au-grid>
-                    <au-grid-translations></au-grid-translations>
-                    ...
-                </au-grid>
-            `);
-        }
-    }
 }

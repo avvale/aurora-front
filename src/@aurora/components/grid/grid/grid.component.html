@@ -1,7 +1,7 @@
 <div class="flex flex-col flex-1 overflow-hidden">
     <div class="grid-header">
 
-        <!-- FILTER DIALOG -->
+        <!-- filter dialog -->
         <button
             mat-icon-button
             (click)="handleFiltersDialog()"
@@ -19,7 +19,7 @@
             </span>
         </button>
 
-        <!-- COLUMNS CONFIGURATOR -->
+        <!-- columns configurator -->
         <button
             mat-icon-button
             (click)="handleColumnsConfigPropertiesDialog()"
@@ -194,17 +194,29 @@
                                 *matCellDef="let row"
                                 [ngClass]="columnConfig.bodyClass ? columnConfig.bodyClass : 'w-20 text-center'"
                             >
-                                <button mat-icon-button [matMenuTriggerFor]="menu">
-                                    <mat-icon>more_vert</mat-icon>
-                                </button>
-                                <mat-menu #menu="matMenu">
+                                <!-- print action menu if has more than one action -->
+                                <ng-container *ngIf="(columnConfig.actions | getActions:row).length > 1">
+                                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <ng-container *ngFor="let action of columnConfig.actions | getActions:row">
+                                            <button mat-menu-item (click)="handleClickAction(action, row, $event)">
+                                                <mat-icon>{{ action.icon }}</mat-icon>
+                                                <span>{{ action.id | gridTranslate:'action' }}</span>
+                                            </button>
+                                        </ng-container>
+                                    </mat-menu>
+                                </ng-container>
+                                <!-- if only have one action, print action without menu -->
+                                <ng-container *ngIf="(columnConfig.actions | getActions:row).length === 1">
                                     <ng-container *ngFor="let action of columnConfig.actions | getActions:row">
-                                        <button mat-menu-item (click)="handleClickAction(action, row, $event)">
+                                        <button mat-icon-button (click)="handleClickAction(action, row, $event)">
                                             <mat-icon>{{ action.icon }}</mat-icon>
                                             <span>{{ action.id | gridTranslate:'action' }}</span>
                                         </button>
                                     </ng-container>
-                                </mat-menu>
+                                </ng-container>
                             </td>
                         </ng-container>
 
@@ -219,7 +231,8 @@
                                     (change)="$event ? masterToggle() : null"
                                     [checked]="rowsSelection.hasValue() && isAllSelected()"
                                     [indeterminate]="isSomeSelected() && !isAllSelected()"
-                                    [aria-label]="checkboxLabel()">
+                                    [aria-label]="checkboxLabel()"
+                                >
                                 </mat-checkbox>
                             </th>
                             <td

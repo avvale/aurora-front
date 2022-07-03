@@ -3,21 +3,6 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Operator } from '@aurora/modules';
 import { BehaviorSubject } from 'rxjs';
 
-export interface ActionEvent
-{
-    action: ColumnConfigAction;
-    row?: any;
-    event?: PointerEvent;
-}
-
-export interface Action
-{
-    id: string;
-    data?: {
-        [key: string]: any;
-    };
-}
-
 export interface ColumnConfig
 {
     type: ColumnDataType;

@@ -1,6 +1,4 @@
-import { MatDateFormats } from '@angular/material/core';
-
-export const DatePickerDayjsFormats: MatDateFormats =
+export const DatePickerDayjsFormats =
 {
     parse: {
         dateInput: 'DD-MM-YYYY',

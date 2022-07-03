@@ -3,6 +3,15 @@ export type Appearance = 'legacy' | 'standard' | 'fill' | 'outline';
 // options to set global and local api environment
 export type ApiEnvironment = 'sandbox' | 'live';
 
+export interface Action
+{
+    id: string;
+    pure?: boolean;
+    data?: {
+        [key: string]: any;
+    };
+}
+
 export interface BoundedContext
 {
     id: string;

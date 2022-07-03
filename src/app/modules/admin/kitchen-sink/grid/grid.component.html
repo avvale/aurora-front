@@ -31,7 +31,7 @@
             [data]="gridData$ | async"
             [selectedRows]="[{ id: '8a9251b2-4a49-4bd2-88e2-462445247e3c'}]"
             [activatedColumnFilters]="defaultFilters"
-            (action)="onRunAction({ id: $event.action.id, data: { event: $event }})"
+            (action)="onRunAction($event)"
             (columnsConfigChange)="handleColumnsConfigChange($event)"
             (rowsSelectionChange)="handleRowsSelectionChange($event)"
             (stateChange)="handleStateChange($event)"
