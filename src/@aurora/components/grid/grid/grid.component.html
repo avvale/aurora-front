@@ -1,55 +1,59 @@
 <div class="flex flex-col flex-1 overflow-hidden">
     <div class="grid-header">
 
-        <!-- left position custom header template -->
-        <ng-container *ngFor="let customGridHeader of customGridHeaderTemplate">
-            <ng-container
-                *ngTemplateOutlet="customGridHeader.templateRef"
-            ></ng-container>
-        </ng-container>
+        <div>
+            <!-- left position custom header template -->
+            <ng-container *ngFor="let gridCustomHeader of gridCustomHeaderTemplate | filterGridCustomHeaderTemplatesPositionPipe:'left'">
+                <ng-container
+                    *ngTemplateOutlet="gridCustomHeader.templateRef"
+                ></ng-container>
+            </ng-container>
+        </div>
 
-        <!-- beforeGriButtons position custom header template -->
-        <ng-container *ngFor="let customGridHeader of customGridHeaderTemplate">
-            <ng-container
-                *ngTemplateOutlet="customGridHeader.templateRef"
-            ></ng-container>
-        </ng-container>
+        <div>
+            <!-- beforeGriButtons position custom header template -->
+            <ng-container *ngFor="let gridCustomHeader of gridCustomHeaderTemplate | filterGridCustomHeaderTemplatesPositionPipe:'beforeGriButtons'">
+                <ng-container
+                    *ngTemplateOutlet="gridCustomHeader.templateRef"
+                ></ng-container>
+            </ng-container>
 
-        <!-- filter dialog -->
-        <button
-            *ngIf="hasFilterButton"
-            mat-icon-button
-            class="mr-2"
-            (click)="handleFiltersDialog()"
-        >
-            <mat-icon
-                [matBadge]="activatedColumnFilters.length"
-                [matBadgeHidden]="activatedColumnFilters.length == 0"
-                matBadgeColor="warn"
+            <!-- filter dialog -->
+            <button
+                *ngIf="hasFilterButton"
+                mat-icon-button
+                class="mr-2"
+                (click)="handleFiltersDialog()"
             >
-                filter_list
-            </mat-icon>
-            <span class="cdk-visually-hidden">
-                Filter icon showing active filters with a value of {{ activatedColumnFilters.length }}
-            </span>
-        </button>
+                <mat-icon
+                    [matBadge]="activatedColumnFilters.length"
+                    [matBadgeHidden]="activatedColumnFilters.length == 0"
+                    matBadgeColor="warn"
+                >
+                    filter_list
+                </mat-icon>
+                <span class="cdk-visually-hidden">
+                    Filter icon showing active filters with a value of {{ activatedColumnFilters.length }}
+                </span>
+            </button>
 
-        <!-- columns configurator -->
-        <button
-            *ngIf="hasColumnsConfigPropertiesButton"
-            mat-icon-button
-            class="mr-2"
-            (click)="handleColumnsConfigPropertiesDialog()"
-        >
-            <mat-icon class="icon-size-6">table_chart</mat-icon>
-        </button>
+            <!-- columns configurator -->
+            <button
+                *ngIf="hasColumnsConfigPropertiesButton"
+                mat-icon-button
+                class="mr-2"
+                (click)="handleColumnsConfigPropertiesDialog()"
+            >
+                <mat-icon class="icon-size-6">table_chart</mat-icon>
+            </button>
 
-        <!-- right position custom header template -->
-        <ng-container *ngFor="let customGridHeader of customGridHeaderTemplate">
-            <ng-container
-                *ngTemplateOutlet="customGridHeader.templateRef"
-            ></ng-container>
-        </ng-container>
+            <!-- right position custom header template -->
+            <ng-container *ngFor="let gridCustomHeader of gridCustomHeaderTemplate | filterGridCustomHeaderTemplatesPositionPipe:'right'">
+                <ng-container
+                    *ngTemplateOutlet="gridCustomHeader.templateRef"
+                ></ng-container>
+            </ng-container>
+        </div>
 
     </div>
     <div class="overflow-auto">

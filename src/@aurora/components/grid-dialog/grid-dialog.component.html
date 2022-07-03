@@ -1,20 +1,9 @@
 <div class="flex flex-col h-full">
-    <div mat-dialog-title class="dialog-header">
-		<div class="title">
-			<mat-icon>filter_list</mat-icon>
-			<span>{{ data.title }}</span>
-		</div>
-
-		<button
-            mat-icon-button
-            [disableRipple]="true"
-            [mat-dialog-close]="undefined"
-        >
-			<mat-icon>close</mat-icon>
-		</button>
-	</div>
-    <div mat-dialog-content class="flex flex-col my-4 h-full">
-
+    <div
+        mat-dialog-content
+        class="flex flex-auto h-full overflow-y-auto"
+        cdkScrollable
+    >
         <!-- grid -->
         <au-grid
             [columnsConfig]="data.columnsConfig"
@@ -24,8 +13,30 @@
             (stateChange)="stateChange.emit($event)"
             (rowsSelectionChange)="rowsSelectionChange.emit($event)"
         >
+            <ng-template
+                auGridCustomHeaderTemplate
+                position="left"
+            >
+                <div class="flex items-center mat-dialog-title">
+                    <mat-icon class="mr-4">list</mat-icon>
+                    <span>{{ data.title }}</span>
+                </div>
+            </ng-template>
+
+            <ng-template
+                auGridCustomHeaderTemplate
+                position="right"
+            >
+                <button
+                    mat-icon-button
+                    class="mr-2"
+                    [disableRipple]="true"
+                    [mat-dialog-close]="undefined"
+                >
+                    <mat-icon>close</mat-icon>
+                </button>
+            </ng-template>
         </au-grid>
         <!-- / grid -->
-
     </div>
 </div>

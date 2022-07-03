@@ -8,7 +8,7 @@ import { MatSort } from '@angular/material/sort';
 // aurora
 import { ColumnConfig, ColumnConfigAction, ColumnDataType, GridData, GridColumnFilter, GridState } from '../grid.types';
 import { CellValueTemplateDirective } from '../directives/cell-value-template.directive';
-import { CustomGridHeaderTemplateDirective } from '../directives/custom-grid-header-template.directive';
+import { GridCustomHeaderTemplateDirective } from '../directives/grid-custom-header-template.directive';
 import { GridColumnsConfigPropertiesDialogComponent } from '../grid-columns-config-properties-dialog/grid-columns-config-properties-dialog.component';
 import { GridFiltersDialogComponent } from '../grid-filters-dialog/grid-filters-dialog.component';
 import { SelectionChange, SelectionModel } from '../selection-model/selection-model';
@@ -47,7 +47,7 @@ export class GridComponent implements OnInit, AfterViewInit
     @ContentChildren(CellValueTemplateDirective) cellValuesTemplate?: QueryList<CellValueTemplateDirective>;
 
     // add custom header
-    @ContentChildren(CustomGridHeaderTemplateDirective) customGridHeaderTemplate?: QueryList<CustomGridHeaderTemplateDirective>;
+    @ContentChildren(GridCustomHeaderTemplateDirective) gridCustomHeaderTemplate?: QueryList<GridCustomHeaderTemplateDirective>;
 
     // outputs
     @Output() pageChange = new EventEmitter<GridState>();

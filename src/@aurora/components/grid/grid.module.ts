@@ -27,6 +27,7 @@ import { DatepickerSqlFormatModule } from '@aurora/components/datepicker-sql-for
 // pipes
 import { ActionTranslationObjectPipe } from './pipes/action-translation-object.pipe';
 import { CheckTranslationObjectPipe } from './pipes/check-translation-object.pipe';
+import { FilterGridCustomHeaderTemplatesPositionPipe } from './pipes/select-positions-template.pipe';
 import { FilterOperatorsPipe } from './grid-filters-dialog/pipes/filter-operators.pipe';
 import { GetActionsPipe } from './pipes/get-actions.pipe';
 import { GetContactOperatorPipe } from './grid-filters-dialog/pipes/get-concat-operator.pipe';
@@ -39,7 +40,7 @@ import { TransformDataCellPipe } from './pipes/transform-data-cell.pipe';
 
 // components & directives
 import { CellValueTemplateDirective } from './directives/cell-value-template.directive';
-import { CustomGridHeaderTemplateDirective } from './directives/custom-grid-header-template.directive';
+import { GridCustomHeaderTemplateDirective } from './directives/grid-custom-header-template.directive';
 import { GridColumnsConfigPropertiesDialogComponent } from './grid-columns-config-properties-dialog/grid-columns-config-properties-dialog.component';
 import { GridColumnTranslationComponent } from './grid-translations/grid-column-translation.component';
 import { GridFiltersDialogComponent } from './grid-filters-dialog/grid-filters-dialog.component';
@@ -88,8 +89,9 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
         ActionTranslationObjectPipe,
         CellValueTemplateDirective,
         CheckTranslationObjectPipe,
-        CustomGridHeaderTemplateDirective,
+        FilterGridCustomHeaderTemplatesPositionPipe,
         GridColumnsConfigPropertiesDialogComponent,
+        GridCustomHeaderTemplateDirective,
         FilterOperatorsPipe,
         GetActionsPipe,
         GetContactOperatorPipe,
@@ -107,8 +109,8 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
     ],
     exports: [
         CellValueTemplateDirective,
-        CustomGridHeaderTemplateDirective,
         GridColumnTranslationComponent,
+        GridCustomHeaderTemplateDirective,
         GridTranslationsComponent,
         GridComponent,
     ],

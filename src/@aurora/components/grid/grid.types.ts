@@ -70,6 +70,8 @@ export interface GridColumnFilter
     value: string | number;
 }
 
+export type GridCustomHeaderPosition = 'left' | 'right' | 'beforeGriButtons';
+
 export interface GridData<T = any>
 {
     /**
