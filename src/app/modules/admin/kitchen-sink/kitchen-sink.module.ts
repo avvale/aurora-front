@@ -32,6 +32,7 @@ import { DecimalsComponent } from './decimals/decimals.component';
 import { GridComponent } from './grid/grid.component';
 import { kitchenSink } from './kitchen-sink.menu';
 import { DatesComponent } from './dates/dates.component';
+import { SelectsComponent } from './selects/selects.component';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { DatesComponent } from './dates/dates.component';
         DecimalsComponent,
         GridComponent,
         KitchenSinkComponent,
+        SelectsComponent,
     ],
     providers: [
         {

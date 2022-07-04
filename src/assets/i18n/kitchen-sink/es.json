@@ -1,7 +1,11 @@
 {
     "CustomCode": "Código personalizado",
+    "Dates": "Fechas",
+    "Decimals": "Decimales",
     "Example1": "Ejemplo 1",
     "Example2": "Ejemplo 2",
     "Example3": "Ejemplo 3",
-    "Example4": "Ejemplo 4"
+    "Example4": "Ejemplo 4",
+    "Grid": "Tabla",
+    "Selects": "Selectores"
 }
