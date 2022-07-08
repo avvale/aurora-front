@@ -8,7 +8,7 @@ import * as dayjs from 'dayjs';
 })
 export class DatetimepickerSqlFormatDirective
 {
-    @Input() format:string = 'YYYY-MM-DD HH:mm:ss';
+    @Input() format: string = 'YYYY-MM-DD HH:mm:ss';
 
     constructor(
         private control: NgControl,
@@ -21,7 +21,7 @@ export class DatetimepickerSqlFormatDirective
             .control
             .setValue(
                 dayjs($event.value)
-                    .format('YYYY-MM-DD HH:mm:ss'),
+                    .format(this.format),
             );
     }
 }
