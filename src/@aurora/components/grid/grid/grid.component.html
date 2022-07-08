@@ -230,7 +230,7 @@
                                         <ng-container *ngFor="let action of columnConfig.actions | getActions:row">
                                             <button mat-menu-item (click)="handleClickAction(action, row, $event)">
                                                 <mat-icon>{{ action.icon }}</mat-icon>
-                                                <span>{{ action.id | gridTranslate:'action' }}</span>
+                                                <span>{{ (action.translation ? action.translation : action.id) | gridTranslate:'action' }}</span>
                                             </button>
                                         </ng-container>
                                     </mat-menu>
@@ -240,7 +240,7 @@
                                     <ng-container *ngFor="let action of columnConfig.actions | getActions:row">
                                         <button mat-icon-button (click)="handleClickAction(action, row, $event)">
                                             <mat-icon>{{ action.icon }}</mat-icon>
-                                            <span>{{ action.id | gridTranslate:'action' }}</span>
+                                            <span>{{ (action.translation ? action.translation : action.id) | gridTranslate:'action' }}</span>
                                         </button>
                                     </ng-container>
                                 </ng-container>

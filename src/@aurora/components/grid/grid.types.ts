@@ -22,6 +22,7 @@ export interface ColumnConfigAction
 {
     id: string;
     icon: string;
+    translation?: string;
 }
 
 export interface ColumnsConfigChange

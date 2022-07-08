@@ -1,13 +1,15 @@
-import { Directive, HostListener } from '@angular/core';
+import { Directive, HostListener, Input } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import * as dayjs from 'dayjs';
 
 @Directive({
-    selector: '[auDatepickerSqlFormat]',
+    selector: '[auDatetimepickerSqlFormat]',
 })
-export class DatepickerSqlFormatDirective
+export class DatetimepickerSqlFormatDirective
 {
+    @Input() format:string = 'YYYY-MM-DD HH:mm:ss';
+
     constructor(
         private control: NgControl,
     ) {}
@@ -19,7 +21,7 @@ export class DatepickerSqlFormatDirective
             .control
             .setValue(
                 dayjs($event.value)
-                    .format('YYYY-MM-DD'),
+                    .format('YYYY-MM-DD HH:mm:ss'),
             );
     }
 }

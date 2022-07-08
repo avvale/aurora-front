@@ -6,7 +6,7 @@ export type ApiEnvironment = 'sandbox' | 'live';
 export interface Action
 {
     id: string;
-    pure?: boolean;
+    isViewAction?: boolean;
     data?: {
         [key: string]: any;
     };

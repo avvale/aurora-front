@@ -20,8 +20,13 @@ export class AssociatedElementsManagerComponent
     @Input() columnsConfig: ColumnConfig[];
     // inputs
     @Input() data: GridData;
+    @Input() newActionId: string = 'new';
     // add class to wrapper grid
     @Input('class') klass: string;
+    @Input('dialogWidth') dialogWidth: string = '90vw';
+    @Input('dialogMaxWidth') dialogMaxWidth: string = '2048px';
+    @Input('dialogMinWidth') dialogMinWidth: string = '240px';
+    @Input('dialogHeight') dialogHeight: string = 'auto';
 
     // outputs
     @Output() stateChange = new EventEmitter<GridState>();
@@ -40,9 +45,10 @@ export class AssociatedElementsManagerComponent
     {
         const elementDetailDialogRef = this.dialog.open(ElementDetailDialogComponent,
             {
-                width    : '90vw',
-                maxWidth : '1024px',
-                minWidth : '240px',
+                width    : this.dialogWidth,
+                maxWidth : this.dialogMaxWidth,
+                minWidth : this.dialogMinWidth,
+                height   : this.dialogHeight,
                 autoFocus: false,
                 data     : {
                     title                          : this.dialogTitle,

@@ -5,6 +5,7 @@ import { TranslocoService } from '@ngneat/transloco';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { SessionService } from '@aurora/modules/session/session.service';
 import { ActionService } from '@aurora/services/action.service';
+import { Action } from '@aurora/aurora.types';
 import { Subject } from 'rxjs';
 
 @Directive()
@@ -20,7 +21,12 @@ export class ViewBaseComponent implements OnDestroy
     snackBar: MatSnackBar;                                  // snack bar common to all components
     confirmationService: FuseConfirmationService;           // confirmation service to show dialogs
     translocoService: TranslocoService;                     // translation service
-    currentActionId: string;                                // store current action id
+
+    get currentViewAction(): Action
+    {
+        // if current action is not defined yet, return empty action
+        return this.actionService.currentViewAction;
+    }
 
     constructor(
         protected injector: Injector,

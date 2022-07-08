@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@aurora';
+import { Action, log } from '@aurora';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -7,6 +7,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ActionService
 {
+    currentViewAction: Action;
+
     private _action: BehaviorSubject<Action> = new BehaviorSubject(null);
     private cache = {};
 
@@ -29,8 +31,19 @@ export class ActionService
 
     action(action: Action): Action
     {
+        // set default isViewAction to true
+        action = { id: null, isViewAction: true, data: null, ...action };
+
         this.setCache(action.id, action.data);
-        this._action.next({ ...action, data: this.getCache(action.id) });
+
+        const cachedAction = { ...action, data: this.getCache(action.id) };
+
+        // set current template action to modify the view
+        if (action.isViewAction) this.currentViewAction = action;
+
+        this._action.next(cachedAction);
+
+        log('[DEBUG] Handle action: ', cachedAction);
 
         return action;
     }

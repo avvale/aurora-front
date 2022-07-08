@@ -11,7 +11,11 @@ import { FormElementDetailDialogTemplateDirective } from './form-element-detail-
 export class ElementDetailDialogComponent
 {
     constructor(
-        @Inject(MAT_DIALOG_DATA) public data: { title: string; currentActionId: string; formElementDetailDialogTemplate?: FormElementDetailDialogTemplateDirective; },
+        @Inject(MAT_DIALOG_DATA) public data: {
+            title: string;
+            currentActionId: string;
+            formElementDetailDialogTemplate?: FormElementDetailDialogTemplateDirective;
+        },
         public dialogRef: MatDialogRef<ElementDetailDialogComponent>,
     ) { }
 }

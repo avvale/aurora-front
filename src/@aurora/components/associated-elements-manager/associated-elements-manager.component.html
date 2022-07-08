@@ -1,34 +1,40 @@
-<div class="flex flex-row items-end justify-between pb-2">
-    <p class="opacity-60">{{ label }}</p>
-    <button
-        mat-icon-button
-        class="ml-3"
-        (click)="handleElementDetailDialog('new')"
-    >
-        <mat-icon class="icon-size-5 mr-2">
-            add
-        </mat-icon>
-        <span class="cdk-visually-hidden">
-            Add item
-        </span>
-    </button>
-</div>
+<div class="relative">
+    <p class="absolute top-0 -left-1 bg-white px-2 pt-1 origin-center -translate-y-1/2 scale-75 text-base">
+        <span class="opacity-60">{{ label }}</span>
+    </p>
 
-<!-- main -->
-<div
-    [ngClass]="klass"
-    class="flex flex-auto pt-0 px-2 overflow-y-auto border rounded-md"
-    cdkScrollable
->
-    <!-- grid -->
-    <au-grid
-        [columnsConfig]="columnsConfig"
-        [data]="data"
-        (action)="action.emit($event)"
-        (stateChange)="stateChange.emit($event)"
-    >
-    </au-grid>
-    <!-- / grid -->
-
+    <div class="rounded-md border hover:border-2 focus-within:border-2 p-0.5 hover:p-px focus-within:p-px transition-all">
+        <!-- main -->
+        <div
+            [ngClass]="klass"
+            class="flex flex-auto pt-0 px-2 overflow-y-auto"
+            cdkScrollable
+        >
+            <!-- grid -->
+            <au-grid
+                [columnsConfig]="columnsConfig"
+                [data]="data"
+                (action)="action.emit($event)"
+                (stateChange)="stateChange.emit($event)"
+            >
+                <ng-template
+                    auGridCustomHeaderTemplate
+                    position="left"
+                >
+                    <button
+                        mat-icon-button
+                        class="mr-2"
+                        (click)="handleElementDetailDialog(newActionId)"
+                    >
+                        <mat-icon>add</mat-icon>
+                        <span class="cdk-visually-hidden">
+                            Add new item
+                        </span>
+                    </button>
+                </ng-template>
+            </au-grid>
+            <!-- / grid -->
+        </div>
+        <!-- / main -->
+    </div>
 </div>
-<!-- / main -->

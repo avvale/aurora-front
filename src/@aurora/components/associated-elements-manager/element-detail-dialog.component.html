@@ -13,7 +13,7 @@
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
-    <div mat-dialog-content class="flex flex-col my-4 h-full">
+    <div mat-dialog-content class="flex flex-col my-4 h-full max-h-full">
         <div *ngIf="data.formElementDetailDialogTemplate">
             <ng-container
                 *ngTemplateOutlet="data.formElementDetailDialogTemplate?.templateRef; context: { $implicit: dialogRef }"
