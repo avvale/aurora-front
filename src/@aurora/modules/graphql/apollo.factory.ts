@@ -2,12 +2,18 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { log } from '@aurora/functions/log';
 import { ApolloClientOptions, ApolloLink, DefaultOptions, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { HttpLink } from 'apollo-angular/http/http-link';
 import { environment } from 'environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { lastValueFrom } from 'rxjs';
+import { extractGraphqlMessageErrors } from './graphql.functions';
 
-export const apolloFactory = (httpLink: HttpLink, authService: AuthService): ApolloClientOptions<NormalizedCacheObject> =>
+export const apolloFactory = (
+    httpLink: HttpLink,
+    authService: AuthService,
+    confirmationService: FuseConfirmationService,
+): ApolloClientOptions<NormalizedCacheObject> =>
 {
     const auth = setContext(async(operation, context) =>
     {
@@ -38,20 +44,35 @@ export const apolloFactory = (httpLink: HttpLink, authService: AuthService): Apo
         // graphql error
         if (graphQLErrors)
         {
-            log('[DEBUG] GraphQL error', graphQLErrors);
+            log(`[DEBUG] GraphQL Error: ${extractGraphqlMessageErrors(graphQLErrors)}`);
 
-            // ver src/@horus/components/apollo/apollo.service.ts de horus cci
-            graphQLErrors.map(({ message, extensions }) =>
+            const unauthorizedError = graphQLErrors.find(({ message, extensions }: { message: string; extensions: any; }) => extensions.response?.statusCode === 401);
+
+            if (unauthorizedError)
             {
-                log(`[DEBUG] Message: ${message}, Extensions: ${extensions}`);
+                authService.signOut();
+                location.reload();
+                return;
+            }
 
-                switch (extensions.response['statusCode'])
-                {
-                    case 401:
-                        authService.signOut();
-                        location.reload();
-                        break;
-                }
+            confirmationService.open({
+                title  : 'Error',
+                message: extractGraphqlMessageErrors(graphQLErrors),
+                icon   : {
+                    show : true,
+                    name : 'error',
+                    color: 'error',
+                },
+                actions: {
+                    confirm: {
+                        show : true,
+                        label: 'Ok',
+                        color: 'warn',
+                    },
+                    cancel: {
+                        show: false,
+                    },
+                },
             });
         }
 
