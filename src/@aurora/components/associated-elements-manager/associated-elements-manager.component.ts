@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Action } from '@aurora/aurora.types';
-import { ColumnConfig, GridData, GridState } from '../grid/grid.types';
+import { ColumnConfig, GridColumnFilter, GridData, GridState } from '../grid/grid.types';
 import { ElementDetailDialogComponent } from './element-detail-dialog.component';
 import { FormElementDetailDialogTemplateDirective } from './form-element-detail-dialog-template.directive';
 
@@ -17,22 +17,24 @@ export class AssociatedElementsManagerComponent
     // title of dialog
     @Input() dialogTitle: string;
     // grid columns config
+    @Input() activatedColumnFilters: GridColumnFilter[];
     @Input() columnsConfig: ColumnConfig[];
+    @Input() originColumnsConfig: ColumnConfig[];
     // inputs
     @Input() data: GridData;
     @Input() newActionId: string = 'new';
-    // add class to wrapper grid
-    @Input('class') klass: string;
     @Input('dialogWidth') dialogWidth: string = '90vw';
     @Input('dialogMaxWidth') dialogMaxWidth: string = '2048px';
     @Input('dialogMinWidth') dialogMinWidth: string = '240px';
     @Input('dialogHeight') dialogHeight: string = 'auto';
 
     // outputs
-    @Output() stateChange = new EventEmitter<GridState>();
     @Output() action = new EventEmitter<Action>();
-    @Output() dialogOpen = new EventEmitter<void>();
+    @Output() columnFiltersChange = new EventEmitter<GridState>();
+    @Output() columnsConfigChange = new EventEmitter<ColumnConfig[]>();
     @Output() dialogClose = new EventEmitter<void>();
+    @Output() dialogOpen = new EventEmitter<void>();
+    @Output() stateChange = new EventEmitter<GridState>();
 
     // directive to set form item detail
     @ContentChild(FormElementDetailDialogTemplateDirective) formElementDetailDialogTemplate?: FormElementDetailDialogTemplateDirective;

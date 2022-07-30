@@ -23,6 +23,7 @@ export class DatePickerDayjsAdapter extends NativeDateAdapter
 
     parse(value: any): Date | null
     {
+        if (!value) return null;
         return dayjs(value, this.dateFormats.parse.dateInput).toDate();
     }
 
@@ -32,8 +33,23 @@ export class DatePickerDayjsAdapter extends NativeDateAdapter
         return dayjs(date).format(displayFormat);
     }
 
+    getDayOfWeek(date: Date): number
+    {
+        return dayjs(date).day();
+    }
+
     getFirstDayOfWeek(): number
     {
         return 1;
+    }
+
+    getMonth(date: Date): number
+    {
+        return dayjs(date).month();
+    }
+
+    getYear(date: Date): number
+    {
+        return dayjs(date).year();
     }
 }

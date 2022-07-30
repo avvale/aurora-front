@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, OnDestroy, Pipe, PipeTransform } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { OnDestroy, Pipe, PipeTransform } from '@angular/core';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { GridTranslationsService } from './grid-translations.service';
 import { GridMessages } from '../grid.types';
 
@@ -8,49 +8,41 @@ import { GridMessages } from '../grid.types';
  */
 @Pipe({
     name: 'gridTranslate',
-    pure: false,
 })
 export class GridTranslatePipe implements PipeTransform, OnDestroy
 {
-    value = '';
     private _unsubscribeAll: Subject<void> = new Subject<void>();
-    updateValue = (res: string): void =>
-    {
-        this.value = res;
-        this.ref.markForCheck();
-    };
 
     constructor(
         private gridTranslationsService: GridTranslationsService,
-        private ref: ChangeDetectorRef,
     )
     {}
 
-    transform(key: string, type: 'column' | 'message' | 'action' = 'message'): string
+    transform(key: string, type: 'column' | 'message' | 'action' = 'message', scope = 'grid'): Observable<string>
     {
         if (type === 'message')
         {
-            this.gridTranslationsService
-                .getMessage(key as keyof GridMessages)
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe(res => this.updateValue(res));
+            return this.gridTranslationsService
+                .getMessage(scope, key as keyof GridMessages)
+                .pipe(takeUntil(this._unsubscribeAll));
         }
         else if (type === 'column')
         {
-            this.gridTranslationsService
-                .getColumnMessage(key)
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe(res => this.updateValue(res));
+            return this.gridTranslationsService
+                .getColumnMessage(scope, key)
+                .pipe(
+                    takeUntil(this._unsubscribeAll),
+                );
         }
         else
         {
-            this.gridTranslationsService
-                .getActionsMenuMessages()
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe(res => this.updateValue(res[key]));
+            return this.gridTranslationsService
+                .getActionsMenuMessages(scope)
+                .pipe(
+                    takeUntil(this._unsubscribeAll),
+                    map(actionsMenuMessages => actionsMenuMessages[key]),
+                );
         }
-
-        return this.value;
     }
 
     ngOnDestroy(): void

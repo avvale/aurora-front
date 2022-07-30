@@ -1,6 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { IamService } from '@aurora';
 import { combineLatest, filter, map, Subject, takeUntil } from 'rxjs';
 import { FuseConfigService } from '@fuse/services/config';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -31,7 +32,8 @@ export class LayoutComponent implements OnInit, OnDestroy
         private _renderer2: Renderer2,
         private _router: Router,
         private _fuseConfigService: FuseConfigService,
-        private _fuseMediaWatcherService: FuseMediaWatcherService
+        private _fuseMediaWatcherService: FuseMediaWatcherService,
+        private iamService: IamService,
     )
     {
     }
@@ -45,6 +47,12 @@ export class LayoutComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
+        // manage initial data
+        this._activatedRoute.data.subscribe(({ initialData }) =>
+        {
+            this.iamService.me = initialData.iamService.me;
+        });
+
         // Set the theme and scheme based on the configuration
         combineLatest([
             this._fuseConfigService.config$,

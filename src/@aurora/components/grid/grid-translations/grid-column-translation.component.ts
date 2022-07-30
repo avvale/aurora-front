@@ -15,6 +15,7 @@ export class GridColumnTranslationComponent implements OnInit
 {
     // set field/column translation
     @Input() field: string;
+    @Input() gridId: string = 'grid';
 
     constructor(
         @Optional() @Host() private parent: GridTranslationsComponent,
@@ -47,7 +48,7 @@ export class GridColumnTranslationComponent implements OnInit
             .subscribe(res =>
                 res.forEach(change =>
                     this.gridTranslationsService
-                        .setColumnMessage(this.field, change.target.nodeValue.trim()),
+                        .setColumnMessage(this.gridId, this.field, change.target.nodeValue.trim()),
                 ),
             );
     }

@@ -8,6 +8,7 @@ export class GetActionsPipe implements PipeTransform
 {
     transform(actionsFn: (item: any) => ColumnConfigAction[], object: any): ColumnConfigAction[]
     {
-        return actionsFn(object);
+        if (actionsFn instanceof Function) return actionsFn(object);
+        return [];
     }
 }

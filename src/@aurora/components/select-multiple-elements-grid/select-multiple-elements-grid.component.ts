@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { Action } from '@aurora/aurora.types';
 import { GridDialogComponent } from '../grid-dialog/grid-dialog.component';
-import { ColumnConfig, GridData, GridState } from '../grid/grid.types';
+import { ColumnConfig, GridColumnFilter, GridData, GridState } from '../grid/grid.types';
+import { GridCustomButtonsHeaderTemplateDirective } from './grid-custom-buttons-header-template.directive';
 
 @Component({
     selector       : 'au-select-multiple-elements-grid',
@@ -11,55 +13,127 @@ import { ColumnConfig, GridData, GridState } from '../grid/grid.types';
 })
 export class SelectMultipleElementsGridComponent
 {
-    dialogRef: MatDialogRef<GridDialogComponent>;
+    elementsDialogRef: MatDialogRef<GridDialogComponent>;
 
     // component label
     @Input() label: string;
 
-    // dialog grid inputs
+    // grid dialog
+    @Input() dialogGridId: string = 'grid';
     @Input() dialogTitle: string;
     @Input() dialogColumnsConfig: ColumnConfig[];
-    @Input() dialogData: GridData;
+    @Input() dialogOriginColumnsConfig: ColumnConfig[];
+    @Input() dialogActivatedColumnFilters: GridColumnFilter[];
+    @Input() dialogSelectedRows: any[] = [];
+    private _dialogGridData: GridData;
+    @Input() set dialogGridData(gridData: GridData)
+    {
+        this._dialogGridData = gridData;
+        if (this.elementsDialogRef)
+        {
+            this.elementsDialogRef.componentInstance.gridData = gridData;
+            this.changeDetection.markForCheck();
+        }
+    }
+    get dialogGridData(): GridData
+    {
+        return this._dialogGridData;
+    }
+
+    // grid
+    @Input() data: GridData;
+    @Input() gridId: string = 'grid';
+    @Input() columnsConfig: ColumnConfig[];
+    @Input() originColumnsConfig: ColumnConfig[];
+    @Input() hasPagination: boolean = true;
+    @Input() hasDragAndDrop: boolean = false;
+    @Input() hasFilterButton: boolean = true;
 
     // selected items grid inputs
     @Input() selectedItemsColumnsConfig: ColumnConfig[];
     @Input() selectedItemsData: GridData;
 
-    // add class to wrapper grid
-    @Input('class') klass: string;
+    // add custom buttons header
+    @ContentChild(GridCustomButtonsHeaderTemplateDirective) gridCustomButtonsHeaderTemplate?: GridCustomButtonsHeaderTemplateDirective;
 
     // outputs
-    @Output() stateChange = new EventEmitter<GridState>();
     @Output() action = new EventEmitter<Action>();
-    @Output() dialogOpen = new EventEmitter<void>();
+    @Output() columnsConfigChange = new EventEmitter<ColumnConfig[]>();
+    @Output() rowDrop = new EventEmitter<CdkDragDrop<any>>();
+    @Output() stateChange = new EventEmitter<GridState>();
+
+    // outputs grid dialog
+    @Output() dialogAction = new EventEmitter<Action>();
     @Output() dialogClose = new EventEmitter<void>();
+    @Output() dialogColumnFiltersChange = new EventEmitter<GridState>();
+    @Output() dialogColumnsConfigChange = new EventEmitter<ColumnConfig[]>();
+    @Output() dialogOpen = new EventEmitter<void>();
+    @Output() dialogStateChange = new EventEmitter<GridState>();
 
     constructor(
-        private matDialog: MatDialog,
+        private changeDetection: ChangeDetectorRef,
+        private dialog: MatDialog,
     ) {}
 
-    handleElementsDialog(): void
+    handleElementsDialog(dialogConfig?: MatDialogConfig): void
     {
-        this.dialogRef = this.matDialog.open(GridDialogComponent,
+        this.elementsDialogRef = this.dialog.open(GridDialogComponent,
             {
                 width    : '90vw',
                 maxWidth : '1024px',
                 minWidth : '240px',
                 autoFocus: false,
-                data     : {
-                    columnsConfig: this.dialogColumnsConfig,
-                    // selectedRows : this.selectedRows,
-                    gridData     : this.dialogData,           // pass data when create dialog, after, will be passed by @Input() set data property
-                    // title        : this.dialogTitle,
+                ...dialogConfig,
+                ...{
+                    data: {
+                        activatedColumnFilters: this.dialogActivatedColumnFilters,
+                        columnsConfig         : this.dialogColumnsConfig,
+                        gridData              : this.dialogGridData,
+                        gridId                : this.dialogGridId,
+                        originColumnsConfig   : this.dialogOriginColumnsConfig,
+                        selectedRows          : this.dialogSelectedRows,
+                        title                 : this.dialogTitle,
+                        ...dialogConfig?.data,
+                    },
                 },
             });
 
-        this.dialogRef
+        this.elementsDialogRef
             .afterOpened()
             .subscribe(() => this.dialogOpen.next());
 
-        this.dialogRef
+        this.elementsDialogRef
             .afterClosed()
             .subscribe(() => this.dialogClose.next());
+
+        // pass change state event to parent component
+        this.elementsDialogRef
+            .componentInstance
+            .stateChange
+            .subscribe((state: GridState) => this.dialogStateChange.next(state));
+
+        // pass on columns config change event to parent component
+        this.elementsDialogRef
+            .componentInstance
+            .columnsConfigChange
+            .subscribe((columnConfig: ColumnConfig[]) => this.dialogColumnsConfigChange.next(columnConfig));
+
+        // pass on columns filters change event to parent component
+        this.elementsDialogRef
+            .componentInstance
+            .columnFiltersChange
+            .subscribe((state: GridState) => this.dialogColumnFiltersChange.next(state));
+
+        // pass action click event to parent component
+        this.elementsDialogRef
+            .componentInstance
+            .action
+            .subscribe((action: Action) => this.dialogAction.next(action));
+
+        // pass on selection row event to parent component
+        this.elementsDialogRef
+            .componentInstance
+            .rowsSelectionChange
+            .subscribe((action: Action) => this.dialogAction.next(action));
     }
 }

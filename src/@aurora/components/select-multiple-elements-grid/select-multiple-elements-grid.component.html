@@ -1,34 +1,55 @@
-<div class="flex flex-row items-end justify-between pb-2">
-    <p class="opacity-60">{{ label }}</p>
-    <button
-        mat-icon-button
-        class="ml-3"
-        (click)="handleElementsDialog()"
-    >
-        <mat-icon class="icon-size-5 mr-2">
-            add
-        </mat-icon>
-        <span class="cdk-visually-hidden">
-            Add item
-        </span>
-    </button>
-</div>
+<div class="relative">
+    <p class="absolute top-0 -left-1 bg-white px-2 pt-1 origin-center -translate-y-1/2 scale-75 text-base">
+        <span class="opacity-60">{{ label }}</span>
+    </p>
 
-<!-- main -->
-<div
-    [ngClass]="klass"
-    class="flex flex-auto pt-0 px-2 overflow-y-auto border rounded-md"
-    cdkScrollable
->
-    <!-- grid -->
-    <au-grid
-        [columnsConfig]="columnsConfig"
-        [data]="data"
-        (action)="action.emit($event)"
-        (stateChange)="stateChange.emit($event)"
-    >
-    </au-grid>
-    <!-- / grid -->
-
+    <div class="rounded-md border hover:border-2 focus-within:border-2 p-0.5 hover:p-px focus-within:p-px transition-all">
+        <!-- main -->
+        <div
+            class="flex flex-auto pt-0 px-2 overflow-y-auto"
+            cdkScrollable
+        >
+            <!-- grid -->
+            <au-grid
+                [columnsConfig]="columnsConfig"
+                [data]="data"
+                [hasDragAndDrop]="hasDragAndDrop"
+                [hasFilterButton]="hasFilterButton"
+                [hasPagination]="hasPagination"
+                [id]="gridId"
+                [originColumnsConfig]="originColumnsConfig"
+                (action)="action.emit($event)"
+                (stateChange)="stateChange.emit($event)"
+                (columnsConfigChange)="columnsConfigChange.next($event)"
+                (rowDrop)="rowDrop.emit($event)"
+            >
+                <ng-template
+                    auGridCustomHeaderTemplate
+                    position="left"
+                >
+                    <!-- we can defined buttons from component parent across template directive -->
+                    <ng-container *ngIf="gridCustomButtonsHeaderTemplate">
+                        <ng-container
+                            *ngTemplateOutlet="gridCustomButtonsHeaderTemplate.templateRef; context: { }"
+                        ></ng-container>
+                    </ng-container>
+                    <!-- we can use default button -->
+                    <ng-container *ngIf="!gridCustomButtonsHeaderTemplate">
+                        <button
+                            mat-icon-button
+                            class="mr-2"
+                            (click)="handleElementsDialog(newActionId)"
+                        >
+                            <mat-icon>add</mat-icon>
+                            <span class="cdk-visually-hidden">
+                                Add new item
+                            </span>
+                        </button>
+                    </ng-container>
+                </ng-template>
+            </au-grid>
+            <!-- / grid -->
+        </div>
+        <!-- / main -->
+    </div>
 </div>
-<!-- / main -->

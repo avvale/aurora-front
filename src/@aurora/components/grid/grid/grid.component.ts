@@ -14,9 +14,9 @@ import { GridFiltersDialogComponent } from '../grid-filters-dialog/grid-filters-
 import { SelectionChange, SelectionModel } from '../selection-model/selection-model';
 
 // third party libraries
-import { merge, Subject, tap } from 'rxjs';
-import cloneDeep from 'lodash-es/cloneDeep';
+import { merge, tap } from 'rxjs';
 import { Action } from '@aurora';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
     selector       : 'au-grid',
@@ -26,18 +26,34 @@ import { Action } from '@aurora';
 })
 export class GridComponent implements OnInit, AfterViewInit
 {
-    // inputs
+    @Input() id: string = 'grid';
+    // input data rows
     @Input() data: GridData;
-    // langs to create TranslationMenuComponent form multi language objects
-    @Input() langs: CommonLang[] = [];
+    @Input() columnsConfig: ColumnConfig[] = [];
+    @Input() originColumnsConfig: ColumnConfig[] = [];
     // set rows selection
     @Input() selectedRows: any[] = [];
     // selection checkbox column
     @Input() rowsSelection = new SelectionModel<any>(true, [], true, (a: any, b: any) => a.id === b.id);
-    // column filters activated
-    @Input() activatedColumnFilters: GridColumnFilter[] = [];
     @Input() hasFilterButton: boolean = true;
     @Input() hasColumnsConfigPropertiesButton: boolean = true;
+    @Input() hasPagination: boolean = true;
+    @Input() hasDragAndDrop: boolean = false;
+
+    // column filters activated
+    private _activatedColumnFilters: GridColumnFilter[];
+    @Input() set activatedColumnFilters(columnFilters: GridColumnFilter[])
+    {
+        this._activatedColumnFilters = columnFilters;
+    }
+    get activatedColumnFilters(): GridColumnFilter[]
+    {
+        // we make sure that it has an empty array as default value, to avoid errors due to undefined value
+        return Array.isArray(this._activatedColumnFilters) ? this._activatedColumnFilters :[];
+    }
+
+    // langs to create TranslationMenuComponent form multi language objects
+    @Input() langs: CommonLang[] = [];
 
     // view children
     @ViewChild(MatPaginator) private paginator: MatPaginator;
@@ -47,38 +63,25 @@ export class GridComponent implements OnInit, AfterViewInit
     @ContentChildren(CellValueTemplateDirective) cellValuesTemplate?: QueryList<CellValueTemplateDirective>;
 
     // add custom header
-    @ContentChildren(GridCustomHeaderTemplateDirective) gridCustomHeaderTemplate?: QueryList<GridCustomHeaderTemplateDirective>;
+    @ContentChildren(GridCustomHeaderTemplateDirective) gridCustomHeadersTemplate?: QueryList<GridCustomHeaderTemplateDirective>;
 
     // outputs
-    @Output() pageChange = new EventEmitter<GridState>();
-    @Output() filtersChange = new EventEmitter<GridState>();
-    @Output() stateChange = new EventEmitter<GridState>();
     @Output() action = new EventEmitter<Action>();
     @Output() closeColumnDialog = new EventEmitter<void>();
+    @Output() columnFiltersChange = new EventEmitter<GridState>();
     @Output() columnsConfigChange = new EventEmitter<ColumnConfig[]>();
+    @Output() pageChange = new EventEmitter<GridState>();
+    @Output() resetColumnsConfig = new EventEmitter<void>();
+    @Output() rowDrop = new EventEmitter<CdkDragDrop<any>>();
     @Output() rowsSelectionChange = new EventEmitter<SelectionChange<any>>();
+    @Output() stateChange = new EventEmitter<GridState>();
 
     // set columns types for render each web component
     columnConfigType = ColumnDataType;
-    changeColumnsConfig$: Subject<ColumnConfig[]> = new Subject();
-
-    // clone columnsConfig to can reset columnsConfig to original status
-    private _columnsConfig: ColumnConfig[] = [];
-    private _originColumnsConfig: ColumnConfig[] = [];
-    @Input() set columnsConfig(data: ColumnConfig[])
-    {
-        this._columnsConfig = cloneDeep(data);
-        this._originColumnsConfig = cloneDeep(data);
-    }
-    get columnsConfig(): ColumnConfig[]
-    {
-        return this._columnsConfig;
-    }
 
     get displayedColumns(): string[]
     {
-        return this.columnsConfig
-            .filter(item => !item.hidden)
+        return this.columnsConfig?.filter(item => !item.hidden)
             .map(item => item.field);
     }
 
@@ -120,8 +123,7 @@ export class GridComponent implements OnInit, AfterViewInit
                                 this.paginator.pageIndex *
                                 this.paginator.pageSize,
                             limit: this.paginator.pageSize,
-                            sort : this.sort.active,
-                            order: this.sort.direction,
+                            order: [[this.sort.active, this.sort.direction]],
                         };
 
                         this.stateChange.emit(gridState);
@@ -133,12 +135,19 @@ export class GridComponent implements OnInit, AfterViewInit
     }
 
     handleClickAction(
-        action: ColumnConfigAction,
+        columnConfigAction: ColumnConfigAction,
         row: any,
         event: PointerEvent,
     ): void
     {
-        this.action.emit({ id: action.id, data: { row, action, event }});
+        this.action.emit({
+            ...columnConfigAction,
+            data: {
+                ...columnConfigAction.data,
+                row,
+                event,
+            },
+        });
     }
 
     /**
@@ -153,7 +162,8 @@ export class GridComponent implements OnInit, AfterViewInit
                 minWidth : '240px',
                 autoFocus: false,
                 data     : {
-                    columnsConfig: this.columnsConfig,
+                    columnsConfig      : this.columnsConfig,
+                    originColumnsConfig: this.originColumnsConfig,
                 },
             });
 
@@ -163,7 +173,8 @@ export class GridComponent implements OnInit, AfterViewInit
             .columnsConfigChange
             .subscribe($event =>
             {
-                this.columnsConfigChange.emit($event.columnsConfig);
+                this.columnsConfig = $event.columnsConfig,
+                this.columnsConfigChange.emit(this.columnsConfig);
                 this.changeDetection.markForCheck();
             });
 
@@ -184,8 +195,9 @@ export class GridComponent implements OnInit, AfterViewInit
                 height   : '75vh',
                 autoFocus: false,
                 data     : {
-                    columnsConfig         : this.columnsConfig,
                     activatedColumnFilters: this.activatedColumnFilters,
+                    columnsConfig         : this.columnsConfig,
+                    gridId                : this.id,
                 },
             });
 
@@ -202,15 +214,14 @@ export class GridComponent implements OnInit, AfterViewInit
                 const gridState = {
                     filters: this.activatedColumnFilters,
                     count  : this.paginator.length,
-                    sort   : this.sort.active,
-                    order  : this.sort.direction,
-                    limit  : this.paginator.pageSize,
                     offset : 0,
+                    limit  : this.paginator.pageSize,
+                    order  : [[this.sort.active, this.sort.direction]],
                 };
 
                 // emit event
                 this.stateChange.emit(gridState);
-                this.filtersChange.emit(gridState);
+                this.columnFiltersChange.emit(gridState);
 
                 // refresh view to update number of filters activated
                 this.changeDetection.markForCheck();

@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, Output, QueryList, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SelectionChange } from '@angular/cdk/collections';
 import { Action } from '@aurora/aurora.types';
-import { ColumnConfig, GridData, GridState } from '../grid';
+import { Observable } from 'rxjs';
+import { ColumnConfig, GridColumnFilter, GridCustomHeaderTemplateDirective, GridData, GridState } from '../grid';
+import { GridComponent } from '../grid/grid/grid.component';
 
 @Component({
     selector       : 'au-grid-dialog',
@@ -10,8 +12,9 @@ import { ColumnConfig, GridData, GridState } from '../grid';
     styleUrls      : ['grid-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GridDialogComponent
+export class GridDialogComponent implements AfterViewInit
 {
+    gridId: string = 'grid';
     set gridData(gridData: GridData)
     {
         this._gridData = gridData;
@@ -21,28 +24,64 @@ export class GridDialogComponent
     {
         return this._gridData;
     }
+    columnsConfig: ColumnConfig[];
+    selectedRows = [];
+
+    // view
+    @ViewChild(GridComponent) gridComponent: GridComponent;
 
     // outputs
-    @Output() stateChange = new EventEmitter<GridState>();
     @Output() action = new EventEmitter<Action>();
-    @Output() rowsSelectionChange = new EventEmitter<SelectionChange<any>>();
-    @Output() dialogOpen = new EventEmitter<void>();
+    @Output() columnFiltersChange = new EventEmitter<GridState>();
+    @Output() columnsConfigChange = new EventEmitter<ColumnConfig[]>();
     @Output() dialogClose = new EventEmitter<void>();
+    @Output() dialogOpen = new EventEmitter<void>();
+    @Output() rowsSelectionChange = new EventEmitter<SelectionChange<any>>();
+    @Output() stateChange = new EventEmitter<GridState>();
 
     private _gridData: GridData;
 
     constructor(
-        @Inject(MAT_DIALOG_DATA) public data: {
-            title: string;
-            columnsConfig: ColumnConfig[];
-            gridData: GridData;
-            selectedRows: any[];
-        },
-        private changeDetection: ChangeDetectorRef,
         public dialogRef: MatDialogRef<GridDialogComponent>,
+        private changeDetection: ChangeDetectorRef,
+        @Inject(MAT_DIALOG_DATA) public data: {
+            activatedColumnFilters: GridColumnFilter[];
+            columnsConfig: ColumnConfig[] | Observable<ColumnConfig[]>;
+            gridCustomHeadersTemplate: QueryList<GridCustomHeaderTemplateDirective>;
+            gridData: GridData | Observable<GridData>;
+            gridId: string;
+            originColumnsConfig: ColumnConfig[];
+            selectedRows: any[];
+            title: string;
+        },
     )
     {
-        // when create dialog set data from constructor
-        this.gridData = data.gridData;
+        // check if columns config is a observable
+        if (data.columnsConfig instanceof Observable)
+        {
+            data.columnsConfig.subscribe(columnsConfig => this.columnsConfig = columnsConfig);
+        }
+        else
+        {
+            this.columnsConfig = data.columnsConfig;
+        }
+
+        // check if grid data is a observable
+        if (data.gridData instanceof Observable)
+        {
+            data.gridData.subscribe(gridData => this.gridData = gridData);
+        }
+        else
+        {
+            this.gridData = data.gridData;
+        }
+
+        this.gridId = data.gridId || this.gridId;
+    }
+
+    ngAfterViewInit(): void
+    {
+        if (this.data.gridCustomHeadersTemplate)
+            this.gridComponent.gridCustomHeadersTemplate = this.data.gridCustomHeadersTemplate;
     }
 }

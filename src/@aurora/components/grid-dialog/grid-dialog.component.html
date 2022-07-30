@@ -6,12 +6,17 @@
     >
         <!-- grid -->
         <au-grid
-            [columnsConfig]="data.columnsConfig"
+            [activatedColumnFilters]="data.activatedColumnFilters"
+            [columnsConfig]="columnsConfig"
             [data]="gridData"
-            [selectedRows]="data.selectedRows"
+            [id]="gridId"
+            [originColumnsConfig]="data.originColumnsConfig"
+            [selectedRows]="selectedRows"
             (action)="action.emit($event)"
-            (stateChange)="stateChange.emit($event)"
+            (columnFiltersChange)="columnFiltersChange.emit($event)"
+            (columnsConfigChange)="columnsConfigChange.emit($event)"
             (rowsSelectionChange)="rowsSelectionChange.emit($event)"
+            (stateChange)="stateChange.emit($event)"
         >
             <ng-template
                 auGridCustomHeaderTemplate

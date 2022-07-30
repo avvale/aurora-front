@@ -1,80 +1,44 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { cloneDeep } from 'lodash-es';
 import { ColumnConfig, ColumnDataType, ColumnsConfigChange } from '../grid.types';
 
 @Component({
-    selector : 'au-grid-columns-config-properties-dialog',
-    styleUrls: ['./grid-columns-config-properties-dialog.component.scss'],
-    template : `
-        <div mat-dialog-title class="dialog-header relative">
-            <p class="title">
-                <mat-icon class="inline">table_chart</mat-icon>
-                <span>{{ 'columns' | gridTranslate }}</span>
-            </p>
-
-            <div class="helper text-base opacity-50">{{ 'clickAndDragInfo' | gridTranslate }}</div>
-            <hr class="mt-2 mb-4">
-
-            <button mat-icon-button [disableRipple]="true" mat-dialog-close class="absolute top-0 right-0">
-                <mat-icon>close</mat-icon>
-            </button>
-        </div>
-
-        <div mat-dialog-content class="max-h-80 overflow-y-scroll">
-            <div
-                cdkDropList
-                class="columns-list"
-                (cdkDropListDropped)="drop($event)"
-            >
-                <ng-container *ngFor="let columnConfig of columnsConfigToList">
-                    <div
-                        class="column"
-                        cdkDrag
-                        [ngClass]="{ 'cursor-move': !columnConfig.sticky }"
-                        [cdkDragDisabled]="columnConfig.sticky"
-                    >
-                        <div class="flex">
-                            <mat-checkbox
-                                [(ngModel)]="!columnConfig.hidden"
-                                [disabled]="columnConfig.sticky"
-                                (change)="handleChangeActiveColumn($event, columnConfig)"
-                            >
-                            </mat-checkbox>
-
-                            <span>
-                            {{ columnConfig.field | gridTranslate:'column' }}
-                            </span>
-                        </div>
-
-                        <mat-icon>drag_indicator</mat-icon>
-                    </div>
-
-                    <hr>
-                </ng-container>
-            </div>
-        </div>
-    `,
+    selector   : 'au-grid-columns-config-properties-dialog',
+    templateUrl: 'grid-columns-config-properties-dialog.component.html',
+    styleUrls  : ['./grid-columns-config-properties-dialog.component.scss'],
 })
 export class GridColumnsConfigPropertiesDialogComponent implements OnInit
 {
     columnsConfig: ColumnConfig[];
+    originColumnsConfig: ColumnConfig[];
     columnsConfigChange = new EventEmitter<ColumnsConfigChange>();
+    columnsConfigReset = new EventEmitter<void>();
 
     // avoid change columns config of type ACTIONS and CHECKBOX
     get columnsConfigToList (): ColumnConfig[]
     {
-        return this.columnsConfig.filter(column => column.type !== ColumnDataType.CHECKBOX && column.type !== ColumnDataType.ACTIONS);
+        return this.columnsConfig.filter(column =>
+            column.type !== ColumnDataType.CHECKBOX &&
+            column.type !== ColumnDataType.ACTIONS &&
+            column.type !== ColumnDataType.DRAG_AND_DROP,
+        );
     }
 
-    get hasActionsColumn (): boolean
+    get howManyActionsColumn (): number
     {
-        return !!this.columnsConfig.find(column => column.type === ColumnDataType.ACTIONS);
+        return this.columnsConfig.filter(column => column.type === ColumnDataType.ACTIONS).length;
     }
 
-    get hasCheckboxColumn (): boolean
+    get howManyCheckboxColumn (): number
     {
-        return !!this.columnsConfig.find(column => column.type === ColumnDataType.CHECKBOX);
+        return this.columnsConfig.filter(column => column.type === ColumnDataType.CHECKBOX).length;
+    }
+
+    get howManyDragAndDropColumn (): number
+    {
+        return this.columnsConfig.filter(column => column.type === ColumnDataType.DRAG_AND_DROP).length;
     }
 
     constructor(
@@ -84,7 +48,8 @@ export class GridColumnsConfigPropertiesDialogComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.columnsConfig = this.data.columnsConfig;
+        this.columnsConfig = cloneDeep(this.data.columnsConfig);
+        this.originColumnsConfig = cloneDeep(this.data.originColumnsConfig);
     }
 
     drop($event: CdkDragDrop<string[]>): void
@@ -92,14 +57,23 @@ export class GridColumnsConfigPropertiesDialogComponent implements OnInit
         let previousIndex = $event.previousIndex;
         let currentIndex  = $event.currentIndex;
 
-        if (this.hasActionsColumn)
+        // avoid manipulate columns
+        for (let i = 0; i < this.howManyActionsColumn; i++)
         {
-            previousIndex++; currentIndex++;
+            previousIndex++;
+            currentIndex++;
         }
 
-        if (this.hasCheckboxColumn)
+        for (let i = 0; i < this.howManyCheckboxColumn; i++)
         {
-            previousIndex++; currentIndex++;
+            previousIndex++;
+            currentIndex++;
+        }
+
+        for (let i = 0; i < this.howManyDragAndDropColumn; i++)
+        {
+            previousIndex++;
+            currentIndex++;
         }
 
         moveItemInArray(
@@ -114,13 +88,21 @@ export class GridColumnsConfigPropertiesDialogComponent implements OnInit
         });
     }
 
-    handleChangeActiveColumn($event, column): void
+    handleChangeVisibilityColumn($event, columnConfig): void
     {
-        const index = this.columnsConfig.map(c => c.sort).indexOf(column.sort);
+        const index = this.columnsConfig.map(columnConfig => columnConfig.field).indexOf(columnConfig.field);
         this.columnsConfig[index].hidden = !$event.checked;
 
         this.columnsConfigChange.emit({
             columnsConfig: this.columnsConfig,
+            event        : $event,
+        });
+    }
+
+    resetColumnsConfig($event): void
+    {
+        this.columnsConfigChange.emit({
+            columnsConfig: this.originColumnsConfig,
             event        : $event,
         });
     }

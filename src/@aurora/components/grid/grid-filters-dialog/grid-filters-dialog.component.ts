@@ -1,19 +1,21 @@
-import { ColumnConfig, ColumnDataType, FilterCriteriaOperator, FilterDialogResponse, GridColumnFilter, GridOperatorsMessages } from '../grid.types';
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Operator, Utils } from '@aurora';
-import { GridTranslationsService } from '../grid-translations/grid-translations.service';
 import { map, Observable, startWith } from 'rxjs';
+import { ColumnConfig, ColumnDataType, FilterCriteriaOperator, FilterDialogResponse, GridColumnFilter, GridOperatorsMessages } from '../grid.types';
+import { GridTranslationsService } from '../grid-translations/grid-translations.service';
 
 @Component({
-    selector   : 'au-grid-filters-dialog',
-    templateUrl: 'grid-filters-dialog.component.html',
-    styleUrls  : ['grid-filters-dialog.component.scss'],
+    selector       : 'au-grid-filters-dialog',
+    templateUrl    : 'grid-filters-dialog.component.html',
+    styleUrls      : ['grid-filters-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GridFiltersDialogComponent implements OnInit
 {
+    gridId: string = 'grid';
     columnsConfig: ColumnConfig[] = [];
     // form control picking for fields search from autocomplete
     searchFieldNameControl = new FormControl();
@@ -46,6 +48,8 @@ export class GridFiltersDialogComponent implements OnInit
         this.containerForm = this.fb.group({
             formColumnFilter: this.fb.array([]),
         });
+
+        this.gridId = data.gridId || this.gridId;
     }
 
     // string criteria information
@@ -104,7 +108,8 @@ export class GridFiltersDialogComponent implements OnInit
             .filter(columnConfig =>
                 columnConfig.filterable !== false &&
                 columnConfig.type !== ColumnDataType.ACTIONS &&
-                columnConfig.type !== ColumnDataType.CHECKBOX,
+                columnConfig.type !== ColumnDataType.CHECKBOX &&
+                columnConfig.type !== ColumnDataType.DRAG_AND_DROP,
             );
 
         // cerate subscription for filter columns in autocomplete component
@@ -116,7 +121,7 @@ export class GridFiltersDialogComponent implements OnInit
             );
 
         // set operator translations
-        this.operatorsMessages = this.gridTranslationsService.operatorsMessages;
+        this.operatorsMessages = this.gridTranslationsService.getOperatorsMessages(this.gridId);
 
         // add active filters
         if (this.data.activatedColumnFilters.length > 0) this.generatePreviousDataForm(this.data.activatedColumnFilters);
@@ -152,7 +157,8 @@ export class GridFiltersDialogComponent implements OnInit
         // translation is used to compare because it is what the users will see on screen (and what is relevant to them)
         return this.columnsConfig.filter(columnConfig =>
         {
-            const translation = Utils.removeSpecialCharacters(this.gridTranslationsService.columnMessages[columnConfig.field].getValue()).toLowerCase();
+            // set scope of columnMessages with gridId
+            const translation = Utils.removeSpecialCharacters(this.gridTranslationsService.columnMessages[this.gridId][columnConfig.field].getValue()).toLowerCase();
             const searchTerm  = Utils.removeSpecialCharacters(value).toLowerCase();
             return translation.includes(searchTerm);
         });

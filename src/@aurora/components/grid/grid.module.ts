@@ -36,6 +36,7 @@ import { GridTranslatePipe } from './grid-translations/grid-translate.pipe';
 import { HasCellValueTemplatePipe } from './pipes/has-cell-value-template.pipe';
 import { HasCellValueWithFieldTemplatePipe } from './pipes/has-cell-value-with-field-template.pipe';
 import { HasRenderOutboxPipe } from './grid-filters-dialog/pipes/has-render-outbox.pipe';
+import { IsOriginColumnConfigPipe } from './pipes/is-origin-column-config.pipe';
 import { TransformDataCellPipe } from './pipes/transform-data-cell.pipe';
 
 // components & directives
@@ -90,20 +91,21 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
         CellValueTemplateDirective,
         CheckTranslationObjectPipe,
         FilterGridCustomHeaderTemplatesPositionPipe,
-        GridColumnsConfigPropertiesDialogComponent,
-        GridCustomHeaderTemplateDirective,
         FilterOperatorsPipe,
         GetActionsPipe,
         GetContactOperatorPipe,
         GetPipe,
+        GridColumnsConfigPropertiesDialogComponent,
         GridColumnTranslationComponent,
         GridComponent,
+        GridCustomHeaderTemplateDirective,
         GridFiltersDialogComponent,
         GridTranslatePipe,
         GridTranslationsComponent,
         HasCellValueTemplatePipe,
         HasCellValueWithFieldTemplatePipe,
         HasRenderOutboxPipe,
+        IsOriginColumnConfigPipe,
         TransformDataCellPipe,
         TranslationMenuComponent,
     ],

@@ -1,6 +1,6 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { Operator } from '@aurora/modules';
+import { Action, Operator } from '@aurora';
 import { BehaviorSubject } from 'rxjs';
 
 export interface ColumnConfig
@@ -14,15 +14,20 @@ export interface ColumnConfig
     headerClass?: string | string[];
     bodyClass?: string | string[];
     sticky?: boolean;
-    actions?: (item: any) => ColumnConfigAction[];
-    transform?: (item: any) => any;
+    actions?: (row: any) => ColumnConfigAction[];
+    transform?: (row: any) => any;
 }
 
-export interface ColumnConfigAction
+export interface ColumnConfigAction extends Action
 {
-    id: string;
-    icon: string;
+    icon?: string;
+    svgIcon?: string;
     translation?: string;
+    badge?: {
+        hidden?: boolean;
+        color?: 'primary' | 'accent' | 'warn' ;
+        label?: string;
+    };
 }
 
 export interface ColumnsConfigChange
@@ -34,11 +39,19 @@ export interface ColumnsConfigChange
 export enum ColumnDataType
 {
     ACTIONS = 'ACTIONS',
+    BOOLEAN = 'BOOLEAN',
     CHECKBOX = 'CHECKBOX',
     DATE = 'DATE',
+    DRAG_AND_DROP= 'DRAG_AND_DROP',
     NUMBER = 'NUMBER',
     STRING = 'STRING',
     TRANSLATIONS_MENU = 'TRANSLATIONS_MENU',
+}
+
+export interface ColumnFilterStorage
+{
+    id: string; // id of grid where apply filter
+    gridState: GridState;
 }
 
 export type FilterColumnDataType = ColumnDataType.STRING | ColumnDataType.NUMBER | ColumnDataType.DATE;
@@ -100,9 +113,11 @@ export interface GridMessages
     columns: BehaviorSubject<string>;
     field: BehaviorSubject<string>;
     filter: BehaviorSubject<string>;
+    noData: BehaviorSubject<string>;
     operator: BehaviorSubject<string>;
     OR: BehaviorSubject<string>;
     pleaseSelectField: BehaviorSubject<string>;
+    resetColumnsConfig: BehaviorSubject<string>;
     translations: BehaviorSubject<string>;
     value: BehaviorSubject<string>;
 }
@@ -136,6 +151,5 @@ export interface GridState
     count?: number;
     limit?: number;
     offset?: number;
-    sort?: string | string[];
-    order?: string;
+    order?: any;
 }

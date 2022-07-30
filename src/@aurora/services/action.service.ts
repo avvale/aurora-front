@@ -7,8 +7,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ActionService
 {
-    currentViewAction: Action;
-
     private _action: BehaviorSubject<Action> = new BehaviorSubject(null);
     private cache = {};
 
@@ -38,13 +36,15 @@ export class ActionService
 
         const cachedAction = { ...action, data: this.getCache(action.id) };
 
-        // set current template action to modify the view
-        if (action.isViewAction) this.currentViewAction = action;
-
         this._action.next(cachedAction);
 
         log('[DEBUG] Handle action: ', cachedAction);
 
         return action;
+    }
+
+    clear(): void
+    {
+        this._action = new BehaviorSubject(null);
     }
 }

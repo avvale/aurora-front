@@ -6,6 +6,7 @@ import { GridTranslationsService } from '../grid-translations/grid-translations.
 export class PaginatorIntlService extends MatPaginatorIntl
 {
     ofLabel: string;
+    gridId: string = 'grid';
 
     constructor(
         private gridTranslationsService: GridTranslationsService,
@@ -18,7 +19,7 @@ export class PaginatorIntlService extends MatPaginatorIntl
     init(): void
     {
         this.gridTranslationsService
-            .getPaginatorMessages()
+            .getPaginatorMessages(this.gridId)
             .subscribe(paginatorMessages =>
             {
                 this.firstPageLabel = paginatorMessages.firstPageLabel;

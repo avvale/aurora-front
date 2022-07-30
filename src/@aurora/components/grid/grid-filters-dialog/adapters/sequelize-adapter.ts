@@ -1,15 +1,17 @@
 import { ColumnDataType, GridColumnFilter, GridState } from '../../grid.types';
 import { ContactOperator, Operator, QueryStatement } from '@aurora';
-import * as _ from 'lodash';
+import groupBy from 'lodash-es/groupBy';
+
 
 export const setQueryFilters = (gridState: GridState): QueryStatement =>
 {
-    const groupedFilters = _.groupBy(gridState.filters, 'field');
+    if (!gridState) return {};
+
+    const groupedFilters = groupBy(gridState.filters, 'field');
     const pagination = {
-        query : { where: {}},
+        where : {},
         limit : gridState.limit,
         offset: gridState.offset,
-        sort  : gridState.sort,
         order : gridState.order,
     };
 
@@ -19,13 +21,13 @@ export const setQueryFilters = (gridState: GridState): QueryStatement =>
         if (groupedFilters[key].length === 1)
         {
             const filter: GridColumnFilter = groupedFilters[key][0];
-            pagination.query.where[key] = {
+            pagination.where[key] = {
                 [filter.operator]: filter.value,
             };
         }
         else if (groupedFilters[key].length > 1)
         {
-            pagination.query.where[key] = {
+            pagination.where[key] = {
                 [getContactOperator(groupedFilters[key][0].type)]: groupedFilters[key].map(filter => ({ [filter.operator]: filter.value })),
             };
         }

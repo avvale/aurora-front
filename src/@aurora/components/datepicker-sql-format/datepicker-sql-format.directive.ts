@@ -20,8 +20,9 @@ export class DatepickerSqlFormatDirective
         this.control
             .control
             .setValue(
-                dayjs($event.value)
-                    .format(this.format),
+                $event.value === null ?
+                    null
+                    : dayjs($event.value).format(this.format),
             );
     }
 }

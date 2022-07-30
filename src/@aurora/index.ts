@@ -5,5 +5,6 @@ export * from './foundations';
 export * from './functions';
 export * from './modules';
 export * from './pipes';
+export * from './rxjs';
 export * from './services';
 export * from './aurora.types';

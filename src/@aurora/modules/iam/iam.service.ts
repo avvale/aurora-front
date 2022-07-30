@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { first, map, Observable, of, ReplaySubject, tap } from 'rxjs';
-import { GraphQLService } from '@aurora/modules/graphql/graphql.service';
+import { GraphQLService, UserDataStorageService } from '@aurora';
 import { iamMeAccount } from './iam.graphql';
 import { Account } from './iam.types';
 
@@ -10,12 +10,14 @@ import { Account } from './iam.types';
 export class IamService
 {
     private _account: ReplaySubject<Account> = new ReplaySubject<Account>(1);
+    private currentAccount: Account;
 
     /**
      * Constructor
      */
     constructor(
         private graphqlService: GraphQLService,
+        private userDataStorageService: UserDataStorageService,
     )
     {
     }
@@ -33,11 +35,17 @@ export class IamService
     {
         // Store the value
         this._account.next(value);
+        this.currentAccount = value;
     }
 
     get account$(): Observable<Account>
     {
         return this._account.asObservable();
+    }
+
+    get me(): Account
+    {
+        return this.currentAccount;
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -58,7 +66,8 @@ export class IamService
             .pipe(
                 first(),
                 map<{ data: { iamMeAccount: Account; };}, { me: Account; }>(result => ({ me: result.data.iamMeAccount })),
-                tap(data => this._account.next(data.me)),
+                tap(data => this.account = data.me),
+                tap(data => this.userDataStorageService.dataSubject$.next(data.me.user.data)),
             );
     }
 
