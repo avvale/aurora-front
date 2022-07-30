@@ -1,4 +1,3 @@
-import { FetchResult } from '@apollo/client/core';
 import { UserDataStorage } from '@aurora/aurora.types';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -13,9 +12,9 @@ export abstract class UserDataStorageService<T = UserDataStorage>
 
     abstract getUserData(keyUserData: string): Observable<T>;
 
-    abstract updateUserData<T>(keyUserData: string, keyUserDataValue: any): Observable<FetchResult<T>>;
+    abstract updateUserData(keyUserData: string, keyUserDataValue: any): Observable<void>;
 
-    abstract saveUserData<T>(data: UserDataStorage): Observable<FetchResult<T>>;
+    abstract saveUserData(data: UserDataStorage): Observable<void>;
 
-    abstract clearUserData<T>(): Observable<FetchResult<T>>;
+    abstract clearUserData(): Observable<void>;
 }

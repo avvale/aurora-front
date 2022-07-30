@@ -49,12 +49,6 @@ export class LayoutComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        // manage initial data
-        this._activatedRoute.data.subscribe(({ initialData }) =>
-        {
-            this.iamService.me = initialData.iamService.me;
-        });
-
         // Set the theme and scheme based on the configuration
         combineLatest([
             this._fuseConfigService.config$,

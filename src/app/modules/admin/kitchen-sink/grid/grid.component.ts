@@ -148,9 +148,9 @@ export class GridComponent extends ViewBaseComponent
 
     onRunAction(action: Action): void
     {
-        this.currentActionId = action.id;
+        this.currentAction = action;
 
-        switch (this.currentActionId)
+        switch (action?.id)
         {
             case 'pagination':
                 this.dataEvent = { ...this.dataEvent, ...action.data.event };
