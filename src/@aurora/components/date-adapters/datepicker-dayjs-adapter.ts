@@ -1,10 +1,22 @@
+import { Inject, Optional } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 import * as dayjs from 'dayjs';
 import * as customParseFormat from 'dayjs/plugin/customParseFormat';
 import * as localizedFormat from 'dayjs/plugin/localizedFormat';
-import 'dayjs/locale/es';
-import { Inject, Optional } from '@angular/core';
+import * as locale from 'dayjs/locale/es';
+
+/* const locales = {
+    es: () => import('dayjs/locale/es'),
+    de: () => import('dayjs/locale/de'),
+    en: () => import('dayjs/locale/en'),
+  }
+  
+  function loadLocale (language) {
+    locales[language]().then(() => dayjs.locale(language))
+  } */
+
+
 
 export class DatePickerDayjsAdapter extends NativeDateAdapter
 {
@@ -16,7 +28,7 @@ export class DatePickerDayjsAdapter extends NativeDateAdapter
     {
         super(matDateLocale, platform);
 
-        dayjs.locale('es');
+        //dayjs.locale('es');
         dayjs.extend(customParseFormat);
         dayjs.extend(localizedFormat);
     }

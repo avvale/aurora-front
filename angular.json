@@ -38,7 +38,17 @@
                             "flat",
                             "moment",
                             "quill",
-                            "dayjs/locale/es"
+                            "dayjs",
+                            "dayjs/locale/es",
+                            "dayjs/locale/en",
+                            "dayjs/plugin/advancedFormat",
+                            "dayjs/plugin/arraySupport",
+                            "dayjs/plugin/localizedFormat",
+                            "dayjs/plugin/customParseFormat",
+                            "dayjs/plugin/timezone",
+                            "dayjs/plugin/isoWeek",
+                            "dayjs/plugin/utc",
+                            "dayjs/plugin/weekOfYear"
                         ],
                         "assets": [
                             "src/favicon-16x16.png",
