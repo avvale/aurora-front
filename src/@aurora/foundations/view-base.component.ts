@@ -50,7 +50,7 @@ export class ViewBaseComponent implements OnInit, OnDestroy
             .subscribe(async action =>
             {
                 // set current view action to modify the view
-                if (action.isViewAction) this.currentViewAction = action;
+                if (action?.isViewAction) this.currentViewAction = action;
 
                 // set current action to modify the view
                 this.currentAction = action;
