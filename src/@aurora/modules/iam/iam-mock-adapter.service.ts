@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { first, map, Observable, of, ReplaySubject, tap } from 'rxjs';
-import { GraphQLService, UserDataStorageService } from '@aurora';
-import { iamMeAccount } from './iam.graphql';
+import { Observable, of, ReplaySubject } from 'rxjs';
+import { UserDataStorageService } from '@aurora';
 import { Account } from './iam.types';
 import { IamService } from './iam.service';
+import { account } from './data';
 
 @Injectable({
     providedIn: 'root',
 })
-export class IamAuroraAdapterService extends IamService
+export class IamMockAdapterService extends IamService
 {
     private _account$: ReplaySubject<Account> = new ReplaySubject<Account>(1);
     private _account: Account;
@@ -17,7 +17,6 @@ export class IamAuroraAdapterService extends IamService
      * Constructor
      */
     constructor(
-        private graphqlService: GraphQLService,
         private userDataStorageService: UserDataStorageService,
     )
     {
@@ -59,18 +58,9 @@ export class IamAuroraAdapterService extends IamService
      */
     get(): Observable<{ me: Account; }>
     {
-        return this.graphqlService
-            .client()
-            .watchQuery<{ account: Account; }>({
-                query: iamMeAccount,
-            })
-            .valueChanges
-            .pipe(
-                first(),
-                map<{ data: { iamMeAccount: Account; };}, { me: Account; }>(result => ({ me: result.data.iamMeAccount })),
-                tap(data => this.account = data.me),
-                tap(data => this.userDataStorageService.dataSubject$.next(data.me.user.data)),
-            );
+        this.account = account;
+        this.userDataStorageService.dataSubject$.next(this.me.user.data);
+        return of({ me: this.me });
     }
 
     /**
