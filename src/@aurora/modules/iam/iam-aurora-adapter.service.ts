@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { first, map, Observable, of, ReplaySubject, tap } from 'rxjs';
-import { GraphQLService, IamService, UserDataStorageService } from '@aurora';
+import { GraphQLService, UserDataStorageService } from '@aurora';
 import { iamMeAccount } from './iam.graphql';
 import { Account } from './iam.types';
+import { IamService } from './iam.service';
 
 @Injectable({
     providedIn: 'root',
