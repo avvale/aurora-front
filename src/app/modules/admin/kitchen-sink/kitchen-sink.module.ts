@@ -3,7 +3,8 @@ import { RouterModule } from '@angular/router';
 import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import { FuseConfirmationModule } from '@fuse/services/confirmation';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
-import { DatePickerDayjsAdapter, DatePickerDayjsFormats, DatepickerModule, ValidationMessagesModule, DecimalModule, DatepickerSqlFormatModule } from '@aurora';
+import { DatePickerDayjsAdapter, DatePickerDayjsFormats, DatepickerModule, ValidationMessagesModule, DecimalModule, DatepickerSqlFormatModule, DateTimePickerDayjsAdapter, DatetimePickerDayjsFormats } from '@aurora';
+import { DatetimeAdapter, MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { SharedModule } from 'app/shared/shared.module';
@@ -33,7 +34,6 @@ import { GridComponent } from './grid/grid.component';
 import { kitchenSink } from './kitchen-sink.menu';
 import { DatesComponent } from './dates/dates.component';
 import { SelectsComponent } from './selects/selects.component';
-
 
 @NgModule({
     imports: [
@@ -89,6 +89,14 @@ import { SelectsComponent } from './selects/selects.component';
         {
             provide : MAT_DATE_FORMATS,
             useValue: DatePickerDayjsFormats,
+        },
+        {
+            provide : DatetimeAdapter,
+            useClass: DateTimePickerDayjsAdapter,
+        },
+        {
+            provide : MTX_DATETIME_FORMATS,
+            useValue: DatetimePickerDayjsFormats,
         },
     ],
 })

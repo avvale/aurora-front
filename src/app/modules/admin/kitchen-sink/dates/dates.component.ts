@@ -56,6 +56,9 @@ export class DatesComponent extends ViewDetailComponent
             example3: ['', [Validators.required]],
             example4: ['2022-06-07', [Validators.required]],
             example5: ['2022-06-08', [Validators.required]],
+            example6: ['', [Validators.required]],
+            example7: ['', [Validators.required]],
+            example8: ['', [Validators.required]],
         });
     }
 }

@@ -106,6 +106,92 @@
                         <mat-datepicker #dp5></mat-datepicker>
                     </mat-form-field>
 
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-start-1 col-4"
+                    >
+                        <mat-label>{{ t('kitchenSink.Example6') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="example6"
+                            [auDatetimepickerSqlFormat]
+                            [mtxDatetimepicker]="dp6"
+                        >
+                        <mtx-datetimepicker-toggle
+                            [for]="dp6"
+                            matSuffix
+                        ></mtx-datetimepicker-toggle>
+                        <mtx-datetimepicker
+                            #dp6
+                            type="datetime"
+                            mode="landscape"
+                            [multiYearSelector]="false"
+                            startView="month"
+                            [twelvehour]="false"
+                            [timeInterval]="1"
+                            [touchUi]="false"
+                        >
+                        </mtx-datetimepicker>
+                    </mat-form-field>
+
+                    <mat-form-field
+                        small
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>{{ t('kitchenSink.Example7') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="example7"
+                            [auDatetimepickerSqlFormat]
+                            [mtxDatetimepicker]="dp7"
+                        >
+                        <mtx-datetimepicker-toggle
+                            [for]="dp7"
+                            matSuffix
+                        ></mtx-datetimepicker-toggle>
+                        <mtx-datetimepicker
+                            #dp7
+                            type="datetime"
+                            mode="landscape"
+                            [multiYearSelector]="false"
+                            startView="month"
+                            [twelvehour]="false"
+                            [timeInterval]="1"
+                            [touchUi]="false"
+                        >
+                        </mtx-datetimepicker>
+                    </mat-form-field>
+
+                    <mat-form-field
+                        tiny
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>{{ t('kitchenSink.Example8') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="example8"
+                            [auDatetimepickerSqlFormat]
+                            [mtxDatetimepicker]="dp8"
+                        >
+                        <mtx-datetimepicker-toggle
+                            [for]="dp8"
+                            matSuffix
+                        ></mtx-datetimepicker-toggle>
+                        <mtx-datetimepicker
+                            #dp8
+                            type="datetime"
+                            mode="landscape"
+                            [multiYearSelector]="false"
+                            startView="month"
+                            [twelvehour]="false"
+                            [timeInterval]="1"
+                            [touchUi]="false"
+                        >
+                        </mtx-datetimepicker>
+                    </mat-form-field>
+
                 </div>
 
             </form>
