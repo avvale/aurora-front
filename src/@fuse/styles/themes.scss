@@ -170,7 +170,7 @@ body .dark {
 
     /* Use all-component-colors to only generate the colors */
     @include mat.all-component-colors($dark-theme);
-   
+
     /* Set colors styles for @ng-matero/extensions package */
     @include mtx.all-component-themes($dark-theme);
     @include mtx.all-experimental-component-themes($dark-theme);
