@@ -11,12 +11,23 @@
         </div>
 
         <div>
-            <!-- beforeGriButtons position custom header template -->
-            <ng-container *ngFor="let gridCustomHeader of gridCustomHeadersTemplate | filterGridCustomHeaderTemplatesPositionPipe:'beforeGriButtons'">
+            <!-- beforeGridButtons position custom header template -->
+            <ng-container *ngFor="let gridCustomHeader of gridCustomHeadersTemplate | filterGridCustomHeaderTemplatesPositionPipe:'beforeGridButtons'">
                 <ng-container
                     *ngTemplateOutlet="gridCustomHeader.templateRef"
                 ></ng-container>
             </ng-container>
+
+            <!-- search component -->
+            <au-grid-search
+                [debounce]="1000"
+                [minLength]="5"
+                (searchOpen)="handleSearchOpen()"
+                (searchClose)="handleSearchClose()"
+                (search)="handleSearch($event)"
+                class="mr-2"
+            >
+            </au-grid-search>
 
             <!-- filter dialog -->
             <button
@@ -102,12 +113,12 @@
                                 <div *ngFor="let cellValueTemplate of cellValuesTemplate">
                                     <div *ngIf="(cellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
                                         <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig }"
+                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig, row }"
                                         ></ng-container>
                                     </div>
                                     <div *ngIf="!(cellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
                                         <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig }"
+                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig, row }"
                                         ></ng-container>
                                     </div>
                                 </div>
@@ -138,12 +149,12 @@
                                 <div *ngFor="let cellValueTemplate of cellValuesTemplate">
                                     <div *ngIf="(cellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
                                         <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig }"
+                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig, row }"
                                         ></ng-container>
                                     </div>
                                     <div *ngIf="!(cellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
                                         <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig }"
+                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig, row }"
                                         ></ng-container>
                                     </div>
                                 </div>
@@ -174,12 +185,12 @@
                                 <div *ngFor="let cellValueTemplate of cellValuesTemplate">
                                     <div *ngIf="(cellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
                                         <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig }"
+                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig, row }"
                                         ></ng-container>
                                     </div>
                                     <div *ngIf="!(cellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
                                         <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig }"
+                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig, row }"
                                         ></ng-container>
                                     </div>
                                 </div>
@@ -210,12 +221,12 @@
                                 <div *ngFor="let cellValueTemplate of cellValuesTemplate">
                                     <div *ngIf="(cellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
                                         <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig }"
+                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig, row }"
                                         ></ng-container>
                                     </div>
                                     <div *ngIf="!(cellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
                                         <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig }"
+                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | get:columnConfig.field, columnConfig, row }"
                                         ></ng-container>
                                     </div>
                                 </div>

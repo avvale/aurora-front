@@ -21,6 +21,21 @@ export class Utils
         return dayjs();
     }
 
+    public static nowTimestamp(): string
+    {
+        return dayjs().format('YYYY-MM-DD H:mm:ss');
+    }
+
+    public static nowDate(): string
+    {
+        return dayjs().format('YYYY-MM-DD');
+    }
+
+    public static timezone(): string
+    {
+        return dayjs.tz.guess();
+    }
+
     static uuid(): string
     {
         return uuidv4();

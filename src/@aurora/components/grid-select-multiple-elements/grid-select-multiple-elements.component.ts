@@ -1,17 +1,20 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter, Input, Output, QueryList } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { Action } from '@aurora/aurora.types';
 import { GridDialogComponent } from '../grid-dialog/grid-dialog.component';
 import { ColumnConfig, GridColumnFilter, GridData, GridState } from '../grid/grid.types';
-import { GridCustomButtonsHeaderTemplateDirective } from './grid-custom-buttons-header-template.directive';
+import { GridSelectMultipleCellValueDialogTemplateDirective } from './directives/grid-select-multiple-cell-value-dialog-template.directive';
+import { GridSelectMultipleCellValueTemplateDirective } from './directives/grid-select-multiple-cell-value-template.directive';
+import { GridSelectMultipleCustomHeaderDialogTemplateDirective } from './directives/grid-select-multiple-custom-header-dialog-template.directive';
+import { GridSelectMultipleCustomHeaderTemplateDirective } from './directives/grid-select-multiple-custom-header-template.directive';
 
 @Component({
-    selector       : 'au-select-multiple-elements-grid',
-    templateUrl    : './select-multiple-elements-grid.component.html',
+    selector       : 'au-grid-select-multiple-elements',
+    templateUrl    : './grid-select-multiple-elements.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectMultipleElementsGridComponent
+export class GridSelectMultipleElementsComponent
 {
     elementsDialogRef: MatDialogRef<GridDialogComponent>;
 
@@ -54,7 +57,12 @@ export class SelectMultipleElementsGridComponent
     @Input() selectedItemsData: GridData;
 
     // add custom buttons header
-    @ContentChild(GridCustomButtonsHeaderTemplateDirective) gridCustomButtonsHeaderTemplate?: GridCustomButtonsHeaderTemplateDirective;
+    @ContentChild(GridSelectMultipleCustomHeaderTemplateDirective) gridSelectMultipleCustomHeadersTemplate?: GridSelectMultipleCustomHeaderTemplateDirective;
+    @ContentChildren(GridSelectMultipleCustomHeaderDialogTemplateDirective) gridSelectMultipleCustomHeadersDialogTemplate?: QueryList<GridSelectMultipleCustomHeaderDialogTemplateDirective>;
+
+    // directive to set custom values in cells
+    @ContentChildren(GridSelectMultipleCellValueTemplateDirective) gridSelectMultipleCellValuesTemplate?: QueryList<GridSelectMultipleCellValueTemplateDirective>;
+    @ContentChildren(GridSelectMultipleCellValueDialogTemplateDirective) gridSelectMultipleCellValuesDialogTemplate?: QueryList<GridSelectMultipleCellValueDialogTemplateDirective>;
 
     // outputs
     @Output() action = new EventEmitter<Action>();
@@ -86,13 +94,15 @@ export class SelectMultipleElementsGridComponent
                 ...dialogConfig,
                 ...{
                     data: {
-                        activatedColumnFilters: this.dialogActivatedColumnFilters,
-                        columnsConfig         : this.dialogColumnsConfig,
-                        gridData              : this.dialogGridData,
-                        gridId                : this.dialogGridId,
-                        originColumnsConfig   : this.dialogOriginColumnsConfig,
-                        selectedRows          : this.dialogSelectedRows,
-                        title                 : this.dialogTitle,
+                        activatedColumnFilters   : this.dialogActivatedColumnFilters,
+                        columnsConfig            : this.dialogColumnsConfig,
+                        gridData                 : this.dialogGridData,
+                        gridId                   : this.dialogGridId,
+                        originColumnsConfig      : this.dialogOriginColumnsConfig,
+                        selectedRows             : this.dialogSelectedRows,
+                        title                    : this.dialogTitle,
+                        gridCustomHeadersTemplate: this.gridSelectMultipleCustomHeadersDialogTemplate,
+                        gridCellValuesTemplate   : this.gridSelectMultipleCellValuesDialogTemplate,
                         ...dialogConfig?.data,
                     },
                 },

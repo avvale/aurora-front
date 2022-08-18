@@ -1,10 +1,11 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, Output, QueryList, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, Output, QueryList, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SelectionChange } from '@angular/cdk/collections';
 import { Action } from '@aurora/aurora.types';
 import { Observable } from 'rxjs';
 import { ColumnConfig, GridColumnFilter, GridCustomHeaderTemplateDirective, GridData, GridState } from '../grid';
 import { GridComponent } from '../grid/grid/grid.component';
+import { GridCellValueTemplateDirective } from '../grid/directives/grid-cell-value-template.directive';
 
 @Component({
     selector       : 'au-grid-dialog',
@@ -12,7 +13,7 @@ import { GridComponent } from '../grid/grid/grid.component';
     styleUrls      : ['grid-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GridDialogComponent implements AfterViewInit
+export class GridDialogComponent
 {
     gridId: string = 'grid';
     set gridData(gridData: GridData)
@@ -47,6 +48,7 @@ export class GridDialogComponent implements AfterViewInit
         @Inject(MAT_DIALOG_DATA) public data: {
             activatedColumnFilters: GridColumnFilter[];
             columnsConfig: ColumnConfig[] | Observable<ColumnConfig[]>;
+            gridCellValuesTemplate: QueryList<GridCellValueTemplateDirective>;
             gridCustomHeadersTemplate: QueryList<GridCustomHeaderTemplateDirective>;
             gridData: GridData | Observable<GridData>;
             gridId: string;
@@ -77,11 +79,5 @@ export class GridDialogComponent implements AfterViewInit
         }
 
         this.gridId = data.gridId || this.gridId;
-    }
-
-    ngAfterViewInit(): void
-    {
-        if (this.data.gridCustomHeadersTemplate)
-            this.gridComponent.gridCustomHeadersTemplate = this.data.gridCustomHeadersTemplate;
     }
 }

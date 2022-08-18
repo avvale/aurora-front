@@ -142,7 +142,7 @@ export class GridFiltersDialogComponent implements OnInit
     handleCloseDialog(): FilterDialogResponse
     {
         return {
-            filters: this.formColumnFilter.value,
+            columnFilters: this.formColumnFilter.value,
         };
     }
 
@@ -228,7 +228,7 @@ export class GridFiltersDialogComponent implements OnInit
     handleRemoveFilters(): FilterDialogResponse
     {
         return {
-            filters: [],
+            columnFilters: [],
         };
     }
 }

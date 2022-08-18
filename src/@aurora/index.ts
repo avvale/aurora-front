@@ -3,6 +3,7 @@ export * from './components';
 export * from './directives';
 export * from './foundations';
 export * from './functions';
+export * from './icons';
 export * from './modules';
 export * from './pipes';
 export * from './rxjs';

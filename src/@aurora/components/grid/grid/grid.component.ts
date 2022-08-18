@@ -7,7 +7,7 @@ import { MatSort } from '@angular/material/sort';
 
 // aurora
 import { ColumnConfig, ColumnConfigAction, ColumnDataType, GridData, GridColumnFilter, GridState } from '../grid.types';
-import { CellValueTemplateDirective } from '../directives/cell-value-template.directive';
+import { GridCellValueTemplateDirective } from '../directives/grid-cell-value-template.directive';
 import { GridCustomHeaderTemplateDirective } from '../directives/grid-custom-header-template.directive';
 import { GridColumnsConfigPropertiesDialogComponent } from '../grid-columns-config-properties-dialog/grid-columns-config-properties-dialog.component';
 import { GridFiltersDialogComponent } from '../grid-filters-dialog/grid-filters-dialog.component';
@@ -60,7 +60,7 @@ export class GridComponent implements OnInit, AfterViewInit
     @ViewChild(MatSort) sort: MatSort;
 
     // directive to set custom values in cells
-    @ContentChildren(CellValueTemplateDirective) cellValuesTemplate?: QueryList<CellValueTemplateDirective>;
+    @ContentChildren(GridCellValueTemplateDirective) cellValuesTemplate?: QueryList<GridCellValueTemplateDirective>;
 
     // add custom header
     @ContentChildren(GridCustomHeaderTemplateDirective) gridCustomHeadersTemplate?: QueryList<GridCustomHeaderTemplateDirective>;
@@ -117,9 +117,9 @@ export class GridComponent implements OnInit, AfterViewInit
                     tap(() =>
                     {
                         const gridState = {
-                            filters: this.activatedColumnFilters,
-                            count  : this.paginator.length,
-                            offset :
+                            columnFilters: this.activatedColumnFilters,
+                            count        : this.paginator.length,
+                            offset       :
                                 this.paginator.pageIndex *
                                 this.paginator.pageSize,
                             limit: this.paginator.pageSize,
@@ -209,14 +209,14 @@ export class GridComponent implements OnInit, AfterViewInit
                 if (res === undefined) return;
 
                 // this saves filters so they are kept after closing the dialog
-                this.activatedColumnFilters = res.filters;
+                this.activatedColumnFilters = res.columnFilters;
 
                 const gridState = {
-                    filters: this.activatedColumnFilters,
-                    count  : this.paginator.length,
-                    offset : 0,
-                    limit  : this.paginator.pageSize,
-                    order  : [[this.sort.active, this.sort.direction]],
+                    columnFilters: this.activatedColumnFilters,
+                    count        : this.paginator.length,
+                    offset       : 0,
+                    limit        : this.paginator.pageSize,
+                    order        : [[this.sort.active, this.sort.direction]],
                 };
 
                 // emit event
@@ -226,6 +226,24 @@ export class GridComponent implements OnInit, AfterViewInit
                 // refresh view to update number of filters activated
                 this.changeDetection.markForCheck();
             });
+    }
+
+    /*
+    * manage grid search
+    */
+    handleSearchOpen(): void
+    {
+        console.log('handleSearchOpen');
+    }
+
+    handleSearchClose(): void
+    {
+        console.log('handleSearchClose');
+    }
+
+    handleSearch($event): void
+    {
+        console.log('handleSearch', $event);
     }
 
     /**

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SelectElementGridComponent } from './select-element-grid.component';
+import { GridSelectElementComponent } from './grid-select-element.component';
 import { GridDialogModule } from '../grid-dialog';
 
 @NgModule({
@@ -8,12 +8,12 @@ import { GridDialogModule } from '../grid-dialog';
         GridDialogModule,
     ],
     declarations: [
-        SelectElementGridComponent,
+        GridSelectElementComponent,
     ],
     exports: [
-        SelectElementGridComponent,
+        GridSelectElementComponent,
     ],
 })
 
-export class SelectElementGridModule
+export class GridSelectElementModule
 { }

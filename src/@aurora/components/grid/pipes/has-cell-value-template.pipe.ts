@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, QueryList } from '@angular/core';
-import { CellValueTemplateDirective } from '../directives/cell-value-template.directive';
+import { GridCellValueTemplateDirective } from '../directives/grid-cell-value-template.directive';
 import { ColumnConfig } from '../grid.types';
 
 /**
@@ -10,7 +10,7 @@ import { ColumnConfig } from '../grid.types';
 })
 export class HasCellValueTemplatePipe implements PipeTransform
 {
-    transform(cellValuesTemplate: QueryList<CellValueTemplateDirective>, columnConfig: ColumnConfig): boolean
+    transform(cellValuesTemplate: QueryList<GridCellValueTemplateDirective>, columnConfig: ColumnConfig): boolean
     {
         return cellValuesTemplate
             .some(

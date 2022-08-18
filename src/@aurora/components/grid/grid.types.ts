@@ -58,7 +58,7 @@ export type FilterColumnDataType = ColumnDataType.STRING | ColumnDataType.NUMBER
 
 export interface FilterDialogResponse
 {
-   filters: GridColumnFilter[];
+   columnFilters: GridColumnFilter[];
 }
 
 export type FilterOperator = Operator.eq | Operator.ne | Operator.startsWith | Operator.endsWith | Operator.substring | Operator.gt | Operator.gte | Operator.lt | Operator.lte;
@@ -84,7 +84,7 @@ export interface GridColumnFilter
     value: string | number;
 }
 
-export type GridCustomHeaderPosition = 'left' | 'right' | 'beforeGriButtons';
+export type GridCustomHeaderPosition = 'left' | 'right' | 'beforeGridButtons';
 
 export interface GridData<T = any>
 {
@@ -147,7 +147,7 @@ export interface GridPaginatorMessages
 
 export interface GridState
 {
-    filters?: GridColumnFilter[];
+    columnFilters?: GridColumnFilter[];
     count?: number;
     limit?: number;
     offset?: number;

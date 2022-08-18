@@ -40,7 +40,7 @@ import { IsOriginColumnConfigPipe } from './pipes/is-origin-column-config.pipe';
 import { TransformDataCellPipe } from './pipes/transform-data-cell.pipe';
 
 // components & directives
-import { CellValueTemplateDirective } from './directives/cell-value-template.directive';
+import { GridCellValueTemplateDirective } from './directives/grid-cell-value-template.directive';
 import { GridCustomHeaderTemplateDirective } from './directives/grid-custom-header-template.directive';
 import { GridColumnsConfigPropertiesDialogComponent } from './grid-columns-config-properties-dialog/grid-columns-config-properties-dialog.component';
 import { GridColumnTranslationComponent } from './grid-translations/grid-column-translation.component';
@@ -50,6 +50,7 @@ import { GridTranslationsService } from './grid-translations/grid-translations.s
 import { GridComponent } from './grid/grid.component';
 import { PaginatorIntlService } from './grid/paginator-intl.service';
 import { TranslationMenuComponent } from './translations-menu/translations-menu.component';
+import { GridSearchComponent } from './grid-search/grid-search.component';
 
 @NgModule({
     entryComponents: [
@@ -88,18 +89,19 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
     ],
     declarations: [
         ActionTranslationObjectPipe,
-        CellValueTemplateDirective,
         CheckTranslationObjectPipe,
         FilterGridCustomHeaderTemplatesPositionPipe,
         FilterOperatorsPipe,
         GetActionsPipe,
         GetContactOperatorPipe,
         GetPipe,
+        GridCellValueTemplateDirective,
         GridColumnsConfigPropertiesDialogComponent,
         GridColumnTranslationComponent,
         GridComponent,
         GridCustomHeaderTemplateDirective,
         GridFiltersDialogComponent,
+        GridSearchComponent,
         GridTranslatePipe,
         GridTranslationsComponent,
         HasCellValueTemplatePipe,
@@ -110,7 +112,7 @@ import { TranslationMenuComponent } from './translations-menu/translations-menu.
         TranslationMenuComponent,
     ],
     exports: [
-        CellValueTemplateDirective,
+        GridCellValueTemplateDirective,
         GridColumnTranslationComponent,
         GridCustomHeaderTemplateDirective,
         GridTranslationsComponent,

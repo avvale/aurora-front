@@ -6,12 +6,12 @@ import { ColumnConfig, GridColumnFilter, GridData, GridState } from '../grid';
 import { GridDialogComponent } from '../grid-dialog/grid-dialog.component';
 
 @Component({
-    selector       : 'au-select-element-grid',
+    selector       : 'au-grid-select-element',
     template       : '',
-    styleUrls      : ['./select-element-grid.component.scss'],
+    styleUrls      : ['./grid-select-element.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectElementGridComponent
+export class GridSelectElementComponent
 {
     @Input() dialogTitle: string;
     @Input() activatedColumnFilters: GridColumnFilter[];

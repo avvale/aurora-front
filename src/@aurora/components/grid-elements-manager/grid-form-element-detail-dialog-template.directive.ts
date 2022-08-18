@@ -1,9 +1,9 @@
 import { Directive, Input, TemplateRef } from '@angular/core';
 
 @Directive({
-    selector: '[auFormElementDetailDialogTemplate]',
+    selector: '[auGridFormElementDetailDialogTemplate]',
 })
-export class FormElementDetailDialogTemplateDirective
+export class GridFormElementDetailDialogTemplateDirective
 {
     @Input() field: string;
 

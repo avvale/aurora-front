@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { ApolloModule as OriginApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { apolloFactory } from './apollo.factory';
@@ -17,6 +18,7 @@ import { AuthService } from '../auth/auth.service';
                 HttpLink,
                 AuthService,
                 FuseConfirmationService,
+                TranslocoService,
             ],
         },
     ],

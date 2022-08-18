@@ -7,7 +7,7 @@ export const setQueryFilters = (gridState: GridState): QueryStatement =>
 {
     if (!gridState) return {};
 
-    const groupedFilters = groupBy(gridState.filters, 'field');
+    const groupedFilters = groupBy(gridState.columnFilters, 'field');
     const pagination = {
         where : {},
         limit : gridState.limit,

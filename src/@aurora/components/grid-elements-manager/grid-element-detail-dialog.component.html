@@ -17,9 +17,9 @@
 		</button>
 	</div>
     <div mat-dialog-content class="flex flex-col my-4 h-full max-h-full">
-        <div *ngIf="data.formElementDetailDialogTemplate">
+        <div *ngIf="data.gridFormElementDetailDialogTemplate">
             <ng-container
-                *ngTemplateOutlet="data.formElementDetailDialogTemplate?.templateRef; context: { $implicit: dialogRef }"
+                *ngTemplateOutlet="data.gridFormElementDetailDialogTemplate?.templateRef; context: { $implicit: dialogRef }"
             >
             </ng-container>
         </div>

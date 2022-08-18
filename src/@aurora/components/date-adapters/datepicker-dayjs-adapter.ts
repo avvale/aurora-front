@@ -6,17 +6,17 @@ import * as customParseFormat from 'dayjs/plugin/customParseFormat';
 import * as localizedFormat from 'dayjs/plugin/localizedFormat';
 import * as locale from 'dayjs/locale/es';
 
-/* const locales = {
+/*
+TODO, crear carga dinámica de idiomas para las Fechas
+const locales = {
     es: () => import('dayjs/locale/es'),
     de: () => import('dayjs/locale/de'),
     en: () => import('dayjs/locale/en'),
-  }
-  
+}
+
   function loadLocale (language) {
     locales[language]().then(() => dayjs.locale(language))
   } */
-
-
 
 export class DatePickerDayjsAdapter extends NativeDateAdapter
 {
@@ -28,7 +28,7 @@ export class DatePickerDayjsAdapter extends NativeDateAdapter
     {
         super(matDateLocale, platform);
 
-        //dayjs.locale('es');
+        dayjs.locale('es');
         dayjs.extend(customParseFormat);
         dayjs.extend(localizedFormat);
     }

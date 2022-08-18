@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Action } from '@aurora/aurora.types';
 import { ColumnConfig, GridColumnFilter, GridData, GridState } from '../grid/grid.types';
-import { ElementDetailDialogComponent } from './element-detail-dialog.component';
-import { FormElementDetailDialogTemplateDirective } from './form-element-detail-dialog-template.directive';
+import { GridElementDetailDialogComponent } from './grid-element-detail-dialog.component';
+import { GridFormElementDetailDialogTemplateDirective } from './grid-form-element-detail-dialog-template.directive';
+import { GridCustomButtonsHeaderDialogTemplateDirective } from './grid-custom-buttons-header-dialog-template.directive';
 
 @Component({
-    selector       : 'au-associated-elements-manager',
-    templateUrl    : './associated-elements-manager.component.html',
+    selector       : 'au-grid-elements-manager',
+    templateUrl    : './grid-elements-manager.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AssociatedElementsManagerComponent
+export class GridElementsManagerComponent
 {
     // component label
     @Input() label: string;
@@ -36,8 +37,10 @@ export class AssociatedElementsManagerComponent
     @Output() dialogOpen = new EventEmitter<void>();
     @Output() stateChange = new EventEmitter<GridState>();
 
+    // add custom buttons header
+    @ContentChild(GridCustomButtonsHeaderDialogTemplateDirective) gridCustomButtonsHeaderDialogTemplate?: GridCustomButtonsHeaderDialogTemplateDirective;
     // directive to set form item detail
-    @ContentChild(FormElementDetailDialogTemplateDirective) formElementDetailDialogTemplate?: FormElementDetailDialogTemplateDirective;
+    @ContentChild(GridFormElementDetailDialogTemplateDirective) gridFormElementDetailDialogTemplate?: GridFormElementDetailDialogTemplateDirective;
 
     constructor(
         private dialog: MatDialog,
@@ -45,7 +48,7 @@ export class AssociatedElementsManagerComponent
 
     handleElementDetailDialog(actionId: string): void
     {
-        const elementDetailDialogRef = this.dialog.open(ElementDetailDialogComponent,
+        const elementDetailDialogRef = this.dialog.open(GridElementDetailDialogComponent,
             {
                 width    : this.dialogWidth,
                 maxWidth : this.dialogMaxWidth,
@@ -53,9 +56,9 @@ export class AssociatedElementsManagerComponent
                 height   : this.dialogHeight,
                 autoFocus: false,
                 data     : {
-                    title                          : this.dialogTitle,
-                    currentActionId                : actionId,
-                    formElementDetailDialogTemplate: this.formElementDetailDialogTemplate,
+                    title                              : this.dialogTitle,
+                    currentActionId                    : actionId,
+                    gridFormElementDetailDialogTemplate: this.gridFormElementDetailDialogTemplate,
                 },
             });
 
