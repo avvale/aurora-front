@@ -6,7 +6,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { FuseModule } from '@fuse';
 import { FuseConfigModule } from '@fuse/services/config';
 import { FuseMockApiModule } from '@fuse/lib/mock-api';
-import { AuroraModule, LangService, JsonLangService, RouteReuseStrategyService, SessionLocalStorageService, SessionService, UserDataStorageService, IamService } from '@aurora';
+import { AuroraModule, LangService, JsonLangService, RouteReuseStrategyService, UserDataStorageService, SessionService, SessionLocalStorageService, IamService, IamAuroraAdapterService, COMPACT_NAVIGATION, DEFAULT_NAVIGATION, FUTURISTIC_NAVIGATION, HORIZONTAL_NAVIGATION } from '@aurora';
 import { CoreModule } from 'app/core/core.module';
 import { appConfig } from 'app/core/config/app.config';
 import { mockApiServices } from 'app/mock-api';
@@ -15,6 +15,7 @@ import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { UserDataStorageLocalStorageService } from '@aurora/components/user-data-storage/user-data-storage-local-storage-adapter.service';
 import { IamMockAdapterService } from '@aurora/modules/iam/iam-mock-adapter.service';
+import { compactNavigation, defaultNavigation, futuristicNavigation, horizontalNavigation } from './core/navigation/default-navigation';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
@@ -67,6 +68,22 @@ const routerConfig: ExtraOptions = {
         {
             provide : IamService,
             useClass: IamMockAdapterService,
+        },
+        {
+            provide : COMPACT_NAVIGATION,
+            useValue: compactNavigation,
+        },
+        {
+            provide : DEFAULT_NAVIGATION,
+            useValue: defaultNavigation,
+        },
+        {
+            provide : FUTURISTIC_NAVIGATION,
+            useValue: futuristicNavigation,
+        },
+        {
+            provide : HORIZONTAL_NAVIGATION,
+            useValue: horizontalNavigation,
         },
     ],
     bootstrap: [
