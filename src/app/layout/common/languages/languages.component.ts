@@ -2,7 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { take } from 'rxjs';
 import { AvailableLangs, TranslocoService } from '@ngneat/transloco';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
+
+// ---- customizations ----
 import { NavigationService as AuroraNavigationService } from '@aurora/components/navigation/navigation.service';
+
 
 @Component({
     selector       : 'languages',
