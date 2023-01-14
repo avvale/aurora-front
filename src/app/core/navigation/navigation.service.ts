@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, ReplaySubject } from 'rxjs';
 import { Navigation } from 'app/core/navigation/navigation.types';
+
+// ---- customizations ----
 import { NavigationService as AuroraNavigationService } from '@aurora/components/navigation/navigation.service';
 
 @Injectable({
