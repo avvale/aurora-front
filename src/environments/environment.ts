@@ -15,8 +15,12 @@ export const environment = {
         langs   : ['es','en'],
     },
     oAuth: {
+        isActivated      : false,
         applicationCode  : 'aurora',
         applicationSecret: '',
+    },
+    iam: {
+        isActivated: false,
     },
 };
 
