@@ -4,7 +4,7 @@ export const exampleNavigation: FuseNavigationItem = {
     id   : 'example',
     title: 'Example',
     type : 'collapsable',
-    icon : 'approval',
+    icon : 'info',
     meta : {
         permission: undefined,
     },
@@ -13,7 +13,7 @@ export const exampleNavigation: FuseNavigationItem = {
             id   : 'exampleSection',
             title: 'ExampleSection',
             type : 'basic',
-            icon : 'app_registration',
+            icon : 'done',
             link : '/example/example-section',
             meta : {
                 permission: undefined,
