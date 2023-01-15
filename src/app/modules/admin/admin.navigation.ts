@@ -1,8 +1,6 @@
 import { FuseNavigationItem } from '@fuse/components/navigation';
-import { oAuthNavigation } from './apps/o-auth/o-auth.navigation';
-import { orionNavigation } from './apps/orion/orion.navigation';
+import { exampleNavigation } from './example/example.navigation';
 
 export const adminNavigation: FuseNavigationItem[] = [
-    orionNavigation,
-    oAuthNavigation,
+    exampleNavigation,
 ];
