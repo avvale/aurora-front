@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanMatch, Route,
 import { lastValueFrom, Observable } from 'rxjs';
 
 // ---- customizations ----
-import { environment } from 'environments/environment';
 import { AuthenticationService, AuthorizationService, log } from '@aurora';
 
 @Injectable({
@@ -35,15 +34,8 @@ export class AuthGuard implements CanMatch, CanActivate, CanActivateChild
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean
     {
         // check permissions routes
-        if (
-            environment.iam.isActivated !== false && // check if IAM is deactivated
-            !this.checkAuthorization(route.data.permission)
-        )
-        {
-            return false;
-        }
+        if (!this.checkAuthorization(route.data.permission)) return false;
 
-        if (environment.oAuth.isActivated === false) return true; // check if OAuth is deactivated
         return this.checkAuthentication(route.url);
     }
 
@@ -56,15 +48,8 @@ export class AuthGuard implements CanMatch, CanActivate, CanActivateChild
     canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
     {
         // check permissions routes
-        if (
-            environment.iam.isActivated !== false && // check if IAM is deactivated
-            !this.checkAuthorization(childRoute.data.permission)
-        )
-        {
-            return false;
-        }
+        if (!this.checkAuthorization(childRoute.data.permission)) return false;
 
-        if (environment.oAuth.isActivated === false) return true; // check if OAuth is deactivated
         return this.checkAuthentication(childRoute.url);
     }
 
@@ -76,7 +61,6 @@ export class AuthGuard implements CanMatch, CanActivate, CanActivateChild
      */
     canMatch(route: Route, segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
     {
-        if (environment.iam.isActivated === false ) return true; // check if IAM is deactivated
         return this.checkAuthentication(segments);
     }
 
