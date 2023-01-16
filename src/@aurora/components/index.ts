@@ -4,7 +4,6 @@ export * from './date-adapters';
 export * from './datepicker-sql-format';
 export * from './datepicker';
 export * from './datetimepicker-sql-format';
-export * from './environments-information';
 export * from './file-preview-overlay';
 export * from './file-upload';
 export * from './grid-dialog';
