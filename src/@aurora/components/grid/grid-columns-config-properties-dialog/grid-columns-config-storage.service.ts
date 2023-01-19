@@ -90,7 +90,7 @@ export class GridColumnsConfigStorageService implements OnDestroy
 
                     if (response.originColumnsConfigHash !== columnConfigStorage.hash)
                     {
-                        log('[DEBUG] columns config changed in : ', id, originColumnsConfig);
+                        log('[DEBUG] columns config changed in: ', id, originColumnsConfig);
 
                         // we use spread operator to break the origin config reference to avoid changing changes
                         const newColumnsConfigStorage = this.addChangesToColumnsConfig(columnConfigStorage.columnsConfig, cloneDeep(originColumnsConfig));
