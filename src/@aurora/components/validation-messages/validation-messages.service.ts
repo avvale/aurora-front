@@ -86,6 +86,9 @@ export class ValidationMessagesService
             case 'integer':
                 return this.translocoService.selectTranslate('validations.Integer');
 
+            case 'numeric':
+                return this.translocoService.selectTranslate('validations.Numeric');
+
             default:
                 console.log('error', error);
                 return this.translocoService.selectTranslate('validations.Default');
