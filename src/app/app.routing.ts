@@ -75,6 +75,7 @@ export const appRoutes: Route[] = [
             initialData: InitialDataResolver,
         },
         children: [
+            { path: 'example', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule) },
             { path: 'kitchen-sink', loadChildren: () => import('app/modules/admin/kitchen-sink/kitchen-sink.module').then(m => m.KitchenSinkModule) },
 
             // add here your module routes
