@@ -5,7 +5,7 @@ import { ExtraOptions, PreloadAllModules, RouteReuseStrategy, RouterModule } fro
 import { FuseModule } from '@fuse';
 import { FuseConfigModule } from '@fuse/services/config';
 import { FuseMockApiModule } from '@fuse/lib/mock-api';
-import { AuroraModule, AuthenticationService, AuthenticationMockAdapterService, EnvironmentsInformationService, EnvironmentsInformationMockAdapterService, AuthenticationDisabledAdapterGuard, LangService, JsonLangService, RouteReuseStrategyService, UserMetaStorageService, SessionService, SessionLocalStorageService, IamService, GridManagerService, AuroraGridManagerService, IamMockAdapterService } from '@aurora';
+import { AuroraModule, AuthenticationService, AuthenticationMockAdapterService, EnvironmentsInformationService, EnvironmentsInformationMockAdapterService, AuthenticationDisabledAdapterGuard, LangService, JsonLangService, RouteReuseStrategyService, UserMetaStorageService, SessionService, SessionLocalStorageService, IamService, GridManagerService, AuroraGridManagerService, IamMockAdapterService, AuthenticationAuroraAdapterService } from '@aurora';
 import { HORIZONTAL_NAVIGATION, FUTURISTIC_NAVIGATION, DEFAULT_NAVIGATION, COMPACT_NAVIGATION } from '@aurora/components/navigation/navigation.types';
 import { CoreModule } from 'app/core/core.module';
 import { appConfig } from 'app/core/config/app.config';
@@ -52,7 +52,7 @@ const routerConfig: ExtraOptions = {
         },
         {
             provide : AuthenticationService,
-            useClass: AuthenticationMockAdapterService,
+            useClass: AuthenticationAuroraAdapterService,
         },
         {
             provide : EnvironmentsInformationService,

@@ -77,6 +77,8 @@ export const appRoutes: Route[] = [
             { path: 'kitchen-sink', loadChildren: () => import('app/modules/admin/kitchen-sink/kitchen-sink.module').then(m => m.KitchenSinkModule) },
 
             // add here your module routes
+            { path: 'o-auth', loadChildren: () => import('app/modules/admin/apps/o-auth/o-auth.module').then(m => m.OAuthModule) },
+            { path: 'iam', loadChildren: () => import('app/modules/admin/apps/iam/iam.module').then(m => m.IamModule) },
         ],
     },
 
