@@ -22,13 +22,10 @@ function copyApplication()
             '!dist/**',
             '!gulp/**',
             '!node_modules/**',
-            
-            '!src/@api/**',
-            '!src/@app/**',
+            '!src/app/modules/admin/apps/auditing/**',
+            '!src/app/modules/admin/apps/iam/**',
+            '!src/app/modules/admin/apps/o-auth/**',
             '!src/index.ts',
-            '!nest-cli.json',
-            '!test/acceptance/**',
-            '!docker-compose.yml',
             '!gulpfile.js',
             '!package.json',
             '!package-lock.json',
@@ -50,23 +47,9 @@ function editPackageJson()
         .pipe(
             jeditor(function(json)
             {
-                delete json.dependencies['@narando/nest-axios-interceptor'];
-                delete json.dependencies['@nestjs-modules/mailer'];
-                delete json.dependencies['@nestjs/axios'];
-                delete json.dependencies['@nestjs/jwt'];
-                delete json.dependencies['@nestjs/passport'];
-                delete json.dependencies['handlebars'];
-                delete json.dependencies['mariadb'];
-                delete json.dependencies['nodemailer'];
-                delete json.dependencies['passport-jwt'];
-                delete json.dependencies['ts-morph'];
-
                 delete json.devDependencies.gulp;
-                delete json.devDependencies['@types/nodemailer'];
-                delete json.devDependencies['@types/passport-jwt'];
                 delete json.devDependencies['gulp-json-editor'];
-                delete json.devDependencies['fs-extra'];
-                delete json.devDependencies['through2'];
+                delete json.devDependencies['ts-morph'];
 
                 return json;
             }),
@@ -164,8 +147,8 @@ async function clean()
 
 exports.publishApplication = series(
     copyApplication,
-    /* editPackageJson,
-    editNestCli,
+    editPackageJson,
+    /*editNestCli,
     cleanAppModule,
     cleanShareModule,
     copyToCLI,
