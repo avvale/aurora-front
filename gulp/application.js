@@ -47,6 +47,7 @@ function editPackageJson()
         .pipe(
             jeditor(function(json)
             {
+                delete json.devDependencies['fs-extra'];
                 delete json.devDependencies.gulp;
                 delete json.devDependencies['gulp-json-editor'];
                 delete json.devDependencies['ts-morph'];
@@ -82,9 +83,9 @@ function editNestCli()
 function copyToCLI()
 {
     // remove old cli application files
-    fs.rmSync('../aurora-cli/src/templates/back/application', { recursive: true, force: true });
+    fs.rmSync('../aurora-cli/src/templates/front/application', { recursive: true, force: true });
     // copy new cli application files
-    return fse.copy('publish', '../aurora-cli/src/templates/back/application', { overwrite: true });
+    return fse.copy('publish', '../aurora-cli/src/templates/front/application', { overwrite: true });
 }
 
 async function cleanAppModule()
@@ -150,7 +151,7 @@ exports.publishApplication = series(
     editPackageJson,
     /*editNestCli,
     cleanAppModule,
-    cleanShareModule,
+    cleanShareModule,*/
     copyToCLI,
-    clean, */
+    clean,
 );
