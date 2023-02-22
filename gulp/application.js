@@ -112,7 +112,7 @@ async function cleanAppModule()
 
     // remove UserMetaStorageIamService
     codeWriter.removeImport(sourceFile, './modules/admin/apps/iam/user-meta/user-meta-storage-iam-adapter.service');
-    codeWriter.changeDecoratorPropertyAdapter(sourceFile, 'AppModule', 'providers', 'UserMetaStorageService', 'UserMetaStorageLocalStorageService');
+    codeWriter.changeDecoratorPropertyAdapter(sourceFile, 'AppModule', 'providers', 'UserMetaStorageService', 'UserMetaStorageLocalStorageAdapterService');
 
     sourceFile.saveSync();
 }
