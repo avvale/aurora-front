@@ -6,6 +6,7 @@ const fse = require('fs-extra');
 const { src, dest, series } = require('gulp');
 const jeditor = require('gulp-json-editor');
 const codeWriter = require('./helpers/code-writer');
+const ts = require('typescript');
 
 /**
  * Copy application files to publish folder
@@ -72,57 +73,34 @@ async function cleanAppRouting()
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'app.routing.ts']);
 
-    sourceFile.saveSync();
-}
+    const appRoutes = sourceFile.getVariableDeclarationOrThrow('appRoutes');
+    const appRoutesArray = appRoutes.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
+    const objectRoute = appRoutesArray.getElements()[5];
+    const childrenRoutes = objectRoute.getPropertyOrThrow('children');
+    const childrenRoutesArray = childrenRoutes?.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
 
-async function cleanAppModule()
-{
-    const project = codeWriter.createProject(['publish', 'tsconfig.json']);
-    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app.module.ts']);
-
-    // remove AuditingModule
-    codeWriter.removeImport(sourceFile, '@api/auditing/auditing.module');
-    codeWriter.removeDecoratorProperty(sourceFile, 'AppModule', 'imports', 'AuditingModule');
-
-    // remove OAuthModule
-    codeWriter.removeImport(sourceFile, '@api/o-auth/o-auth.module');
-    codeWriter.removeDecoratorProperty(sourceFile, 'AppModule', 'imports', 'OAuthModule');
-
-    // remove IamModule
-    codeWriter.removeImport(sourceFile, '@api/iam/iam.module');
-    codeWriter.removeDecoratorProperty(sourceFile, 'AppModule', 'imports', 'IamModule');
-
-    // remove AuthenticationJwtGuard
-    codeWriter.removeImport(sourceFile, '@api/o-auth/shared/guards/authentication-jwt.guard');
-    codeWriter.changeDecoratorPropertyAdapter(sourceFile, 'AppModule', 'providers', 'AuthenticationGuard', 'AuthenticationDisabledAdapterGuard');
-
-    // remove AuthorizationPermissionsGuard
-    codeWriter.removeImport(sourceFile, '@api/iam/shared/guards/authorization-permissions.guard');
-    codeWriter.changeDecoratorPropertyAdapter(sourceFile, 'AppModule', 'providers', 'AuthorizationGuard', 'AuthorizationDisabledAdapterGuard');
+    codeWriter.removeItemsFromObjectArrayAccordPropertyValue(childrenRoutesArray, 'path', ['auditing', 'iam', 'o-auth']);
 
     sourceFile.saveSync();
 }
 
-async function cleanShareModule()
+async function cleanAdminNavigation()
 {
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
-    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', '@aurora', 'shared.module.ts']);
+    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'modules', 'admin', 'admin.navigation.ts']);
 
-    // remove LoggingAxiosInterceptorService
-    codeWriter.removeImport(sourceFile, '@api/auditing/shared/services/logging.axios-interceptor.service');
-    codeWriter.removeDecoratorProperty(sourceFile, 'SharedModule', 'providers', 'LoggingAxiosInterceptorService');
+    codeWriter.removeImport(sourceFile, './apps/o-auth/o-auth.navigation');
+    codeWriter.removeImport(sourceFile, './apps/iam/iam.navigation');
+    codeWriter.removeImport(sourceFile, './apps/auditing/auditing.navigation');
 
-    // remove HttpModule
-    codeWriter.removeImport(sourceFile, '@nestjs/axios');
-    codeWriter.removeDecoratorProperty(sourceFile, 'SharedModule', 'imports', 'HttpModule');
+    const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
+    const adminNavigationArray = adminNavigation.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
 
-    // remove AuthJwtStrategyRegistryModule
-    codeWriter.removeImport(sourceFile, '@app/o-auth/shared/modules/auth-jwt-strategy-registry.module');
-    codeWriter.removeDecoratorProperty(sourceFile, 'SharedModule', 'exports', 'AuthJwtStrategyRegistryModule');
-
-    // remove AuthJwtStrategyRegistryModule
-    codeWriter.removeImport(sourceFile, '@app/o-auth/shared/jwt-config');
-    codeWriter.removeDecoratorProperty(sourceFile, 'SharedModule', 'imports', 'AuthJwtStrategyRegistryModule.forRoot(jwtConfig)');
+    codeWriter.removeItemsArrayAccordValue(adminNavigationArray, [
+        'oAuthNavigation',
+        'iamNavigation',
+        'auditingNavigation',
+    ]);
 
     sourceFile.saveSync();
 }
@@ -145,6 +123,7 @@ exports.publishApplication = series(
     copyApplication,
     editPackageJson,
     cleanAppRouting,
+    cleanAdminNavigation,
     copyToCLI,
     clean,
 );

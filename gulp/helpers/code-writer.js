@@ -87,3 +87,35 @@ exports.changeDecoratorPropertyAdapter = (sourceFile, moduleName, propertyName, 
         }
     }
 };
+
+exports.removeItemsFromObjectArrayAccordPropertyValue = (arrayToManage, propertyName, valuesToDelete) =>
+{
+    for (const [index, value] of arrayToManage.getElements().entries())
+    {
+        const valueName = value.getPropertyOrThrow(propertyName)
+            .getInitializerIfKindOrThrow(ts.SyntaxKind.StringLiteral)
+            .getText();
+
+        if (valuesToDelete.includes(valueName.replaceAll('\'', '')))
+        {
+            arrayToManage.removeElement(index);
+            this.removeItemsFromObjectArrayAccordPropertyValue(arrayToManage, propertyName, valuesToDelete);
+            break;
+        }
+    }
+};
+
+exports.removeItemsArrayAccordValue = (arrayToManage, valuesToDelete) =>
+{
+    for (const [index, value] of arrayToManage.getElements().entries())
+    {
+        const valueName = value.getText();
+
+        if (valuesToDelete.includes(valueName.replaceAll('\'', '')))
+        {
+            arrayToManage.removeElement(index);
+            this.removeItemsArrayAccordValue(arrayToManage, valuesToDelete);
+            break;
+        }
+    }
+};
