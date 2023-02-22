@@ -6,7 +6,7 @@ import { findUserMetaById, updateUserMetaByIdMutation } from './user-meta.graphq
 @Injectable({
     providedIn: 'root',
 })
-export class UserMetaStorageIamService extends UserMetaStorageService
+export class UserMetaStorageIamAdapterService extends UserMetaStorageService
 {
     metaSubject$: BehaviorSubject<UserMetaStorage | null> = new BehaviorSubject(null);
 
