@@ -105,6 +105,18 @@ async function cleanAdminNavigation()
     sourceFile.saveSync();
 }
 
+async function cleanAppModule()
+{
+    const project = codeWriter.createProject(['publish', 'tsconfig.json']);
+    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'app.module.ts']);
+
+    // remove UserMetaStorageIamService
+    codeWriter.removeImport(sourceFile, './modules/admin/apps/iam/user-meta/user-meta-storage-iam-adapter.service');
+    codeWriter.changeDecoratorPropertyAdapter(sourceFile, 'AppModule', 'providers', 'UserMetaStorageService', 'UserMetaStorageLocalStorageService');
+
+    sourceFile.saveSync();
+}
+
 function copyToCLI()
 {
     // remove old cli application files
@@ -124,6 +136,7 @@ exports.publishApplication = series(
     editPackageJson,
     cleanAppRouting,
     cleanAdminNavigation,
+    cleanAppModule,
     copyToCLI,
     clean,
 );

@@ -60,7 +60,7 @@ exports.removeDecoratorProperty = (sourceFile, moduleName, propertyName, valueNa
 exports.changeDecoratorPropertyAdapter = (sourceFile, moduleName, propertyName, provide, adapter) =>
 {
     const moduleClass = sourceFile.getClass(moduleName);
-    const moduleDecorator = moduleClass.getDecorator('Module');
+    const moduleDecorator = moduleClass.getDecorator('NgModule');
     const moduleDecoratorArguments = moduleDecorator.getArguments()[0];
     const importsArgument = moduleDecoratorArguments.getProperty(propertyName);
     const importsArray = importsArgument.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
