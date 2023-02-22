@@ -16,6 +16,7 @@ function copyApplication()
     return src(
         [
             '**/*',
+            '**/.gitkeep',
             '.editorconfig',
             '.eslintrc.json',
             '.gitignore',
@@ -26,10 +27,10 @@ function copyApplication()
             '!gulp/**',
             '!node_modules/**',
             '!src/app/modules/admin/apps/auditing/**',
-            '!src/assets/i18n/auditing/**',
             '!src/app/modules/admin/apps/iam/**',
-            '!src/assets/i18n/iam/**',
             '!src/app/modules/admin/apps/o-auth/**',
+            '!src/assets/i18n/auditing/**',
+            '!src/assets/i18n/iam/**',
             '!src/assets/i18n/o-auth/**',
             '!src/index.ts',
             '!gulpfile.js',
@@ -66,32 +67,12 @@ function editPackageJson()
         );
 }
 
-/**
- * Delete nest-cli.json configuration that will not used in application
- */
-function editNestCli()
+async function cleanAppRouting()
 {
-    return src(
-        [
-            'nest-cli.json',
-        ])
-        .pipe(
-            jeditor(function(json)
-            {
-                delete json['compilerOptions'];
+    const project = codeWriter.createProject(['publish', 'tsconfig.json']);
+    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'app.routing.ts']);
 
-                return json;
-            }),
-        )
-        .pipe(dest('publish'));
-}
-
-function copyToCLI()
-{
-    // remove old cli application files
-    fs.rmSync('../aurora-cli/src/templates/front/application', { recursive: true, force: true });
-    // copy new cli application files
-    return fse.copy('publish', '../aurora-cli/src/templates/front/application', { overwrite: true });
+    sourceFile.saveSync();
 }
 
 async function cleanAppModule()
@@ -146,6 +127,14 @@ async function cleanShareModule()
     sourceFile.saveSync();
 }
 
+function copyToCLI()
+{
+    // remove old cli application files
+    fs.rmSync('../aurora-cli/src/templates/front/application', { recursive: true, force: true });
+    // copy new cli application files
+    return fse.copy('publish', '../aurora-cli/src/templates/front/application', { overwrite: true });
+}
+
 async function clean()
 {
     // remove publish folder
@@ -155,9 +144,7 @@ async function clean()
 exports.publishApplication = series(
     copyApplication,
     editPackageJson,
-    /*editNestCli,
-    cleanAppModule,
-    cleanShareModule,*/
+    cleanAppRouting,
     copyToCLI,
     clean,
 );
