@@ -114,6 +114,12 @@ async function cleanAppModule()
     codeWriter.removeImport(sourceFile, './modules/admin/apps/iam/user-meta/user-meta-storage-iam-adapter.service');
     codeWriter.changeDecoratorPropertyAdapter(sourceFile, 'AppModule', 'providers', 'UserMetaStorageService', 'UserMetaStorageLocalStorageAdapterService');
 
+    // change AuthenticationService
+    codeWriter.changeDecoratorPropertyAdapter(sourceFile, 'AppModule', 'providers', 'AuthenticationService', 'AuthenticationMockAdapterService');
+
+    // change IamService
+    codeWriter.changeDecoratorPropertyAdapter(sourceFile, 'AppModule', 'providers', 'IamService', 'IamMockAdapterService');
+
     // add EnvironmentsInformationMockAdapterService implementation
     codeWriter.addDecoratorPropertyAdapter(
         sourceFile,
