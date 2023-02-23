@@ -55,10 +55,6 @@ const routerConfig: ExtraOptions = {
             useClass: AuthenticationAuroraAdapterService,
         },
         {
-            provide : EnvironmentsInformationService,
-            useClass: EnvironmentsInformationMockAdapterService,
-        },
-        {
             provide : RouteReuseStrategy,
             useClass: RouteReuseStrategyService,
         },
