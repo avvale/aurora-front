@@ -96,7 +96,7 @@ async function cleanAdminNavigation()
     const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
     const adminNavigationArray = adminNavigation.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
 
-    codeWriter.removeItemsArrayAccordValue(adminNavigationArray, [
+    codeWriter.removeArrayItemsAccordValue(adminNavigationArray, [
         'oAuthNavigation',
         'iamNavigation',
         'auditingNavigation',
@@ -113,6 +113,18 @@ async function cleanAppModule()
     // remove UserMetaStorageIamService
     codeWriter.removeImport(sourceFile, './modules/admin/apps/iam/user-meta/user-meta-storage-iam-adapter.service');
     codeWriter.changeDecoratorPropertyAdapter(sourceFile, 'AppModule', 'providers', 'UserMetaStorageService', 'UserMetaStorageLocalStorageAdapterService');
+
+    // add EnvironmentsInformationService implementation
+    codeWriter.addDecoratorPropertyAdapter(
+        sourceFile,
+        'AppModule',
+        'providers',
+        `
+{
+    provide : EnvironmentsInformationService,
+    useClass: EnvironmentsInformationMockAdapterService
+}`,
+    );
 
     sourceFile.saveSync();
 }
