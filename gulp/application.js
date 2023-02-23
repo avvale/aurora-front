@@ -114,7 +114,7 @@ async function cleanAppModule()
     codeWriter.removeImport(sourceFile, './modules/admin/apps/iam/user-meta/user-meta-storage-iam-adapter.service');
     codeWriter.changeDecoratorPropertyAdapter(sourceFile, 'AppModule', 'providers', 'UserMetaStorageService', 'UserMetaStorageLocalStorageAdapterService');
 
-    // add EnvironmentsInformationService implementation
+    // add EnvironmentsInformationMockAdapterService implementation
     codeWriter.addDecoratorPropertyAdapter(
         sourceFile,
         'AppModule',
@@ -123,6 +123,18 @@ async function cleanAppModule()
 {
     provide : EnvironmentsInformationService,
     useClass: EnvironmentsInformationMockAdapterService
+}`,
+    );
+
+    // add AuthenticationDisabledAdapterGuard implementation
+    codeWriter.addDecoratorPropertyAdapter(
+        sourceFile,
+        'AppModule',
+        'providers',
+        `
+{
+    provide : AuthGuard,
+    useClass: AuthenticationDisabledAdapterGuard
 }`,
     );
 
