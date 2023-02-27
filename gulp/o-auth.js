@@ -2,8 +2,14 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require('node:fs');
+const cp = require('node:child_process');
 const fse = require('fs-extra');
 const { series } = require('gulp');
+
+function cleanSourceDirectory(cb)
+{
+    cp.exec('find . -name ".DS_Store" -delete', () => cb());
+}
 
 /**
  * Copy oAuth files to publish folder
@@ -32,6 +38,7 @@ async function clean()
 }
 
 exports.publishOAuth = series(
+    cleanSourceDirectory,
     copyOAuth,
     copyToCLI,
     clean,

@@ -2,11 +2,17 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require('node:fs');
+const cp = require('node:child_process');
 const fse = require('fs-extra');
 const { src, dest, series } = require('gulp');
 const jeditor = require('gulp-json-editor');
 const codeWriter = require('./helpers/code-writer');
 const ts = require('typescript');
+
+function cleanSourceDirectory(cb)
+{
+    cp.exec('find . -name ".DS_Store" -delete', () => cb());
+}
 
 /**
  * Copy application files to publish folder
@@ -162,6 +168,7 @@ async function clean()
 }
 
 exports.publishApplication = series(
+    cleanSourceDirectory,
     copyApplication,
     editPackageJson,
     cleanAppRouting,
