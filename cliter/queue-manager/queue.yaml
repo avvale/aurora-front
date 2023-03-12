@@ -1,0 +1,67 @@
+version: 0.0.1
+boundedContextName: queue-manager
+moduleName: queue
+moduleNames: queues
+aggregateName: QueueManagerQueue
+hasOAuth: true
+hasTenant: false
+hasAuditing: false
+aggregateProperties:
+  - name: id
+    type: id
+    primaryKey: true
+    length: 36
+    nullable: false
+  - name: prefix
+    type: varchar
+    maxLength: 50
+    nullable: false
+    index: unique
+  - name: name
+    type: varchar
+    maxLength: 50
+    nullable: false
+    index: unique
+  - name: waitingJobs
+    type: int.unsigned
+    maxLength: 10
+    nullable: false
+    defaultValue: 0
+  - name: activeJobs
+    type: int.unsigned
+    maxLength: 10
+    nullable: false
+    defaultValue: 0
+  - name: completedJobs
+    type: int.unsigned
+    maxLength: 10
+    nullable: false
+    defaultValue: 0
+  - name: failedJobs
+    type: int.unsigned
+    maxLength: 10
+    nullable: false
+    defaultValue: 0
+  - name: delayedJobs
+    type: int.unsigned
+    maxLength: 10
+    nullable: false
+    defaultValue: 0
+  - name: pausedJobs
+    type: int.unsigned
+    maxLength: 10
+    nullable: false
+    defaultValue: 0
+  - name: createdAt
+    type: timestamp
+    nullable: true
+  - name: updatedAt
+    type: timestamp
+    nullable: true
+  - name: deletedAt
+    type: timestamp
+    nullable: true
+additionalApis:
+  - path: queue-manager/queue/jobs/paginate
+    resolverType: query
+    httpMethod: post

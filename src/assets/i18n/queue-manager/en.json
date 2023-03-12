@@ -1,0 +1,13 @@
+{
+    "ActiveJobs": "ActiveJobs",
+    "CompletedJobs": "Completed",
+    "DelayedJobs": "Delayed",
+    "FailedJobs": "Failed",
+    "Name": "Name",
+    "PausedJobs": "Paused",
+    "Prefix": "Prefix",
+    "Queue": "Queue",
+    "QueueManager": "Queue Manager",
+    "Queues": "Queues",
+    "WaitingJobs": "Waiting"
+}
