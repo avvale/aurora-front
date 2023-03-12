@@ -36,6 +36,7 @@ function copyApplication()
             '!src/app/modules/admin/apps/auditing/**',
             '!src/app/modules/admin/apps/iam/**',
             '!src/app/modules/admin/apps/o-auth/**',
+            '!src/app/modules/azure-ad/**',
             '!src/assets/i18n/auditing/**',
             '!src/assets/i18n/iam/**',
             '!src/assets/i18n/o-auth/**',
@@ -61,8 +62,10 @@ function editPackageJson()
         .pipe(
             jeditor(function(json)
             {
+                delete json.devDependencies['@azure/msal-angular'];
+                delete json.devDependencies['@azure/msal-browser'];
                 delete json.devDependencies['fs-extra'];
-                delete json.devDependencies.gulp;
+                delete json.devDependencies['gulp'];
                 delete json.devDependencies['gulp-json-editor'];
                 delete json.devDependencies['ts-morph'];
 
@@ -85,7 +88,12 @@ async function cleanAppRouting()
     const childrenRoutes = objectRoute.getPropertyOrThrow('children');
     const childrenRoutesArray = childrenRoutes?.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
 
-    codeWriter.removeItemsFromObjectArrayAccordPropertyValue(childrenRoutesArray, 'path', ['auditing', 'iam', 'o-auth']);
+    codeWriter.removeItemsFromObjectArrayAccordPropertyValue(childrenRoutesArray, 'path', [
+        'auditing',
+        'iam',
+        'o-auth',
+        'queue-manager',
+    ]);
 
     sourceFile.saveSync();
 }
@@ -98,6 +106,7 @@ async function cleanAdminNavigation()
     codeWriter.removeImport(sourceFile, './apps/o-auth/o-auth.navigation');
     codeWriter.removeImport(sourceFile, './apps/iam/iam.navigation');
     codeWriter.removeImport(sourceFile, './apps/auditing/auditing.navigation');
+    codeWriter.removeImport(sourceFile, './apps/queue-manager/queue-manager.navigation');
 
     const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
     const adminNavigationArray = adminNavigation.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
@@ -106,6 +115,7 @@ async function cleanAdminNavigation()
         'oAuthNavigation',
         'iamNavigation',
         'auditingNavigation',
+        'queueManagerNavigation',
     ]);
 
     sourceFile.saveSync();
