@@ -8,5 +8,5 @@ export const adminNavigation: FuseNavigationItem[] = [
     oAuthNavigation,
     iamNavigation,
     auditingNavigation,
-    queueManagerNavigation
+    queueManagerNavigation,
 ];
