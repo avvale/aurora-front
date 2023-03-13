@@ -178,9 +178,9 @@ exports.isDuplicateArrayValue = (arrayToManage, item, finder) =>
 
 exports.removeObjectProperty = (sourceFile, variableInitializer, propertyName) =>
 {
-    const environmentVariable = sourceFile.getVariableDeclarationOrThrow(variableInitializer);
-    const navigationObject = environmentVariable.getInitializerIfKindOrThrow(ts.SyntaxKind.ObjectLiteralExpression);
-    const property = navigationObject.getProperty(propertyName);
+    const variable = sourceFile.getVariableDeclarationOrThrow(variableInitializer);
+    const obj = variable.getInitializerIfKindOrThrow(ts.SyntaxKind.ObjectLiteralExpression);
+    const property = obj.getProperty(propertyName);
     if (property) property.remove();
 };
 
