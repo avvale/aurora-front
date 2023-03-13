@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Account, IamService } from '@aurora';
+import { Account, IamService, log } from '@aurora';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
-import { Observable, of, ReplaySubject } from 'rxjs';
+import { InteractionStatus } from '@azure/msal-browser';
+import { filter, map, Observable, of, ReplaySubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -25,7 +26,20 @@ export class AuthorizationAzureAdAdapterService extends IamService
 
     init(): void
     {
-        this.checkAndSetActiveAccount();
+        const subscription = this.msalBroadcastService
+            .inProgress$
+            .pipe(
+                filter((status: InteractionStatus) => status === InteractionStatus.None),
+                map(() => this.authService.instance.getAllAccounts().length > 0),
+            )
+            .subscribe((response: boolean) =>
+            {
+                if (response)
+                {
+                    this.checkAndSetActiveAccount();
+                    subscription.unsubscribe();
+                }
+            });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -90,6 +104,8 @@ export class AuthorizationAzureAdAdapterService extends IamService
          * Note: Basic usage demonstrated. Your app may require more complicated account selection logic
          */
         const activeAccount = this.authService.instance.getAllAccounts()[0];
+
+        log('[DEBUG] Azure Ad active account: ', activeAccount);
 
         this.account = {
             id               : null,
