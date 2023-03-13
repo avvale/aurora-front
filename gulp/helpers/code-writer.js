@@ -39,10 +39,10 @@ exports.removeImport = (sourceFile, importPath) =>
     someModuleImport.remove();
 };
 
-exports.removeDecoratorProperty = (sourceFile, moduleName, propertyName, valueName) =>
+exports.removeDecoratorProperty = (sourceFile, moduleName, decoratorNameName, propertyName, valueName) =>
 {
     const moduleClass = sourceFile.getClass(moduleName);
-    const moduleDecorator = moduleClass.getDecorator('Module');
+    const moduleDecorator = moduleClass.getDecorator(decoratorNameName);
     const moduleDecoratorArguments = moduleDecorator.getArguments()[0];
     const importsArgument = moduleDecoratorArguments.getProperty(propertyName);
     const importsArray = importsArgument.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
@@ -81,6 +81,32 @@ exports.changeDecoratorPropertyAdapter = (sourceFile, moduleName, propertyName, 
                 if (isProvideWanted && property.getName() === 'useClass')
                 {
                     property.setInitializer(adapter);
+                    break;
+                }
+            }
+        }
+    }
+};
+
+exports.removeDecoratorPropertyAdapter = (sourceFile, moduleName, decoratorName, propertyName, provide) =>
+{
+    const moduleClass = sourceFile.getClass(moduleName);
+    const moduleDecorator = moduleClass.getDecorator(decoratorName);
+    const moduleDecoratorArguments = moduleDecorator.getArguments()[0];
+    const decoratorProperty = moduleDecoratorArguments.getProperty(propertyName);
+    const decoratorArrayProperty = decoratorProperty.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
+
+    for (const [index, value] of decoratorArrayProperty.getElements().entries())
+    {
+        // const object = value.getInitializer();
+        if (value instanceof tsMorph.ObjectLiteralExpression)
+        {
+            const properties = value.getProperties();
+            for (const property of properties)
+            {
+                if (property.getName() === 'provide' && property.getInitializer().getText() === provide)
+                {
+                    decoratorArrayProperty.removeElement(index);
                     break;
                 }
             }
@@ -156,4 +182,38 @@ exports.removeObjectProperty = (sourceFile, variableInitializer, propertyName) =
     const navigationObject = environmentVariable.getInitializerIfKindOrThrow(ts.SyntaxKind.ObjectLiteralExpression);
     const property = navigationObject.getProperty(propertyName);
     if (property) property.remove();
+};
+
+exports.removeCallExpressionArgument = (sourceFile, functionName, argumentName) =>
+{
+    const callExpressions = sourceFile.getDescendantsOfKind(tsMorph.SyntaxKind.CallExpression);
+
+    for (const callExpression of callExpressions)
+    {
+        if (callExpression.getExpression().getText() === functionName)
+        {
+            for (const [index, value] of callExpression.getArguments().entries())
+            {
+                if (value.getText() === argumentName)
+                {
+                    callExpression.removeArgument(index);
+                    break;
+                }
+            }
+        }
+    }
+};
+
+exports.addCallExpressionArgument = (sourceFile, functionName, argumentName) =>
+{
+    const callExpressions = sourceFile.getDescendantsOfKind(tsMorph.SyntaxKind.CallExpression);
+
+    for (const callExpression of callExpressions)
+    {
+        if (callExpression.getExpression().getText() === functionName)
+        {
+            callExpression.addArgument(argumentName);
+            break;
+        }
+    }
 };
