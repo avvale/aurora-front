@@ -67,7 +67,7 @@ export class NavigationService
         // get applications item to set navigation
         const applicationsMenu = this.fuseNavigationService.getItem('applications', this.defaultNavigation);
 
-        // set admin navigation
+        // set admin navigation and check navigation permissions
         applicationsMenu.children = this.checkNavigationPermissions(adminNavigation, this.iamService.me.dPermissions.all);
 
         return {
