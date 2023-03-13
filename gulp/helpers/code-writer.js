@@ -149,3 +149,11 @@ exports.isDuplicateArrayValue = (arrayToManage, item, finder) =>
 
     return false;
 };
+
+exports.removeObjectProperty = (sourceFile, variableInitializer, propertyName) =>
+{
+    const environmentVariable = sourceFile.getVariableDeclarationOrThrow(variableInitializer);
+    const navigationObject = environmentVariable.getInitializerIfKindOrThrow(ts.SyntaxKind.ObjectLiteralExpression);
+    const property = navigationObject.getProperty(propertyName);
+    if (property) property.remove();
+};
