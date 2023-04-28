@@ -32,5 +32,10 @@
     "Status": "Status",
     "Tags": "Tags",
     "Url": "Url",
-    "UserAgent": "UserAgent"
+    "UserAgent": "UserAgent",
+    "error": {
+        "101": "The username already exists.",
+        "102": "The email already exists.",
+        "103": "The code already exists."
+    }
 }
