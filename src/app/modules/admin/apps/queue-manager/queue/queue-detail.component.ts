@@ -77,7 +77,9 @@ export class QueueDetailComponent extends ViewDetailComponent
     // this method will be called after the ngOnInit of
     // the parent class you can use instead of ngOnInit
     init(): void
-    { /**/ }
+    {
+        /**/
+    }
 
     onSubmit($event): void
     {
@@ -130,6 +132,7 @@ export class QueueDetailComponent extends ViewDetailComponent
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
+            /* #region common actions */
             case 'queueManager::queue.detail.new':
                 this.fg.get('id').setValue(Utils.uuid());
                 break;
@@ -211,6 +214,7 @@ export class QueueDetailComponent extends ViewDetailComponent
                     log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
                 }
                 break;
+                /* #endregion common actions */
         }
     }
 }

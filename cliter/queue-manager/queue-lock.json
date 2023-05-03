@@ -15,7 +15,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/queue-manager/queue/queue-detail.component.ts",
-            "integrity": "sha1:d5a7537a39b1388f0b7c2acbc6a2272f7b9cf17a"
+            "integrity": "sha1:194fad71dd2fa482f2376719cdf759332c06c1b9"
         },
         {
             "path": "src/app/modules/admin/apps/queue-manager/queue/queue-list.component.html",
@@ -31,15 +31,15 @@
         },
         {
             "path": "src/app/modules/admin/apps/queue-manager/queue/queue.graphql.ts",
-            "integrity": "sha1:246d6e50df4a686ae8c499057070e87de7a0d09f"
+            "integrity": "sha1:34420a055c94e8b2c649bb7b6bdf9d3b25cb4f5a"
         },
         {
             "path": "src/app/modules/admin/apps/queue-manager/queue/queue.resolvers.ts",
-            "integrity": "sha1:2e00865c7cd42b2d5d36ca97319054fe764ed4c4"
+            "integrity": "sha1:93837c9469fa6516d999af2c9b8e6d97e34cd276"
         },
         {
             "path": "src/app/modules/admin/apps/queue-manager/queue/queue.service.ts",
-            "integrity": "sha1:e847dc10ec36f7cc020db115f2bdac3ef5318a39"
+            "integrity": "sha1:66c1c1e5257b4e4d74258aebeadfc8f8f13be530"
         }
     ]
 }

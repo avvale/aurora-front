@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, QueryStatementHandler } from '@aurora';
 import { Observable } from 'rxjs';
 import { QueueManagerQueue } from '../queue-manager.types';
@@ -56,7 +56,7 @@ export class QueuePaginationResolver implements Resolve<GridData<QueueManagerQue
 export class QueueNewResolver implements Resolve<Action>
 {
     constructor(
-        private readonly actionService: ActionService,
+		private readonly actionService: ActionService,
     )
     {}
 
@@ -82,12 +82,12 @@ export class QueueNewResolver implements Resolve<Action>
     providedIn: 'root',
 })
 export class QueueEditResolver implements Resolve<{
-    object: QueueManagerQueue;
+	object: QueueManagerQueue;
 }>
 {
     constructor(
-        private readonly actionService: ActionService,
-        private readonly queueService: QueueService,
+		private readonly actionService: ActionService,
+		private readonly queueService: QueueService,
     )
     {}
 
@@ -101,7 +101,7 @@ export class QueueEditResolver implements Resolve<{
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
     ): Observable<{
-        object: QueueManagerQueue;
+		object: QueueManagerQueue;
     }>
     {
         this.actionService.action({
