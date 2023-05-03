@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from 
 import { Validators } from '@angular/forms';
 import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
-import { jobColumnsConfig } from '../job/queue.columns-config';
+import { jobColumnsConfig } from '../job/job.columns-config';
 import { QueueManagerQueue } from '../queue-manager.types';
 import { QueueService } from './queue.service';
+import { JobService } from '../job/job.service';
 
 @Component({
     selector       : 'queue-manager-queue-detail',
@@ -22,11 +23,11 @@ export class QueueDetailComponent extends ViewDetailComponent
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
     managedObject: QueueManagerQueue;
-    gridId: string = 'queueManager::queue.list.jobList';
-    gridData$: Observable<GridData<any>>;
-    gridState: GridState = {};
-    columnsConfig$: Observable<ColumnConfig[]>;
-    originColumnsConfig: ColumnConfig[] = [
+    jobsGridId: string = 'queueManager::queue.detail.jobsGridList';
+    jobsGridData$: Observable<GridData<any>>;
+    jobsGridState: GridState = {};
+    jobsColumnsConfig$: Observable<ColumnConfig[]>;
+    jobsOriginColumnsConfig: ColumnConfig[] = [
         {
             type   : ColumnDataType.ACTIONS,
             field  : 'Actions',
@@ -66,6 +67,7 @@ export class QueueDetailComponent extends ViewDetailComponent
     constructor(
         protected readonly injector: Injector,
         private readonly queueService: QueueService,
+        private readonly jobService: JobService,
         private readonly gridColumnsConfigStorageService: GridColumnsConfigStorageService,
         private readonly gridFiltersStorageService: GridFiltersStorageService,
         private readonly gridStateService: GridStateService,
@@ -138,19 +140,6 @@ export class QueueDetailComponent extends ViewDetailComponent
                 break;
 
             case 'queueManager::queue.detail.edit':
-                this.columnsConfig$ = this.gridColumnsConfigStorageService
-                    .getColumnsConfig(this.gridId, this.originColumnsConfig)
-                    .pipe(takeUntil(this.unsubscribeAll$));
-
-                this.gridState = {
-                    columnFilters: this.gridFiltersStorageService.getColumnFilterState(this.gridId),
-                    page         : this.gridStateService.getPage(this.gridId),
-                    sort         : this.gridStateService.getSort(this.gridId),
-                    search       : this.gridStateService.getSearchState(this.gridId),
-                };
-
-                this.gridData$ = this.queueService.pagination$;
-
                 this.queueService
                     .queue$
                     .pipe(takeUntil(this.unsubscribeAll$))
@@ -159,6 +148,21 @@ export class QueueDetailComponent extends ViewDetailComponent
                         this.managedObject = item;
                         this.fg.patchValue(item);
                     });
+
+                // jobs grid
+                this.jobsColumnsConfig$ = this.gridColumnsConfigStorageService
+                    .getColumnsConfig(this.jobsGridId, this.jobsOriginColumnsConfig)
+                    .pipe(takeUntil(this.unsubscribeAll$));
+
+                this.jobsGridState = {
+                    columnFilters: this.gridFiltersStorageService.getColumnFilterState(this.jobsGridId),
+                    page         : this.gridStateService.getPage(this.jobsGridId),
+                    sort         : this.gridStateService.getSort(this.jobsGridId),
+                    search       : this.gridStateService.getSearchState(this.jobsGridId),
+                };
+
+                this.jobsGridData$ = this.jobService.pagination$;
+
                 break;
 
             case 'queueManager::queue.detail.create':

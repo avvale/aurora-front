@@ -4,6 +4,7 @@ import { Action, ActionService, GridData, GridFiltersStorageService, GridStateSe
 import { Observable } from 'rxjs';
 import { QueueManagerQueue } from '../queue-manager.types';
 import { queueColumnsConfig } from './queue.columns-config';
+import { jobColumnsConfig } from '../job/job.columns-config';
 import { QueueService } from './queue.service';
 
 @Injectable({
@@ -87,6 +88,8 @@ export class QueueEditResolver implements Resolve<{
 {
     constructor(
 		private readonly actionService: ActionService,
+        private readonly gridFiltersStorageService: GridFiltersStorageService,
+        private readonly gridStateService: GridStateService,
 		private readonly queueService: QueueService,
     )
     {}
@@ -109,8 +112,25 @@ export class QueueEditResolver implements Resolve<{
             isViewAction: true,
         });
 
-        return this.queueService.findById({
-            id: route.paramMap.get('id'),
+        // job grid elements manager
+        const jobsGridId = 'queueManager::queue.detail.jobsGridList';
+        this.gridStateService.setPaginationActionId(jobsGridId, 'queueManager::queue.detail.jobsPagination');
+        this.gridStateService.setExportActionId(jobsGridId, 'queueManager::queue.detail.exportJobs');
+
+        return this.queueService.findByIdWithRelations({
+            id               : route.paramMap.get('id'),
+            queryPaginateJobs: QueryStatementHandler
+                .init({ columnsConfig: jobColumnsConfig })
+                .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(jobsGridId))
+                .setSort(this.gridStateService.getSort(jobsGridId))
+                .setPage(this.gridStateService.getPage(jobsGridId))
+                .setSearch(this.gridStateService.getSearchState(jobsGridId))
+                .getQueryStatement(),
+            constraintPaginateJobs: {
+                where: {
+                    queueId: route.paramMap.get('id'),
+                },
+            },
         });
     }
 }

@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
-import { QueueManagerQueue, QueueManagerCreateQueue, QueueManagerUpdateQueueById, QueueManagerUpdateQueues } from '../queue-manager.types';
-import { paginationQuery, getQuery, fields, findByIdQuery, findQuery, createMutation, updateByIdMutation, updateMutation, deleteByIdMutation, deleteMutation } from './queue.graphql';
+import { QueueManagerQueue, QueueManagerCreateQueue, QueueManagerUpdateQueueById, QueueManagerUpdateQueues, QueueManagerJob } from '../queue-manager.types';
+import { paginationQuery, getQuery, fields, findByIdQuery, findQuery, createMutation, updateByIdMutation, updateMutation, deleteByIdMutation, deleteMutation, findByIdWithRelationsQuery } from './queue.graphql';
+import { JobService } from '../job/job.service';
 
 @Injectable({
     providedIn: 'root',
@@ -16,6 +17,7 @@ export class QueueService
 
     constructor(
         private readonly graphqlService: GraphQLService,
+        private readonly jobService: JobService,
     ) {}
 
     /**
@@ -102,6 +104,57 @@ export class QueueService
             );
     }
 
+    findByIdWithRelations(
+        {
+            graphqlStatement = findByIdWithRelationsQuery,
+            id = '',
+            constraint = {},
+            queryPaginateJobs = {},
+            constraintPaginateJobs = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            id?: string;
+            constraint?: QueryStatement;
+            queryPaginateJobs?: QueryStatement;
+            constraintPaginateJobs?: QueryStatement;
+        } = {},
+    ): Observable<{
+        object: QueueManagerQueue;
+        queueManagerPaginateJobs: GridData<QueueManagerJob>;
+    }>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                object: QueueManagerQueue;
+                queueManagerPaginateJobs: GridData<QueueManagerJob>;
+            }>({
+                query    : parseGqlFields(graphqlStatement, fields, constraint),
+                variables: {
+                    id,
+                    constraint,
+                    queryPaginateJobs: {
+                        ...queryPaginateJobs,
+                        where: {
+                            ...queryPaginateJobs.where,
+                            queueId: id,
+                        },
+
+                    },
+                    constraintPaginateJobs,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data),
+                tap(data =>
+                {
+                    this.queueSubject$.next(data.object);
+                    this.jobService.paginationSubject$.next(data.queueManagerPaginateJobs);
+                }),
+            );
+    }
 
     find(
         {
@@ -273,51 +326,4 @@ export class QueueService
                 variables: { query, constraint },
             });
     }
-
-    // ---- customizations ----
-    // TODO QUEUES
-    /* findByIdWithRelations(
-        {
-            graphqlStatement = findByIdWithRelationsQuery,
-            id = '',
-            constraint = {},
-            queryPaginateJobs = {},
-            constraintPaginateJobs = {},
-        }: {
-            graphqlStatement?: DocumentNode;
-            id?: string;
-            constraint?: QueryStatement;
-            queryPaginateJobs?: QueryStatement;
-            constraintPaginateJobs?: QueryStatement;
-        } = {},
-    ): Observable<{
-        object: QueueManagerQueue;
-        queueManagerPaginateJobs: GridData<QueueManagerJob>;
-    }>
-    {
-        return this.graphqlService
-            .client()
-            .watchQuery<{
-                object: QueueManagerQueue;
-                queueManagerPaginateJobs: GridData<QueueManagerJob>;
-            }>({
-                query    : parseGqlFields(graphqlStatement, fields, constraint),
-                variables: {
-                    id,
-                    constraint,
-                    queryPaginateJobs,
-                    constraintPaginateJobs,
-                },
-            })
-            .valueChanges
-            .pipe(
-                first(),
-                map(result => result.data),
-                tap(data =>
-                {
-                    this.queueSubject$.next(data.object);
-                    //this.jobService.paginationSubject$.next(data.queueManagerPaginateJobs);
-                }),
-            );
-    } */
 }

@@ -63,6 +63,31 @@ export const findByIdQuery = gql`
     }
 `;
 
+export const findByIdWithRelationsQuery = gql`
+    query QueueManagerFindQueueById (
+        $id: ID
+        $constraint: QueryStatement
+        $queryPaginateJobs: QueryStatement
+        $constraintPaginateJobs: QueryStatement
+    ) {
+        object: queueManagerFindQueueById (
+            id: $id
+            constraint: $constraint
+        ) {
+            id
+            #FIELDS
+        }
+        queueManagerPaginateJobs (
+            query: $queryPaginateJobs
+            constraint: $constraintPaginateJobs
+        ) {
+            total
+            rows
+            count
+        }
+    }
+`;
+
 export const findQuery = gql`
     query QueueManagerFindQueue (
         $query: QueryStatement

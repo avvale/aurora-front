@@ -3,6 +3,7 @@
     "CompletedJobs": "Completados",
     "DelayedJobs": "Retrasados",
     "FailedJobs": "Fallados",
+    "Jobs": "Trabajos",
     "Name": "Name",
     "PausedJobs": "Pausados",
     "Prefix": "Prefijo",

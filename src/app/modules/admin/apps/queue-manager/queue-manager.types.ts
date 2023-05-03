@@ -48,3 +48,11 @@ export interface QueueManagerUpdateQueues {
     delayedJobs?: number;
     pausedJobs?: number;
 }
+
+export interface QueueManagerJob {
+    id: string;
+    name: string;
+    delay: number;
+    progress: number;
+    attemptsMode: number;
+}
