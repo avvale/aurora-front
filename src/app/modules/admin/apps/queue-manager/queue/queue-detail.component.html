@@ -183,76 +183,160 @@
                         <mat-error>{{ formErrors?.pausedJobs | async }}</mat-error>
                     </mat-form-field>
 
-                    <!-- Grid -->
-                    <div class="relative col-12">
-                        <p class="absolute top-0 -left-1 bg-white px-2 pt-1 origin-center -translate-y-1/2 scale-75 text-base z-999 pointer-events-none">
-                            <span class="opacity-60">{{ t('queueManager.Jobs') }}</span>
-                        </p>
-                        <div class="rounded-md border hover:border-2 focus-within:border-2 p-0.5 hover:p-px focus-within:p-px transition-all">
-                            <!-- main -->
-                            <div
-                                class="flex flex-auto pt-0 px-2 overflow-y-auto"
-                                cdkScrollable
+                    <!-- #region component to manage jobs -->
+                    <au-grid-elements-manager
+                        class="col-12 mt-7"
+                        [columnsConfig]="jobsColumnsConfig$ | async"
+                        [dialogTitle]="t('queueManager.Job')"
+                        [gridData]="jobsGridData$ | async"
+                        [gridState]="jobsGridState"
+                        [id]="jobsGridId"
+                        [label]="t('queueManager.Jobs')"
+                        [originColumnsConfig]="jobsOriginColumnsConfig"
+                        [hasSearch]="false"
+                        [hasFilterButton]="false"
+                        #jobsGridElementsManager
+                    >
+                        <!-- #region header grid buttons -->
+                        <ng-template
+                            auGridCustomButtonsHeaderDialogTemplate
+                        >
+                            <!-- no buttons -->
+                        </ng-template>
+                        <!-- #endregion header grid buttons -->
+
+                        <ng-template
+                            auGridFormElementDetailDialogTemplate
+                            let-dialog
+                        >
+                            <form
+                                id="jobDetailDialogForm"
+                                novalidate
+                                [formGroup]="jobDialogFg"
+                                (ngSubmit)="handleSubmitBookForm($event, dialog)"
                             >
-                                <au-grid
-                                    [columnsConfig]="jobsColumnsConfig$ | async"
-                                    [gridData]="jobsGridData$ | async"
-                                    [gridState]="jobsGridState"
-                                    [id]="jobsGridId"
-                                    [originColumnsConfig]="jobsOriginColumnsConfig"
-                                >
-                                    <au-grid-translations
-                                        [actions]="t('Actions')"
-                                        [AND]="t('AND')"
-                                        [clearFilters]="t('ClearFilters')"
-                                        [clickAndDragInfo]="t('ClickAndDragInfo')"
-                                        [columns]="t('Columns')"
-                                        [field]="t('Field')"
-                                        [filter]="t('Filter')"
-                                        [for]="gridId"
-                                        [operator]="t('Operator')"
-                                        [OR]="t('OR')"
-                                        [pleaseSelectField]="t('PleaseSelectField')"
-                                        [resetColumnsConfig]="t('ResetColumnsConfig')"
-                                        [translations]="t('Translations')"
-                                        [value]="t('Value')"
-                                        [paginator]="{
-                                            firstPageLabel: t('Paginator.FirstPageLabel'),
-                                            itemsPerPageLabel: t('Paginator.ItemsPerPageLabel'),
-                                            lastPageLabel: t('Paginator.LastPageLabel'),
-                                            nextPageLabel: t('Paginator.NextPageLabel'),
-                                            ofLabel: t('Paginator.OfLabel'),
-                                            previousPageLabel: t('Paginator.PreviousPageLabel')
-                                        }"
-                                        [operators]="{
-                                            contains: t('Operators.Contains'),
-                                            endsWith: t('Operators.EndsWith'),
-                                            equals: t('Operators.Equals'),
-                                            greaterThan: t('Operators.GreaterThan'),
-                                            greaterThanEqual: t('Operators.GreaterThanEqual'),
-                                            lessThan: t('Operators.LessThan'),
-                                            lessThanEqual: t('Operators.LessThanEqual'),
-                                            notEquals: t('Operators.NotEquals'),
-                                            startsWith: t('Operators.StartsWith')
-                                        }"
-                                        [actionsMenu]="{
-                                            edit: t('Edit'),
-                                            delete: t('Delete')
-                                        }"
+                                <div class="layout__container">
+
+                                    <mat-form-field
+                                        appearance="outline"
+                                        class="col-2"
                                     >
-                                        <au-grid-column-translation
-                                            *ngFor="let columnConfig of originColumnsConfig"
-                                            [field]="columnConfig.field"
+                                        <mat-label>{{ t('Id') }}</mat-label>
+                                        <input
+                                            matInput
+                                            formControlName="id"
+                                            required
                                         >
-                                            {{ t(columnConfig.translation ? columnConfig.translation : columnConfig.field.toPascalCase()) }}
-                                        </au-grid-column-translation>
-                                    </au-grid-translations>
-                                </au-grid>
-                                <!-- / Grid -->
+                                        <mat-error>{{ formErrors?.id | async }}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field
+                                        appearance="outline"
+                                        class="col-6"
+                                    >
+                                        <mat-label>{{ t('Name') }}</mat-label>
+                                        <input
+                                            matInput
+                                            formControlName="name"
+                                            required
+                                        >
+                                        <mat-error>{{ formErrors?.name | async }}</mat-error>
+                                    </mat-form-field>
+                                    <au-mat-form-field-appearance
+                                        *ngIf="!(managedJob.data | isObjectEmpty)"
+                                        [label]="t('Data')"
+                                        class="col-12"
+                                    >
+                                        <ngx-json-viewer
+                                            class="m-4"
+                                            [json]="managedJob.data"
+                                            [expanded]="false"
+                                        >
+                                        </ngx-json-viewer>
+                                    </au-mat-form-field-appearance>
+
+                                </div>
+                            </form>
+                            <div class="flex justify-end">
+                                <button
+                                    mat-flat-button
+                                    mat-dialog-close
+                                    class="ml-3"
+                                    color="basic"
+                                >
+                                    <mat-icon
+                                        class="icon-size-5 mr-2"
+                                        svgIcon="heroicons_solid:x"
+                                    >
+                                    </mat-icon>
+                                    {{ t('Cancel') }}
+                                </button>
+                                <button
+                                    mat-flat-button
+                                    class="ml-3"
+                                    type="submit"
+                                    form="jobDetailDialogForm"
+                                    color="accent"
+                                    [disabled]="jobDialogFg.pristine"
+                                >
+                                    <mat-icon
+                                        class="icon-size-5 mr-2"
+                                        svgIcon="heroicons_solid:pencil"
+                                    >
+                                    </mat-icon>
+                                    {{ t('Save') }}
+                                </button>
                             </div>
-                        <!-- / main -->
-                        </div>
-                    </div>
+                        </ng-template>
+                        <au-grid-translations
+                            [actions]="t('Actions')"
+                            [AND]="t('AND')"
+                            [clearFilters]="t('ClearFilters')"
+                            [clickAndDragInfo]="t('ClickAndDragInfo')"
+                            [columns]="t('Columns')"
+                            [field]="t('Field')"
+                            [filter]="t('Filter')"
+                            [for]="jobsGridId"
+                            [operator]="t('Operator')"
+                            [OR]="t('OR')"
+                            [pleaseSelectField]="t('PleaseSelectField')"
+                            [translations]="t('Translations')"
+                            [value]="t('Value')"
+                            [noData]="t('NoData')"
+                            [paginator]="{
+                                firstPageLabel: t('Paginator.FirstPageLabel'),
+                                itemsPerPageLabel: t('Paginator.ItemsPerPageLabel'),
+                                lastPageLabel: t('Paginator.LastPageLabel'),
+                                nextPageLabel: t('Paginator.NextPageLabel'),
+                                ofLabel: t('Paginator.OfLabel'),
+                                previousPageLabel: t('Paginator.PreviousPageLabel')
+                            }"
+                            [operators]="{
+                                contains: t('Operators.Contains'),
+                                endsWith: t('Operators.EndsWith'),
+                                equals: t('Operators.Equals'),
+                                greaterThan: t('Operators.GreaterThan'),
+                                greaterThanEqual: t('Operators.GreaterThanEqual'),
+                                lessThan: t('Operators.LessThan'),
+                                lessThanEqual: t('Operators.LessThanEqual'),
+                                notEquals: t('Operators.NotEquals'),
+                                startsWith: t('Operators.StartsWith')
+                            }"
+                            [actionsMenu]="{
+                                edit: t('Edit'),
+                                delete: t('Delete'),
+                                cancel: t('Cancel'),
+                                close: t('Close')
+                            }"
+                        >
+                            <au-grid-column-translation
+                                *ngFor="let columnConfig of originJobsColumnsConfig"
+                                [field]="columnConfig.field"
+                            >
+                                {{ t(columnConfig.translation ? columnConfig.translation : columnConfig.field.toPascalCase()) }}
+                            </au-grid-column-translation>
+                        </au-grid-translations>
+                    </au-grid-elements-manager>
+                    <!-- #endregion component to manage jobs -->
 
                 </div>
 

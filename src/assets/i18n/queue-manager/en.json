@@ -3,6 +3,7 @@
     "CompletedJobs": "Completed",
     "DelayedJobs": "Delayed",
     "FailedJobs": "Failed",
+    "Job": "Job",
     "Jobs": "Jobs",
     "Name": "Name",
     "PausedJobs": "Paused",

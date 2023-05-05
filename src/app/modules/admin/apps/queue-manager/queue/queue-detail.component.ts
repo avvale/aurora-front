@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { ChangeDetectionStrategy, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridElementsManagerComponent, GridFiltersStorageService, GridState, GridStateService, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 import { jobColumnsConfig } from '../job/job.columns-config';
-import { QueueManagerQueue } from '../queue-manager.types';
+import { QueueManagerJob, QueueManagerQueue } from '../queue-manager.types';
 import { QueueService } from './queue.service';
 import { JobService } from '../job/job.service';
 
@@ -23,8 +23,14 @@ export class QueueDetailComponent extends ViewDetailComponent
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
     managedObject: QueueManagerQueue;
+
+    // relationships
+    /* #region  variables to manage grid-elements-manager jobs */
+    @ViewChild('jobsGridElementsManager') jobsComponent: GridElementsManagerComponent;
+    managedJob: QueueManagerJob;
+    jobDialogFg: FormGroup;
     jobsGridId: string = 'queueManager::queue.detail.jobsGridList';
-    jobsGridData$: Observable<GridData<any>>;
+    jobsGridData$: Observable<GridData<QueueManagerJob>>;
     jobsGridState: GridState = {};
     jobsColumnsConfig$: Observable<ColumnConfig[]>;
     jobsOriginColumnsConfig: ColumnConfig[] = [
@@ -36,12 +42,12 @@ export class QueueDetailComponent extends ViewDetailComponent
             {
                 return [
                     {
-                        id         : 'queueManager::queue.list.edit',
+                        id         : 'queueManager::queue.detail.editJob',
                         translation: 'edit',
                         icon       : 'mode_edit',
                     },
                     {
-                        id         : 'queueManager::queue.list.delete',
+                        id         : 'queueManager::queue.detail.deleteJob',
                         translation: 'delete',
                         icon       : 'delete',
                     },
@@ -117,17 +123,27 @@ export class QueueDetailComponent extends ViewDetailComponent
     createForm(): void
     {
         this.fg = this.fb.group({
-            id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
-            prefix: ['', [Validators.required, Validators.maxLength(50)]],
-            name: ['', [Validators.required, Validators.maxLength(50)]],
-            waitingJobs: [null, [Validators.required, Validators.maxLength(10)]],
-            activeJobs: [null, [Validators.required, Validators.maxLength(10)]],
+            id           : ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
+            prefix       : ['', [Validators.required, Validators.maxLength(50)]],
+            name         : ['', [Validators.required, Validators.maxLength(50)]],
+            waitingJobs  : [null, [Validators.required, Validators.maxLength(10)]],
+            activeJobs   : [null, [Validators.required, Validators.maxLength(10)]],
             completedJobs: [null, [Validators.required, Validators.maxLength(10)]],
-            failedJobs: [null, [Validators.required, Validators.maxLength(10)]],
-            delayedJobs: [null, [Validators.required, Validators.maxLength(10)]],
-            pausedJobs: [null, [Validators.required, Validators.maxLength(10)]],
+            failedJobs   : [null, [Validators.required, Validators.maxLength(10)]],
+            delayedJobs  : [null, [Validators.required, Validators.maxLength(10)]],
+            pausedJobs   : [null, [Validators.required, Validators.maxLength(10)]],
         });
     }
+
+    /* #region methods to manage Jobs */
+    createJobDialogForm(): void
+    {
+        this.jobDialogFg = this.fb.group({
+            id  : [{ value: '', disabled: true }],
+            name: [{ value: '', disabled: true }],
+        });
+    }
+    /* #endregion methods to manage Jobs */
 
     async handleAction(action: Action): Promise<void>
     {
@@ -162,6 +178,20 @@ export class QueueDetailComponent extends ViewDetailComponent
                 };
 
                 this.jobsGridData$ = this.jobService.pagination$;
+
+                // subscription to get job in edit author action
+                this.jobService
+                    .job$
+                    .pipe(takeUntil(this.unsubscribeAll$))
+                    .subscribe(job =>
+                    {
+                        if (job && this.currentAction.id === 'queueManager::queue.detail.editJob')
+                        {
+                            this.managedJob = job;
+                            console.log(job.data);
+                            this.jobDialogFg.patchValue(job);
+                        }
+                    });
 
                 break;
 
@@ -219,6 +249,21 @@ export class QueueDetailComponent extends ViewDetailComponent
                 }
                 break;
                 /* #endregion common actions */
+
+            /* #region actions to manage books grid-elements-manager */
+            case 'queueManager::queue.detail.editJob':
+                this.createJobDialogForm();
+                await lastValueFrom(
+                    this.jobService
+                        .findById({
+                            id  : action.data.row.id,
+                            name: this.managedObject.name,
+                        }),
+                );
+                this.jobsComponent.handleElementDetailDialog(action.id);
+                break;
+            /* #endregion actions to manage books grid-elements-manager */
+
         }
     }
 }

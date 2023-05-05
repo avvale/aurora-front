@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { DocumentNode } from '@apollo/client/core';
-import { GraphQLService, GridData, QueryStatement } from '@aurora';
+import { GraphQLService, GridData, QueryStatement, parseGqlFields } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
 import { QueueManagerJob } from '../queue-manager.types';
-import { paginationQuery } from './job.graphql';
+import { fields, findByIdQuery, paginationQuery } from './job.graphql';
 
 @Injectable({
     providedIn: 'root',
@@ -11,8 +11,8 @@ import { paginationQuery } from './job.graphql';
 export class JobService
 {
     paginationSubject$: BehaviorSubject<GridData<QueueManagerJob> | null> = new BehaviorSubject(null);
-    queueSubject$: BehaviorSubject<QueueManagerJob | null> = new BehaviorSubject(null);
-    queuesSubject$: BehaviorSubject<QueueManagerJob[] | null> = new BehaviorSubject(null);
+    jobSubject$: BehaviorSubject<QueueManagerJob | null> = new BehaviorSubject(null);
+    jobsSubject$: BehaviorSubject<QueueManagerJob[] | null> = new BehaviorSubject(null);
 
     constructor(
         private readonly graphqlService: GraphQLService,
@@ -26,14 +26,14 @@ export class JobService
         return this.paginationSubject$.asObservable();
     }
 
-    get queue$(): Observable<QueueManagerJob>
+    get job$(): Observable<QueueManagerJob>
     {
-        return this.queueSubject$.asObservable();
+        return this.jobSubject$.asObservable();
     }
 
-    get queues$(): Observable<QueueManagerJob[]>
+    get jobs$(): Observable<QueueManagerJob[]>
     {
-        return this.queuesSubject$.asObservable();
+        return this.jobsSubject$.asObservable();
     }
 
     pagination(
@@ -63,6 +63,42 @@ export class JobService
                 first(),
                 map(result => result.data.pagination),
                 tap(pagination => this.paginationSubject$.next(pagination)),
+            );
+    }
+
+    findById(
+        {
+            graphqlStatement = findByIdQuery,
+            id = '',
+            name = '',
+        }: {
+            graphqlStatement?: DocumentNode;
+            id?: string;
+            name?: string;
+        } = {},
+    ): Observable<{
+        object: QueueManagerJob;
+    }>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                object: QueueManagerJob;
+            }>({
+                query    : parseGqlFields(graphqlStatement, fields),
+                variables: {
+                    id,
+                    name,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data),
+                tap(data =>
+                {
+                    this.jobSubject$.next(data.object);
+                }),
             );
     }
 }

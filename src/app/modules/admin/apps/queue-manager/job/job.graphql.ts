@@ -1,16 +1,19 @@
 import gql from 'graphql-tag';
 
 export const fields = `
-    prefix
+    id
     name
-    waitingJobs
-    activeJobs
-    completedJobs
-    failedJobs
-    delayedJobs
-    pausedJobs
-    createdAt
-    updatedAt
+    data
+    opts
+    progress
+    delay
+    timestamp
+    attemptsMade
+    failedReason
+    stacktrace
+    returnvalue
+    finishedOn
+    processedOn
 `;
 
 export const relationsFields = `
@@ -29,6 +32,21 @@ export const paginationQuery = gql`
             total
             rows
             count
+        }
+    }
+`;
+
+export const findByIdQuery = gql`
+    query QueueManagerFindJobById (
+        $id: GraphQLString!
+        $name: GraphQLString!
+    ) {
+        object: queueManagerFindJobById (
+            id: $id
+            name: $name
+        ) {
+            id
+            #FIELDS
         }
     }
 `;

@@ -4,6 +4,7 @@ import { TranslocoModule, TRANSLOCO_SCOPE } from '@ngneat/transloco';
 import { FuseConfirmationModule } from '@fuse/services/confirmation';
 import { DatePickerDayjsAdapter, DatePickerDayjsFormats, ValidationMessagesModule } from '@aurora';
 import { SharedModule } from 'app/shared/shared.module';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 // Material
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -41,6 +42,9 @@ import { QueueDetailComponent } from './queue/queue-detail.component';
         MatProgressSpinnerModule,
         MatSelectModule,
         MatSnackBarModule,
+
+        // Third party
+        NgxJsonViewerModule,
     ],
     declarations: [
         QueueManagerComponent,

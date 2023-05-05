@@ -52,7 +52,15 @@ export interface QueueManagerUpdateQueues {
 export interface QueueManagerJob {
     id: string;
     name: string;
-    delay: number;
+    data: any;
+    opts: any;
     progress: number;
+    delay: number;
+    timestamp: number;
     attemptsMode: number;
+    failedReason?: string;
+    stacktrace: string[];
+    returnvalue: any;
+    finishedOn: number;
+    processedOn: number;
 }
