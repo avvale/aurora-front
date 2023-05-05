@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { DocumentNode } from '@apollo/client/core';
+import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { GraphQLService, GridData, QueryStatement, parseGqlFields } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
 import { QueueManagerJob } from '../queue-manager.types';
-import { fields, findByIdQuery, paginationQuery } from './job.graphql';
+import { deleteByIdMutation, fields, findByIdQuery, paginationQuery } from './job.graphql';
 
 @Injectable({
     providedIn: 'root',
@@ -100,5 +100,19 @@ export class JobService
                     this.jobSubject$.next(data.object);
                 }),
             );
+    }
+
+    deleteById<T>(
+        id: string,
+        name: string,
+        graphqlStatement = deleteByIdMutation,
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: { id, name },
+            });
     }
 }

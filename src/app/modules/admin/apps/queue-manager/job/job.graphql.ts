@@ -50,3 +50,17 @@ export const findByIdQuery = gql`
         }
     }
 `;
+
+export const deleteByIdMutation = gql`
+    mutation QueueManagerDeleteJobById (
+        $id: GraphQLString!
+        $name: GraphQLString!
+    ) {
+        queueManagerDeleteJobById (
+            id: $id
+            name: $name
+        ) {
+            ${fields}
+        }
+    }
+`;

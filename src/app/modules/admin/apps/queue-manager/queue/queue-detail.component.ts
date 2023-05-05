@@ -47,8 +47,8 @@ export class QueueDetailComponent extends ViewDetailComponent
                         icon       : 'mode_edit',
                     },
                     {
-                        id         : 'queueManager::queue.detail.deleteJob',
-                        translation: 'delete',
+                        id         : 'queueManager::queue.detail.removeJob',
+                        translation: 'remove',
                         icon       : 'delete',
                     },
                 ];
@@ -295,6 +295,58 @@ export class QueueDetailComponent extends ViewDetailComponent
                         }),
                 );
                 this.jobsComponent.handleElementDetailDialog(action.id);
+                break;
+
+            case 'queueManager::queue.detail.removeJob':
+                const removeJobDialogRef = this.confirmationService.open({
+                    title  : `${this.translocoService.translate('Delete')} ${this.translocoService.translate('queueManager.Job')}`,
+                    message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('queueManager.Job') }),
+                    icon   : {
+                        show : true,
+                        name : 'heroicons_outline:exclamation',
+                        color: 'warn',
+                    },
+                    actions: {
+                        confirm: {
+                            show : true,
+                            label: this.translocoService.translate('Remove'),
+                            color: 'warn',
+                        },
+                        cancel: {
+                            show : true,
+                            label: this.translocoService.translate('Cancel'),
+                        },
+                    },
+                    dismissible: true,
+                });
+
+                removeJobDialogRef
+                    .afterClosed()
+                    .subscribe(async result =>
+                    {
+                        if (result === 'confirmed')
+                        {
+                            try
+                            {
+                                await lastValueFrom(
+                                    this.jobService
+                                        .deleteById<QueueManagerJob>(
+                                            action.data.row.id,
+                                            this.managedObject.name,
+                                        ),
+                                );
+
+                                this.actionService.action({
+                                    id          : 'queueManager::queue.detail.jobsPagination',
+                                    isViewAction: false,
+                                });
+                            }
+                            catch(error)
+                            {
+                                log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
+                            }
+                        }
+                    });
                 break;
             /* #endregion actions to manage jobs grid-elements-manager */
 
