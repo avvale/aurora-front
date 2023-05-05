@@ -227,8 +227,9 @@
                                         <mat-error>{{ formErrors?.delay | async }}</mat-error>
                                     </mat-form-field>
                                     <mat-form-field
+                                        *ngIf="managedJob?.failedReason"
                                         appearance="outline"
-                                        class="col-6"
+                                        class="col-12"
                                     >
                                         <mat-label>{{ t('queueManager.FailedReason') }}</mat-label>
                                         <input
