@@ -8,7 +8,9 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 // Material
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
@@ -34,7 +36,9 @@ import { QueueDetailComponent } from './queue/queue-detail.component';
         FuseConfirmationModule,
 
         // Material
+        MatBadgeModule,
         MatButtonModule,
+        MatButtonToggleModule,
         MatCheckboxModule,
         MatDatepickerModule,
         MatIconModule,
@@ -49,7 +53,7 @@ import { QueueDetailComponent } from './queue/queue-detail.component';
     declarations: [
         QueueManagerComponent,
         QueueDetailComponent,
-        QueueListComponent
+        QueueListComponent,
     ],
     providers: [
         {

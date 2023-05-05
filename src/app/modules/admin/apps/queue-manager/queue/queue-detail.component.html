@@ -104,88 +104,64 @@
                         >
                         <mat-error>{{ formErrors?.name | async }}</mat-error>
                     </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-2"
+                    <au-mat-form-field-appearance
+                        [label]="t('queueManager.WaitingJobs')"
+                        class="col-2 cursor-pointer"
                     >
-                        <mat-label>{{ t('queueManager.WaitingJobs') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="waitingJobs"
-                            type="number"
-                            maxlength="10"
-                        >
-                        <mat-error>{{ formErrors?.waitingJobs | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-2"
+                        <p class="text-8xl">{{ managedObject.waitingJobs }}</p>
+                    </au-mat-form-field-appearance>
+                    <au-mat-form-field-appearance
+                        [label]="t('queueManager.ActiveJobs')"
+                        class="col-2 cursor-pointer"
                     >
-                        <mat-label>{{ t('queueManager.ActiveJobs') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="activeJobs"
-                            type="number"
-                            maxlength="10"
-                        >
-                        <mat-error>{{ formErrors?.activeJobs | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-2"
+                        <p class="text-8xl">{{ managedObject.activeJobs }}</p>
+                    </au-mat-form-field-appearance>
+                    <au-mat-form-field-appearance
+                        [label]="t('queueManager.CompletedJobs')"
+                        class="col-2 cursor-pointer"
+                        (click)="
+                            actionService.action({
+                                id          : 'queueManager::queue.detail.changeTypeJobsPagination',
+                                isViewAction: false,
+                                data        : {
+                                    jobType: 'completed'
+                                }
+                            })
+                        "
                     >
-                        <mat-label>{{ t('queueManager.CompletedJobs') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="completedJobs"
-                            type="number"
-                            maxlength="10"
-                        >
-                        <mat-error>{{ formErrors?.completedJobs | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-2"
+                        <p class="text-8xl">{{ managedObject.completedJobs }}</p>
+                    </au-mat-form-field-appearance>
+                    <au-mat-form-field-appearance
+                        [label]="t('queueManager.FailedJobs')"
+                        class="col-2 cursor-pointer"
+                        (click)="
+                            actionService.action({
+                                id          : 'queueManager::queue.detail.changeTypeJobsPagination',
+                                isViewAction: false,
+                                data        : {
+                                    jobType: 'failed'
+                                }
+                            })
+                        "
                     >
-                        <mat-label>{{ t('queueManager.FailedJobs') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="failedJobs"
-                            type="number"
-                            maxlength="10"
-                        >
-                        <mat-error>{{ formErrors?.failedJobs | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-2"
+                        <p class="text-8xl text-red-600">{{ managedObject.failedJobs }}</p>
+                    </au-mat-form-field-appearance>
+                    <au-mat-form-field-appearance
+                        [label]="t('queueManager.DelayedJobs')"
+                        class="col-2 cursor-pointer"
                     >
-                        <mat-label>{{ t('queueManager.DelayedJobs') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="delayedJobs"
-                            type="number"
-                            maxlength="10"
-                        >
-                        <mat-error>{{ formErrors?.delayedJobs | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-2"
+                        <p class="text-8xl">{{ managedObject.delayedJobs }}</p>
+                    </au-mat-form-field-appearance>
+                    <au-mat-form-field-appearance
+                        [label]="t('queueManager.PausedJobs')"
+                        class="col-2 cursor-pointer"
                     >
-                        <mat-label>{{ t('queueManager.PausedJobs') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="pausedJobs"
-                            type="number"
-                            maxlength="10"
-                        >
-                        <mat-error>{{ formErrors?.pausedJobs | async }}</mat-error>
-                    </mat-form-field>
+                        <p class="text-8xl">{{ managedObject.pausedJobs }}</p>
+                    </au-mat-form-field-appearance>
 
                     <!-- #region component to manage jobs -->
                     <au-grid-elements-manager
-                        class="col-12 mt-7"
+                        class="col-12 mt-2"
                         [columnsConfig]="jobsColumnsConfig$ | async"
                         [dialogTitle]="t('queueManager.Job')"
                         [gridData]="jobsGridData$ | async"
@@ -225,7 +201,6 @@
                                         <input
                                             matInput
                                             formControlName="id"
-                                            required
                                         >
                                         <mat-error>{{ formErrors?.id | async }}</mat-error>
                                     </mat-form-field>
@@ -237,10 +212,43 @@
                                         <input
                                             matInput
                                             formControlName="name"
-                                            required
                                         >
                                         <mat-error>{{ formErrors?.name | async }}</mat-error>
                                     </mat-form-field>
+                                    <mat-form-field
+                                        appearance="outline"
+                                        class="col-2"
+                                    >
+                                        <mat-label>{{ t('queueManager.Delay') }}</mat-label>
+                                        <input
+                                            matInput
+                                            formControlName="delay"
+                                        >
+                                        <mat-error>{{ formErrors?.delay | async }}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field
+                                        appearance="outline"
+                                        class="col-6"
+                                    >
+                                        <mat-label>{{ t('queueManager.FailedReason') }}</mat-label>
+                                        <input
+                                            matInput
+                                            formControlName="failedReason"
+                                        >
+                                        <mat-error>{{ formErrors?.failedReason | async }}</mat-error>
+                                    </mat-form-field>
+                                    <au-mat-form-field-appearance
+                                        *ngIf="!(managedJob.opts | isObjectEmpty)"
+                                        [label]="t('Options')"
+                                        class="col-12"
+                                    >
+                                        <ngx-json-viewer
+                                            class="m-4"
+                                            [json]="managedJob.opts"
+                                            [expanded]="false"
+                                        >
+                                        </ngx-json-viewer>
+                                    </au-mat-form-field-appearance>
                                     <au-mat-form-field-appearance
                                         *ngIf="!(managedJob.data | isObjectEmpty)"
                                         [label]="t('Data')"
@@ -253,39 +261,8 @@
                                         >
                                         </ngx-json-viewer>
                                     </au-mat-form-field-appearance>
-
                                 </div>
                             </form>
-                            <div class="flex justify-end">
-                                <button
-                                    mat-flat-button
-                                    mat-dialog-close
-                                    class="ml-3"
-                                    color="basic"
-                                >
-                                    <mat-icon
-                                        class="icon-size-5 mr-2"
-                                        svgIcon="heroicons_solid:x"
-                                    >
-                                    </mat-icon>
-                                    {{ t('Cancel') }}
-                                </button>
-                                <button
-                                    mat-flat-button
-                                    class="ml-3"
-                                    type="submit"
-                                    form="jobDetailDialogForm"
-                                    color="accent"
-                                    [disabled]="jobDialogFg.pristine"
-                                >
-                                    <mat-icon
-                                        class="icon-size-5 mr-2"
-                                        svgIcon="heroicons_solid:pencil"
-                                    >
-                                    </mat-icon>
-                                    {{ t('Save') }}
-                                </button>
-                            </div>
                         </ng-template>
                         <au-grid-translations
                             [actions]="t('Actions')"

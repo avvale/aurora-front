@@ -133,15 +133,14 @@ export class QueueService
                 variables: {
                     id,
                     constraint,
-                    queryPaginateJobs: {
-                        ...queryPaginateJobs,
+                    queryPaginateJobs,
+                    constraintPaginateJobs: {
+                        ...constraintPaginateJobs,
                         where: {
-                            ...queryPaginateJobs.where,
+                            ...constraintPaginateJobs.where,
                             queueId: id,
                         },
-
                     },
-                    constraintPaginateJobs,
                 },
             })
             .valueChanges

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridElementsManagerComponent, GridFiltersStorageService, GridState, GridStateService, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridElementsManagerComponent, GridFiltersStorageService, GridState, GridStateService, log, mapActions, QueryStatementHandler, Utils, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 import { jobColumnsConfig } from '../job/job.columns-config';
-import { QueueManagerJob, QueueManagerQueue } from '../queue-manager.types';
+import { QueueJobType, QueueManagerJob, QueueManagerQueue } from '../queue-manager.types';
 import { QueueService } from './queue.service';
 import { JobService } from '../job/job.service';
 
@@ -16,7 +16,7 @@ import { JobService } from '../job/job.service';
 export class QueueDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
-    // ..
+    currentJobType: QueueJobType  = 'failed';
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -123,15 +123,9 @@ export class QueueDetailComponent extends ViewDetailComponent
     createForm(): void
     {
         this.fg = this.fb.group({
-            id           : ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
-            prefix       : ['', [Validators.required, Validators.maxLength(50)]],
-            name         : ['', [Validators.required, Validators.maxLength(50)]],
-            waitingJobs  : [null, [Validators.required, Validators.maxLength(10)]],
-            activeJobs   : [null, [Validators.required, Validators.maxLength(10)]],
-            completedJobs: [null, [Validators.required, Validators.maxLength(10)]],
-            failedJobs   : [null, [Validators.required, Validators.maxLength(10)]],
-            delayedJobs  : [null, [Validators.required, Validators.maxLength(10)]],
-            pausedJobs   : [null, [Validators.required, Validators.maxLength(10)]],
+            id    : [{ value: '', disabled: true }, [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
+            prefix: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(50)]],
+            name  : [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(50)]],
         });
     }
 
@@ -139,8 +133,10 @@ export class QueueDetailComponent extends ViewDetailComponent
     createJobDialogForm(): void
     {
         this.jobDialogFg = this.fb.group({
-            id  : [{ value: '', disabled: true }],
-            name: [{ value: '', disabled: true }],
+            id          : [{ value: '', disabled: true }],
+            name        : [{ value: '', disabled: true }],
+            delay       : [{ value: '', disabled: true }],
+            failedReason: [{ value: '', disabled: true }],
         });
     }
     /* #endregion methods to manage Jobs */
@@ -250,7 +246,45 @@ export class QueueDetailComponent extends ViewDetailComponent
                 break;
                 /* #endregion common actions */
 
-            /* #region actions to manage books grid-elements-manager */
+            /* #region actions to manage jobs grid-elements-manager */
+            case 'queueManager::queue.detail.changeTypeJobsPagination':
+                this.currentJobType = action.data.jobType;
+
+                // reset request pagination
+                this.gridStateService.setPageState(this.jobsGridId, { pageIndex: 0, pageSize: 10 });
+                // reset grid component pagination
+                this.jobsGridState = { ...this.jobsGridState, page: { pageIndex: 0, pageSize: 10 }};
+
+                this.actionService.action({
+                    id          : 'queueManager::queue.detail.jobsPagination',
+                    isViewAction: false,
+                    noCache     : true,
+                });
+                break;
+
+            case 'queueManager::queue.detail.jobsPagination':
+                await lastValueFrom(
+                    this.jobService
+                        .pagination({
+                            query: action.data.query ?
+                                action.data.query :
+                                QueryStatementHandler
+                                    .init({ columnsConfig: jobColumnsConfig })
+                                    .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.jobsGridId))
+                                    .setSort(this.gridStateService.getSort(this.jobsGridId))
+                                    .setPage(this.gridStateService.getPage(this.jobsGridId))
+                                    .setSearch(this.gridStateService.getSearchState(this.jobsGridId))
+                                    .getQueryStatement(),
+                            constraint: {
+                                where: {
+                                    queueId: this.managedObject.id,
+                                    jobType: this.currentJobType,
+                                },
+                            },
+                        }),
+                );
+                break;
+
             case 'queueManager::queue.detail.editJob':
                 this.createJobDialogForm();
                 await lastValueFrom(
@@ -262,7 +296,7 @@ export class QueueDetailComponent extends ViewDetailComponent
                 );
                 this.jobsComponent.handleElementDetailDialog(action.id);
                 break;
-            /* #endregion actions to manage books grid-elements-manager */
+            /* #endregion actions to manage jobs grid-elements-manager */
 
         }
     }

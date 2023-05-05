@@ -1,3 +1,5 @@
+export type QueueJobType = 'completed' | 'waiting' | 'active' | 'delayed' | 'failed'| 'paused';
+
 export interface QueueManagerQueue {
     id: string;
     prefix: string;
@@ -60,7 +62,7 @@ export interface QueueManagerJob {
     attemptsMode: number;
     failedReason?: string;
     stacktrace: string[];
-    returnvalue: any;
+    returnvalue?: any;
     finishedOn: number;
     processedOn: number;
 }

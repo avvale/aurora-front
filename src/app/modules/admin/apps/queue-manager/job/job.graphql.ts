@@ -25,7 +25,7 @@ export const paginationQuery = gql`
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        pagination: queueManagerPaginateQueues (
+        pagination: queueManagerPaginateJobs (
             query: $query
             constraint: $constraint
         ) {

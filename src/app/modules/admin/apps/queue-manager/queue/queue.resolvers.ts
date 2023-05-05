@@ -129,6 +129,7 @@ export class QueueEditResolver implements Resolve<{
             constraintPaginateJobs: {
                 where: {
                     queueId: route.paramMap.get('id'),
+                    jobType: 'failed',
                 },
             },
         });

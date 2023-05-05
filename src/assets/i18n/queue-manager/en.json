@@ -1,8 +1,10 @@
 {
     "ActiveJobs": "ActiveJobs",
     "CompletedJobs": "Completed",
+    "Delay": "Delay",
     "DelayedJobs": "Delayed",
     "FailedJobs": "Failed",
+    "FailedReason": "Failed Reason",
     "Job": "Job",
     "Jobs": "Jobs",
     "Name": "Name",
