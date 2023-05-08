@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, QueryStatementHandler } from '@aurora';
-import { Observable } from 'rxjs';
-import { QueueManagerJobRegistry } from '../queue-manager.types';
+import { Observable, Subject, first, map } from 'rxjs';
+import { QueueManagerJob, QueueManagerJobRegistry } from '../queue-manager.types';
 import { jobRegistryColumnsConfig } from './job-registry.columns-config';
+import { JobService } from '../job/job.service';
 import { JobRegistryService } from './job-registry.service';
 
 @Injectable({
@@ -82,12 +83,13 @@ export class JobRegistryNewResolver implements Resolve<Action>
     providedIn: 'root',
 })
 export class JobRegistryEditResolver implements Resolve<{
-	object: QueueManagerJobRegistry;
+	object: QueueManagerJob;
 }>
 {
     constructor(
 		private readonly actionService: ActionService,
 		private readonly jobRegistryService: JobRegistryService,
+        private readonly jobService: JobService,
     )
     {}
 
@@ -101,7 +103,7 @@ export class JobRegistryEditResolver implements Resolve<{
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
     ): Observable<{
-		object: QueueManagerJobRegistry;
+		object: QueueManagerJob;
     }>
     {
         this.actionService.action({
@@ -109,8 +111,30 @@ export class JobRegistryEditResolver implements Resolve<{
             isViewAction: true,
         });
 
-        return this.jobRegistryService.findById({
+        const jobResponse = new Subject<{ object: QueueManagerJob; }>();
+        this.jobRegistryService.findById({
             id: route.paramMap.get('id'),
-        });
+        })
+            .pipe(
+                map(response => response.object),
+                first(),
+            )
+            .subscribe(jobRegistry =>
+            {
+                this.jobService
+                    .findById({
+                        id  : jobRegistry.jobId,
+                        name: jobRegistry.queueName,
+                    })
+                    .pipe(
+                        first(),
+                    )
+                    .subscribe(job =>
+                    {
+                        jobResponse.next(job);
+                    });
+            });
+
+        return jobResponse;
     }
 }

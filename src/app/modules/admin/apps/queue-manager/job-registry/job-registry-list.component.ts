@@ -34,8 +34,8 @@ export class JobRegistryListComponent extends ViewBaseComponent
                 return [
                     {
                         id         : 'queueManager::jobRegistry.list.edit',
-                        translation: 'edit',
-                        icon       : 'mode_edit',
+                        translation: 'view',
+                        icon       : 'pageview',
                     },
                     {
                         id         : 'queueManager::jobRegistry.list.delete',

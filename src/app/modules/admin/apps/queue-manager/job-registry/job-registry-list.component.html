@@ -7,9 +7,9 @@
             <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
             <au-title>
                 <mat-icon
-                    svgIcon="heroicons_solid:tag"
                     class="icon-size-8 mr-2"
                 >
+                    engineering
                 </mat-icon>
                 {{ t('queueManager.JobRegistry') }}
             </au-title>
@@ -72,7 +72,8 @@
                 }"
                 [actionsMenu]="{
                     edit: t('Edit'),
-                    delete: t('Delete')
+                    delete: t('Delete'),
+                    view: t('View')
                 }"
             >
                 <au-grid-column-translation

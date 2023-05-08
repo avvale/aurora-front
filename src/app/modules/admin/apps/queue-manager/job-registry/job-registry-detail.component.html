@@ -7,9 +7,9 @@
             <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
             <au-title>
                 <mat-icon
-                    svgIcon="heroicons_solid:tag"
                     class="icon-size-8 mr-2"
                 >
+                    engineering
                 </mat-icon>
                 {{ t('queueManager.JobRegistry') }}
             </au-title>
@@ -79,43 +79,73 @@
 
                     <mat-form-field
                         appearance="outline"
-                        class="col-6"
+                        class="col-2"
                     >
-                        <mat-label>{{ t('queueManager.QueueName') }}</mat-label>
+                        <mat-label>{{ t('Id') }}</mat-label>
                         <input
                             matInput
-                            formControlName="queueName"
-                            maxlength="50"
-                            required
+                            formControlName="id"
                         >
-                        <mat-error>{{ formErrors?.queueName | async }}</mat-error>
+                        <mat-error>{{ formErrors?.id | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-6"
+                    >
+                        <mat-label>{{ t('Name') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="name"
+                        >
+                        <mat-error>{{ formErrors?.name | async }}</mat-error>
                     </mat-form-field>
                     <mat-form-field
                         appearance="outline"
                         class="col-2"
                     >
-                        <mat-label>{{ t('queueManager.JobId') }}</mat-label>
+                        <mat-label>{{ t('queueManager.Delay') }}</mat-label>
                         <input
                             matInput
-                            formControlName="jobId"
-                            type="number"
-                            maxlength="10"
+                            formControlName="delay"
                         >
-                        <mat-error>{{ formErrors?.jobId | async }}</mat-error>
+                        <mat-error>{{ formErrors?.delay | async }}</mat-error>
                     </mat-form-field>
                     <mat-form-field
+                        *ngIf="managedObject?.failedReason"
                         appearance="outline"
-                        class="col-6"
+                        class="col-12"
                     >
-                        <mat-label>{{ t('queueManager.JobName') }}</mat-label>
+                        <mat-label>{{ t('queueManager.FailedReason') }}</mat-label>
                         <input
                             matInput
-                            formControlName="jobName"
-                            maxlength="50"
-                            required
+                            formControlName="failedReason"
                         >
-                        <mat-error>{{ formErrors?.jobName | async }}</mat-error>
+                        <mat-error>{{ formErrors?.failedReason | async }}</mat-error>
                     </mat-form-field>
+                    <au-mat-form-field-appearance
+                        *ngIf="!(managedObject.opts | isObjectEmpty)"
+                        [label]="t('Options')"
+                        class="col-12"
+                    >
+                        <ngx-json-viewer
+                            class="m-4"
+                            [json]="managedObject.opts"
+                            [expanded]="false"
+                        >
+                        </ngx-json-viewer>
+                    </au-mat-form-field-appearance>
+                    <au-mat-form-field-appearance
+                        *ngIf="!(managedObject.data | isObjectEmpty)"
+                        [label]="t('Data')"
+                        class="col-12"
+                    >
+                        <ngx-json-viewer
+                            class="m-4"
+                            [json]="managedObject.data"
+                            [expanded]="false"
+                        >
+                        </ngx-json-viewer>
+                    </au-mat-form-field-appearance>
 
                 </div>
 

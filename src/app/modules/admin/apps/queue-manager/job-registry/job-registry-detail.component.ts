@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from 
 import { Validators } from '@angular/forms';
 import { Action, Crumb, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
-import { QueueManagerJobRegistry } from '../queue-manager.types';
+import { QueueManagerJob, QueueManagerJobRegistry } from '../queue-manager.types';
 import { JobRegistryService } from './job-registry.service';
+import { JobService } from '../job/job.service';
 
 @Component({
     selector       : 'queue-manager-job-registry-detail',
@@ -20,7 +21,7 @@ export class JobRegistryDetailComponent extends ViewDetailComponent
     // it should only be used to obtain uninitialized
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
-    managedObject: QueueManagerJobRegistry;
+    managedObject: QueueManagerJob;
 
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
@@ -32,6 +33,7 @@ export class JobRegistryDetailComponent extends ViewDetailComponent
     constructor(
 		protected readonly injector: Injector,
 		private readonly jobRegistryService: JobRegistryService,
+        private readonly jobService: JobService,
     )
     {
         super(injector);
@@ -78,11 +80,10 @@ export class JobRegistryDetailComponent extends ViewDetailComponent
     createForm(): void
     {
         this.fg = this.fb.group({
-            id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
-            queueName: ['', [Validators.required, Validators.maxLength(50)]],
-            jobId: [null, [Validators.required, Validators.maxLength(10)]],
-            jobName: ['', [Validators.required, Validators.maxLength(50)]],
-            tags: null,
+            id          : [{ value: '', disabled: true }],
+            name        : [{ value: '', disabled: true }],
+            delay       : [{ value: '', disabled: true }],
+            failedReason: [{ value: '', disabled: true }],
         });
     }
 
@@ -97,8 +98,8 @@ export class JobRegistryDetailComponent extends ViewDetailComponent
                 break;
 
             case 'queueManager::jobRegistry.detail.edit':
-                this.jobRegistryService
-                    .jobRegistry$
+                this.jobService
+                    .job$
                     .pipe(takeUntil(this.unsubscribeAll$))
                     .subscribe(item =>
                     {

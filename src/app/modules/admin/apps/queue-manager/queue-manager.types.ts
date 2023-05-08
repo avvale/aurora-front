@@ -70,7 +70,7 @@ export interface QueueManagerJob {
 export interface QueueManagerJobRegistry {
     id: string;
     queueName: string;
-    jobId: number;
+    jobId: string;
     jobName: string;
     tags?: any;
     createdAt?: string;

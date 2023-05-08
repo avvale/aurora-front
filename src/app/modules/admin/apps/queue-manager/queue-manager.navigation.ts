@@ -24,7 +24,7 @@ export const queueManagerNavigation: FuseNavigationItem = {
             id   : 'jobsRegistry',
             title: 'JobRegistry',
             type : 'basic',
-            icon : 'heroicons_outline:tag',
+            icon : 'engineering',
             link : '/queue-manager/job-registry',
         },
     ],
