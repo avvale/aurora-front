@@ -20,5 +20,12 @@ export const queueManagerNavigation: FuseNavigationItem = {
                 permission: 'queueManager.queue.access',
             },
         },
+        {
+            id   : 'jobsRegistry',
+            title: 'JobRegistry',
+            type : 'basic',
+            icon : 'heroicons_outline:tag',
+            link : '/queue-manager/job-registry',
+        },
     ],
 };

@@ -66,3 +66,38 @@ export interface QueueManagerJob {
     finishedOn: number;
     processedOn: number;
 }
+
+export interface QueueManagerJobRegistry {
+    id: string;
+    queueName: string;
+    jobId: number;
+    jobName: string;
+    tags?: any;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
+}
+
+export interface QueueManagerCreateJobRegistry {
+    id: string;
+    queueName: string;
+    jobId: number;
+    jobName: string;
+    tags?: any;
+}
+
+export interface QueueManagerUpdateJobRegistryById {
+    id: string;
+    queueName?: string;
+    jobId?: number;
+    jobName?: string;
+    tags?: any;
+}
+
+export interface QueueManagerUpdateJobsRegistry {
+    id?: string;
+    queueName?: string;
+    jobId?: number;
+    jobName?: string;
+    tags?: any;
+}

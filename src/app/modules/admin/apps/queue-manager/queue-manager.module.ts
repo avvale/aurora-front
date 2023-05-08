@@ -24,6 +24,8 @@ import { queueManagerRoutes } from './queue-manager.routing';
 import { QueueManagerComponent } from './queue-manager.component';
 import { QueueListComponent } from './queue/queue-list.component';
 import { QueueDetailComponent } from './queue/queue-detail.component';
+import { JobRegistryListComponent } from './job-registry/job-registry-list.component';
+import { JobRegistryDetailComponent } from './job-registry/job-registry-detail.component';
 
 @NgModule({
     imports: [
@@ -54,6 +56,8 @@ import { QueueDetailComponent } from './queue/queue-detail.component';
         QueueManagerComponent,
         QueueDetailComponent,
         QueueListComponent,
+        JobRegistryDetailComponent,
+        JobRegistryListComponent
     ],
     providers: [
         {
