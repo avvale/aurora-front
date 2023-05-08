@@ -299,8 +299,8 @@ export class QueueDetailComponent extends ViewDetailComponent
 
             case 'queueManager::queue.detail.removeJob':
                 const removeJobDialogRef = this.confirmationService.open({
-                    title  : `${this.translocoService.translate('Delete')} ${this.translocoService.translate('queueManager.Job')}`,
-                    message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('queueManager.Job') }),
+                    title  : `${this.translocoService.translate('Delete')} ${this.translocoService.translate('queueManager.Job')} ${action.data.row.id}`,
+                    message: `${this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('queueManager.Job') })} ${action.data.row.id}`,
                     icon   : {
                         show : true,
                         name : 'heroicons_outline:exclamation',
