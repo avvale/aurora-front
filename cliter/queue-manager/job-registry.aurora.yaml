@@ -17,13 +17,14 @@ aggregateProperties:
     maxLength: 50
     nullable: false
   - name: jobId
-    type: int.unsigned
-    maxLength: 10
+    type: varchar
+    maxLength: 36
     nullable: false
+    index: unique
   - name: jobName
     type: varchar
     maxLength: 50
-    nullable: false
+    nullable: true
     defaultValue: __default__
   - name: tags
     type: json
@@ -38,3 +39,4 @@ aggregateProperties:
   - name: deletedAt
     type: timestamp
     nullable: true
+additionalApis: []
