@@ -104,17 +104,49 @@
                         >
                         <mat-error>{{ formErrors?.name | async }}</mat-error>
                     </mat-form-field>
+
+                    <!-- #region counters -->
                     <au-mat-form-field-appearance
                         [label]="t('queueManager.WaitingJobs')"
                         class="col-2 cursor-pointer"
+                        (click)="
+                            actionService.action({
+                                id          : 'queueManager::queue.detail.changeTypeJobsPagination',
+                                isViewAction: false,
+                                data        : {
+                                    jobType: 'waiting'
+                                }
+                            })
+                        "
                     >
-                        <p class="text-8xl">{{ managedObject.waitingJobs }}</p>
+                        <p class="text-7xl">{{ managedObject.waitingJobs }}</p>
+                        <mat-icon
+                            *ngIf="currentJobType === 'waiting'"
+                            class="absolute top-2 right-2"
+                        >
+                            check
+                        </mat-icon>
                     </au-mat-form-field-appearance>
                     <au-mat-form-field-appearance
                         [label]="t('queueManager.ActiveJobs')"
                         class="col-2 cursor-pointer"
+                        (click)="
+                            actionService.action({
+                                id          : 'queueManager::queue.detail.changeTypeJobsPagination',
+                                isViewAction: false,
+                                data        : {
+                                    jobType: 'active'
+                                }
+                            })
+                        "
                     >
-                        <p class="text-8xl">{{ managedObject.activeJobs }}</p>
+                        <p class="text-7xl">{{ managedObject.activeJobs }}</p>
+                        <mat-icon
+                            *ngIf="currentJobType === 'active'"
+                            class="absolute top-2 right-2"
+                        >
+                            check
+                        </mat-icon>
                     </au-mat-form-field-appearance>
                     <au-mat-form-field-appearance
                         [label]="t('queueManager.CompletedJobs')"
@@ -129,7 +161,13 @@
                             })
                         "
                     >
-                        <p class="text-8xl">{{ managedObject.completedJobs }}</p>
+                        <p class="text-7xl">{{ managedObject.completedJobs }}</p>
+                        <mat-icon
+                            *ngIf="currentJobType === 'completed'"
+                            class="absolute top-2 right-2"
+                        >
+                            check
+                        </mat-icon>
                     </au-mat-form-field-appearance>
                     <au-mat-form-field-appearance
                         [label]="t('queueManager.FailedJobs')"
@@ -144,20 +182,57 @@
                             })
                         "
                     >
-                        <p class="text-8xl text-red-600">{{ managedObject.failedJobs }}</p>
+                        <p class="text-7xl text-red-600">{{ managedObject.failedJobs }}</p>
+                        <mat-icon
+                            *ngIf="currentJobType === 'failed'"
+                            class="absolute top-2 right-2"
+                        >
+                            check
+                        </mat-icon>
                     </au-mat-form-field-appearance>
                     <au-mat-form-field-appearance
                         [label]="t('queueManager.DelayedJobs')"
                         class="col-2 cursor-pointer"
+                        (click)="
+                            actionService.action({
+                                id          : 'queueManager::queue.detail.changeTypeJobsPagination',
+                                isViewAction: false,
+                                data        : {
+                                    jobType: 'delayed'
+                                }
+                            })
+                        "
                     >
-                        <p class="text-8xl">{{ managedObject.delayedJobs }}</p>
+                        <p class="text-7xl">{{ managedObject.delayedJobs }}</p>
+                        <mat-icon
+                            *ngIf="currentJobType === 'delayed'"
+                            class="absolute top-2 right-2"
+                        >
+                            check
+                        </mat-icon>
                     </au-mat-form-field-appearance>
                     <au-mat-form-field-appearance
                         [label]="t('queueManager.PausedJobs')"
                         class="col-2 cursor-pointer"
+                        (click)="
+                            actionService.action({
+                                id          : 'queueManager::queue.detail.changeTypeJobsPagination',
+                                isViewAction: false,
+                                data        : {
+                                    jobType: 'paused'
+                                }
+                            })
+                        "
                     >
-                        <p class="text-8xl">{{ managedObject.pausedJobs }}</p>
+                        <p class="text-7xl">{{ managedObject.pausedJobs }}</p>
+                        <mat-icon
+                            *ngIf="currentJobType === 'paused'"
+                            class="absolute top-2 right-2"
+                        >
+                            check
+                        </mat-icon>
                     </au-mat-form-field-appearance>
+                    <!-- #endregion counters -->
 
                     <!-- #region component to manage jobs -->
                     <au-grid-elements-manager
