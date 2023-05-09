@@ -63,7 +63,7 @@ export interface QueueManagerJob {
     failedReason?: string;
     stacktrace: string[];
     returnvalue?: any;
-    finishedOn: number;
+    finishedOn?: number;
     processedOn: number;
 }
 
