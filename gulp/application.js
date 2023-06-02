@@ -34,11 +34,13 @@ function copyApplication()
             '!gulp/**',
             '!node_modules/**',
             '!src/app/modules/admin/apps/auditing/**',
+            '!src/app/modules/admin/apps/common/**',
             '!src/app/modules/admin/apps/iam/**',
             '!src/app/modules/admin/apps/o-auth/**',
             '!src/app/modules/admin/apps/queue-manager/**',
             '!src/app/modules/azure-ad/**',
             '!src/assets/i18n/auditing/**',
+            '!src/assets/i18n/common/**',
             '!src/assets/i18n/iam/**',
             '!src/assets/i18n/o-auth/**',
             '!src/assets/i18n/queue-manager/**',
@@ -93,6 +95,7 @@ async function cleanAppRouting()
 
     codeWriter.removeItemsFromObjectArrayAccordPropertyValue(childrenRoutesArray, 'path', [
         'auditing',
+        'common',
         'iam',
         'o-auth',
         'queue-manager',
@@ -106,18 +109,20 @@ async function cleanAdminNavigation()
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'modules', 'admin', 'admin.navigation.ts']);
 
-    codeWriter.removeImport(sourceFile, './apps/o-auth/o-auth.navigation');
-    codeWriter.removeImport(sourceFile, './apps/iam/iam.navigation');
     codeWriter.removeImport(sourceFile, './apps/auditing/auditing.navigation');
+    codeWriter.removeImport(sourceFile, './apps/common/common.navigation');
+    codeWriter.removeImport(sourceFile, './apps/iam/iam.navigation');
+    codeWriter.removeImport(sourceFile, './apps/o-auth/o-auth.navigation');
     codeWriter.removeImport(sourceFile, './apps/queue-manager/queue-manager.navigation');
 
     const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
     const adminNavigationArray = adminNavigation.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
 
     codeWriter.removeArrayItemsAccordValue(adminNavigationArray, [
-        'oAuthNavigation',
-        'iamNavigation',
         'auditingNavigation',
+        'commonNavigation',
+        'iamNavigation',
+        'oAuthNavigation',
         'queueManagerNavigation',
     ]);
 
