@@ -4,6 +4,7 @@
 const { publishApplication } = require('./gulp/application');
 const { publishAuditing } = require('./gulp/auditing');
 const { publishAzureAd } = require('./gulp/azure-ad');
+const { publishCommon } = require('./gulp/common');
 const { publishIam } = require('./gulp/iam');
 const { publishOAuth } = require('./gulp/o-auth');
 const { publishQueueManager } = require('./gulp/queue-manager');
@@ -20,6 +21,7 @@ exports.default = defaultTask;
 exports.publishApplication = publishApplication;
 exports.publishAuditing = publishAuditing;
 exports.publishAzureAd = publishAzureAd;
+exports.publishCommon = publishCommon;
 exports.publishIam = publishIam;
 exports.publishOAuth = publishOAuth;
 exports.publishQueueManager = publishQueueManager;
