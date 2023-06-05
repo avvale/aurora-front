@@ -3,6 +3,18 @@ import { ColumnConfig, ColumnDataType } from '@aurora';
 export const countryColumnsConfig: ColumnConfig[] = [
     {
         type       : ColumnDataType.STRING,
+        field      : 'name',
+        sort       : 'name',
+        translation: 'common.Name',
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'slug',
+        sort       : 'slug',
+        translation: 'common.Slug',
+    },
+    {
+        type       : ColumnDataType.STRING,
         field      : 'iso3166Alpha2',
         sort       : 'iso3166Alpha2',
         translation: 'common.Iso3166Alpha2',
@@ -32,16 +44,28 @@ export const countryColumnsConfig: ColumnConfig[] = [
         translation: 'common.Prefix',
     },
     {
-        type       : ColumnDataType.STRING,
-        field      : 'image',
-        sort       : 'image',
-        translation: 'common.Image',
-    },
-    {
         type       : ColumnDataType.NUMBER,
         field      : 'sort',
         sort       : 'sort',
         translation: 'common.Sort',
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'administrativeAreaLevel1',
+        sort       : 'administrativeAreaLevel1',
+        translation: 'common.AdministrativeAreaLevel1',
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'administrativeAreaLevel2',
+        sort       : 'administrativeAreaLevel2',
+        translation: 'common.AdministrativeAreaLevel2',
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'administrativeAreaLevel3',
+        sort       : 'administrativeAreaLevel3',
+        translation: 'common.AdministrativeAreaLevel3',
     },
     {
         type       : ColumnDataType.NUMBER,
@@ -69,38 +93,8 @@ export const countryColumnsConfig: ColumnConfig[] = [
     },
     {
         type       : ColumnDataType.STRING,
-        field      : 'langId',
-        sort       : 'langId',
-        translation: 'common.LangId',
-    },
-    {
-        type       : ColumnDataType.STRING,
-        field      : 'name',
-        sort       : 'name',
-        translation: 'common.Name',
-    },
-    {
-        type       : ColumnDataType.STRING,
-        field      : 'slug',
-        sort       : 'slug',
-        translation: 'common.Slug',
-    },
-    {
-        type       : ColumnDataType.STRING,
-        field      : 'administrativeAreaLevel1',
-        sort       : 'administrativeAreaLevel1',
-        translation: 'common.AdministrativeAreaLevel1',
-    },
-    {
-        type       : ColumnDataType.STRING,
-        field      : 'administrativeAreaLevel2',
-        sort       : 'administrativeAreaLevel2',
-        translation: 'common.AdministrativeAreaLevel2',
-    },
-    {
-        type       : ColumnDataType.STRING,
-        field      : 'administrativeAreaLevel3',
-        sort       : 'administrativeAreaLevel3',
-        translation: 'common.AdministrativeAreaLevel3',
+        field      : 'image',
+        sort       : 'image',
+        translation: 'common.Image',
     },
 ];
