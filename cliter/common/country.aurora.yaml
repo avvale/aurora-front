@@ -3,7 +3,7 @@ boundedContextName: common
 moduleName: country
 moduleNames: countries
 aggregateName: CommonCountry
-hasOAuth: false
+hasOAuth: true
 hasTenant: false
 hasAuditing: true
 aggregateProperties:

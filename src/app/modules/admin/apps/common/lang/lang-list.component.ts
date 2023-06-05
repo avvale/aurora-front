@@ -166,7 +166,8 @@ export class LangListComponent extends ViewBaseComponent
                 );
 
                 // format export rows
-                (rows.objects as any[]).forEach(row => {
+                (rows.objects as any[]).forEach(row =>
+                {
                     // row.id = row.id;
                 });
 

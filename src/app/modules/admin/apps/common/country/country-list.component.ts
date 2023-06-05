@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { Action, ColumnConfig, ColumnDataType, Crumb, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
+import { Action, ColumnConfig, ColumnDataType, Crumb, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, LangService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 import { CommonCountry } from '../common.types';
 import { CountryService } from './country.service';
@@ -60,6 +60,7 @@ export class CountryListComponent extends ViewBaseComponent
         private readonly gridFiltersStorageService: GridFiltersStorageService,
         private readonly gridStateService: GridStateService,
         private readonly countryService: CountryService,
+        private readonly langService: LangService,
     )
     {
         super(injector);
@@ -166,7 +167,8 @@ export class CountryListComponent extends ViewBaseComponent
                 );
 
                 // format export rows
-                (rows.objects as any[]).forEach(row => {
+                (rows.objects as any[]).forEach(row =>
+                {
                     // row.id = row.id;
                 });
 
