@@ -8,6 +8,11 @@ export const countryColumnsConfig: ColumnConfig[] = [
         translation: 'common.Name',
     },
     {
+        type       : ColumnDataType.TRANSLATIONS_MENU,
+        field      : 'translations',
+        translation: 'Translations',
+    },
+    {
         type       : ColumnDataType.STRING,
         field      : 'slug',
         sort       : 'slug',
