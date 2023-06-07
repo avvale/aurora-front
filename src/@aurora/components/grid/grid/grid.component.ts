@@ -1,6 +1,5 @@
 // angular
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList, ViewChild } from '@angular/core';
-import { CoreLang } from '@aurora/modules';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -46,9 +45,6 @@ export class GridComponent implements OnInit, AfterViewInit
     @Input() hasColumnsConfigPropertiesButton: boolean = true;
     @Input() hasPagination: boolean = true;
     @Input() hasDragAndDrop: boolean = false;
-
-    // langs to create TranslationMenuComponent form multi language objects
-    @Input() langs: CoreLang[] = [];
 
     // manage all grid state, or part of it
     // set grid state to load grid with specific state with sort and filters
@@ -229,7 +225,7 @@ export class GridComponent implements OnInit, AfterViewInit
     {
         const action = {
             ...columnConfigAction,
-            data: {
+            meta: {
                 ...columnConfigAction.meta,
                 row,
                 event,

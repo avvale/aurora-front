@@ -33,7 +33,7 @@ export class SessionLocalStorageService extends SessionService
         this.dataSubject$.next(this.session);
     }
 
-    get(id: string): any | null
+    get<T>(id: string): T | null
     {
         const value = localStorage.getItem(this.sessionName);
 

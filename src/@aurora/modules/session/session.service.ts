@@ -14,7 +14,7 @@ export abstract class SessionService<T = Session>
 
     abstract init(): void;
 
-    abstract get(id: string): T | null;
+    abstract get<E = any>(id: string): E | null;
 
     abstract set(id: string, session: T | null): void;
 
