@@ -19,7 +19,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country-list.component.html",
-            "integrity": "sha1:f6515f42123427b7e12955704a5aad4b72611582"
+            "integrity": "sha1:8e663a5559e6fc2bf5e936a92073a508625f235b"
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country-list.component.ts",

@@ -230,7 +230,7 @@ export class GridComponent implements OnInit, AfterViewInit
         const action = {
             ...columnConfigAction,
             data: {
-                ...columnConfigAction.data,
+                ...columnConfigAction.meta,
                 row,
                 event,
             },
