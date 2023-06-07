@@ -16,7 +16,10 @@ export interface ColumnConfig
     headerClass?: string | string[];
     bodyClass?: string | string[];
     sticky?: boolean;
-    actions?: (row: any) => ColumnConfigAction[];
+    // meta is for add extra data when execute actions, for example,
+    // in translations menu, we need to know the current lang to set
+    // the correct action (@aurora/components/grid/translations-menu/translations-menu.component.html)
+    actions?: (row: any, meta?: any) => ColumnConfigAction[];
     transform?: (row: any) => any;
 }
 
