@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { Action, ColumnConfig, ColumnDataType, Crumb, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
+import { Action, ColumnConfig, ColumnConfigAction, ColumnDataType, Crumb, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 import { CommonCountry } from '../common.types';
 import { CountryService } from './country.service';
@@ -43,6 +43,52 @@ export class CountryListComponent extends ViewBaseComponent
                         icon       : 'delete',
                     },
                 ];
+            },
+        },
+        {
+            type                : ColumnDataType.TRANSLATIONS_MENU,
+            field               : 'translations',
+            translation         : 'Translations',
+            sticky              : true,
+            translationIconColor: row =>
+            {
+                const langs = this.sessionService.get('langs');
+
+                for (const lang of langs.filter(lang => lang.isActive))
+                {
+                    if (!row.availableLangs.includes(lang.id)) return 'warn';
+                }
+                return 'primary';
+            },
+            actions: row =>
+            {
+                const langs = this.sessionService.get('langs');
+                const transitionActions: ColumnConfigAction[] = [];
+
+                for (const lang of langs.filter(lang => lang.isActive))
+                {
+                    if (row.availableLangs.includes(lang.id))
+                    {
+                        transitionActions.push({
+                            id          : 'common::country.list.edit',
+                            translation : 'edit',
+                            isViewAction: true,
+                            meta        : { lang },
+                        });
+                    }
+                    else
+                    {
+                        transitionActions.push({
+                            id          : 'common::country.list.new',
+                            translation : 'new',
+                            isViewAction: true,
+                            meta        : { lang },
+                        });
+
+                    }
+                }
+
+                return transitionActions;
             },
         },
         {
@@ -93,8 +139,8 @@ export class CountryListComponent extends ViewBaseComponent
             case 'common::country.list.pagination':
                 await lastValueFrom(
                     this.countryService.pagination({
-                        query: action.data.query ?
-                            action.data.query :
+                        query: action.meta.query ?
+                            action.meta.query :
                             QueryStatementHandler
                                 .init({ columnsConfig: countryColumnsConfig })
                                 .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.gridId))
@@ -107,7 +153,7 @@ export class CountryListComponent extends ViewBaseComponent
                 break;
 
             case 'common::country.list.edit':
-                this.router.navigate(['common/country/edit', action.data.row.id]);
+                this.router.navigate(['common/country/edit', action.meta.row.id]);
                 break;
 
             case 'common::country.list.delete':
@@ -142,7 +188,7 @@ export class CountryListComponent extends ViewBaseComponent
                             {
                                 await lastValueFrom(
                                     this.countryService
-                                        .deleteById<CommonCountry>(action.data.row.id),
+                                        .deleteById<CommonCountry>(action.meta.row.id),
                                 );
                                 this.actionService.action({
                                     id          : 'common::country.list.pagination',
@@ -161,7 +207,7 @@ export class CountryListComponent extends ViewBaseComponent
                 const rows = await lastValueFrom(
                     this.countryService
                         .get({
-                            query: action.data.query,
+                            query: action.meta.query,
                         }),
                 );
 
@@ -176,10 +222,10 @@ export class CountryListComponent extends ViewBaseComponent
 
                 exportRows(
                     rows.objects,
-                    'countries.' + action.data.format,
+                    'countries.' + action.meta.format,
                     columns,
                     headers,
-                    action.data.format,
+                    action.meta.format,
                 );
                 break;
         }

@@ -19,11 +19,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country-list.component.html",
-            "integrity": "sha1:8e663a5559e6fc2bf5e936a92073a508625f235b"
+            "integrity": "sha1:f6515f42123427b7e12955704a5aad4b72611582"
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country-list.component.ts",
-            "integrity": "sha1:868ae59984390bcd8f64720fdfb1bd34e10858ae"
+            "integrity": "sha1:6696cd777592b955007333b45cd10b7810d123e7"
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country.columns-config.ts",
