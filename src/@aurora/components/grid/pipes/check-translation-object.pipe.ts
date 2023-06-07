@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CommonLang, Translatable } from '@aurora';
+import { CoreLang, Translatable } from '@aurora';
 
 @Pipe({
     name: 'checkTranslationObject',
@@ -8,7 +8,7 @@ export class CheckTranslationObjectPipe implements PipeTransform
 {
     transform(
         object: Translatable,
-        activatedLangs: CommonLang[],
+        activatedLangs: CoreLang[],
         completedClass: string = 'completed-translations',
         uncompletedClass: string = 'uncompleted-translations',
     ): string

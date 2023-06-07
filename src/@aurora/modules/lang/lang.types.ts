@@ -1,4 +1,4 @@
-export interface CommonLang
+export interface CoreLang
 {
     id: string;
     name: string;
@@ -7,14 +7,15 @@ export interface CommonLang
     iso6393: string;
     ietf: string;
     customCode?: string;
-    dir: CommonLangDir;
+    dir: CoreLangDir;
     sort?: number;
     isActive: boolean;
     createdAt?: string;
     updatedAt?: string;
+    deletedAt?: string;
 }
 
-export enum CommonLangDir
+export enum CoreLangDir
 {
     LTR = 'LTR',
     RTL = 'RTL',

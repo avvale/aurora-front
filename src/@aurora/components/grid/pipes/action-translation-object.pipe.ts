@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Translatable } from '@aurora/aurora.types';
-import { CommonLang } from '@aurora/modules';
+import { CoreLang } from '@aurora/modules';
 
 /**
  * Check which action to perform depending on whether or not the language exists.
@@ -10,7 +10,7 @@ import { CommonLang } from '@aurora/modules';
 })
 export class ActionTranslationObjectPipe implements PipeTransform
 {
-    transform(object: Translatable, lang: CommonLang): string
+    transform(object: Translatable, lang: CoreLang): string
     {
         const langs: string[] = object.availableLangs; // get langs from object
 
