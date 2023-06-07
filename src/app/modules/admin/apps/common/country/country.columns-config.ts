@@ -2,15 +2,16 @@ import { ColumnConfig, ColumnDataType } from '@aurora';
 
 export const countryColumnsConfig: ColumnConfig[] = [
     {
+        type       : ColumnDataType.TRANSLATIONS_MENU,
+        field      : 'translations',
+        translation: 'Translations',
+        sticky     : true,
+    },
+    {
         type       : ColumnDataType.STRING,
         field      : 'name',
         sort       : 'name',
         translation: 'common.Name',
-    },
-    {
-        type       : ColumnDataType.TRANSLATIONS_MENU,
-        field      : 'translations',
-        translation: 'Translations',
     },
     {
         type       : ColumnDataType.STRING,
