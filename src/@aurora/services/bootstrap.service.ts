@@ -21,12 +21,12 @@ export class BootstrapService
         this.checkEnvironmentSchema(environment);
 
         // get session from local storage and set in session observable
-        this.sessionService.initSession();
+        this.sessionService.init();
 
         // get languages from CACHE MANAGER in nestjs or json or
         // database according to configuration in shared module
         const langs = await lastValueFrom(this.coreGetLangsService.get());
-        this.sessionService.updateSession('langs', langs);
+        this.sessionService.set('langs', langs);
 
         // check token to request user
         if (await lastValueFrom(this.authenticationService.check()))
