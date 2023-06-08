@@ -79,6 +79,30 @@
 
                     <mat-form-field
                         appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>{{ t('common.Name') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="name"        required
+                        >
+                        <mat-error>{{ formErrors?.name | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>{{ t('common.Slug') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="slug"
+                            maxlength="1024"
+                            required
+                        >
+                        <mat-error>{{ formErrors?.slug | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
                         class="col-2"
                     >
                         <mat-label>{{ t('common.Iso3166Alpha2') }}</mat-label>
@@ -211,30 +235,6 @@
                             <mat-option value="TERRAIN">TERRAIN</mat-option>
                         </mat-select>
                         <mat-error>{{ formErrors?.mapType | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('common.Name') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="name"        required
-                        >
-                        <mat-error>{{ formErrors?.name | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('common.Slug') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="slug"
-                            maxlength="1024"
-                            required
-                        >
-                        <mat-error>{{ formErrors?.slug | async }}</mat-error>
                     </mat-form-field>
                     <mat-form-field
                         appearance="outline"

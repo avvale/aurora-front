@@ -25,8 +25,9 @@ export class BootstrapService
 
         // get languages from CACHE MANAGER in nestjs or json or
         // database according to configuration in shared module
-        const langs = await lastValueFrom(this.coreGetLangsService.get());
-        this.sessionService.set('langs', langs);
+        const data = await lastValueFrom(this.coreGetLangsService.get());
+        this.sessionService.set('langs', data.langs);
+        this.sessionService.set('fallbackLang', data.fallbackLang);
 
         // check token to request user
         if (await lastValueFrom(this.authenticationService.check()))

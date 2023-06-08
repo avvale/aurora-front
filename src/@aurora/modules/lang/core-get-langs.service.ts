@@ -11,6 +11,7 @@ import gql from 'graphql-tag';
 export class CoreGetLangsService
 {
     private langsSubject$: BehaviorSubject<CoreLang[] | null> = new BehaviorSubject(null);
+    private fallbackLangSubject$: BehaviorSubject<CoreLang | null> = new BehaviorSubject(null);
 
     constructor(
         private readonly graphqlService: GraphQLService,
@@ -24,26 +25,64 @@ export class CoreGetLangsService
         return this.langsSubject$.asObservable();
     }
 
-    get(): Observable<CoreLang[]>
+    /**
+    * Getter for fallbackLang
+    */
+    get fallbackLang$(): Observable<CoreLang>
+    {
+        return this.fallbackLangSubject$.asObservable();
+    }
+
+    get(): Observable<{
+        langs: CoreLang[];
+        fallbackLang: CoreLang;
+    }>
     {
         return this.graphqlService
             .client()
             .watchQuery<{
-                objects: CoreLang[];
+                langs: CoreLang[];
+                fallbackLang: CoreLang;
             }>({
                 query: gql`
                     query CoreGetLangs{
-                        objects: coreGetLangs
+                        langs: coreGetLangs
+                        {
+                            id
+                            name
+                            image
+                            iso6392
+                            iso6393
+                            ietf
+                            customCode
+                            dir
+                            sort
+                            isActive
+                        }
+                        fallbackLang: coreGetFallbackLang
+                        {
+                            id
+                            name
+                            image
+                            iso6392
+                            iso6393
+                            ietf
+                            customCode
+                            dir
+                            sort
+                            isActive
+                        }
                     }
                 `,
             })
             .valueChanges
             .pipe(
                 first(),
-                map(result => result.data.objects),
+                map(result => result.data),
                 tap(data =>
                 {
-                    this.langsSubject$.next(data);
+                    this.langsSubject$.next(data.langs);
+                    this.fallbackLangSubject$.next(data.fallbackLang);
                 }),
             );
     }
