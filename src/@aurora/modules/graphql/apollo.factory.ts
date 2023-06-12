@@ -19,11 +19,34 @@ export const apolloFactory = (
 {
     const headers = new Headers();
 
-    const auth = setContext(async(operation, context) =>
+    const customHeaders = setContext(async(operation, context) =>
+    {
+        if (context.headers)
+        {
+            for (const [key, value] of Object.entries(context.headers))
+            {
+                // set custom headers
+                headers.set(key, value as string);
+            }
+        }
+
+        return {
+            headers: Object.fromEntries(headers.entries()),
+        };
+    });
+
+    const timezone = setContext(async(operation, context) =>
     {
         // set user timezone
         headers.set('X-Timezone', Utils.timezone());
 
+        return {
+            headers: Object.fromEntries(headers.entries()),
+        };
+    });
+
+    const auth = setContext(async(operation, context) =>
+    {
         // return basic authentication form login
         if (operation.operationName === 'oAuthCreateCredentials')
         {
@@ -103,6 +126,8 @@ export const apolloFactory = (
 
 
     const link = ApolloLink.from([
+        customHeaders,
+        timezone,
         auth,
         error,
         httpLink.create({
