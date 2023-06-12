@@ -102,7 +102,14 @@ export const apolloFactory = (
     });
 
 
-    const link = ApolloLink.from([auth, error, httpLink.create({ uri: environment.api.graphql })]);
+    const link = ApolloLink.from([
+        auth,
+        error,
+        httpLink.create({
+            uri: environment.api.graphql,
+        }),
+    ]);
+
     const cache = new InMemoryCache({
         addTypename: true,  // add __typename field in graphql types
     });
