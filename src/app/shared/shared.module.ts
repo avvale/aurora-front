@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthorizationModule, BreadcrumbModule, ChipModule, DatepickerSqlFormatModule, DatetimepickerSqlFormatModule, EnvironmentsInformationModule, FilePreviewOverlayModule, FileUploadModule, GridDialogModule, GridElementsManagerModule, GridModule, GridSelectElementModule, GridSelectMultipleElementsModule, IconsModule, MatFormFieldAppearanceModule, PipesModule, SpinnerManagerModule, SplitButtonModule, TemplateDialogModule, TitleModule } from '@aurora';
+import { AuthorizationModule, BreadcrumbModule, ChipModule, DatepickerSqlFormatModule, DatetimepickerSqlFormatModule, EnvironmentsInformationModule, FilePreviewOverlayModule, FileUploadModule, FlagLangModule, GridDialogModule, GridElementsManagerModule, GridModule, GridSelectElementModule, GridSelectMultipleElementsModule, IconsModule, MatFormFieldAppearanceModule, PipesModule, SpinnerManagerModule, SplitButtonModule, TemplateDialogModule, TitleModule } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { CustomModule } from './custom/custom.module';
 
@@ -24,6 +24,7 @@ import { CustomModule } from './custom/custom.module';
         EnvironmentsInformationModule,
         FilePreviewOverlayModule,
         FileUploadModule,
+        FlagLangModule,
         GridDialogModule,
         GridElementsManagerModule,
         GridModule,
@@ -54,6 +55,7 @@ import { CustomModule } from './custom/custom.module';
         DatetimepickerSqlFormatModule,
         EnvironmentsInformationModule,
         FileUploadModule,
+        FlagLangModule,
         GridElementsManagerModule,
         GridModule,
         GridSelectElementModule,
