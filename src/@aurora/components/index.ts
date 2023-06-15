@@ -8,6 +8,7 @@ export * from './environments-information';
 export * from './file-preview-overlay';
 export * from './file-upload';
 export { FlagIconModule } from './flag-icon';
+export { FlagLangModule } from './flag-lang';
 export * from './grid';
 export * from './grid-dialog';
 export * from './grid-elements-manager';
