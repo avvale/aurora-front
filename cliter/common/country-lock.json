@@ -11,7 +11,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country-detail.component.html",
-            "integrity": "sha1:c8cb083f67ad79a0499f929d5d864d4af35b6231"
+            "integrity": "sha1:052bbbaf67d1696422f3c60afcd8ce8eddb6caef"
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country-detail.component.ts",
