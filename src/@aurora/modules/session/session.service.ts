@@ -16,7 +16,7 @@ export abstract class SessionService<T = Session>
 
     abstract get<E = any>(id: string): E | null;
 
-    abstract set(id: string, session: T | null): void;
+    abstract set<E = any>(id: string, value: E): void;
 
     abstract save(session: T | null): void;
 

@@ -17,7 +17,17 @@ export const apolloFactory = (
     translocoService: TranslocoService,
 ): ApolloClientOptions<NormalizedCacheObject> =>
 {
-    const headers = new Headers();
+    let headers: Headers;
+
+    const initHeaders = setContext(async(operation, context) =>
+    {
+        headers = new Headers();
+
+        // return original context headers
+        return {
+            headers: context.headers,
+        };
+    });
 
     const customHeaders = setContext(async(operation, context) =>
     {
@@ -126,6 +136,7 @@ export const apolloFactory = (
 
 
     const link = ApolloLink.from([
+        initHeaders,
         customHeaders,
         timezone,
         auth,

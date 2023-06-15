@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { AuthenticationService, CoreGetLangsService, Environment, IamService, log, SessionService } from '@aurora';
+import { AuthenticationService, CoreGetLangsService, CoreSearchKeyLang, Environment, IamService, log, SessionService } from '@aurora';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable({
@@ -28,6 +28,7 @@ export class BootstrapService
         const data = await lastValueFrom(this.coreGetLangsService.get());
         this.sessionService.set('langs', data.langs);
         this.sessionService.set('fallbackLang', data.fallbackLang);
+        this.sessionService.set('searchKeyLang', data.searchKeyLang);
 
         // check token to request user
         if (await lastValueFrom(this.authenticationService.check()))

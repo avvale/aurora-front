@@ -20,3 +20,11 @@ export enum CoreLangDir
     LTR = 'LTR',
     RTL = 'RTL',
 }
+
+export enum CoreSearchKeyLang
+{
+    ID = 'id',
+    ISO6392 = 'iso6392',
+    ISO6393 = 'iso6393',
+    IETF = 'ietf'
+}
