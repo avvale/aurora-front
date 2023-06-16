@@ -23,7 +23,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country-list.component.ts",
-            "integrity": "sha1:f720cf3053c4872db9bbea038873a22c8d895542"
+            "integrity": "sha1:c2f14720ae8156d8bfc7e8fc69111a62f94587ac"
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country.columns-config.ts",
