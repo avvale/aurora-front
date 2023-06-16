@@ -35,7 +35,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country.resolvers.ts",
-            "integrity": "sha1:beee08f8e7c557a5eefd85e690d2e226ff57072c"
+            "integrity": "sha1:98f6c360465f1d74b6641c63c0e213490fe6e194"
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country.service.ts",
