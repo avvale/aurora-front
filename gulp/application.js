@@ -38,12 +38,14 @@ function copyApplication()
             '!src/app/modules/admin/apps/iam/**',
             '!src/app/modules/admin/apps/o-auth/**',
             '!src/app/modules/admin/apps/queue-manager/**',
+            '!src/app/modules/admin/apps/search-engine/**',
             '!src/app/modules/azure-ad/**',
             '!src/assets/i18n/auditing/**',
             '!src/assets/i18n/common/**',
             '!src/assets/i18n/iam/**',
             '!src/assets/i18n/o-auth/**',
             '!src/assets/i18n/queue-manager/**',
+            '!src/assets/i18n/search-engine/**',
             '!src/index.ts',
             '!gulpfile.js',
             '!package.json',
@@ -99,6 +101,7 @@ async function cleanAppRouting()
         'iam',
         'o-auth',
         'queue-manager',
+        'search-engine',
     ]);
 
     sourceFile.saveSync();
@@ -114,6 +117,7 @@ async function cleanAdminNavigation()
     codeWriter.removeImport(sourceFile, './apps/iam/iam.navigation');
     codeWriter.removeImport(sourceFile, './apps/o-auth/o-auth.navigation');
     codeWriter.removeImport(sourceFile, './apps/queue-manager/queue-manager.navigation');
+    codeWriter.removeImport(sourceFile, './apps/search-engine/search-engine.navigation');
 
     const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
     const adminNavigationArray = adminNavigation.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
@@ -124,6 +128,7 @@ async function cleanAdminNavigation()
         'iamNavigation',
         'oAuthNavigation',
         'queueManagerNavigation',
+        'searchEngineNavigation',
     ]);
 
     sourceFile.saveSync();

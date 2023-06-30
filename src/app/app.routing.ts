@@ -83,6 +83,7 @@ export const appRoutes: Route[] = [
             { path: 'auditing', loadChildren: () => import('app/modules/admin/apps/auditing/auditing.module').then(m => m.AuditingModule) },
             { path: 'queue-manager', loadChildren: () => import('app/modules/admin/apps/queue-manager/queue-manager.module').then(m => m.QueueManagerModule) },
             { path: 'common', loadChildren: () => import('app/modules/admin/apps/common/common.module').then(m => m.CommonModule) },
+            { path: 'search-engine', loadChildren: () => import('app/modules/admin/apps/search-engine/search-engine.module').then(m => m.SearchEngineModule) },
         ],
     },
 
