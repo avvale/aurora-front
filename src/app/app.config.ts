@@ -108,6 +108,10 @@ export const appConfig: ApplicationConfig = {
             useClass: SessionLocalStorageService,
         },
         {
+            provide : IamService,
+            useClass: IamAuroraAdapterService,
+        },
+        {
             provide : GridManagerService,
             useClass: AuroraGridManagerService,
         },
