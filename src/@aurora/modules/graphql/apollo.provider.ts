@@ -1,16 +1,15 @@
-import { NgModule } from '@angular/core';
-import { TranslocoService } from '@ngneat/transloco';
-import { ApolloModule as OriginApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
-import { apolloFactory } from './apollo.factory';
+import { EnvironmentProviders, Provider, importProvidersFrom } from '@angular/core';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { TranslocoService } from '@ngneat/transloco';
+import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
+import { HttpLink } from 'apollo-angular/http';
 import { AuthenticationService } from '../authentication/authentication.service';
+import { apolloFactory } from './apollo.factory';
 
-@NgModule({
-    imports: [
-        OriginApolloModule,
-    ],
-    providers: [
+export const provideApollo = (): Array<Provider | EnvironmentProviders> =>
+{
+    return [
+        importProvidersFrom(ApolloModule),
         {
             provide   : APOLLO_OPTIONS,
             useFactory: apolloFactory,
@@ -21,8 +20,5 @@ import { AuthenticationService } from '../authentication/authentication.service'
                 TranslocoService,
             ],
         },
-    ],
-})
-export class ApolloModule
-{
-}
+    ];
+};
