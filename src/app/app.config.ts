@@ -11,6 +11,10 @@ import { provideIcons } from 'app/core/icons/icons.provider';
 import { provideTransloco } from 'app/core/transloco/transloco.provider';
 import { mockApiServices } from 'app/mock-api';
 
+// @aurora
+import { AuroraGridManagerService, AuthenticationAuroraAdapterService, AuthenticationDisabledAdapterGuard, AuthenticationMockAdapterService, AuthenticationService, AuthorizationService, COMPACT_NAVIGATION, DEFAULT_NAVIGATION, EnvironmentsInformationMockAdapterService, EnvironmentsInformationService, FUTURISTIC_NAVIGATION, GridManagerService, HORIZONTAL_NAVIGATION, IamAuroraAdapterService, IamMockAdapterService, IamService, RibbonEnvironmentModule, RouteReuseStrategyService, SessionLocalStorageService, SessionService, UserMetaStorageLocalStorageAdapterService, UserMetaStorageService, compactNavigation, defaultNavigation, futuristicNavigation, horizontalNavigation } from '@aurora';
+import { UserMetaStorageIamAdapterService } from './modules/admin/apps/iam';
+
 export const appConfig: ApplicationConfig = {
     providers: [
         provideAnimations(),
@@ -89,5 +93,39 @@ export const appConfig: ApplicationConfig = {
                 ],
             },
         }),
+
+        // @aurora
+        {
+            provide : AuthenticationService,
+            useClass: AuthenticationAuroraAdapterService,
+        },
+        {
+            provide : UserMetaStorageService,
+            useClass: UserMetaStorageIamAdapterService,
+        },
+        {
+            provide : SessionService,
+            useClass: SessionLocalStorageService,
+        },
+        {
+            provide : GridManagerService,
+            useClass: AuroraGridManagerService,
+        },
+        {
+            provide : COMPACT_NAVIGATION,
+            useValue: compactNavigation,
+        },
+        {
+            provide : DEFAULT_NAVIGATION,
+            useValue: defaultNavigation,
+        },
+        {
+            provide : FUTURISTIC_NAVIGATION,
+            useValue: futuristicNavigation,
+        },
+        {
+            provide : HORIZONTAL_NAVIGATION,
+            useValue: horizontalNavigation,
+        },
     ],
 };
