@@ -11,7 +11,7 @@ import { provideIcons } from 'app/core/icons/icons.provider';
 import { provideTransloco } from 'app/core/transloco/transloco.provider';
 import { mockApiServices } from 'app/mock-api';
 
-// @aurora
+// ---- customizations ----
 import { provideAurora } from '@aurora';
 
 export const appConfig: ApplicationConfig = {
@@ -93,7 +93,7 @@ export const appConfig: ApplicationConfig = {
             },
         }),
 
-        // @aurora
+        //  ---- customizations ----
         provideAurora(),
     ],
 };
