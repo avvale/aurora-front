@@ -3,6 +3,7 @@ import { GridCustomHeaderPosition } from '@aurora/components/grid/grid.types';
 
 @Directive({
     selector: '[auGridSelectMultipleCustomHeaderDialogTemplate]',
+    standalone: true,
 })
 export class GridSelectMultipleCustomHeaderDialogTemplateDirective
 {

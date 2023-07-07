@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ContentChild, ContentChildren, Even
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { SelectionChange } from '@angular/cdk/collections';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Action } from '@aurora/aurora.types';
+import { Action } from '@aurora';
 import { GridDialogComponent } from '../grid-dialog/grid-dialog.component';
 import { ColumnConfig, GridData, GridState } from '../grid/grid.types';
 import { GridSelectMultipleCellValueDialogTemplateDirective } from './directives/grid-select-multiple-cell-value-dialog-template.directive';
@@ -10,11 +10,14 @@ import { GridSelectMultipleCellValueTemplateDirective } from './directives/grid-
 import { GridSelectMultipleCustomHeaderDialogTemplateDirective } from './directives/grid-select-multiple-custom-header-dialog-template.directive';
 import { GridSelectMultipleCustomHeaderTemplateDirective } from './directives/grid-select-multiple-custom-header-template.directive';
 import { SelectionModel } from '../grid/selection-model/selection-model';
+import { GridComponent } from '../grid/grid/grid.component';
 
 @Component({
     selector       : 'au-grid-select-multiple-elements',
     templateUrl    : './grid-select-multiple-elements.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone     : true,
+    imports        : [GridComponent],
 })
 export class GridSelectMultipleElementsComponent
 {
