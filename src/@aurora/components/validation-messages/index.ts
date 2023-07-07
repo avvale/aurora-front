@@ -1,3 +1,4 @@
-export * from './validation-messages.service';
-export * from './validation-messages.module';
-export * from './validation-messages.types';
+export { translocoLoader } from './transloco-loader';
+export { provideValidationMessages } from './validation-messages.provider';
+export { ValidationMessagesService } from './validation-messages.service';
+export { CustomMessage, FormMessageErrors, ValidateOptions } from './validation-messages.types';
