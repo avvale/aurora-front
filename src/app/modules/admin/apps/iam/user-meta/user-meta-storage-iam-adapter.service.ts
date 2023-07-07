@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { GraphQLService, UserMetaStorage, UserMetaStorageService } from '@aurora';
+import { GraphQLService, UserMetaStorage } from '@aurora';
 import { BehaviorSubject, Observable, first, map, tap } from 'rxjs';
 import { findUserMetaById, updateUserMetaByIdMutation } from './user-meta.graphql';
+import { UserMetaStorageService } from '@aurora/components/user-meta-storage/user-meta-storage.service'; // no barrel
 
 @Injectable({
     providedIn: 'root',
