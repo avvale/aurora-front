@@ -1,6 +1,8 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgForOf, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList, ViewChild } from '@angular/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +11,7 @@ import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { Action, GridManagerService } from '@aurora';
+import { GetPipe } from '@aurora/pipes/get.pipe';
 import { merge, tap } from 'rxjs';
 import { GridCellValueTemplateDirective } from '../directives/grid-cell-value-template.directive';
 import { GridCustomHeaderTemplateDirective } from '../directives/grid-custom-header-template.directive';
@@ -21,13 +24,10 @@ import { ColumnConfig, ColumnConfigAction, ColumnDataType, ExportFormat, ExportG
 import { FilterGridCustomHeaderTemplatesPositionPipe } from '../pipes/filter-grid-custom-header-templates-position.pipe';
 import { GetActionsPipe } from '../pipes/get-actions.pipe';
 import { GetGridSpinnerFlagPipe } from '../pipes/get-grid-spinner-flag.pipe';
-import { GetPipe } from '../pipes/get.pipe';
 import { HasCellValueTemplatePipe } from '../pipes/has-cell-value-template.pipe';
 import { IsOriginColumnConfigPipe } from '../pipes/is-origin-column-config.pipe';
 import { TransformDataCellPipe } from '../pipes/transform-data-cell.pipe';
 import { SelectionChange, SelectionModel } from '../selection-model/selection-model';
-import { MatButtonModule } from '@angular/material/button';
-import { MatBadgeModule } from '@angular/material/badge';
 
 // no barrel
 @Component({

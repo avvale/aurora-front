@@ -2,20 +2,20 @@ import { AsyncPipe, NgForOf, NgIf, NgSwitch, NgSwitchCase } from '@angular/commo
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { Operator, Utils } from '@aurora';
+import { GetPipe } from '@aurora/pipes/get.pipe';
 import { Observable, map, startWith } from 'rxjs';
 import { GridTranslatePipe } from '../grid-translations/grid-translate.pipe';
 import { GridTranslationsService } from '../grid-translations/grid-translations.service';
 import { ColumnConfig, ColumnDataType, FilterCriteriaOperator, FilterDialogResponse, GridColumnFilter, GridOperatorsMessages } from '../grid.types';
 import { FilterOperatorsPipe } from './pipes/filter-operators.pipe';
-import { MatSelectModule } from '@angular/material/select';
-import { GetPipe } from '../pipes/get.pipe';
 import { HasRenderOutboxPipe } from './pipes/has-render-outbox.pipe';
-import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector       : 'au-grid-filters-dialog',
