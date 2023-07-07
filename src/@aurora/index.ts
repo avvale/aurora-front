@@ -1,4 +1,4 @@
-export * from './aurora.module';
+export * from './aurora.provider';
 export * from './aurora.types';
 export * from './components';
 export * from './directives';
