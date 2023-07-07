@@ -1,1 +1,1 @@
-export { ChipComponent } from './chip.component';
+export * from '@aurora/components/chip/public-api';
