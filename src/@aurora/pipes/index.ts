@@ -1,1 +1,1 @@
-export * from './pipes.module';
+export { LogPipe } from './log.pipe';
