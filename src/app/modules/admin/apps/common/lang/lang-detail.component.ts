@@ -1,15 +1,28 @@
+import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { Action, Crumb, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Action, BreadcrumbComponent, Crumb, GetSpinnerFlagPipe, TitleComponent, Utils, ViewDetailComponent, log, mapActions } from '@aurora';
+import { TranslocoModule } from '@ngneat/transloco';
 import { lastValueFrom, takeUntil } from 'rxjs';
 import { CommonLang } from '../common.types';
 import { LangService } from './lang.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
     selector       : 'common-lang-detail',
     templateUrl    : './lang-detail.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone     : true,
+    imports        : [
+        MatCheckboxModule, MatSelectModule,
+        AsyncPipe, BreadcrumbComponent, FormsModule, GetSpinnerFlagPipe, MatButtonModule, MatIconModule, MatInputModule, MatSnackBarModule, NgIf, TitleComponent, ReactiveFormsModule, TranslocoModule
+    ],
 })
 export class LangDetailComponent extends ViewDetailComponent
 {

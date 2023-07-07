@@ -7,9 +7,9 @@
             <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
             <au-title>
                 <mat-icon
-                    svgIcon="heroicons_solid:tag"
                     class="icon-size-8 mr-2"
                 >
+                    language
                 </mat-icon>
                 {{ t('common.Lang') }}
             </au-title>
@@ -29,7 +29,7 @@
                 <mat-icon
                     *ngIf="!('common::lang.detail.update' | getSpinnerFlag | async)"
                     class="icon-size-5 mr-2"
-                    svgIcon="heroicons_solid:pencil-alt"
+                    svgIcon="mat_solid:edit"
                 >
                 </mat-icon>
                 <mat-icon *ngIf="'common::lang.detail.update' | getSpinnerFlag | async">

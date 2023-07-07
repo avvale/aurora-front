@@ -1,15 +1,25 @@
+import { AsyncPipe, NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { Action, ColumnConfig, ColumnDataType, Crumb, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
-import { lastValueFrom, Observable, takeUntil } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Action, BreadcrumbComponent, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, QueryStatementHandler, TitleComponent, ViewBaseComponent, exportRows, log } from '@aurora';
+import { GridColumnTranslationComponent } from '@aurora/components/grid/grid-translations/grid-column-translation.component';
+import { GridTranslationsComponent } from '@aurora/components/grid/grid-translations/grid-translations.component';
+import { GridComponent } from '@aurora/components/grid/grid/grid.component';
+import { TranslocoModule } from '@ngneat/transloco';
+import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 import { CommonLang } from '../common.types';
-import { LangService } from './lang.service';
 import { langColumnsConfig } from './lang.columns-config';
+import { LangService } from './lang.service';
 
 @Component({
     selector       : 'common-lang-list',
     templateUrl    : './lang-list.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone     : true,
+    imports        : [AsyncPipe, BreadcrumbComponent, GridComponent, GridTranslationsComponent, GridColumnTranslationComponent, NgForOf, MatButtonModule, MatIconModule, MatSnackBarModule, TitleComponent, TranslocoModule],
 })
 export class LangListComponent extends ViewBaseComponent
 {
