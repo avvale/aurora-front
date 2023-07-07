@@ -8,8 +8,8 @@
             <au-title>
                 <mat-icon
                     class="icon-size-8 mr-2"
+                    svgIcon="mat_solid:language"
                 >
-                    language
                 </mat-icon>
                 {{ t('common.Lang') }}
             </au-title>
@@ -49,7 +49,7 @@
                 <mat-icon
                     *ngIf="!('common::lang.detail.create' | getSpinnerFlag | async)"
                     class="icon-size-5 mr-2"
-                    svgIcon="heroicons_solid:save"
+                    svgIcon="mat_solid:save"
                 >
                 </mat-icon>
                 <mat-icon *ngIf="'common::lang.detail.create' | getSpinnerFlag | async">

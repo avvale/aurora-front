@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterLink } from '@angular/router';
 import { Action, BreadcrumbComponent, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, QueryStatementHandler, TitleComponent, ViewBaseComponent, exportRows, log } from '@aurora';
 import { GridColumnTranslationComponent } from '@aurora/components/grid/grid-translations/grid-column-translation.component';
 import { GridTranslationsComponent } from '@aurora/components/grid/grid-translations/grid-translations.component';
@@ -19,7 +20,7 @@ import { LangService } from './lang.service';
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
-    imports        : [AsyncPipe, BreadcrumbComponent, GridComponent, GridTranslationsComponent, GridColumnTranslationComponent, NgForOf, MatButtonModule, MatIconModule, MatSnackBarModule, TitleComponent, TranslocoModule],
+    imports        : [AsyncPipe, BreadcrumbComponent, GridComponent, GridTranslationsComponent, GridColumnTranslationComponent, NgForOf, MatButtonModule, MatIconModule, MatSnackBarModule, RouterLink, TitleComponent, TranslocoModule],
 })
 export class LangListComponent extends ViewBaseComponent
 {
@@ -126,7 +127,7 @@ export class LangListComponent extends ViewBaseComponent
                     message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('common.Lang') }),
                     icon   : {
                         show : true,
-                        name : 'heroicons_outline:exclamation',
+                        name : 'mat_outline:warning_amber',
                         color: 'warn',
                     },
                     actions: {
