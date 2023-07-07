@@ -1,1 +1,1 @@
-export * from './ribbon-environment.module';
+export { RibbonEnvironmentComponent } from './ribbon-environment.component';
