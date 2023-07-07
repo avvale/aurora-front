@@ -1,27 +1,49 @@
-// angular
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { AsyncPipe, NgForOf, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList, ViewChild } from '@angular/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
-
-// aurora
-import { ColumnConfig, ColumnConfigAction, ColumnDataType, GridData, GridColumnFilter, GridState, ExportGridState, ExportFormat, GridSearchState, GridSortState } from '../grid.types';
-import { GridCellValueTemplateDirective } from '../directives/grid-cell-value-template.directive';
-import { GridColumnsConfigPropertiesDialogComponent } from '../grid-columns-config-properties-dialog/grid-columns-config-properties-dialog.component';
-import { GridCustomHeaderTemplateDirective } from '../directives/grid-custom-header-template.directive';
-import { GridFiltersDialogComponent } from '../grid-filters-dialog/grid-filters-dialog.component';
-import { SelectionChange, SelectionModel } from '../selection-model/selection-model';
-
-// third party libraries
-import { merge, tap } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { Action, GridManagerService } from '@aurora';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { merge, tap } from 'rxjs';
+import { GridCellValueTemplateDirective } from '../directives/grid-cell-value-template.directive';
+import { GridCustomHeaderTemplateDirective } from '../directives/grid-custom-header-template.directive';
+import { GridColumnsConfigPropertiesDialogComponent } from '../grid-columns-config-properties-dialog/grid-columns-config-properties-dialog.component';
+import { GridFiltersDialogComponent } from '../grid-filters-dialog/grid-filters-dialog.component';
+import { GridSearchComponent } from '../grid-search/grid-search.component';
+import { GridTranslatePipe } from '../grid-translations/grid-translate.pipe';
+import { GridTranslationsService } from '../grid-translations/grid-translations.service';
+import { ColumnConfig, ColumnConfigAction, ColumnDataType, ExportFormat, ExportGridState, GridColumnFilter, GridData, GridSearchState, GridSortState, GridState } from '../grid.types';
+import { FilterGridCustomHeaderTemplatesPositionPipe } from '../pipes/filter-grid-custom-header-templates-position.pipe';
+import { GetActionsPipe } from '../pipes/get-actions.pipe';
+import { GetGridSpinnerFlagPipe } from '../pipes/get-grid-spinner-flag.pipe';
+import { GetPipe } from '../pipes/get.pipe';
+import { HasCellValueTemplatePipe } from '../pipes/has-cell-value-template.pipe';
+import { IsOriginColumnConfigPipe } from '../pipes/is-origin-column-config.pipe';
+import { TransformDataCellPipe } from '../pipes/transform-data-cell.pipe';
+import { SelectionChange, SelectionModel } from '../selection-model/selection-model';
+import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
 
+// no barrel
 @Component({
     selector       : 'au-grid',
     templateUrl    : './grid.component.html',
     styleUrls      : ['./grid.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone     : true,
+    imports        : [
+        AsyncPipe, DragDropModule, FilterGridCustomHeaderTemplatesPositionPipe, GetActionsPipe, GetGridSpinnerFlagPipe, GetPipe, GridSearchComponent, GridTranslatePipe, HasCellValueTemplatePipe,
+        IsOriginColumnConfigPipe, MatBadgeModule, MatButtonModule, MatCheckboxModule, MatIconModule, MatMenuModule, MatPaginatorModule, MatSortModule, MatTableModule, NgForOf, NgIf, NgSwitch,
+        NgSwitchCase, TransformDataCellPipe,
+    ],
+    providers      : [
+        GridTranslationsService,
+    ],
 })
 export class GridComponent implements OnInit, AfterViewInit
 {
@@ -321,7 +343,8 @@ export class GridComponent implements OnInit, AfterViewInit
             .subscribe(data =>
             {
                 // dialog is closed without actions
-                if (data === undefined) return;
+                // must check string empty
+                if (!data) return;
 
                 this.gridState = {
                     ...this.gridState,

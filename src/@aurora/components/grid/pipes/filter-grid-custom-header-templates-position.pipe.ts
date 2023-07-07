@@ -5,8 +5,10 @@ import { GridCustomHeaderPosition } from '../grid.types';
 /**
  * Check which action to perform depending on whether or not the language exists.
  */
+// no barrel
 @Pipe({
     name: 'filterGridCustomHeaderTemplatesPositionPipe',
+    standalone: true,
 })
 export class FilterGridCustomHeaderTemplatesPositionPipe implements PipeTransform
 {
