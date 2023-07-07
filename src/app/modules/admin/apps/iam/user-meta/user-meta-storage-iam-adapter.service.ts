@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GraphQLService, UserMetaStorage, UserMetaStorageService } from '@aurora';
-import { BehaviorSubject, first, map, mapTo, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, first, map, tap } from 'rxjs';
 import { findUserMetaById, updateUserMetaByIdMutation } from './user-meta.graphql';
 
 @Injectable({
@@ -66,7 +66,7 @@ export class UserMetaStorageIamAdapterService extends UserMetaStorageService
                 },
             })
             .pipe(
-                mapTo(undefined),
+                map(() => undefined),
             );
     }
 
@@ -81,7 +81,7 @@ export class UserMetaStorageIamAdapterService extends UserMetaStorageService
                 },
             })
             .pipe(
-                mapTo(undefined),
+                map(() => undefined),
             );
     }
 }
