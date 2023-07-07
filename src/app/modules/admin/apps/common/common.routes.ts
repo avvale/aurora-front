@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { CommonComponent } from './common.component';
 import { LangListComponent } from './lang/lang-list.component';
 import { LangDetailComponent } from './lang/lang-detail.component';
@@ -25,11 +24,6 @@ export default [
             {
                 provide : TRANSLOCO_SCOPE,
                 useValue: 'common',
-                multi   : true,
-            },
-            {
-                provide : TRANSLOCO_SCOPE,
-                useValue: 'error',
                 multi   : true,
             },
         ],
