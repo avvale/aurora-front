@@ -1,5 +1,6 @@
+
 export * from './breadcrumb';
-export * from './chip';
+export { ChipComponent } from './chip';
 export * from './date-adapters';
 export * from './datepicker';
 export * from './datepicker-sql-format';

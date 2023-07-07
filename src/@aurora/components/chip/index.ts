@@ -1,1 +1,1 @@
-export * from './chip.module';
+export { ChipComponent } from './chip.component';
