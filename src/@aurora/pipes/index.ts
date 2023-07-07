@@ -1,1 +1,1 @@
-export { LogPipe } from './log.pipe';
+export * from '@aurora/pipes/public-api';
