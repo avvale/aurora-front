@@ -1,2 +1,1 @@
-export * from './grid-dialog.component';
-export * from './grid-dialog.module';
+export { GridDialogComponent } from './grid-dialog.component';
