@@ -2,15 +2,18 @@ import { ChangeDetectionStrategy, Component, ContentChild, ContentChildren, Even
 import { MatDialog } from '@angular/material/dialog';
 import { Action } from '@aurora/aurora.types';
 import { ColumnConfig, GridData, GridState } from '../grid/grid.types';
-import { GridElementDetailDialogComponent } from './grid-element-detail-dialog.component';
-import { GridFormElementDetailDialogTemplateDirective } from './directives/grid-form-element-detail-dialog-template.directive';
+import { GridComponent } from '../grid/grid/grid.component';
 import { GridCustomButtonsHeaderDialogTemplateDirective } from './directives/grid-custom-buttons-header-dialog-template.directive';
 import { GridElementsManagerCellValueTemplateDirective } from './directives/grid-elements-manager-cell-value-template.directive';
+import { GridFormElementDetailDialogTemplateDirective } from './directives/grid-form-element-detail-dialog-template.directive';
+import { GridElementDetailDialogComponent } from './grid-element-detail-dialog.component';
 
 @Component({
     selector       : 'au-grid-elements-manager',
     templateUrl    : './grid-elements-manager.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone     : true,
+    imports        : [GridComponent],
 })
 export class GridElementsManagerComponent
 {
