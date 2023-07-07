@@ -1,5 +1,5 @@
 import { APP_INITIALIZER, EnvironmentProviders, Provider } from '@angular/core';
-import { AuthenticationAuroraAdapterService, AuthenticationService, BootstrapService, COMPACT_NAVIGATION, DEFAULT_NAVIGATION, FUTURISTIC_NAVIGATION, HORIZONTAL_NAVIGATION, IamAuroraAdapterService, IamService, SessionLocalStorageService, SessionService, UserMetaStorageLocalStorageAdapterService, UserMetaStorageService, compactNavigation, defaultNavigation, futuristicNavigation, horizontalNavigation, provideApollo } from '@aurora';
+import { AuroraGridManagerService, AuthenticationAuroraAdapterService, AuthenticationService, BootstrapService, COMPACT_NAVIGATION, DEFAULT_NAVIGATION, FUTURISTIC_NAVIGATION, GridManagerService, HORIZONTAL_NAVIGATION, IamAuroraAdapterService, IamService, SessionLocalStorageService, SessionService, UserMetaStorageLocalStorageAdapterService, UserMetaStorageService, compactNavigation, defaultNavigation, futuristicNavigation, horizontalNavigation, provideApollo, provideValidationMessages, translocoLoader } from '@aurora';
 
 import './prototypes/string-to-camel-case.interface';
 import './prototypes/string-to-camel-case';
@@ -16,6 +16,7 @@ export const provideAurora = (): Array<Provider | EnvironmentProviders> =>
 {
     return [
         provideApollo(),
+        provideValidationMessages(),
         {
             provide   : APP_INITIALIZER,
             useFactory: (bootstrapService: BootstrapService): () => void => () => bootstrapService.init(),
@@ -37,6 +38,10 @@ export const provideAurora = (): Array<Provider | EnvironmentProviders> =>
         {
             provide : IamService,
             useClass: IamAuroraAdapterService,
+        },
+        {
+            provide : GridManagerService,
+            useClass: AuroraGridManagerService,
         },
         {
             provide : COMPACT_NAVIGATION,
