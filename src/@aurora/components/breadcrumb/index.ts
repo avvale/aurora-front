@@ -1,2 +1,1 @@
-export { Crumb } from './breadcrumb.types';
-export { BreadcrumbComponent } from './breadcrumb.component';
+export * from '@aurora/components/breadcrumb/public-api';
