@@ -1,14 +1,5 @@
-import { AsyncPipe, NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { RouterLink } from '@angular/router';
-import { Action, BreadcrumbComponent, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, QueryStatementHandler, TitleComponent, ViewBaseComponent, exportRows, log } from '@aurora';
-import { GridColumnTranslationComponent } from '@aurora/components/grid/grid-translations/grid-column-translation.component';
-import { GridTranslationsComponent } from '@aurora/components/grid/grid-translations/grid-translations.component';
-import { GridComponent } from '@aurora/components/grid/grid/grid.component';
-import { TranslocoModule } from '@ngneat/transloco';
+import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, QueryStatementHandler, ViewBaseComponent, defaultListImports, exportRows, log } from '@aurora';
 import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 import { CommonLang } from '../common.types';
 import { langColumnsConfig } from './lang.columns-config';
@@ -20,7 +11,9 @@ import { LangService } from './lang.service';
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
-    imports        : [AsyncPipe, BreadcrumbComponent, GridComponent, GridTranslationsComponent, GridColumnTranslationComponent, NgForOf, MatButtonModule, MatIconModule, MatSnackBarModule, RouterLink, TitleComponent, TranslocoModule],
+    imports        : [
+        ...defaultListImports
+    ],
 })
 export class LangListComponent extends ViewBaseComponent
 {
