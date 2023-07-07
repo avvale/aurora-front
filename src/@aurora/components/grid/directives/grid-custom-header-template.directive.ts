@@ -3,6 +3,7 @@ import { GridCustomHeaderPosition } from '../grid.types';
 
 @Directive({
     selector: '[auGridCustomHeaderTemplate]',
+    standalone: true,
 })
 export class GridCustomHeaderTemplateDirective
 {
