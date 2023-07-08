@@ -45,9 +45,13 @@ exports.changeDecoratorPropertyAdapter = (sourceFile, moduleName, propertyName, 
     const decoratorProperty = moduleDecoratorArguments.getProperty(propertyName);
     const decoratorArrayProperty = decoratorProperty.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
 
-    for (const [index, value] of decoratorArrayProperty.getElements().entries())
+    this.changeProviderArray(decoratorArrayProperty.getElements().entries(), provide, adapter);
+};
+
+exports.changeProviderArray = (providerArray, provide, adapter) =>
+{
+    for (const [index, value] of providerArray.getElements().entries())
     {
-        // const object = value.getInitializer();
         if (value instanceof tsMorph.ObjectLiteralExpression)
         {
             const properties = value.getProperties();
@@ -188,7 +192,12 @@ exports.removeDecoratorPropertyAdapter = (sourceFile, moduleName, decoratorName,
     const decoratorProperty = moduleDecoratorArguments.getProperty(propertyName);
     const decoratorArrayProperty = decoratorProperty.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
 
-    for (const [index, value] of decoratorArrayProperty.getElements().entries())
+    this.deleteProviderArray(decoratorArrayProperty, provide)
+};
+
+exports.deleteProviderArray = (providerArray, provide) =>
+{
+    for (const [index, value] of providerArray.getElements().entries())
     {
         // const object = value.getInitializer();
         if (value instanceof tsMorph.ObjectLiteralExpression)

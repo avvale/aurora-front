@@ -87,11 +87,11 @@ function editPackageJson()
 async function cleanAppRouting()
 {
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
-    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'app.routing.ts']);
+    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'app.routes.ts']);
 
     const appRoutes = sourceFile.getVariableDeclarationOrThrow('appRoutes');
     const appRoutesArray = appRoutes.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
-    const objectRoute = appRoutesArray.getElements()[5];
+    const objectRoute = appRoutesArray.getElements()[5]; // Admin routes
     const childrenRoutes = objectRoute.getPropertyOrThrow('children');
     const childrenRoutesArray = childrenRoutes?.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
 
@@ -137,73 +137,63 @@ async function cleanAdminNavigation()
 async function cleanAppModule()
 {
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
-    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'app.module.ts']);
+    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', '@aurora', 'aurora.provider.ts']);
 
-    // remove UserMetaStorageIamService
+    // get provideAurora return array
+    const provideAurora = sourceFile.getVariableDeclarationOrThrow('provideAurora');
+    const provideAuroraFunction = provideAurora.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrowFunction);
+    const returnFunction = provideAuroraFunction.getDescendantsOfKind(ts.SyntaxKind.ReturnStatement)[0];
+    const returnArray = returnFunction.getDescendantsOfKind(ts.SyntaxKind.ArrayLiteralExpression)[0];
+
+
+    // change source of UserMetaStorageService
     codeWriter.removeImport(sourceFile, './modules/admin/apps/iam/user-meta/user-meta-storage-iam-adapter.service');
-    codeWriter.changeDecoratorPropertyAdapter(
-        sourceFile,
-        'AppModule',
-        'providers',
+    codeWriter.changeProviderArray(
+        returnArray,
         'UserMetaStorageService',
         'UserMetaStorageLocalStorageAdapterService',
     );
 
     // remove AzureModule
     codeWriter.removeImport(sourceFile, './modules/azure-ad/azure-ad.module');
-    codeWriter.removeDecoratorProperty(
-        sourceFile,
-        'AppModule',
-        'NgModule',
-        'imports',
+    /* codeWriter.deleteProviderArray(
+        returnArray,
         'AzureAdModule',
-    );
+    ); */
 
     // remove MsalGuard
     codeWriter.removeImport(sourceFile, '@azure/msal-angular');
-    codeWriter.removeDecoratorPropertyAdapter(
-        sourceFile,
-        'AppModule',
-        'NgModule',
-        'providers',
+    /* codeWriter.deleteProviderArray(
+        returnArray,
         'AuthGuard',
-    );
+    ); */
 
     // remove AuthorizationService
     codeWriter.removeImport(sourceFile, './modules/azure-ad/authorization-azure-ad-adapter.service');
-    codeWriter.removeDecoratorPropertyAdapter(
-        sourceFile,
-        'AppModule',
-        'NgModule',
-        'providers',
+    codeWriter.deleteProviderArray(
+        returnArray,
         'AuthorizationService',
     );
 
     // change AuthenticationService
     codeWriter.removeImport(sourceFile, './modules/azure-ad/authentication-azure-ad-adapter.service');
-    codeWriter.changeDecoratorPropertyAdapter(
-        sourceFile,
-        'AppModule',
-        'providers',
+    codeWriter.changeProviderArray(
+        returnArray,
         'AuthenticationService',
         'AuthenticationMockAdapterService',
     );
 
     // change IamService
     codeWriter.removeImport(sourceFile, './modules/azure-ad/iam-azure-ad-adapter.service');
-    codeWriter.changeDecoratorPropertyAdapter(
-        sourceFile,
-        'AppModule',
-        'providers',
+    codeWriter.changeProviderArray(
+        returnArray,
         'IamService',
         'IamMockAdapterService',
     );
 
     // add EnvironmentsInformationMockAdapterService implementation
-    codeWriter.addDecoratorPropertyAdapter(
-        sourceFile,
-        'AppModule',
-        'providers',
+    codeWriter.addArrayItem(
+        returnArray,
         `
 {
     provide : EnvironmentsInformationService,
@@ -212,10 +202,8 @@ async function cleanAppModule()
     );
 
     // add AuthenticationDisabledAdapterGuard implementation
-    codeWriter.addDecoratorPropertyAdapter(
-        sourceFile,
-        'AppModule',
-        'providers',
+    codeWriter.addArrayItem(
+        returnArray,
         `
 {
     provide : AuthGuard,
