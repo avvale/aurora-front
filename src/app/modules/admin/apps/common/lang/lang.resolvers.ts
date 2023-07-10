@@ -1,10 +1,10 @@
+import { CommonLang } from '../common.types';
+import { langColumnsConfig } from './lang.columns-config';
+import { LangService } from './lang.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, QueryStatementHandler } from '@aurora';
 import { Observable } from 'rxjs';
-import { CommonLang } from '../common.types';
-import { langColumnsConfig } from './lang.columns-config';
-import { LangService } from './lang.service';
 
 @Injectable({
     providedIn: 'root',
@@ -109,8 +109,9 @@ export class LangEditResolver implements Resolve<{
             isViewAction: true,
         });
 
-        return this.langService.findById({
-            id: route.paramMap.get('id'),
-        });
+        return this.langService
+            .findById({
+                id: route.paramMap.get('id'),
+            });
     }
 }
