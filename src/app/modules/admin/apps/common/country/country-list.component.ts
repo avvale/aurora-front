@@ -184,7 +184,7 @@ export class CountryListComponent extends ViewBaseComponent
                     message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('common.Country') }),
                     icon   : {
                         show : true,
-                        name : 'mat_outline:warning_amber',
+                        name : 'heroicons_outline:exclamation-triangle',
                         color: 'warn',
                     },
                     actions: {

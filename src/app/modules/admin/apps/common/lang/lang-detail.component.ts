@@ -16,8 +16,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
     imports        : [
+        ...defaultDetailImports,
         MatCheckboxModule, MatSelectModule,
-        ...defaultDetailImports
     ],
 })
 export class LangDetailComponent extends ViewDetailComponent

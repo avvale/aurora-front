@@ -1,9 +1,11 @@
-import { CommonCountry, CommonCountryMapType } from '../common.types';
-import { CountryService } from './country.service';
+import { KeyValuePipe, NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { Action, CoreCurrentLangService, CoreLang, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { Action, CoreCurrentLangService, CoreLang, Crumb, FlagLangComponent, Utils, ViewDetailComponent, defaultDetailImports, log, mapActions } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
+import { CommonCountry, CommonCountryMapType } from '../common.types';
+import { CountryService } from './country.service';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
     selector       : 'common-country-detail',
@@ -12,7 +14,8 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
     imports        : [
-        ...defaultDetailImports
+        ...defaultDetailImports,
+        FlagLangComponent, KeyValuePipe, MatSelectModule, NgForOf,
     ],
 })
 export class CountryDetailComponent extends ViewDetailComponent
@@ -242,7 +245,7 @@ export class CountryDetailComponent extends ViewDetailComponent
                     message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('common.Country') }),
                     icon   : {
                         show : true,
-                        name : 'heroicons_outline:exclamation',
+                        name : 'heroicons_outline:exclamation-triangle',
                         color: 'warn',
                     },
                     actions: {
