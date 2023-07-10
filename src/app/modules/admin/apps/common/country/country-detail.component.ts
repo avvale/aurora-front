@@ -2,7 +2,7 @@ import { CommonCountry, CommonCountryMapType } from '../common.types';
 import { CountryService } from './country.service';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { Action, CoreCurrentLangService, CoreLang, Crumb, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { Action, CoreCurrentLangService, CoreLang, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
 
 @Component({
@@ -10,6 +10,10 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     templateUrl    : './country-detail.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone     : true,
+    imports        : [
+        ...defaultDetailImports
+    ],
 })
 export class CountryDetailComponent extends ViewDetailComponent
 {
