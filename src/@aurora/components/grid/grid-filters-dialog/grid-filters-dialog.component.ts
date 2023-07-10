@@ -27,7 +27,6 @@ import { HasRenderOutboxPipe } from './pipes/has-render-outbox.pipe';
         AsyncPipe, FilterOperatorsPipe, GetPipe, GridTranslatePipe, HasRenderOutboxPipe, MatAutocompleteModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule,
         MatInputModule, MatSelectModule, NgForOf, NgIf, NgSwitch, NgSwitchCase, ReactiveFormsModule
     ],
-    providers      : [GridTranslationsService],
 })
 export class GridFiltersDialogComponent implements OnInit
 {

@@ -8,7 +8,6 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatIconModule } from '@angular/material/icon';
 import cloneDeep from 'lodash-es/cloneDeep';
 import { GridTranslatePipe } from '../grid-translations/grid-translate.pipe';
-import { GridTranslationsService } from '../grid-translations/grid-translations.service';
 import { ColumnConfig, ColumnDataType, ColumnsConfigChange } from '../grid.types';
 
 @Component({
@@ -20,7 +19,6 @@ import { ColumnConfig, ColumnDataType, ColumnsConfigChange } from '../grid.types
         AsyncPipe, GridTranslatePipe, MatButtonModule, MatCheckboxModule, MatDialogModule, DragDropModule,
         MatIconModule,NgForOf, FormsModule
     ],
-    providers  : [GridTranslationsService],
 })
 export class GridColumnsConfigPropertiesDialogComponent implements OnInit
 {

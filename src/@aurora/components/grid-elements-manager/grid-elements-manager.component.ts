@@ -1,8 +1,9 @@
+import { NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ContentChild, ContentChildren, EventEmitter, Input, Output, QueryList } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Action } from '@aurora/aurora.types';
+import { GridComponent } from '@aurora/components/grid';
 import { ColumnConfig, GridData, GridState } from '../grid/grid.types';
-import { GridComponent } from '../grid/grid/grid.component';
 import { GridCustomButtonsHeaderDialogTemplateDirective } from './directives/grid-custom-buttons-header-dialog-template.directive';
 import { GridElementsManagerCellValueTemplateDirective } from './directives/grid-elements-manager-cell-value-template.directive';
 import { GridFormElementDetailDialogTemplateDirective } from './directives/grid-form-element-detail-dialog-template.directive';
@@ -13,7 +14,7 @@ import { GridElementDetailDialogComponent } from './grid-element-detail-dialog.c
     templateUrl    : './grid-elements-manager.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
-    imports        : [GridComponent],
+    imports        : [GridComponent, NgForOf],
 })
 export class GridElementsManagerComponent
 {

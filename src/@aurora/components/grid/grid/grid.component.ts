@@ -20,7 +20,6 @@ import { GridColumnsConfigPropertiesDialogComponent } from '../grid-columns-conf
 import { GridFiltersDialogComponent } from '../grid-filters-dialog/grid-filters-dialog.component';
 import { GridSearchComponent } from '../grid-search/grid-search.component';
 import { GridTranslatePipe } from '../grid-translations/grid-translate.pipe';
-import { GridTranslationsService } from '../grid-translations/grid-translations.service';
 import { ColumnConfig, ColumnConfigAction, ColumnDataType, ExportFormat, ExportGridState, GridColumnFilter, GridData, GridSearchState, GridSortState, GridState } from '../grid.types';
 import { FilterGridCustomHeaderTemplatesPositionPipe, GetActionsPipe, GetGridSpinnerFlagPipe, GetTranslationIconColorPipe, HasCellValueTemplatePipe, IsOriginColumnConfigPipe, TransformDataCellPipe } from '../pipes';
 import { SelectionChange, SelectionModel } from '../selection-model/selection-model';
@@ -36,9 +35,6 @@ import { SelectionChange, SelectionModel } from '../selection-model/selection-mo
         AsyncPipe, DragDropModule, FilterGridCustomHeaderTemplatesPositionPipe, FlagIconComponent, GetActionsPipe, GetGridSpinnerFlagPipe, GetPipe, GridSearchComponent, GridTranslatePipe, GetTranslationIconColorPipe,
         HasCellValueTemplatePipe, IsOriginColumnConfigPipe, MatBadgeModule, MatButtonModule, MatCheckboxModule, MatIconModule, MatMenuModule, MatPaginatorModule, MatSortModule, MatTableModule,
         NgForOf, NgIf, NgSwitch, NgSwitchCase, TransformDataCellPipe,
-    ],
-    providers      : [
-        GridTranslationsService,
     ],
 })
 export class GridComponent implements OnInit, AfterViewInit
