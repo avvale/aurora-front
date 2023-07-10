@@ -76,6 +76,7 @@ export const appRoutes: Route[] = [
         children: [
             { path: 'example', loadChildren: () => import('app/modules/admin/example/example.routes') },
             { path: 'common', loadChildren: () => import('app/modules/admin/apps/common/common.routes') },
+            { path: 'queue-manager', loadChildren: () => import('app/modules/admin/apps/queue-manager/queue-manager.routes') },
         ]
     }
 ];
