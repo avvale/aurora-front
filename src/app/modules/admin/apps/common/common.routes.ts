@@ -1,11 +1,11 @@
-import { CommonComponent } from './common.component';
-import { LangListComponent } from './lang/lang-list.component';
-import { LangDetailComponent } from './lang/lang-detail.component';
-import { LangEditResolver, LangNewResolver, LangPaginationResolver } from './lang/lang.resolvers';
-import { CountryListComponent } from './country/country-list.component';
-import { CountryDetailComponent } from './country/country-detail.component';
-import { CountryEditResolver, CountryNewResolver, CountryPaginationResolver } from './country/country.resolvers';
 import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { CommonComponent } from './common.component';
+import { CountryDetailComponent } from './country/country-detail.component';
+import { CountryListComponent } from './country/country-list.component';
+import { CountryEditResolver, CountryNewResolver, CountryPaginationResolver } from './country/country.resolvers';
+import { LangDetailComponent } from './lang/lang-detail.component';
+import { LangListComponent } from './lang/lang-list.component';
+import { LangEditResolver, LangNewResolver, LangPaginationResolver } from './lang/lang.resolvers';
 
 export default [
     {
