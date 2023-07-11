@@ -12,7 +12,7 @@ import { lastValueFrom, Observable, takeUntil } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
     imports        : [
-        ...defaultListImports
+        ...defaultListImports,
     ],
 })
 export class CountryListComponent extends ViewBaseComponent
