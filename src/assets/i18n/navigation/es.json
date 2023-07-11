@@ -11,5 +11,6 @@
     "jobsRegistry": "JobsRegistry",
     "langs": "Idiomas",
     "queues": "Queues",
+    "refreshTokens": "RefreshTokens",
     "sideEffects": "SideEffects"
 }
