@@ -2,6 +2,7 @@ import { OAuthRefreshToken } from '../o-auth.types';
 import { RefreshTokenService } from './refresh-token.service';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Action, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
 
@@ -13,6 +14,7 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
+        MatCheckboxModule,
     ],
 })
 export class RefreshTokenDetailComponent extends ViewDetailComponent

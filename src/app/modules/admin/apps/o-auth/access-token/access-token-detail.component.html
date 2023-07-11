@@ -81,18 +81,6 @@
                         appearance="outline"
                         class="col-12"
                     >
-                        <mat-label>{{ t('oAuth.Token') }}</mat-label>
-                        <textarea
-                            matInput
-                            formControlName="token"
-                        >
-                        </textarea>
-                        <mat-error>{{ formErrors?.token | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
                         <mat-label>{{ t('oAuth.Name') }}</mat-label>
                         <input
                             matInput
@@ -101,7 +89,19 @@
                         >
                         <mat-error>{{ formErrors?.name | async }}</mat-error>
                     </mat-form-field>
-                    <div class="col-4 pt-5">
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>{{ t('oAuth.Token') }}</mat-label>
+                        <textarea
+                            matInput
+                            formControlName="token"
+                        >
+                        </textarea>
+                        <mat-error>{{ formErrors?.token | async }}</mat-error>
+                    </mat-form-field>
+                    <div class="col-3 pt-5">
                         <mat-checkbox
                             formControlName="isRevoked"
                         >
