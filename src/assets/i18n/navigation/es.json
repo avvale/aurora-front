@@ -6,7 +6,9 @@
     "example": "Ejemplo",
     "exampleSection": "Sección de ejemplo",
     "fields": "Fields",
+    "httpCommunications": "HttpCommunications",
     "jobsRegistry": "JobsRegistry",
     "langs": "Idiomas",
-    "queues": "Queues"
+    "queues": "Queues",
+    "sideEffects": "SideEffects"
 }

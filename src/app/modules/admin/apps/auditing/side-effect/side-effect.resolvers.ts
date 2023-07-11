@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, QueryStatementHandler } from '@aurora';
-import { Observable } from 'rxjs';
 import { AuditingSideEffect } from '../auditing.types';
 import { sideEffectColumnsConfig } from './side-effect.columns-config';
 import { SideEffectService } from './side-effect.service';
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, QueryStatementHandler } from '@aurora';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -33,9 +33,11 @@ export class SideEffectPaginationResolver implements Resolve<GridData<AuditingSi
             id          : 'auditing::sideEffect.list.view',
             isViewAction: true,
         });
+
         const gridId = 'auditing::sideEffect.list.mainGridList';
         this.gridStateService.setPaginationActionId(gridId, 'auditing::sideEffect.list.pagination');
         this.gridStateService.setExportActionId(gridId, 'auditing::sideEffect.list.export');
+
         return this.sideEffectService.pagination({
             query: QueryStatementHandler
                 .init({ columnsConfig: sideEffectColumnsConfig })
@@ -54,7 +56,7 @@ export class SideEffectPaginationResolver implements Resolve<GridData<AuditingSi
 export class SideEffectNewResolver implements Resolve<Action>
 {
     constructor(
-        private readonly actionService: ActionService,
+		private readonly actionService: ActionService,
     )
     {}
 
@@ -80,12 +82,12 @@ export class SideEffectNewResolver implements Resolve<Action>
     providedIn: 'root',
 })
 export class SideEffectEditResolver implements Resolve<{
-    object: AuditingSideEffect;
+	object: AuditingSideEffect;
 }>
 {
     constructor(
-        private readonly actionService: ActionService,
-        private readonly sideEffectService: SideEffectService,
+		private readonly actionService: ActionService,
+		private readonly sideEffectService: SideEffectService,
     )
     {}
 
@@ -99,15 +101,17 @@ export class SideEffectEditResolver implements Resolve<{
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot,
     ): Observable<{
-        object: AuditingSideEffect;
+		object: AuditingSideEffect;
     }>
     {
         this.actionService.action({
             id          : 'auditing::sideEffect.detail.edit',
             isViewAction: true,
         });
-        return this.sideEffectService.findById({
-            id: route.paramMap.get('id'),
-        });
+
+        return this.sideEffectService
+            .findById({
+                id: route.paramMap.get('id'),
+            });
     }
 }
