@@ -1,9 +1,13 @@
+import { KeyValuePipe, NgForOf } from '@angular/common';
 import { AuditingSideEffect, AuditingSideEffectEvent } from '../auditing.types';
 import { SideEffectService } from './side-effect.service';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { Action, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { Action, CanPipe, Crumb, defaultDetailImports, IsObjectEmptyPipe, log, mapActions, MatFormFieldAppearanceComponent, Utils, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @Component({
     selector       : 'auditing-side-effect-detail',
@@ -13,6 +17,7 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
+        CanPipe, IsObjectEmptyPipe, KeyValuePipe, MatCheckboxModule, MatFormFieldAppearanceComponent, MatSelectModule, NgForOf, NgxJsonViewerModule,
     ],
 })
 export class SideEffectDetailComponent extends ViewDetailComponent

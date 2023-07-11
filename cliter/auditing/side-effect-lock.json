@@ -10,10 +10,6 @@
             "integrity": "sha1:f159bf24b92632095210bb1cf822d90526fcf96d"
         },
         {
-            "path": "src/app/modules/admin/apps/auditing/auditing.routes.ts",
-            "integrity": "sha1:1642216c199938d91898549b3d6f86149b8874bf"
-        },
-        {
             "path": "src/app/modules/admin/apps/auditing/side-effect/side-effect-detail.component.html",
             "integrity": "sha1:71e9f20b39525dbbb51e0860dcb32bc5220bef65"
         },
@@ -39,7 +35,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/auditing/side-effect/side-effect.resolvers.ts",
-            "integrity": "sha1:217411c6203cb8022c813c3128b36044b9b1872a"
+            "integrity": "sha1:dd6f32532e5061598cd4919ab8959e76fbf0d2be"
         },
         {
             "path": "src/app/modules/admin/apps/auditing/side-effect/side-effect.service.ts",
