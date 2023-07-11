@@ -7,6 +7,9 @@ import { accessTokenEditResolver, accessTokenNewResolver, accessTokenPaginationR
 import { RefreshTokenListComponent } from './refresh-token/refresh-token-list.component';
 import { RefreshTokenDetailComponent } from './refresh-token/refresh-token-detail.component';
 import { refreshTokenEditResolver, refreshTokenNewResolver, refreshTokenPaginationResolver } from './refresh-token/refresh-token.resolvers';
+import { ScopeListComponent } from './scope/scope-list.component';
+import { ScopeDetailComponent } from './scope/scope-detail.component';
+import { scopeEditResolver, scopeNewResolver, scopePaginationResolver } from './scope/scope.resolvers';
 
 export default [
     {
@@ -19,6 +22,9 @@ export default [
             { path: 'refresh-token', component: RefreshTokenListComponent, resolve: { data: refreshTokenPaginationResolver }, data: { permission: 'oAuth.refreshToken.get' }},
             { path: 'refresh-token/new', component: RefreshTokenDetailComponent, resolve: { data: refreshTokenNewResolver }, data: { permission: 'oAuth.refreshToken.create' }},
             { path: 'refresh-token/edit/:id', component: RefreshTokenDetailComponent, resolve: { data: refreshTokenEditResolver }, data: { permission: 'oAuth.refreshToken.get' }},
+            { path: 'scope', component: ScopeListComponent, resolve: { data: scopePaginationResolver }, data: { permission: 'oAuth.scope.get' }},
+            { path: 'scope/new', component: ScopeDetailComponent, resolve: { data: scopeNewResolver }, data: { permission: 'oAuth.scope.create' }},
+            { path: 'scope/edit/:id', component: ScopeDetailComponent, resolve: { data: scopeEditResolver }, data: { permission: 'oAuth.scope.get' }},
         ],
         providers: [
             {

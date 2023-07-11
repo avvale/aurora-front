@@ -12,5 +12,6 @@
     "langs": "Idiomas",
     "queues": "Queues",
     "refreshTokens": "RefreshTokens",
+    "scopes": "Scopes",
     "sideEffects": "SideEffects"
 }
