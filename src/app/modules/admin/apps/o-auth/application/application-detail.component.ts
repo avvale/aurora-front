@@ -2,6 +2,7 @@ import { OAuthApplication } from '../o-auth.types';
 import { ApplicationService } from './application.service';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Action, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
 
@@ -13,6 +14,7 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
+        MatCheckboxModule,
     ],
 })
 export class ApplicationDetailComponent extends ViewDetailComponent
