@@ -10,6 +10,9 @@ import { refreshTokenEditResolver, refreshTokenNewResolver, refreshTokenPaginati
 import { ScopeListComponent } from './scope/scope-list.component';
 import { ScopeDetailComponent } from './scope/scope-detail.component';
 import { scopeEditResolver, scopeNewResolver, scopePaginationResolver } from './scope/scope.resolvers';
+import { ApplicationListComponent } from './application/application-list.component';
+import { ApplicationDetailComponent } from './application/application-detail.component';
+import { applicationEditResolver, applicationNewResolver, applicationPaginationResolver } from './application/application.resolvers';
 
 export default [
     {
@@ -25,6 +28,9 @@ export default [
             { path: 'scope', component: ScopeListComponent, resolve: { data: scopePaginationResolver }, data: { permission: 'oAuth.scope.get' }},
             { path: 'scope/new', component: ScopeDetailComponent, resolve: { data: scopeNewResolver }, data: { permission: 'oAuth.scope.create' }},
             { path: 'scope/edit/:id', component: ScopeDetailComponent, resolve: { data: scopeEditResolver }, data: { permission: 'oAuth.scope.get' }},
+            { path: 'application', component: ApplicationListComponent, resolve: { data: applicationPaginationResolver }, data: { permission: 'oAuth.application.get' }},
+            { path: 'application/new', component: ApplicationDetailComponent, resolve: { data: applicationNewResolver }, data: { permission: 'oAuth.application.create' }},
+            { path: 'application/edit/:id', component: ApplicationDetailComponent, resolve: { data: applicationEditResolver }, data: { permission: 'oAuth.application.get' }},
         ],
         providers: [
             {
