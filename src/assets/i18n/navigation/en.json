@@ -1,4 +1,5 @@
 {
+    "accessTokens": "AccessTokens",
     "admin": "Admin",
     "applications": "Applications",
     "collections": "Collections",

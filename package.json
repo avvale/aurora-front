@@ -30,7 +30,7 @@
         "@apollo/client": "^3.7.16",
         "@azure/msal-angular": "^2.5.8",
         "@azure/msal-browser": "^2.37.1",
-        "@ng-matero/extensions": "^16.0.2",
+        "@ng-matero/extensions": "^16.0.3",
         "@ngneat/transloco": "4.2.7",
         "@rxweb/reactive-form-validators": "^13.0.1",
         "apexcharts": "3.40.0",

@@ -78,6 +78,7 @@ export const appRoutes: Route[] = [
             { path: 'common', loadChildren: () => import('app/modules/admin/apps/common/common.routes') },
             { path: 'queue-manager', loadChildren: () => import('app/modules/admin/apps/queue-manager/queue-manager.routes') },
             { path: 'auditing', loadChildren: () => import('app/modules/admin/apps/auditing/auditing.routes') },
+            { path: 'o-auth', loadChildren: () => import('app/modules/admin/apps/o-auth/o-auth.routes') },
         ]
     }
 ];

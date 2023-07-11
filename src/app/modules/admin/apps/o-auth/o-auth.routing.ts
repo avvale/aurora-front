@@ -12,7 +12,6 @@ import { ClientDetailComponent } from './client/client-detail.component';
 import { ClientEditResolver, ClientNewResolver, ClientPaginationResolver } from './client/client.resolvers';
 import { AccessTokenListComponent } from './access-token/access-token-list.component';
 import { AccessTokenDetailComponent } from './access-token/access-token-detail.component';
-import { AccessTokenEditResolver, AccessTokenNewResolver, AccessTokenPaginationResolver } from './access-token/access-token.resolvers';
 import { RefreshTokenListComponent } from './refresh-token/refresh-token-list.component';
 import { RefreshTokenDetailComponent } from './refresh-token/refresh-token-detail.component';
 import { RefreshTokenEditResolver, RefreshTokenNewResolver, RefreshTokenPaginationResolver } from './refresh-token/refresh-token.resolvers';
@@ -31,9 +30,6 @@ export const oAuthRoutes: Route[] = [
             { path: 'client', component: ClientListComponent, resolve: { data: ClientPaginationResolver }, data: { permission: 'oAuth.client.get' }},
             { path: 'client/new', component: ClientDetailComponent, resolve: { data: ClientNewResolver }, data: { permission: 'oAuth.client.create' }},
             { path: 'client/edit/:id', component: ClientDetailComponent, resolve: { data: ClientEditResolver }, data: { permission: 'oAuth.client.get' }},
-            { path: 'access-token', component: AccessTokenListComponent, resolve: { data: AccessTokenPaginationResolver }, data: { permission: 'oAuth.accessToken.get' }},
-            { path: 'access-token/new', component: AccessTokenDetailComponent, resolve: { data: AccessTokenNewResolver }, data: { permission: 'oAuth.accessToken.create' }},
-            { path: 'access-token/edit/:id', component: AccessTokenDetailComponent, resolve: { data: AccessTokenEditResolver }, data: { permission: 'oAuth.accessToken.get' }},
             { path: 'refresh-token', component: RefreshTokenListComponent, resolve: { data: RefreshTokenPaginationResolver }, data: { permission: 'oAuth.refreshToken.get' }},
             { path: 'refresh-token/new', component: RefreshTokenDetailComponent, resolve: { data: RefreshTokenNewResolver }, data: { permission: 'oAuth.refreshToken.create' }},
             { path: 'refresh-token/edit/:id', component: RefreshTokenDetailComponent, resolve: { data: RefreshTokenEditResolver }, data: { permission: 'oAuth.refreshToken.get' }},
