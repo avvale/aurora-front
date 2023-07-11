@@ -15,7 +15,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country-detail.component.ts",
-            "integrity": "sha1:624be72d19d20138993ab3cd52f4211b8789deb9"
+            "integrity": "sha1:9398da9115091a343c75b15e0d0b9c83d2e0def5"
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country-list.component.html",
@@ -23,7 +23,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country-list.component.ts",
-            "integrity": "sha1:387b27c05385b2023d188a2abb5e7f01eb73874c"
+            "integrity": "sha1:8a946982ed3688487b6675f1ac2eb86ae7a31894"
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country.columns-config.ts",
@@ -35,7 +35,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country.resolvers.ts",
-            "integrity": "sha1:98f6c360465f1d74b6641c63c0e213490fe6e194"
+            "integrity": "sha1:e8ae9c4c4ae7564ba5bcd35b4f8149675af491ad"
         },
         {
             "path": "src/app/modules/admin/apps/common/country/country.service.ts",
