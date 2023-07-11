@@ -1,13 +1,13 @@
-import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
-import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnTranslationComponent, GridColumnsConfigStorageService, GridData, GridElementsManagerComponent, GridFiltersStorageService, GridFormElementDetailDialogTemplateDirective, GridState, GridStateService, GridTranslationsComponent, IsObjectEmptyPipe, MatFormFieldAppearanceComponent, QueryStatementHandler, Utils, ViewDetailComponent, defaultDetailImports, log, mapActions } from '@aurora';
-import { NgxJsonViewerModule } from 'ngx-json-viewer';
-import { Observable, lastValueFrom, takeUntil } from 'rxjs';
-import { jobColumnsConfig } from '../job/job.columns-config';
-import { JobService } from '../job/job.service';
 import { QueueJobType, QueueManagerJob, QueueManagerQueue } from '../queue-manager.types';
 import { QueueService } from './queue.service';
+import { ChangeDetectionStrategy, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
+import { NgForOf } from '@angular/common';
+import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnTranslationComponent, GridColumnsConfigStorageService, GridData, GridElementsManagerComponent, GridFiltersStorageService, GridFormElementDetailDialogTemplateDirective, GridState, GridStateService, GridTranslationsComponent, IsObjectEmptyPipe, MatFormFieldAppearanceComponent, QueryStatementHandler, Utils, ViewDetailComponent, defaultDetailImports, log, mapActions } from '@aurora';
+import { Observable, lastValueFrom, takeUntil } from 'rxjs';
+import { FormGroup, Validators } from '@angular/forms';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { jobColumnsConfig } from '../job/job.columns-config';
+import { JobService } from '../job/job.service';
 
 @Component({
     selector       : 'queue-manager-queue-detail',

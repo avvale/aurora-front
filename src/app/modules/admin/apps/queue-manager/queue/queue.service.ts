@@ -1,9 +1,11 @@
+import { QueueManagerQueue, QueueManagerCreateQueue, QueueManagerUpdateQueueById, QueueManagerUpdateQueues, QueueManagerJob } from '../queue-manager.types';
+import { paginationQuery, getQuery, fields, findByIdQuery, findQuery, createMutation, updateByIdMutation, updateMutation, deleteByIdMutation, deleteMutation, findByIdWithRelationsQuery } from './queue.graphql';
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
-import { QueueManagerQueue, QueueManagerCreateQueue, QueueManagerUpdateQueueById, QueueManagerUpdateQueues, QueueManagerJob } from '../queue-manager.types';
-import { paginationQuery, getQuery, fields, findByIdQuery, findQuery, createMutation, updateByIdMutation, updateMutation, deleteByIdMutation, deleteMutation, findByIdWithRelationsQuery } from './queue.graphql';
+
+// ---- customizations ----
 import { JobService } from '../job/job.service';
 
 @Injectable({
@@ -121,12 +123,14 @@ export class QueueService
             constraint = {},
             queryPaginateJobs = {},
             constraintPaginateJobs = {},
+            headers = {},
         }: {
             graphqlStatement?: DocumentNode;
             id?: string;
             constraint?: QueryStatement;
             queryPaginateJobs?: QueryStatement;
             constraintPaginateJobs?: QueryStatement;
+            headers?: GraphQLHeaders;
         } = {},
     ): Observable<{
         object: QueueManagerQueue;
@@ -151,6 +155,9 @@ export class QueueService
                             queueId: id,
                         },
                     },
+                },
+                context: {
+                    headers,
                 },
             })
             .valueChanges

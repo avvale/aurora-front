@@ -35,7 +35,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/queue-manager/queue/queue.resolvers.ts",
-            "integrity": "sha1:94f80f39c0434c0b0b8d7fb1a6b7ec89c6050fa6"
+            "integrity": "sha1:f9feb75b1f07233f287e4a57015a7c233aeaaa65"
         },
         {
             "path": "src/app/modules/admin/apps/queue-manager/queue/queue.service.ts",

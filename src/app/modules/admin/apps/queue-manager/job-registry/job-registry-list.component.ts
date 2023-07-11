@@ -1,9 +1,9 @@
+import { QueueManagerJobRegistry } from '../queue-manager.types';
+import { jobRegistryColumnsConfig } from './job-registry.columns-config';
+import { JobRegistryService } from './job-registry.service';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Action, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
-import { QueueManagerJobRegistry } from '../queue-manager.types';
-import { JobRegistryService } from './job-registry.service';
-import { jobRegistryColumnsConfig } from './job-registry.columns-config';
 
 @Component({
     selector       : 'queue-manager-job-registry-list',

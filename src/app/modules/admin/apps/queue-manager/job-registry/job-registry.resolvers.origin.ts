@@ -1,12 +1,9 @@
-import { QueueManagerJob, QueueManagerJobRegistry } from '../queue-manager.types';
+import { QueueManagerJobRegistry } from '../queue-manager.types';
 import { jobRegistryColumnsConfig } from './job-registry.columns-config';
 import { JobRegistryService } from './job-registry.service';
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, QueryStatementHandler } from '@aurora';
-
-import { Observable, Subject, first, map } from 'rxjs';
-import { JobService } from '../job/job.service';
 
 export const jobRegistryPaginationResolver: ResolveFn<GridData<QueueManagerJobRegistry>> = (
     route: ActivatedRouteSnapshot,
@@ -52,7 +49,7 @@ export const jobRegistryNewResolver: ResolveFn<Action> = (
 };
 
 export const jobRegistryEditResolver: ResolveFn<{
-	object: QueueManagerJob;
+	object: QueueManagerJobRegistry;
 }> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
@@ -60,36 +57,14 @@ export const jobRegistryEditResolver: ResolveFn<{
 {
 	const actionService = inject(ActionService);
 	const jobRegistryService = inject(JobRegistryService);
-    const jobService = inject(JobService);
 
     actionService.action({
         id          : 'queueManager::jobRegistry.detail.edit',
         isViewAction: true,
     });
 
-    const jobResponse = new Subject<{ object: QueueManagerJob; }>();
-    jobRegistryService.findById({
-        id: route.paramMap.get('id'),
-    })
-        .pipe(
-            map(response => response.object),
-            first(),
-        )
-        .subscribe(jobRegistry =>
-        {
-            jobService
-                .findById({
-                    id  : jobRegistry.jobId,
-                    name: jobRegistry.queueName,
-                })
-                .pipe(
-                    first(),
-                )
-                .subscribe(job =>
-                {
-                    jobResponse.next(job);
-                });
+    return jobRegistryService
+        .findById({
+            id: route.paramMap.get('id'),
         });
-
-    return jobResponse;
 };

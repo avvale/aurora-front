@@ -35,7 +35,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/queue-manager/job-registry/job-registry.resolvers.ts",
-            "integrity": "sha1:8ef13ac8841fc3c16c6af1ca8c259a6b7159a3ee"
+            "integrity": "sha1:b0b63f2ee5ba5ce5903917a0954fee3e424f8224"
         },
         {
             "path": "src/app/modules/admin/apps/queue-manager/job-registry/job-registry.service.ts",
