@@ -14,5 +14,6 @@
     "queues": "Queues",
     "refreshTokens": "RefreshTokens",
     "scopes": "Scopes",
-    "sideEffects": "SideEffects"
+    "sideEffects": "SideEffects",
+    "tenants": "Tenants"
 }

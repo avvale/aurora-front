@@ -4,7 +4,7 @@ export const iamNavigation: FuseNavigationItem = {
     id   : 'iam',
     title: 'Iam',
     type : 'collapsable',
-    icon : 'security',
+    icon : 'mat_outline:admin_panel_settings',
     meta : {
         permission: 'iam.access',
     },
