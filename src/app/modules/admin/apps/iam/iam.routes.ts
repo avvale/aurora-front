@@ -10,6 +10,9 @@ import { boundedContextEditResolver, boundedContextNewResolver, boundedContextPa
 import { RoleListComponent } from './role/role-list.component';
 import { RoleDetailComponent } from './role/role-detail.component';
 import { roleEditResolver, roleNewResolver, rolePaginationResolver } from './role/role.resolvers';
+import { AccountListComponent } from './account/account-list.component';
+import { AccountDetailComponent } from './account/account-detail.component';
+import { accountEditResolver, accountNewResolver, accountPaginationResolver } from './account/account.resolvers';
 
 export default [
     {
@@ -25,6 +28,9 @@ export default [
             { path: 'role', component: RoleListComponent, resolve: { data: rolePaginationResolver }, data: { permission: 'iam.role.get' }},
             { path: 'role/new', component: RoleDetailComponent, resolve: { data: roleNewResolver }, data: { permission: 'iam.role.create' }},
             { path: 'role/edit/:id', component: RoleDetailComponent, resolve: { data: roleEditResolver }, data: { permission: 'iam.role.get' }},
+            { path: 'account', component: AccountListComponent, resolve: { data: accountPaginationResolver }, data: { permission: 'iam.account.get' }},
+            { path: 'account/new', component: AccountDetailComponent, resolve: { data: accountNewResolver }, data: { permission: 'iam.account.create' }},
+            { path: 'account/edit/:id', component: AccountDetailComponent, resolve: { data: accountEditResolver }, data: { permission: 'iam.account.get' }},
         ],
         providers: [
             {

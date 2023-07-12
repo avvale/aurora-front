@@ -1,5 +1,6 @@
 {
     "accessTokens": "AccessTokens",
+    "accounts": "Accounts",
     "admin": "Admin",
     "applications": "Applications",
     "boundedContexts": "BoundedContexts",
