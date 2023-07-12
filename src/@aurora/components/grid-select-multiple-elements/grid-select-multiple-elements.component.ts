@@ -3,6 +3,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ContentChild, ContentChildren, EventEmitter, Input, Output, QueryList } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { Action } from '@aurora';
 import { GridCustomHeaderTemplateDirective } from '@aurora/components/grid/directives/grid-custom-header-template.directive';
 import { GridDialogComponent } from '../grid-dialog/grid-dialog.component';
@@ -20,7 +21,7 @@ import { GridSelectMultipleCustomHeaderTemplateDirective } from './directives/gr
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
     imports        : [
-        GridComponent, GridCustomHeaderTemplateDirective, NgForOf, NgIf, NgTemplateOutlet,
+        GridComponent, GridCustomHeaderTemplateDirective, MatIconModule, NgForOf, NgIf, NgTemplateOutlet,
     ],
 })
 export class GridSelectMultipleElementsComponent

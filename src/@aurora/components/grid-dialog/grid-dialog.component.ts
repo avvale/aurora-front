@@ -1,7 +1,8 @@
 import { SelectionChange } from '@angular/cdk/collections';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgForOf, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Output, QueryList, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Action } from '@aurora';
 import { BehaviorSubject, Observable, Subject, of, takeUntil } from 'rxjs';
@@ -16,7 +17,9 @@ import { SelectionModel } from '../grid/selection-model/selection-model';
     styleUrls      : ['grid-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
-    imports        : [AsyncPipe, GridComponent, MatIconModule],
+    imports        : [
+        AsyncPipe, GridComponent, GridCustomHeaderTemplateDirective, MatButtonModule, MatDialogModule, MatIconModule, NgForOf, NgTemplateOutlet,
+    ],
 })
 export class GridDialogComponent
 {
