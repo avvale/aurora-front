@@ -13,6 +13,9 @@ import { scopeEditResolver, scopeNewResolver, scopePaginationResolver } from './
 import { ApplicationListComponent } from './application/application-list.component';
 import { ApplicationDetailComponent } from './application/application-detail.component';
 import { applicationEditResolver, applicationNewResolver, applicationPaginationResolver } from './application/application.resolvers';
+import { ClientListComponent } from './client/client-list.component';
+import { ClientDetailComponent } from './client/client-detail.component';
+import { clientEditResolver, clientNewResolver, clientPaginationResolver } from './client/client.resolvers';
 
 export default [
     {
@@ -31,6 +34,9 @@ export default [
             { path: 'application', component: ApplicationListComponent, resolve: { data: applicationPaginationResolver }, data: { permission: 'oAuth.application.get' }},
             { path: 'application/new', component: ApplicationDetailComponent, resolve: { data: applicationNewResolver }, data: { permission: 'oAuth.application.create' }},
             { path: 'application/edit/:id', component: ApplicationDetailComponent, resolve: { data: applicationEditResolver }, data: { permission: 'oAuth.application.get' }},
+            { path: 'client', component: ClientListComponent, resolve: { data: clientPaginationResolver }, data: { permission: 'oAuth.client.get' }},
+            { path: 'client/new', component: ClientDetailComponent, resolve: { data: clientNewResolver }, data: { permission: 'oAuth.client.create' }},
+            { path: 'client/edit/:id', component: ClientDetailComponent, resolve: { data: clientEditResolver }, data: { permission: 'oAuth.client.get' }},
         ],
         providers: [
             {
