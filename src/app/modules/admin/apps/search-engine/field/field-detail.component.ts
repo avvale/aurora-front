@@ -2,7 +2,8 @@ import { SearchEngineField } from '../search-engine.types';
 import { FieldService } from './field.service';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { Action, Crumb, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Action, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
 
 @Component({
@@ -10,6 +11,11 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     templateUrl    : './field-detail.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone     : true,
+    imports        : [
+        ...defaultDetailImports,
+        MatCheckboxModule,
+    ],
 })
 export class FieldDetailComponent extends ViewDetailComponent
 {

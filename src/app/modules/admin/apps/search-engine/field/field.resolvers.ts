@@ -1,117 +1,70 @@
 import { SearchEngineField } from '../search-engine.types';
 import { fieldColumnsConfig } from './field.columns-config';
 import { FieldService } from './field.service';
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, QueryStatementHandler } from '@aurora';
-import { Observable } from 'rxjs';
 
-@Injectable({
-    providedIn: 'root',
-})
-export class FieldPaginationResolver implements Resolve<GridData<SearchEngineField>>
+export const fieldPaginationResolver: ResolveFn<GridData<SearchEngineField>> = (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+) =>
 {
-    constructor(
-        private readonly actionService: ActionService,
-        private readonly gridFiltersStorageService: GridFiltersStorageService,
-        private readonly gridStateService: GridStateService,
-        private readonly fieldService: FieldService,
-    ) {}
+    const actionService = inject(ActionService);
+    const gridFiltersStorageService = inject(GridFiltersStorageService);
+    const gridStateService = inject(GridStateService);
+    const fieldService = inject(FieldService);
 
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<GridData<SearchEngineField>>
-    {
-        this.actionService.action({
-            id          : 'searchEngine::field.list.view',
-            isViewAction: true,
-        });
+    actionService.action({
+        id          : 'searchEngine::field.list.view',
+        isViewAction: true,
+    });
 
-        const gridId = 'searchEngine::field.list.mainGridList';
-        this.gridStateService.setPaginationActionId(gridId, 'searchEngine::field.list.pagination');
-        this.gridStateService.setExportActionId(gridId, 'searchEngine::field.list.export');
+    const gridId = 'searchEngine::field.list.mainGridList';
+    gridStateService.setPaginationActionId(gridId, 'searchEngine::field.list.pagination');
+    gridStateService.setExportActionId(gridId, 'searchEngine::field.list.export');
 
-        return this.fieldService.pagination({
-            query: QueryStatementHandler
-                .init({ columnsConfig: fieldColumnsConfig })
-                .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(gridId))
-                .setSort(this.gridStateService.getSort(gridId))
-                .setPage(this.gridStateService.getPage(gridId))
-                .setSearch(this.gridStateService.getSearchState(gridId))
-                .getQueryStatement(),
-        });
-    }
-}
+    return fieldService.pagination({
+        query: QueryStatementHandler
+            .init({ columnsConfig: fieldColumnsConfig })
+            .setColumFilters(gridFiltersStorageService.getColumnFilterState(gridId))
+            .setSort(gridStateService.getSort(gridId))
+            .setPage(gridStateService.getPage(gridId))
+            .setSearch(gridStateService.getSearchState(gridId))
+            .getQueryStatement(),
+    });
+};
 
-@Injectable({
-    providedIn: 'root',
-})
-export class FieldNewResolver implements Resolve<Action>
+export const fieldNewResolver: ResolveFn<Action> = (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+) =>
 {
-    constructor(
-		private readonly actionService: ActionService,
-    )
-    {}
+	const actionService = inject(ActionService);
 
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Action
-    {
-        return this.actionService.action({
-            id          : 'searchEngine::field.detail.new',
-            isViewAction: true,
-        });
-    }
-}
+    return actionService.action({
+        id          : 'searchEngine::field.detail.new',
+        isViewAction: true,
+    });
+};
 
-@Injectable({
-    providedIn: 'root',
-})
-export class FieldEditResolver implements Resolve<{
+export const fieldEditResolver: ResolveFn<{
 	object: SearchEngineField;
-}>
+}> = (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+) =>
 {
-    constructor(
-		private readonly actionService: ActionService,
-		private readonly fieldService: FieldService,
-    )
-    {}
+	const actionService = inject(ActionService);
+	const fieldService = inject(FieldService);
 
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<{
-		object: SearchEngineField;
-    }>
-    {
-        this.actionService.action({
-            id          : 'searchEngine::field.detail.edit',
-            isViewAction: true,
+    actionService.action({
+        id          : 'searchEngine::field.detail.edit',
+        isViewAction: true,
+    });
+
+    return fieldService
+        .findById({
+            id: route.paramMap.get('id'),
         });
-
-        return this.fieldService
-            .findById({
-                id: route.paramMap.get('id'),
-            });
-    }
-}
+};

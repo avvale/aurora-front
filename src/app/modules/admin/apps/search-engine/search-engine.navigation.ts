@@ -17,7 +17,7 @@ export const searchEngineNavigation: FuseNavigationItem = {
             id   : 'fields',
             title: 'Field',
             type : 'basic',
-            icon : 'heroicons_outline:tag',
+            icon : 'mat_outline:input',
             link : '/search-engine/field',
         },
     ],
