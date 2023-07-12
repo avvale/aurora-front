@@ -195,7 +195,7 @@ export class SideEffectDetailComponent extends ViewDetailComponent
                     message: this.translocoService.translate('auditing.RollbackAlertMessage'),
                     icon   : {
                         show : true,
-                        name : 'heroicons_outline:exclamation',
+                        name : 'heroicons_outline:exclamation-triangle',
                         color: 'warn',
                     },
                     actions: {

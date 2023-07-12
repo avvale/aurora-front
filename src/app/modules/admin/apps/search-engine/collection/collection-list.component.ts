@@ -125,7 +125,7 @@ export class CollectionListComponent extends ViewBaseComponent
                     message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('searchEngine.Collection') }),
                     icon   : {
                         show : true,
-                        name : 'heroicons_outline:exclamation',
+                        name : 'heroicons_outline:exclamation-triangle',
                         color: 'warn',
                     },
                     actions: {
@@ -201,7 +201,7 @@ export class CollectionListComponent extends ViewBaseComponent
                     message: this.translocoService.translate('searchEngine.IndexWarning', { alias: action.meta.row.alias }),
                     icon   : {
                         show : true,
-                        name : 'heroicons_outline:exclamation',
+                        name : 'heroicons_outline:exclamation-triangle',
                         color: 'warn',
                     },
                     actions: {

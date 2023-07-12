@@ -42,11 +42,13 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                         id         : 'iam::boundedContext.detail.editPermission',
                         translation: 'edit',
                         icon       : 'mode_edit',
+                        isViewAction: false,
                     },
                     {
                         id         : 'iam::boundedContext.detail.deletePermission',
                         translation: 'delete',
                         icon       : 'delete',
+                        isViewAction: false,
                     },
                 ];
             },
@@ -347,7 +349,7 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                     message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('iam.Permission') }),
                     icon   : {
                         show : true,
-                        name : 'heroicons_outline:exclamation',
+                        name : 'heroicons_outline:exclamation-triangle',
                         color: 'warn',
                     },
                     actions: {
