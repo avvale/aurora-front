@@ -10,7 +10,7 @@ export const searchEngineNavigation: FuseNavigationItem = {
             id   : 'collections',
             title: 'Collection',
             type : 'basic',
-            icon : 'segment',
+            icon : 'mat_outline:segment',
             link : '/search-engine/collection',
         },
         {

@@ -389,9 +389,11 @@ export class CollectionService
         {
             graphqlStatement = indexCollectionMutation,
             id = '',
+            headers = {},
         }: {
             graphqlStatement?: DocumentNode;
             id?: string;
+            headers?: GraphQLHeaders;
         } = {},
     ): Observable<FetchResult<T>>
     {
@@ -401,6 +403,9 @@ export class CollectionService
                 mutation : graphqlStatement,
                 variables: {
                     id,
+                },
+                context: {
+                    headers,
                 },
             });
     }

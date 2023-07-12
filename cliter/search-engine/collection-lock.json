@@ -7,23 +7,27 @@
         },
         {
             "path": "src/app/modules/admin/apps/search-engine/search-engine.component.ts",
-            "integrity": "sha1:17a962628b9bafa6f0347344a9c02eebf3adc556"
+            "integrity": "sha1:099da41f9a20e2e8d0c241780985bb227e84f5bf"
+        },
+        {
+            "path": "src/app/modules/admin/apps/search-engine/search-engine.routes.ts",
+            "integrity": "sha1:e6ad3801383eb51c3b5716c5f1dc160c3362c048"
         },
         {
             "path": "src/app/modules/admin/apps/search-engine/collection/collection-detail.component.html",
-            "integrity": "sha1:97a5a825ea809f20577dadd7025438b216d88178"
+            "integrity": "sha1:9e7dd8343cd32959e7538e956aace5d4442305b7"
         },
         {
             "path": "src/app/modules/admin/apps/search-engine/collection/collection-detail.component.ts",
-            "integrity": "sha1:41f01e6ddb47e4bd69eab544cee15c6559fc50a0"
+            "integrity": "sha1:8130df458252bcd13e13b9fdd985b1ef56b0a372"
         },
         {
             "path": "src/app/modules/admin/apps/search-engine/collection/collection-list.component.html",
-            "integrity": "sha1:f2ebb266bbdbf8fe585f1f85b771ee3b81138057"
+            "integrity": "sha1:c68860d3639f7c6e031c0700bee45251c5058d7f"
         },
         {
             "path": "src/app/modules/admin/apps/search-engine/collection/collection-list.component.ts",
-            "integrity": "sha1:464c42d65aa74389eb89b9066964f98c5666444b"
+            "integrity": "sha1:226397e1bcfa70e88c2a6c04762b4915db47f92b"
         },
         {
             "path": "src/app/modules/admin/apps/search-engine/collection/collection.columns-config.ts",
@@ -35,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/search-engine/collection/collection.resolvers.ts",
-            "integrity": "sha1:263e2bbd833f014947604709af002bc75bf3745a"
+            "integrity": "sha1:ff2dfbd6d0d906223531515129cac2a493859f4c"
         },
         {
             "path": "src/app/modules/admin/apps/search-engine/collection/collection.service.ts",

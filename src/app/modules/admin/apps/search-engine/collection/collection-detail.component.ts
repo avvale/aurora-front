@@ -1,17 +1,25 @@
+import { NgForOf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridElementsManagerComponent, GridFiltersStorageService, GridState, GridStateService, QueryStatementHandler, Utils, ViewDetailComponent, defaultDetailImports, exportRows, log, mapActions } from '@aurora';
+import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 import { fieldColumnsConfig } from '../field/field.columns-config';
 import { FieldService } from '../field/field.service';
 import { SearchEngineCollection, SearchEngineField } from '../search-engine.types';
 import { CollectionService } from './collection.service';
-import { ChangeDetectionStrategy, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
-import { Action, ColumnConfig, ColumnDataType, Crumb, exportRows, GridColumnsConfigStorageService, GridData, GridElementsManagerComponent, GridFiltersStorageService, GridState, GridStateService, log, mapActions, QueryStatementHandler, Utils, ViewDetailComponent } from '@aurora';
-import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 
 @Component({
     selector       : 'search-engine-collection-detail',
     templateUrl    : './collection-detail.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone     : true,
+    imports        : [
+        ...defaultDetailImports,
+        MatCheckboxModule, MatSelectModule, NgForOf,
+    ],
 })
 export class CollectionDetailComponent extends ViewDetailComponent
 {
@@ -382,7 +390,9 @@ export class CollectionDetailComponent extends ViewDetailComponent
                             {
                                 await lastValueFrom(
                                     this.fieldService
-                                        .deleteById<SearchEngineField>(action.meta.row.id),
+                                        .deleteById<SearchEngineField>({
+                                            id: action.meta.row.id,
+                                        }),
                                 );
 
                                 this.actionService.action({
