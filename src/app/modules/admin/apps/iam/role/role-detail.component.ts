@@ -132,7 +132,9 @@ export class RoleDetailComponent extends ViewDetailComponent
     // this method will be called after the ngOnInit of
     // the parent class you can use instead of ngOnInit
     init(): void
-    { /**/ }
+    {
+        /**/
+    }
 
     onSubmit($event): void
     {
