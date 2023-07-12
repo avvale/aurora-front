@@ -36,8 +36,8 @@ export class UserMetaStorageIamAdapterService extends UserMetaStorageService
             .valueChanges
             .pipe(
                 first(),
-                map<{ data: { iamGetUserMeta: UserMetaStorage; };}, UserMetaStorage>(result => result.data.iamGetUserMeta),
-                tap((iamGetUserMeta: UserMetaStorage) => this.metaSubject$.next(iamGetUserMeta)),
+                map(result => result.data.iamGetUserMeta),
+                tap(iamGetUserMeta => this.metaSubject$.next(iamGetUserMeta)),
             );
     }
 
