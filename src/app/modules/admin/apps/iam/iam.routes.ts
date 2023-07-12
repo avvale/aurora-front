@@ -7,6 +7,9 @@ import { tenantEditResolver, tenantNewResolver, tenantPaginationResolver } from 
 import { BoundedContextListComponent } from './bounded-context/bounded-context-list.component';
 import { BoundedContextDetailComponent } from './bounded-context/bounded-context-detail.component';
 import { boundedContextEditResolver, boundedContextNewResolver, boundedContextPaginationResolver } from './bounded-context/bounded-context.resolvers';
+import { RoleListComponent } from './role/role-list.component';
+import { RoleDetailComponent } from './role/role-detail.component';
+import { roleEditResolver, roleNewResolver, rolePaginationResolver } from './role/role.resolvers';
 
 export default [
     {
@@ -19,6 +22,9 @@ export default [
             { path: 'bounded-context', component: BoundedContextListComponent, resolve: { data: boundedContextPaginationResolver }, data: { permission: 'iam.boundedContext.get' }},
             { path: 'bounded-context/new', component: BoundedContextDetailComponent, resolve: { data: boundedContextNewResolver }, data: { permission: 'iam.boundedContext.create' }},
             { path: 'bounded-context/edit/:id', component: BoundedContextDetailComponent, resolve: { data: boundedContextEditResolver }, data: { permission: 'iam.boundedContext.get' }},
+            { path: 'role', component: RoleListComponent, resolve: { data: rolePaginationResolver }, data: { permission: 'iam.role.get' }},
+            { path: 'role/new', component: RoleDetailComponent, resolve: { data: roleNewResolver }, data: { permission: 'iam.role.create' }},
+            { path: 'role/edit/:id', component: RoleDetailComponent, resolve: { data: roleEditResolver }, data: { permission: 'iam.role.get' }},
         ],
         providers: [
             {

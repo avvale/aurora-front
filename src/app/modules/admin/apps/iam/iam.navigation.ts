@@ -13,7 +13,7 @@ export const iamNavigation: FuseNavigationItem = {
             id   : 'accounts',
             title: 'Account',
             type : 'basic',
-            icon : 'manage_accounts',
+            icon : 'mat_outline:manage_accounts',
             link : '/iam/account',
             meta : {
                 permission: 'iam.account.access',
@@ -23,7 +23,7 @@ export const iamNavigation: FuseNavigationItem = {
             id   : 'roles',
             title: 'Role',
             type : 'basic',
-            icon : 'groups',
+            icon : 'mat_outline:groups',
             link : '/iam/role',
             meta : {
                 permission: 'iam.role.access',
