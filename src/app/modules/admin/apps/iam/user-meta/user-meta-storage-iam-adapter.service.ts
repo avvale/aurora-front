@@ -29,7 +29,9 @@ export class UserMetaStorageIamAdapterService extends UserMetaStorageService
             .client()
             .watchQuery<{ iamGetUserMeta: UserMetaStorage; }>({
                 query    : findUserMetaById,
-                variables: { id: keyUserMeta },
+                variables: {
+                    id: keyUserMeta,
+                },
             })
             .valueChanges
             .pipe(
@@ -45,12 +47,17 @@ export class UserMetaStorageIamAdapterService extends UserMetaStorageService
 
         if (typeof currentUserMeta === 'object')
         {
-            currentUserMeta = { ...currentUserMeta, [keyUserMeta]: keyUserMetaValue };
+            currentUserMeta = {
+                ...currentUserMeta,
+                [keyUserMeta]: keyUserMetaValue,
+            };
         }
         else
         {
             // create object if not exist user meta
-            currentUserMeta = { [keyUserMeta]: keyUserMetaValue };
+            currentUserMeta = {
+                [keyUserMeta]: keyUserMetaValue,
+            };
         }
 
         return this.saveUserMeta(currentUserMeta);
@@ -63,7 +70,9 @@ export class UserMetaStorageIamAdapterService extends UserMetaStorageService
             .mutate({
                 mutation : updateUserMetaByIdMutation,
                 variables: {
-                    payload: { meta },
+                    payload: {
+                        meta,
+                    },
                 },
             })
             .pipe(
@@ -78,7 +87,9 @@ export class UserMetaStorageIamAdapterService extends UserMetaStorageService
             .mutate({
                 mutation : updateUserMetaByIdMutation,
                 variables: {
-                    payload: { meta: null },
+                    payload: {
+                        meta: null,
+                    },
                 },
             })
             .pipe(
