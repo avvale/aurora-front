@@ -1,19 +1,25 @@
+import { NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridElementsManagerComponent, GridData, GridFiltersStorageService, GridState, log, mapActions, Utils, ViewDetailComponent, QueryStatementHandler, GridStateService, exportRows } from '@aurora';
-import { lastValueFrom, Observable, takeUntil } from 'rxjs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnTranslationComponent, GridColumnsConfigStorageService, GridCustomButtonsHeaderDialogTemplateDirective, GridData, GridElementsManagerComponent, GridFiltersStorageService, GridFormElementDetailDialogTemplateDirective, GridState, GridStateService, GridTranslationsComponent, QueryStatementHandler, Utils, ViewDetailComponent, defaultDetailImports, exportRows, log, mapActions } from '@aurora';
+import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 import { IamBoundedContext, IamPermission } from '../iam.types';
-import { BoundedContextService } from './bounded-context.service';
-
-// ---- customizations ----
-import { PermissionService } from '../permission/permission.service';
 import { permissionColumnsConfig } from '../permission/permission.columns-config';
+import { PermissionService } from '../permission/permission.service';
+import { BoundedContextService } from './bounded-context.service';
 
 @Component({
     selector       : 'iam-bounded-context-detail',
     templateUrl    : './bounded-context-detail.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone     : true,
+    imports        : [
+        ...defaultDetailImports,
+        GridColumnTranslationComponent, GridCustomButtonsHeaderDialogTemplateDirective, GridElementsManagerComponent, GridFormElementDetailDialogTemplateDirective,
+        GridTranslationsComponent, MatCheckboxModule, NgForOf,
+    ],
 })
 export class BoundedContextDetailComponent extends ViewDetailComponent
 {
@@ -76,7 +82,9 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
     // this method will be called after the ngOnInit of
     // the parent class you can use instead of ngOnInit
     init(): void
-    { /**/ }
+    {
+        /**/
+    }
 
     onSubmit($event): void
     {
@@ -161,7 +169,7 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
-            /* #region default actions */
+            /* #region common actions */
             case 'iam::boundedContext.detail.new':
                 this.fg.get('id').setValue(Utils.uuid());
                 break;
@@ -256,7 +264,7 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                     log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
                 }
                 break;
-                /* #endregion default actions */
+                /* #endregion common actions */
 
             /* #region permissions actions */
             case 'iam::boundedContext.detail.permissionsPagination':

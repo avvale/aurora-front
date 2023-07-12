@@ -33,7 +33,7 @@ export const iamNavigation: FuseNavigationItem = {
             id   : 'boundedContexts',
             title: 'BoundedContext',
             type : 'basic',
-            icon : 'extension',
+            icon : 'mat_outline:extension',
             link : '/iam/bounded-context',
             meta : {
                 permission: 'iam.boundedContext.access',

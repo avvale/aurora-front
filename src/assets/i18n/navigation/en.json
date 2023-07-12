@@ -2,6 +2,7 @@
     "accessTokens": "AccessTokens",
     "admin": "Admin",
     "applications": "Applications",
+    "boundedContexts": "BoundedContexts",
     "clients": "Clients",
     "collections": "Collections",
     "countries": "Countries",

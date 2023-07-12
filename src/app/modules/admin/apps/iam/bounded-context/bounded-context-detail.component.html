@@ -7,9 +7,9 @@
             <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
             <au-title>
                 <mat-icon
+                    svgIcon="mat_outline:extension"
                     class="icon-size-8 mr-2"
                 >
-                    extension
                 </mat-icon>
                 {{ t('iam.BoundedContext') }}
             </au-title>
@@ -24,12 +24,16 @@
                 class="ml-3"
                 form="iamBoundedContextFormDetail"
                 color="accent"
-                [disabled]="fg.pristine"
+                [disabled]="fg.pristine || ('iam::boundedContext.detail.update' | getSpinnerFlag | async)"
             >
                 <mat-icon
+                    *ngIf="!('iam::boundedContext.detail.update' | getSpinnerFlag | async)"
+                    svgIcon="mat_solid:edit"
                     class="icon-size-5 mr-2"
-                    svgIcon="heroicons_solid:pencil-alt"
                 >
+                </mat-icon>
+                <mat-icon *ngIf="'iam::boundedContext.detail.update' | getSpinnerFlag | async">
+                    <mat-spinner diameter="20"></mat-spinner>
                 </mat-icon>
                 {{ t('Update') }}
             </button>
@@ -40,12 +44,16 @@
                 form="iamBoundedContextFormDetail"
                 class="ml-3"
                 color="accent"
-                [disabled]="fg.pristine"
+                [disabled]="fg.pristine || ('iam::boundedContext.detail.create' | getSpinnerFlag | async)"
             >
                 <mat-icon
+                    *ngIf="!('iam::boundedContext.detail.create' | getSpinnerFlag | async)"
+                    svgIcon="mat_solid:save"
                     class="icon-size-5 mr-2"
-                    svgIcon="heroicons_solid:save"
                 >
+                </mat-icon>
+                <mat-icon *ngIf="'iam::boundedContext.detail.create' | getSpinnerFlag | async">
+                    <mat-spinner diameter="20"></mat-spinner>
                 </mat-icon>
                 {{ t('Create') }}
             </button>
@@ -149,7 +157,6 @@
                                 <mat-icon class="mr-2">add</mat-icon>
                                 {{ t('New.F') }}
                             </button>
-
                         </ng-template>
                         <!-- / header grid buttons -->
 
