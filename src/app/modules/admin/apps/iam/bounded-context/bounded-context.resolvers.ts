@@ -1,4 +1,4 @@
-import { IamBoundedContext } from '../iam.types';
+import { IamBoundedContext, IamPermission } from '../iam.types';
 import { permissionColumnsConfig } from '../permission/permission.columns-config';
 import { boundedContextColumnsConfig } from './bounded-context.columns-config';
 import { BoundedContextService } from './bounded-context.service';
@@ -50,6 +50,7 @@ export const boundedContextNewResolver: ResolveFn<Action> = (
 };
 
 export const boundedContextEditResolver: ResolveFn<{
+	iamPaginatePermissions: GridData<IamPermission>;
 	object: IamBoundedContext;
 }> = (
     route: ActivatedRouteSnapshot,
@@ -58,31 +59,33 @@ export const boundedContextEditResolver: ResolveFn<{
 {
 	const actionService = inject(ActionService);
 	const boundedContextService = inject(BoundedContextService);
-    const gridFiltersStorageService = inject(GridFiltersStorageService);
-    const gridStateService = inject(GridStateService);
+	const gridFiltersStorageService = inject(GridFiltersStorageService);
+	const gridStateService = inject(GridStateService);
+
+    // paginate to manage permissions grid-elements-manager
+    const permissionsGridId = 'iam::boundedContext.detail.permissionsGridList';
+    gridStateService.setPaginationActionId(permissionsGridId, 'iam::boundedContext.detail.permissionsPagination');
+    gridStateService.setExportActionId(permissionsGridId, 'iam::boundedContext.detail.exportPermissions');
 
     actionService.action({
         id          : 'iam::boundedContext.detail.edit',
         isViewAction: true,
     });
 
-    const permissionsGridId: string = 'iam::boundedContext.detail.permissionsGridList';
-    gridStateService.setPaginationActionId(permissionsGridId, 'iam::boundedContext.detail.permissionsPagination');
-    gridStateService.setExportActionId(permissionsGridId, 'iam::boundedContext.detail.exportPermissions');
-
-    return boundedContextService.findByIdWithRelations({
-        id                      : route.paramMap.get('id'),
-        queryPaginatePermissions: QueryStatementHandler
-            .init({ columnsConfig: permissionColumnsConfig })
-            .setColumFilters(gridFiltersStorageService.getColumnFilterState(permissionsGridId))
-            .setSort(gridStateService.getSort(permissionsGridId, { active: 'name', direction: 'asc' }))
-            .setPage(gridStateService.getPage(permissionsGridId))
-            .setSearch(gridStateService.getSearchState(permissionsGridId))
-            .getQueryStatement(),
-        constraintPaginatePermissions: {
-            where: {
-                boundedContextId: route.paramMap.get('id'),
+    return boundedContextService
+        .findByIdWithRelations({
+            id                      : route.paramMap.get('id'),
+            queryPaginatePermissions: QueryStatementHandler
+                .init({ columnsConfig: permissionColumnsConfig })
+                .setColumFilters(gridFiltersStorageService.getColumnFilterState(permissionsGridId))
+                .setSort(gridStateService.getSort(permissionsGridId, { active: 'name', direction: 'asc' }))
+                .setPage(gridStateService.getPage(permissionsGridId))
+                .setSearch(gridStateService.getSearchState(permissionsGridId))
+                .getQueryStatement(),
+            constraintPaginatePermissions: {
+                where: {
+                    boundedContextId: route.paramMap.get('id'),
+                },
             },
-        },
-    });
+        });
 };

@@ -1,13 +1,13 @@
 import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnTranslationComponent, GridColumnsConfigStorageService, GridCustomButtonsHeaderDialogTemplateDirective, GridData, GridElementsManagerComponent, GridFiltersStorageService, GridFormElementDetailDialogTemplateDirective, GridState, GridStateService, GridTranslationsComponent, QueryStatementHandler, Utils, ViewDetailComponent, defaultDetailImports, exportRows, log, mapActions } from '@aurora';
-import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 import { IamBoundedContext, IamPermission } from '../iam.types';
 import { permissionColumnsConfig } from '../permission/permission.columns-config';
 import { PermissionService } from '../permission/permission.service';
 import { BoundedContextService } from './bounded-context.service';
+import { ChangeDetectionStrategy, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnTranslationComponent, GridColumnsConfigStorageService, GridCustomButtonsHeaderDialogTemplateDirective, GridData, GridElementsManagerComponent, GridFiltersStorageService, GridFormElementDetailDialogTemplateDirective, GridState, GridStateService, GridTranslationsComponent, QueryStatementHandler, Utils, ViewDetailComponent, defaultDetailImports, exportRows, log, mapActions } from '@aurora';
+import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 
 @Component({
     selector       : 'iam-bounded-context-detail',
@@ -24,6 +24,16 @@ import { BoundedContextService } from './bounded-context.service';
 export class BoundedContextDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
+    // ..
+
+    // Object retrieved from the database request,
+    // it should only be used to obtain uninitialized
+    // data in the form, such as relations, etc.
+    // It should not be used habitually, since the source of truth is the form.
+    managedObject: IamBoundedContext;
+
+    // relationships
+    /* #region  variables to manage grid-elements-manager permissions */
     @ViewChild('permissionsGridElementsManager') permissionsComponent: GridElementsManagerComponent;
     permissionDialogFg: FormGroup;
     permissionsGridId: string = 'iam::boundedContext.detail.permissionsGridList';
@@ -37,30 +47,27 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
             sticky : true,
             actions: row =>
             {
-                return [
+                const actions = [
                     {
-                        id         : 'iam::boundedContext.detail.editPermission',
-                        translation: 'edit',
-                        icon       : 'mode_edit',
+                        id          : 'iam::boundedContext.detail.editPermission',
                         isViewAction: false,
+                        translation : 'edit',
+                        icon        : 'mode_edit',
                     },
                     {
-                        id         : 'iam::boundedContext.detail.deletePermission',
-                        translation: 'delete',
-                        icon       : 'delete',
+                        id          : 'iam::boundedContext.detail.deletePermission',
                         isViewAction: false,
+                        translation : 'delete',
+                        icon        : 'delete',
                     },
                 ];
+
+                return actions;
             },
         },
         ...permissionColumnsConfig,
     ];
-
-    // Object retrieved from the database request,
-    // it should only be used to obtain uninitialized
-    // data in the form, such as relations, etc.
-    // It should not be used habitually, since the source of truth is the form.
-    managedObject: IamBoundedContext;
+    /* #endregion variables to manage grid-elements-manager permissions */
 
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
@@ -70,12 +77,12 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
     ];
 
     constructor(
-        protected readonly injector: Injector,
-        private readonly gridColumnsConfigStorageService: GridColumnsConfigStorageService,
-        private readonly gridFiltersStorageService: GridFiltersStorageService,
-        private readonly gridStateService: GridStateService,
-        private readonly boundedContextService: BoundedContextService,
-        private readonly permissionService: PermissionService,
+		private readonly boundedContextService: BoundedContextService,
+		private readonly gridColumnsConfigStorageService: GridColumnsConfigStorageService,
+		private readonly gridFiltersStorageService: GridFiltersStorageService,
+		private readonly gridStateService: GridStateService,
+		protected readonly injector: Injector,
+		private readonly permissionService: PermissionService,
     )
     {
         super(injector);
@@ -130,13 +137,13 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
         });
     }
 
-    /* #region methods to manage permissions */
+    /* #region methods to manage Permissions */
     createPermissionDialogForm(): void
     {
         this.permissionDialogFg = this.fb.group({
-            id              : '',
-            boundedContextId: '',
-            name            : ['', [Validators.required]],
+            id              : ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
+            name            : ['', [Validators.required, Validators.maxLength(255)]],
+            boundedContextId: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
         });
     }
 
@@ -150,7 +157,7 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
             return;
         }
 
-        // depending on the dialog action we invoke a createCallLog or updateCallLog action
+        // depending on the dialog action we invoke a createPermission or updatePermission action
         this.actionService.action({
             id: mapActions(
                 dialog.componentInstance.data.currentActionId,
@@ -164,7 +171,7 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
 
         dialog.close();
     }
-    /* #endregion methods to manage permissions */
+    /* #endregion methods to manage Permissions */
 
     async handleAction(action: Action): Promise<void>
     {
@@ -186,7 +193,7 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                         this.fg.patchValue(item);
                     });
 
-                // permissions grid
+                /* #region init actions to manage permissions grid-elements-manager */
                 this.permissionsColumnsConfig$ = this.gridColumnsConfigStorageService
                     .getColumnsConfig(this.permissionsGridId, this.originPermissionsColumnsConfig)
                     .pipe(takeUntil(this.unsubscribeAll$));
@@ -200,17 +207,18 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
 
                 this.permissionsGridData$ = this.permissionService.pagination$;
 
-                // subscription to get permissions in edit editPermission action
+                // subscription to get permission in edit boundedContext action
                 this.permissionService
                     .permission$
                     .pipe(takeUntil(this.unsubscribeAll$))
                     .subscribe((permission: IamPermission) =>
                     {
-                        if (permission && this.currentAction.id === 'am::boundedContext.detail.editPermission')
+                        if (permission && this.currentAction.id === 'iam::boundedContext.detail.editPermission')
                         {
                             this.permissionDialogFg.patchValue(permission);
                         }
                     });
+                /* #endregion init actions to manage permissions grid-elements-manager */
                 break;
 
             case 'iam::boundedContext.detail.create':
@@ -268,27 +276,26 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                 break;
                 /* #endregion common actions */
 
-            /* #region permissions actions */
+            /* #region actions to manage permissions grid-elements-manager */
             case 'iam::boundedContext.detail.permissionsPagination':
                 await lastValueFrom(
                     this.permissionService
-                        .pagination(
-                            {
-                                query: action.meta.query ?
-                                    action.meta.query :
-                                    QueryStatementHandler
-                                        .init({ columnsConfig: permissionColumnsConfig })
-                                        .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.permissionsGridId))
-                                        .setSort(this.gridStateService.getSort(this.permissionsGridId))
-                                        .setPage(this.gridStateService.getPage(this.permissionsGridId))
-                                        .setSearch(this.gridStateService.getSearchState(this.permissionsGridId))
-                                        .getQueryStatement(),
-                                constraint: {
-                                    where: {
-                                        boundedContextId: this.managedObject.id,
-                                    }},
+                        .pagination({
+                            query: action.meta.query ?
+                                action.meta.query :
+                                QueryStatementHandler
+                                    .init({ columnsConfig: permissionColumnsConfig })
+                                    .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.permissionsGridId))
+                                    .setSort(this.gridStateService.getSort(this.permissionsGridId))
+                                    .setPage(this.gridStateService.getPage(this.permissionsGridId))
+                                    .setSearch(this.gridStateService.getSearchState(this.permissionsGridId))
+                                    .getQueryStatement(),
+                            constraint: {
+                                where: {
+                                    boundedContextId: this.managedObject.id,
+                                },
                             },
-                        ),
+                        }),
                 );
                 break;
 
@@ -306,6 +313,7 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                             object: this.permissionDialogFg.value,
                         }),
                 );
+
                 this.actionService.action({
                     id          : 'iam::boundedContext.detail.permissionsPagination',
                     isViewAction: false,
@@ -344,7 +352,7 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                 break;
 
             case 'iam::boundedContext.detail.deletePermission':
-                const loadOrdersDialogRef = this.confirmationService.open({
+                const deletePermissionDialogRef = this.confirmationService.open({
                     title  : `${this.translocoService.translate('Delete')} ${this.translocoService.translate('iam.Permission')}`,
                     message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('iam.Permission') }),
                     icon   : {
@@ -366,7 +374,7 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                     dismissible: true,
                 });
 
-                loadOrdersDialogRef
+                deletePermissionDialogRef
                     .afterClosed()
                     .subscribe(async result =>
                     {
@@ -376,7 +384,9 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                             {
                                 await lastValueFrom(
                                     this.permissionService
-                                        .deleteById<IamPermission>(action.meta.row.id),
+                                        .deleteById<IamPermission>({
+                                            id: action.meta.row.id,
+                                        }),
                                 );
 
                                 this.actionService.action({
@@ -393,7 +403,7 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                 break;
 
             case 'iam::boundedContext.detail.exportPermissions':
-                const rows = await lastValueFrom(
+                const permissionRows = await lastValueFrom(
                     this.permissionService
                         .get({
                             query     : action.meta.query,
@@ -405,18 +415,18 @@ export class BoundedContextDetailComponent extends ViewDetailComponent
                         }),
                 );
 
-                const columns: string[] = permissionColumnsConfig.map(permissionColumnConfig => permissionColumnConfig.field);
-                const headers = columns.map(column => this.translocoService.translate('iam.' + column.toPascalCase()));
+                const permissionColumns: string[] = permissionColumnsConfig.map(permissionColumnConfig => permissionColumnConfig.field);
+                const permissionHeaders = permissionColumns.map(column => this.translocoService.translate('iam.' + column.toPascalCase()));
 
                 exportRows(
-                    rows.objects,
-                    'bondedContextPermissions.' + action.meta.format,
-                    columns,
-                    headers,
+                    permissionRows.objects,
+                    'permissions.' + action.meta.format,
+                    permissionColumns,
+                    permissionHeaders,
                     action.meta.format,
                 );
                 break;
-                /* #endregion permissions actions */
+                /* #endregion actions to manage permissions grid-elements-manager */
         }
     }
 }

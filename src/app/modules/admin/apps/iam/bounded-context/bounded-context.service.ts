@@ -1,12 +1,10 @@
 import { IamBoundedContext, IamCreateBoundedContext, IamPermission, IamUpdateBoundedContextById, IamUpdateBoundedContexts } from '../iam.types';
+import { PermissionService } from '../permission/permission.service';
 import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findByIdWithRelationsQuery, findQuery, getQuery, paginationQuery, updateByIdMutation, updateMutation } from './bounded-context.graphql';
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
-
-// ---- customizations ----
-import { PermissionService } from '../permission/permission.service';
 
 @Injectable({
     providedIn: 'root',
@@ -112,6 +110,56 @@ export class BoundedContextService
                 tap(data =>
                 {
                     this.boundedContextSubject$.next(data.object);
+                }),
+            );
+    }
+
+    findByIdWithRelations(
+        {
+            graphqlStatement = findByIdWithRelationsQuery,
+            id = '',
+            constraint = {},
+            headers = {},
+            queryPaginatePermissions = {},
+            constraintPaginatePermissions = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            id?: string;
+            constraint?: QueryStatement;
+            headers?: GraphQLHeaders;
+            queryPaginatePermissions?: QueryStatement;
+            constraintPaginatePermissions?: QueryStatement;
+        } = {},
+    ): Observable<{
+        object: IamBoundedContext;
+        iamPaginatePermissions: GridData<IamPermission>;
+    }>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                object: IamBoundedContext;
+                iamPaginatePermissions: GridData<IamPermission>;
+            }>({
+                query    : parseGqlFields(graphqlStatement, fields, constraint),
+                variables: {
+                    id,
+                    constraint,
+                    queryPaginatePermissions,
+                    constraintPaginatePermissions,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data),
+                tap(data =>
+                {
+                    this.boundedContextSubject$.next(data.object);
+                    this.permissionService.paginationSubject$.next(data.iamPaginatePermissions);
                 }),
             );
     }
@@ -333,69 +381,5 @@ export class BoundedContextService
                     headers,
                 },
             });
-    }
-
-    // ---- customizations ----
-    findByIdWithRelations(
-        {
-            graphqlStatement = findByIdWithRelationsQuery,
-            id = '',
-            constraint = {},
-            queryPaginatePermissions = {},
-            constraintPaginatePermissions = {},
-        }: {
-            graphqlStatement?: DocumentNode;
-            id?: string;
-            constraint?: QueryStatement;
-            queryPaginatePermissions?: QueryStatement;
-            constraintPaginatePermissions?: QueryStatement;
-        } = {},
-    ): Observable<{
-        object: IamBoundedContext;
-        iamPaginatePermissions: GridData<IamPermission>;
-    }>
-    {
-        return this.graphqlService
-            .client()
-            .watchQuery<{
-                object: IamBoundedContext;
-                iamPaginatePermissions: GridData<IamPermission>;
-            }>({
-                query    : parseGqlFields(graphqlStatement, fields, constraint),
-                variables: {
-                    id,
-                    constraint,
-                    queryPaginatePermissions: {
-                        ...queryPaginatePermissions,
-                        where: {
-                            ...queryPaginatePermissions.where,
-                            boundedContextId: id,
-                        },
-                    },
-                    constraintPaginatePermissions,
-                },
-            })
-            .valueChanges
-            .pipe(
-                first(),
-                map<{
-                    data: {
-                        object: IamBoundedContext;
-                        iamPaginatePermissions: GridData<IamPermission>;
-                    };
-                },
-                {
-                    object: IamBoundedContext;
-                    iamPaginatePermissions: GridData<IamPermission>;
-                }>(result => result.data),
-                tap((data: {
-                    object: IamBoundedContext;
-                    iamPaginatePermissions: GridData<IamPermission>;
-                }) =>
-                {
-                    this.boundedContextSubject$.next(data.object);
-                    this.permissionService.paginationSubject$.next(data.iamPaginatePermissions);
-                }),
-            );
     }
 }
