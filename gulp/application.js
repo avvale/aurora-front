@@ -212,6 +212,17 @@ async function cleanAppModule()
 }`,
     );
 
+    // add AuthenticationDisabledAdapterGuard to disable AuthGuard
+    // AuthGuard has implementation
+    codeWriter.addArrayItem(
+        returnArray,
+        `
+{
+    provide : AuthorizationService,
+    useClass: AuthorizationDisabledService
+}`,
+    );
+
     sourceFile.saveSync();
 }
 
