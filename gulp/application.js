@@ -145,9 +145,8 @@ async function cleanAppModule()
     const returnFunction = provideAuroraFunction.getDescendantsOfKind(ts.SyntaxKind.ReturnStatement)[0];
     const returnArray = returnFunction.getDescendantsOfKind(ts.SyntaxKind.ArrayLiteralExpression)[0];
 
-
     // change source of UserMetaStorageService
-    codeWriter.removeImport(sourceFile, './modules/admin/apps/iam/user-meta/user-meta-storage-iam-adapter.service');
+    codeWriter.removeImport(sourceFile, 'app/modules/admin/apps/iam');
     codeWriter.changeProviderArray(
         returnArray,
         'UserMetaStorageService',
@@ -191,7 +190,8 @@ async function cleanAppModule()
         'IamMockAdapterService',
     );
 
-    // add EnvironmentsInformationMockAdapterService implementation
+    // add EnvironmentsInformationMockAdapterService to disable environment information service
+    // EnvironmentsInformationService has implementation
     codeWriter.addArrayItem(
         returnArray,
         `
@@ -201,7 +201,8 @@ async function cleanAppModule()
 }`,
     );
 
-    // add AuthenticationDisabledAdapterGuard implementation
+    // add AuthenticationDisabledAdapterGuard to disable AuthGuard
+    // AuthGuard has implementation
     codeWriter.addArrayItem(
         returnArray,
         `

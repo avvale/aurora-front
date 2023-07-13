@@ -8,6 +8,7 @@ const { publishCommon } = require('./gulp/common');
 const { publishIam } = require('./gulp/iam');
 const { publishOAuth } = require('./gulp/o-auth');
 const { publishQueueManager } = require('./gulp/queue-manager');
+const { publishSearchEngine } = require('./gulp/search-engine');
 
 function defaultTask(cb)
 {
@@ -25,3 +26,4 @@ exports.publishCommon = publishCommon;
 exports.publishIam = publishIam;
 exports.publishOAuth = publishOAuth;
 exports.publishQueueManager = publishQueueManager;
+exports.publishSearchEngine = publishSearchEngine;

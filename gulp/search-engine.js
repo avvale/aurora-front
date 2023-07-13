@@ -37,7 +37,7 @@ async function clean()
     fs.rmSync('publish', { recursive: true, force: true });
 }
 
-exports.publishQueueManager = series(
+exports.publishSearchEngine = series(
     cleanSourceDirectory,
     copySearchEngine,
     copyToCLI,
