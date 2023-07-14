@@ -11,48 +11,48 @@
                     class="icon-size-8 mr-2"
                 >
                 </mat-icon>
-                {{ t('common.AdministrativeAreaLevel2') }}
+                {{ t('common.AdministrativeAreaLevel3') }}
             </au-title>
         </div>
 
         <!-- Actions -->
         <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
             <button
-                *ngIf="currentViewAction.id === 'common::administrativeAreaLevel2.detail.edit'"
+                *ngIf="currentViewAction.id === 'common::administrativeAreaLevel3.detail.edit'"
                 mat-flat-button
                 type="submit"
                 class="ml-3"
-                form="commonAdministrativeAreaLevel2FormDetail"
+                form="commonAdministrativeAreaLevel3FormDetail"
                 color="accent"
-                [disabled]="fg.pristine || ('common::administrativeAreaLevel2.detail.update' | getSpinnerFlag | async)"
+                [disabled]="fg.pristine || ('common::administrativeAreaLevel3.detail.update' | getSpinnerFlag | async)"
             >
                 <mat-icon
-                    *ngIf="!('common::administrativeAreaLevel2.detail.update' | getSpinnerFlag | async)"
+                    *ngIf="!('common::administrativeAreaLevel3.detail.update' | getSpinnerFlag | async)"
                     svgIcon="mat_solid:edit"
                     class="icon-size-5 mr-2"
                 >
                 </mat-icon>
-                <mat-icon *ngIf="'common::administrativeAreaLevel2.detail.update' | getSpinnerFlag | async">
+                <mat-icon *ngIf="'common::administrativeAreaLevel3.detail.update' | getSpinnerFlag | async">
                     <mat-spinner diameter="20"></mat-spinner>
                 </mat-icon>
                 {{ t('Update') }}
             </button>
             <button
-                *ngIf="currentViewAction.id === 'common::administrativeAreaLevel2.detail.new'"
+                *ngIf="currentViewAction.id === 'common::administrativeAreaLevel3.detail.new'"
                 mat-flat-button
                 type="submit"
-                form="commonAdministrativeAreaLevel2FormDetail"
+                form="commonAdministrativeAreaLevel3FormDetail"
                 class="ml-3"
                 color="accent"
-                [disabled]="fg.pristine || ('common::administrativeAreaLevel2.detail.create' | getSpinnerFlag | async)"
+                [disabled]="fg.pristine || ('common::administrativeAreaLevel3.detail.create' | getSpinnerFlag | async)"
             >
                 <mat-icon
-                    *ngIf="!('common::administrativeAreaLevel2.detail.create' | getSpinnerFlag | async)"
+                    *ngIf="!('common::administrativeAreaLevel3.detail.create' | getSpinnerFlag | async)"
                     svgIcon="mat_solid:save"
                     class="icon-size-5 mr-2"
                 >
                 </mat-icon>
-                <mat-icon *ngIf="'common::administrativeAreaLevel2.detail.create' | getSpinnerFlag | async">
+                <mat-icon *ngIf="'common::administrativeAreaLevel3.detail.create' | getSpinnerFlag | async">
                     <mat-spinner diameter="20"></mat-spinner>
                 </mat-icon>
                 {{ t('Create') }}
@@ -69,7 +69,7 @@
         <div class="form-card">
 
             <form
-                id="commonAdministrativeAreaLevel2FormDetail"
+                id="commonAdministrativeAreaLevel3FormDetail"
                 novalidate
                 [formGroup]="fg"
                 (ngSubmit)="onSubmit($event)"

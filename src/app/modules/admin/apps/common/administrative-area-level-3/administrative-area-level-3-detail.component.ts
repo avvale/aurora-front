@@ -1,5 +1,5 @@
-import { CommonAdministrativeAreaLevel1 } from '../common.types';
-import { AdministrativeAreaLevel1Service } from './administrative-area-level-1.service';
+import { CommonAdministrativeAreaLevel3 } from '../common.types';
+import { AdministrativeAreaLevel3Service } from './administrative-area-level-3.service';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
@@ -7,8 +7,8 @@ import { Action, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetail
 import { lastValueFrom, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'common-administrative-area-level-1-detail',
-    templateUrl    : './administrative-area-level-1-detail.component.html',
+    selector       : 'common-administrative-area-level-3-detail',
+    templateUrl    : './administrative-area-level-3-detail.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
@@ -17,7 +17,7 @@ import { lastValueFrom, takeUntil } from 'rxjs';
         MatSelectModule,
     ],
 })
-export class AdministrativeAreaLevel1DetailComponent extends ViewDetailComponent
+export class AdministrativeAreaLevel3DetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
     // ..
@@ -26,17 +26,17 @@ export class AdministrativeAreaLevel1DetailComponent extends ViewDetailComponent
     // it should only be used to obtain uninitialized
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
-    managedObject: CommonAdministrativeAreaLevel1;
+    managedObject: CommonAdministrativeAreaLevel3;
 
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
         { translation: 'App' },
-        { translation: 'common.AdministrativeAreasLevel1', routerLink: ['/common/administrative-area-level-1']},
-        { translation: 'common.AdministrativeAreaLevel1' },
+        { translation: 'common.AdministrativeAreasLevel3', routerLink: ['/common/administrative-area-level-3']},
+        { translation: 'common.AdministrativeAreaLevel3' },
     ];
 
     constructor(
-		private readonly administrativeAreaLevel1Service: AdministrativeAreaLevel1Service,
+		private readonly administrativeAreaLevel3Service: AdministrativeAreaLevel3Service,
 		protected readonly injector: Injector,
     )
     {
@@ -73,8 +73,8 @@ export class AdministrativeAreaLevel1DetailComponent extends ViewDetailComponent
             id: mapActions(
                 this.currentViewAction.id,
                 {
-                    'common::administrativeAreaLevel1.detail.new' : 'common::administrativeAreaLevel1.detail.create',
-                    'common::administrativeAreaLevel1.detail.edit': 'common::administrativeAreaLevel1.detail.update',
+                    'common::administrativeAreaLevel3.detail.new' : 'common::administrativeAreaLevel3.detail.create',
+                    'common::administrativeAreaLevel3.detail.edit': 'common::administrativeAreaLevel3.detail.update',
                 },
             ),
             isViewAction: false,
@@ -86,6 +86,8 @@ export class AdministrativeAreaLevel1DetailComponent extends ViewDetailComponent
         this.fg = this.fb.group({
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             countryId: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
+            administrativeAreaLevel1Id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
+            administrativeAreaLevel2Id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             code: ['', [Validators.required, Validators.maxLength(8)]],
             customCode: ['', [Validators.maxLength(10)]],
             name: ['', [Validators.required, Validators.maxLength(100)]],
@@ -103,13 +105,13 @@ export class AdministrativeAreaLevel1DetailComponent extends ViewDetailComponent
         switch (action?.id)
         {
             /* #region common actions */
-            case 'common::administrativeAreaLevel1.detail.new':
+            case 'common::administrativeAreaLevel3.detail.new':
                 this.fg.get('id').setValue(Utils.uuid());
                 break;
 
-            case 'common::administrativeAreaLevel1.detail.edit':
-                this.administrativeAreaLevel1Service
-                    .administrativeAreaLevel1$
+            case 'common::administrativeAreaLevel3.detail.edit':
+                this.administrativeAreaLevel3Service
+                    .administrativeAreaLevel3$
                     .pipe(takeUntil(this.unsubscribeAll$))
                     .subscribe(item =>
                     {
@@ -118,18 +120,18 @@ export class AdministrativeAreaLevel1DetailComponent extends ViewDetailComponent
                     });
                 break;
 
-            case 'common::administrativeAreaLevel1.detail.create':
+            case 'common::administrativeAreaLevel3.detail.create':
                 try
                 {
                     await lastValueFrom(
-                        this.administrativeAreaLevel1Service
-                            .create<CommonAdministrativeAreaLevel1>({
+                        this.administrativeAreaLevel3Service
+                            .create<CommonAdministrativeAreaLevel3>({
                                 object: this.fg.value,
                             }),
                     );
 
                     this.snackBar.open(
-                        `${this.translocoService.translate('common.AdministrativeAreaLevel1')} ${this.translocoService.translate('Created.M')}`,
+                        `${this.translocoService.translate('common.AdministrativeAreaLevel3')} ${this.translocoService.translate('Created.M')}`,
                         undefined,
                         {
                             verticalPosition: 'top',
@@ -137,7 +139,7 @@ export class AdministrativeAreaLevel1DetailComponent extends ViewDetailComponent
                         },
                     );
 
-                    this.router.navigate(['common/administrative-area-level-1']);
+                    this.router.navigate(['common/administrative-area-level-3']);
                 }
                 catch(error)
                 {
@@ -145,18 +147,18 @@ export class AdministrativeAreaLevel1DetailComponent extends ViewDetailComponent
                 }
                 break;
 
-            case 'common::administrativeAreaLevel1.detail.update':
+            case 'common::administrativeAreaLevel3.detail.update':
                 try
                 {
                     await lastValueFrom(
-                        this.administrativeAreaLevel1Service
-                            .updateById<CommonAdministrativeAreaLevel1>({
+                        this.administrativeAreaLevel3Service
+                            .updateById<CommonAdministrativeAreaLevel3>({
                                 object: this.fg.value,
                             }),
                     );
 
                     this.snackBar.open(
-                        `${this.translocoService.translate('common.AdministrativeAreaLevel1')} ${this.translocoService.translate('Saved.M')}`,
+                        `${this.translocoService.translate('common.AdministrativeAreaLevel3')} ${this.translocoService.translate('Saved.M')}`,
                         undefined,
                         {
                             verticalPosition: 'top',
@@ -164,7 +166,7 @@ export class AdministrativeAreaLevel1DetailComponent extends ViewDetailComponent
                         },
                     );
 
-                    this.router.navigate(['common/administrative-area-level-1']);
+                    this.router.navigate(['common/administrative-area-level-3']);
                 }
                 catch(error)
                 {

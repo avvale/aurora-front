@@ -13,6 +13,9 @@ import { administrativeAreaLevel1EditResolver, administrativeAreaLevel1NewResolv
 import { AdministrativeAreaLevel2ListComponent } from './administrative-area-level-2/administrative-area-level-2-list.component';
 import { AdministrativeAreaLevel2DetailComponent } from './administrative-area-level-2/administrative-area-level-2-detail.component';
 import { administrativeAreaLevel2EditResolver, administrativeAreaLevel2NewResolver, administrativeAreaLevel2PaginationResolver } from './administrative-area-level-2/administrative-area-level-2.resolvers';
+import { AdministrativeAreaLevel3ListComponent } from './administrative-area-level-3/administrative-area-level-3-list.component';
+import { AdministrativeAreaLevel3DetailComponent } from './administrative-area-level-3/administrative-area-level-3-detail.component';
+import { administrativeAreaLevel3EditResolver, administrativeAreaLevel3NewResolver, administrativeAreaLevel3PaginationResolver } from './administrative-area-level-3/administrative-area-level-3.resolvers';
 
 export default [
     {
@@ -32,6 +35,9 @@ export default [
             { path: 'administrative-area-level-2', component: AdministrativeAreaLevel2ListComponent, resolve: { data: administrativeAreaLevel2PaginationResolver }, data: { permission: 'common.administrativeAreaLevel2.get' }},
             { path: 'administrative-area-level-2/new', component: AdministrativeAreaLevel2DetailComponent, resolve: { data: administrativeAreaLevel2NewResolver }, data: { permission: 'common.administrativeAreaLevel2.create' }},
             { path: 'administrative-area-level-2/edit/:id', component: AdministrativeAreaLevel2DetailComponent, resolve: { data: administrativeAreaLevel2EditResolver }, data: { permission: 'common.administrativeAreaLevel2.get' }},
+            { path: 'administrative-area-level-3', component: AdministrativeAreaLevel3ListComponent, resolve: { data: administrativeAreaLevel3PaginationResolver }, data: { permission: 'common.administrativeAreaLevel3.get' }},
+            { path: 'administrative-area-level-3/new', component: AdministrativeAreaLevel3DetailComponent, resolve: { data: administrativeAreaLevel3NewResolver }, data: { permission: 'common.administrativeAreaLevel3.create' }},
+            { path: 'administrative-area-level-3/edit/:id', component: AdministrativeAreaLevel3DetailComponent, resolve: { data: administrativeAreaLevel3EditResolver }, data: { permission: 'common.administrativeAreaLevel3.get' }},
         ],
         providers: [
             {

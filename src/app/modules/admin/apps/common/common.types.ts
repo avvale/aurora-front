@@ -272,3 +272,66 @@ export interface CommonUpdateAdministrativeAreasLevel2 {
     zoom?: number;
     mapType?: string;
 }
+
+export interface CommonAdministrativeAreaLevel3 {
+    id: string;
+    countryId: string;
+    administrativeAreaLevel1Id: string;
+    administrativeAreaLevel2Id: string;
+    code: string;
+    customCode?: string;
+    name: string;
+    slug: string;
+    latitude?: number;
+    longitude?: number;
+    zoom?: number;
+    mapType: string;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
+}
+
+export interface CommonCreateAdministrativeAreaLevel3 {
+    id: string;
+    countryId: string;
+    administrativeAreaLevel1Id: string;
+    administrativeAreaLevel2Id: string;
+    code: string;
+    customCode?: string;
+    name: string;
+    slug: string;
+    latitude?: number;
+    longitude?: number;
+    zoom?: number;
+    mapType: string;
+}
+
+export interface CommonUpdateAdministrativeAreaLevel3ById {
+    id: string;
+    countryId?: string;
+    administrativeAreaLevel1Id?: string;
+    administrativeAreaLevel2Id?: string;
+    code?: string;
+    customCode?: string;
+    name?: string;
+    slug?: string;
+    latitude?: number;
+    longitude?: number;
+    zoom?: number;
+    mapType?: string;
+}
+
+export interface CommonUpdateAdministrativeAreasLevel3 {
+    id?: string;
+    countryId?: string;
+    administrativeAreaLevel1Id?: string;
+    administrativeAreaLevel2Id?: string;
+    code?: string;
+    customCode?: string;
+    name?: string;
+    slug?: string;
+    latitude?: number;
+    longitude?: number;
+    zoom?: number;
+    mapType?: string;
+}
