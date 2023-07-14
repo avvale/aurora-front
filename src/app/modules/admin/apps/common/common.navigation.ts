@@ -40,5 +40,12 @@ export const commonNavigation: FuseNavigationItem = {
                 permission: 'common.administrativeAreaLevel1.access',
             },
         },
+        {
+            id   : 'administrativeAreasLevel2',
+            title: 'AdministrativeAreaLevel2',
+            type : 'basic',
+            icon : 'heroicons_outline:tag',
+            link : '/common/administrative-area-level-2',
+        },
     ],
 };
