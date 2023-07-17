@@ -1,6 +1,7 @@
+import { NgForOf, NgIf } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { log } from '@aurora';
-import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry, NgxFileDropModule } from 'ngx-file-drop';
 
 interface FileEntry
 {
@@ -15,10 +16,13 @@ interface FileEntry
     selector   : 'au-file-upload',
     templateUrl: './file-upload.component.html',
     styleUrls  : ['./file-upload.component.scss'],
+    standalone : true,
+    imports    : [
+        NgForOf, NgIf, NgxFileDropModule,
+    ],
 })
 export class FileUploadComponent
 {
-
     @Input('label') label: string = '';
     @Input('dropLabel') dropLabel: string = 'Drop files here';
     @Input('browseLabel') browseLabel: string = 'or click here to browse files';

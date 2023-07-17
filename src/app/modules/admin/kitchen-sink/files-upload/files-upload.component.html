@@ -7,11 +7,11 @@
             <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
             <au-title>
                 <mat-icon
-                    svgIcon="mat_solid:calculate"
+                    svgIcon="mat_solid:cloud_upload"
                     class="icon-size-8 mr-2"
                 >
                 </mat-icon>
-                {{ t('kitchenSink.Decimals') }}
+                {{ t('kitchenSink.FileUpload') }}
             </au-title>
         </div>
 
@@ -21,8 +21,8 @@
                     type="submit"
                     form="formDetail"
                     mat-flat-button
+                    color="accent"
                     [disabled]="fg.pristine"
-                    [color]="'accent'"
                 >
                 <mat-icon
                     class="icon-size-5 mr-2"
@@ -49,7 +49,21 @@
 
                 <div class="layout__container">
 
-                    <mat-form-field appearance="outline" class="col-4">
+                    <au-file-upload
+                        class="col-12"
+                        (files)="
+                            actionService.action({
+                                id          : 'kitchenSink::fileUpload.detail.uploadFiles',
+                                isViewAction: false,
+                                meta: {
+                                    files: $event
+                                }
+                            })
+                        "
+                    >
+                    </au-file-upload>
+
+                    <!-- <mat-form-field appearance="outline" class="col-4">
                         <mat-label>{{ t('kitchenSink.example1') }}</mat-label>
                         <input
                             matInput
@@ -71,7 +85,7 @@
                             required
                         >
                         <mat-error>{{ formErrors?.example2 | async }}</mat-error>
-                    </mat-form-field>
+                    </mat-form-field> -->
 
                 </div>
 

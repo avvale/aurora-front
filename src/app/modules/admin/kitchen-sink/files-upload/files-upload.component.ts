@@ -1,20 +1,21 @@
 
+import { NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { Action, Crumb, DecimalDirective, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
+import { Action, Crumb, DecimalDirective, FileUploadComponent, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
 
 @Component({
-    selector       : 'kitchen-sink-decimals',
-    templateUrl    : './decimals.component.html',
+    selector       : 'kitchen-sink-file-upload',
+    templateUrl    : './files-upload.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
-        DecimalDirective,
+        DecimalDirective, FileUploadComponent, NgIf, NgForOf,
     ],
 })
-export class DecimalsComponent extends ViewDetailComponent
+export class FilesUploadComponent extends ViewDetailComponent
 {
     // ---- customizations ----
     // ..
@@ -28,7 +29,7 @@ export class DecimalsComponent extends ViewDetailComponent
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
         { translation: 'App' },
-        { translation: 'kitchenSink.Decimals' },
+        { translation: 'kitchenSink.FileUpload' },
     ];
 
     constructor(
@@ -71,6 +72,11 @@ export class DecimalsComponent extends ViewDetailComponent
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
+            case 'kitchenSink::fileUpload.detail.uploadFiles':
+
+                log('[DEBUG] Upload files', action);
+                break;
+
             default:
                 log(`[DEBUG] Action not found: ${action?.id}`);
                 break;

@@ -1,14 +1,20 @@
 
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { Action, ColumnConfig, ColumnDataType, Crumb, GridData, ViewBaseComponent } from '@aurora';
-import { combineLatest, map, Observable, of } from 'rxjs';
+import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, ViewBaseComponent, defaultListImports } from '@aurora';
+import { Observable, of, takeUntil } from 'rxjs';
 import { gridData } from './grid-data';
+import { JsonPipe } from '@angular/common';
 
 @Component({
     selector       : 'kitchen-sink-grid',
     templateUrl    : './grid.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone     : true,
+    imports        : [
+        ...defaultListImports,
+        JsonPipe,
+    ],
 })
 export class GridComponent extends ViewBaseComponent
 {
@@ -16,9 +22,11 @@ export class GridComponent extends ViewBaseComponent
         { translation: 'App', routerLink: ['/']},
         { translation: 'kitchenSink.Grid' },
     ];
+    gridId: string = 'kitchenSinh::grid.detail.mainGridList';
     gridData$: Observable<GridData<any>>;
-    gridTranslations$: Observable<any>;
-    columnsConfig: ColumnConfig[] = [
+    gridState: GridState = {};
+    columnsConfig$: Observable<ColumnConfig[]>;
+    originColumnsConfig: ColumnConfig[] = [
         {
             type       : ColumnDataType.ACTIONS,
             field      : 'Actions',
@@ -39,7 +47,6 @@ export class GridComponent extends ViewBaseComponent
                     },
                 ];
             },
-            hidden: false,
         },
         {
             type       : ColumnDataType.STRING,
@@ -89,35 +96,39 @@ export class GridComponent extends ViewBaseComponent
 
     constructor(
         protected injector: Injector,
+        private readonly gridColumnsConfigStorageService: GridColumnsConfigStorageService,
+        private readonly gridFiltersStorageService: GridFiltersStorageService,
+        private readonly gridStateService: GridStateService,
     )
     {
         super(injector);
     }
 
-    ngOnInit(): void
-    {
-        /**/
-        this.gridData$ = of(gridData);
-        this.gridTranslations$ = combineLatest(
-            {
-                a: this.translocoService.selectTranslation(),
-                b: this.translocoService.selectTranslation('kitchen-sink'),
-            })
-            .pipe(
-                map(res => ({ ...res.a, ...res.b })),
-            );
-    }
+    // this method will be called after the ngOnInit of
+    // the parent class you can use instead of ngOnInit
+    init(): void
+    { /**/ }
 
-    handleColumnsConfigChanged($event): void
+    async handleAction(action: Action): Promise<void>
     {
-        //
-    }
-
-    onRunAction(action: Action): void
-    {
-
+        // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action.id)
         {
+            case 'kitchenSinh::grid.detail.view':
+                this.columnsConfig$ = this.gridColumnsConfigStorageService
+                    .getColumnsConfig(this.gridId, this.originColumnsConfig)
+                    .pipe(takeUntil(this.unsubscribeAll$));
+
+                this.gridState = {
+                    columnFilters: this.gridFiltersStorageService.getColumnFilterState(this.gridId),
+                    page         : this.gridStateService.getPage(this.gridId),
+                    sort         : this.gridStateService.getSort(this.gridId),
+                    search       : this.gridStateService.getSearchState(this.gridId),
+                };
+
+                this.gridData$ = of(gridData);
+                break;
+
             case 'pagination':
                 this.dataEvent = { ...this.dataEvent, ...action.meta.query };
                 break;
