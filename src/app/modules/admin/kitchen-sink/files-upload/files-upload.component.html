@@ -18,11 +18,17 @@
         <!-- Actions -->
         <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
             <button class="ml-3"
-                    type="submit"
+                    type="button"
                     form="formDetail"
                     mat-flat-button
                     color="accent"
-                    [disabled]="fg.pristine"
+                    [disabled]="!enableSubmitButton"
+                    (click)="
+                        actionService.action({
+                            id          : 'kitchenSink::fileUpload.detail.submitFiles',
+                            isViewAction: false
+                        })
+                    "
                 >
                 <mat-icon
                     class="icon-size-5 mr-2"
@@ -45,15 +51,17 @@
             <form   id="formDetail"
                     novalidate
                     [formGroup]="fg"
-                    (ngSubmit)="onSubmit()">
+                    (ngSubmit)="onSubmit()"
+            >
 
                 <div class="layout__container">
 
                     <au-file-upload
                         class="col-12"
+                        [isMultiple]="false"
                         (files)="
                             actionService.action({
-                                id          : 'kitchenSink::fileUpload.detail.uploadFiles',
+                                id          : 'kitchenSink::fileUpload.detail.stagingOneFile',
                                 isViewAction: false,
                                 meta: {
                                     files: $event
@@ -63,29 +71,20 @@
                     >
                     </au-file-upload>
 
-                    <!-- <mat-form-field appearance="outline" class="col-4">
-                        <mat-label>{{ t('kitchenSink.example1') }}</mat-label>
-                        <input
-                            matInput
-                            auDecimal
-                            integerNumberAmount="3"
-                            decimalNumberAmount="3"
-                            formControlName="example1"
-                            required
-                        >
-                        <mat-error>{{ formErrors?.example1 | async }}</mat-error>
-                    </mat-form-field>
-
-
-                    <mat-form-field appearance="outline" class="col-4">
-                        <mat-label>{{ t('kitchenSink.example2') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="example2"
-                            required
-                        >
-                        <mat-error>{{ formErrors?.example2 | async }}</mat-error>
-                    </mat-form-field> -->
+                    <au-file-upload
+                        class="col-12"
+                        [isMultiple]="true"
+                        (files)="
+                            actionService.action({
+                                id          : 'kitchenSink::fileUpload.detail.stagingMultipleFiles',
+                                isViewAction: false,
+                                meta: {
+                                    files: $event
+                                }
+                            })
+                        "
+                    >
+                    </au-file-upload>
 
                 </div>
 

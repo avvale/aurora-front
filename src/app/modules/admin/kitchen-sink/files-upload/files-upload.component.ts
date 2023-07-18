@@ -2,7 +2,9 @@
 import { NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { Action, Crumb, DecimalDirective, FileUploadComponent, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
+import { Action, Crumb, DecimalDirective, FileUploadComponent, Utils, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
+import { FileUploadService } from './file-upload.service';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
     selector       : 'kitchen-sink-file-upload',
@@ -25,6 +27,10 @@ export class FilesUploadComponent extends ViewDetailComponent
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
     managedObject: any;
+    uploadFileResponse: any;
+    stagingOneFile: { id: string; file: File; }[] = [];
+    stagingMultipleFiles: { id: string; file: File; } [] = [];
+    enableSubmitButton: boolean = false;
 
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
@@ -34,6 +40,7 @@ export class FilesUploadComponent extends ViewDetailComponent
 
     constructor(
         protected injector: Injector,
+        private readonly fileUploadService: FileUploadService,
     )
     {
         super(injector);
@@ -72,9 +79,71 @@ export class FilesUploadComponent extends ViewDetailComponent
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
-            case 'kitchenSink::fileUpload.detail.uploadFiles':
+            case 'kitchenSink::fileUpload.detail.stagingOneFile':
+                if (action.meta.files.length === 0) return;
 
-                log('[DEBUG] Upload files', action);
+                this.stagingOneFile = [];
+                for (const file of action.meta.files)
+                {
+                    const fileEntry = file.file.fileEntry as FileSystemFileEntry;
+                    fileEntry.file((file: File) =>
+                    {
+                        this.stagingOneFile.push({
+                            id: Utils.uuid(),
+                            file,
+                        });
+                    });
+                }
+
+                this.enableSubmitButton = true;
+                break;
+
+            case 'kitchenSink::fileUpload.detail.stagingMultipleFiles':
+                if (action.meta.files.length === 0) return;
+
+                this.stagingMultipleFiles = [];
+                for (const file of action.meta.files)
+                {
+                    const fileEntry = file.file.fileEntry as FileSystemFileEntry;
+                    fileEntry.file((file: File) =>
+                    {
+                        this.stagingMultipleFiles.push({
+                            id: Utils.uuid(),
+                            file,
+                        });
+                    });
+                }
+
+                this.enableSubmitButton = true;
+                break;
+
+
+            case 'kitchenSink::fileUpload.detail.submitFiles':
+                try
+                {
+                    this.uploadFileResponse = await lastValueFrom(
+                        this.fileUploadService
+                            .uploadFiles({
+                                files: [
+                                    ...this.stagingMultipleFiles,
+                                    ...this.stagingOneFile,
+                                ],
+                            }),
+                    );
+
+                    this.snackBar.open(
+                        `${this.translocoService.translate('common.Lang')} ${this.translocoService.translate('Created.M')}`,
+                        undefined,
+                        {
+                            verticalPosition: 'top',
+                            duration        : 3000,
+                        },
+                    );
+                }
+                catch(error)
+                {
+                    log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
+                }
                 break;
 
             default:
