@@ -39,6 +39,7 @@ function copyApplication()
             '!src/app/modules/admin/apps/o-auth/**',
             '!src/app/modules/admin/apps/queue-manager/**',
             '!src/app/modules/admin/apps/search-engine/**',
+            '!src/app/modules/admin/kitchen-sink/**',
             '!src/app/modules/azure-ad/**',
             '!src/assets/i18n/auditing/**',
             '!src/assets/i18n/common/**',
@@ -46,6 +47,7 @@ function copyApplication()
             '!src/assets/i18n/o-auth/**',
             '!src/assets/i18n/queue-manager/**',
             '!src/assets/i18n/search-engine/**',
+            '!src/assets/i18n/kitchen-sink/**',
             '!src/index.ts',
             '!gulpfile.js',
             '!package.json',
@@ -84,7 +86,7 @@ function editPackageJson()
         );
 }
 
-async function cleanAppRouting()
+async function cleanAppRoutes()
 {
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'app.routes.ts']);
@@ -102,6 +104,7 @@ async function cleanAppRouting()
         'o-auth',
         'queue-manager',
         'search-engine',
+        'kitchen-sink',
     ]);
 
     sourceFile.saveSync();
@@ -118,6 +121,7 @@ async function cleanAdminNavigation()
     codeWriter.removeImport(sourceFile, './apps/o-auth/o-auth.navigation');
     codeWriter.removeImport(sourceFile, './apps/queue-manager/queue-manager.navigation');
     codeWriter.removeImport(sourceFile, './apps/search-engine/search-engine.navigation');
+    codeWriter.removeImport(sourceFile, './kitchen-sink/kitchen-sink.navigation');
 
     const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
     const adminNavigationArray = adminNavigation.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
@@ -129,6 +133,7 @@ async function cleanAdminNavigation()
         'oAuthNavigation',
         'queueManagerNavigation',
         'searchEngineNavigation',
+        'kitchenSinkNavigation',
     ]);
 
     sourceFile.saveSync();
@@ -265,7 +270,7 @@ exports.publishApplication = series(
     cleanSourceDirectory,
     copyApplication,
     editPackageJson,
-    cleanAppRouting,
+    cleanAppRoutes,
     cleanAdminNavigation,
     cleanAppModule,
     cleanEnvironments,
