@@ -15,6 +15,7 @@
     "CountryId": "Id País",
     "CustomCode": "Code",
     "Dir": "Dir",
+    "HasAttachments": "HasAttachments",
     "Ietf": "Ietf",
     "Image": "Image",
     "IsActive": "Activo",
@@ -31,6 +32,8 @@
     "MapType": "Map Type",
     "Name": "Name",
     "Prefix": "Prefix",
+    "Resource": "Resource",
+    "Resources": "Resources",
     "Slug": "Slug",
     "Sort": "Sort",
     "Zoom": "Zoom"
