@@ -370,3 +370,54 @@ export interface CommonUpdateResources {
     isActive?: boolean;
     hasAttachments?: boolean;
 }
+
+export interface CommonAttachmentFamily {
+    id: string;
+    resourceId: string;
+    name: string;
+    width?: number;
+    height?: number;
+    fitType: string;
+    quality?: number;
+    sizes?: any;
+    format: string;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
+}
+
+export interface CommonCreateAttachmentFamily {
+    id: string;
+    resourceId: string;
+    name: string;
+    width?: number;
+    height?: number;
+    fitType: string;
+    quality?: number;
+    sizes?: any;
+    format: string;
+}
+
+export interface CommonUpdateAttachmentFamilyById {
+    id: string;
+    resourceId?: string;
+    name?: string;
+    width?: number;
+    height?: number;
+    fitType?: string;
+    quality?: number;
+    sizes?: any;
+    format?: string;
+}
+
+export interface CommonUpdateAttachmentFamilies {
+    id?: string;
+    resourceId?: string;
+    name?: string;
+    width?: number;
+    height?: number;
+    fitType?: string;
+    quality?: number;
+    sizes?: any;
+    format?: string;
+}

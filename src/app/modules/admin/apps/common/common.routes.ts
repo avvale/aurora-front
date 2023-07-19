@@ -19,6 +19,9 @@ import { administrativeAreaLevel3EditResolver, administrativeAreaLevel3NewResolv
 import { ResourceListComponent } from './resource/resource-list.component';
 import { ResourceDetailComponent } from './resource/resource-detail.component';
 import { resourceEditResolver, resourceNewResolver, resourcePaginationResolver } from './resource/resource.resolvers';
+import { AttachmentFamilyListComponent } from './attachment-family/attachment-family-list.component';
+import { AttachmentFamilyDetailComponent } from './attachment-family/attachment-family-detail.component';
+import { attachmentFamilyEditResolver, attachmentFamilyNewResolver, attachmentFamilyPaginationResolver } from './attachment-family/attachment-family.resolvers';
 
 export default [
     {
@@ -44,6 +47,9 @@ export default [
             { path: 'resource', component: ResourceListComponent, resolve: { data: resourcePaginationResolver }, data: { permission: 'common.resource.get' }},
             { path: 'resource/new', component: ResourceDetailComponent, resolve: { data: resourceNewResolver }, data: { permission: 'common.resource.create' }},
             { path: 'resource/edit/:id', component: ResourceDetailComponent, resolve: { data: resourceEditResolver }, data: { permission: 'common.resource.get' }},
+            { path: 'attachment-family', component: AttachmentFamilyListComponent, resolve: { data: attachmentFamilyPaginationResolver }, data: { permission: 'common.attachmentFamily.get' }},
+            { path: 'attachment-family/new', component: AttachmentFamilyDetailComponent, resolve: { data: attachmentFamilyNewResolver }, data: { permission: 'common.attachmentFamily.create' }},
+            { path: 'attachment-family/edit/:id', component: AttachmentFamilyDetailComponent, resolve: { data: attachmentFamilyEditResolver }, data: { permission: 'common.attachmentFamily.get' }},
         ],
         providers: [
             {
