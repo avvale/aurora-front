@@ -15,11 +15,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang-detail.component.ts",
-            "integrity": "sha1:0d526d5df80ccafd0f0e4bc21520c3b8850440d4"
+            "integrity": "sha1:6dd3f27052e388512a0e2b21e3ea2cc1f9eb05a5"
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang-list.component.html",
-            "integrity": "sha1:a4d87520a0c40b796f07bc95c2e6bf9913d15b6b"
+            "integrity": "sha1:9e2b898b93e5e490be5039d76b18d1433eb44336"
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang-list.component.ts",
