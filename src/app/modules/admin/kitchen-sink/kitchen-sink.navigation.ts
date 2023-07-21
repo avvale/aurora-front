@@ -27,5 +27,12 @@ export const kitchenSinkNavigation: FuseNavigationItem = {
             icon : 'mat_outline:cloud_upload',
             link : '/kitchen-sink/files-upload',
         },
+        {
+            id   : 'attachments',
+            title: 'Attachments',
+            type : 'basic',
+            icon : 'mat_outline:attachment',
+            link : '/kitchen-sink/attachments',
+        },
     ],
 };

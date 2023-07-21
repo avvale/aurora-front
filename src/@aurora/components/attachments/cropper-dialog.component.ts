@@ -1,6 +1,5 @@
 import { Component, ViewChild, Inject, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { AttachmentsService } from './attachments.service';
 import { environment } from 'environments/environment';
 import Cropper from 'cropperjs/dist/cropper.esm.js';
@@ -35,7 +34,6 @@ export class CropperDialogComponent implements OnInit, OnDestroy
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<CropperDialogComponent>,
         private _renderer: Renderer2,
-        private _translateService: TranslateService,
         private _attachmentsService: AttachmentsService
     ) 
     { }
@@ -43,14 +41,6 @@ export class CropperDialogComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this._renderer.setProperty(this.cropperImage.nativeElement, 'src', this.data.attachment.get('library').value.url);
-
-        // load translations for component
-        this._translateService.get('ATTACHMENTS').subscribe(response => 
-        {
-            this.title  = this.data.title ? this.data.title : response['TITLE'];
-            this.crop   = this.data.crop ? this.data.crop : response['CROP'];
-            this.cancel = this.data.cancel ? this.data.cancel : response['CANCEL'];
-        });
 
         const cropperParameters = {
             aspectRatio: this.data.attachmentFamily.width && this.data.attachmentFamily.height ? this.data.attachmentFamily.width / this.data.attachmentFamily.height : NaN,

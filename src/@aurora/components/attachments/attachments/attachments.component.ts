@@ -1,25 +1,49 @@
-import { Component, ViewChildren, QueryList, Input, OnInit, OnChanges, ViewChild, Renderer2 } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Component, ViewChildren, QueryList, Input, OnInit, OnChanges, ViewChild, Renderer2, forwardRef } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { AttachmentsService } from './../attachments.service';
 import { AttachmentItemComponent } from './../attachment-item/attachment-item.component';
 import { CropperDialogComponent } from './../cropper-dialog.component';
-import { ConfigService } from '@horus/services/config.service';
+// import { ConfigService } from '@horus/services/config.service';
 import { AdminAttachmentFamily, AdminAttachment } from 'app/main/admin/admin.types';
 import { environment } from 'environments/environment';
 import * as _ from 'lodash';
 
 @Component({
-    selector   : 'hr-attachments',
+    selector   : 'au-attachments',
     templateUrl: './attachments.component.html',
     styleUrls  : ['./attachments.component.scss'],
+    providers  : [
+        {
+            provide    : NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => AttachmentsComponent),
+            multi      : true,
+        },
+    ],
+    standalone: true,
 })
 export class AttachmentsComponent implements OnInit, OnChanges
 {
-    // Input elements
     @Input() placeholder: string;
+    @Input('value')
+    set value(val: any[])
+    {
+        this._value = val;
+    }
+
+    get value(): any[] | null
+    {
+        return this._value;
+    }
+    private _value: any[] | null;
+
+    isDisabled: boolean;
+
+    // OLD
+    // Input elements
+    
     @Input() form: FormGroup;
     @Input() name: string;                                      // name of input that contain attachments FormArray
     @Input() value: AdminAttachment[];                          // array of attachments to init component
@@ -44,8 +68,27 @@ export class AttachmentsComponent implements OnInit, OnChanges
         private _sanitizer: DomSanitizer,
         private _attachmentsService: AttachmentsService,
         private _dialog: MatDialog,
-        private _configService: ConfigService,
+        //private _configService: ConfigService,
     ) { }
+
+    registerOnTouched = (): void => { /**/ };
+    propagateChange = (_: any): void => { /**/ };
+    registerOnChange = (fn: (value: any) => void): void => { this.propagateChange = fn; };
+    setDisabledState = (isDisabled: boolean): void => { this.isDisabled = isDisabled; };
+
+    writeValue(value: any): void
+    {
+        this._value = value;
+    }
+
+
+
+
+
+
+
+
+    /// OLD
 
     ngOnInit(): void
     {
@@ -78,7 +121,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
                 $event => this._dropHandler($event),
             );
 
-        if (! this.endpoint) this.endpoint = this._configService.config.restUrl + '/api/v1/admin/attachment/upload';
+        //if (! this.endpoint) this.endpoint = this._configService.config.restUrl + '/api/v1/admin/attachment/upload';
     }
 
     ngOnChanges(): void
@@ -94,7 +137,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
      *
      * @param event
      */
-    drop(event: CdkDragDrop<string[]>)
+    drop(event: CdkDragDrop<string[]>): void
     {
         moveItemInArray(this.attachments.controls, event.previousIndex, event.currentIndex);
 
