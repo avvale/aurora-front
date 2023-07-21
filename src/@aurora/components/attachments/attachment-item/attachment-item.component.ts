@@ -39,10 +39,11 @@ export class AttachmentItemComponent implements OnInit
                 $event => this.renderer.addClass($event.target.closest('.attachment-item'), 'covered'),
             );
 
-        this.renderer.listen(this.closeOver.nativeElement, 'click', $event =>
-        {
-            this.renderer.removeClass($event.target.closest('.attachment-item'), 'covered');
-        });
+        this.renderer.listen(
+            this.closeOver.nativeElement,
+            'click',
+            $event => this.renderer.removeClass($event.target.closest('.attachment-item'), 'covered'),
+        );
 
         this.attachmentFamilySelect = <AdminAttachmentFamily>_.find(this.attachmentFamilies, { uuid: this.attachment.get('familyUuid').value });
 

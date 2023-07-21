@@ -12,14 +12,14 @@ import { environment } from 'environments/environment';
 import * as _ from 'lodash';
 
 @Component({
-    selector: 'hr-attachments',
+    selector   : 'hr-attachments',
     templateUrl: './attachments.component.html',
-    styleUrls: ['./attachments.component.scss']
+    styleUrls  : ['./attachments.component.scss'],
 })
 export class AttachmentsComponent implements OnInit, OnChanges
 {
     // Input elements
-    @Input() placeholder: String;
+    @Input() placeholder: string;
     @Input() form: FormGroup;
     @Input() name: string;                                      // name of input that contain attachments FormArray
     @Input() value: AdminAttachment[];                          // array of attachments to init component
@@ -28,8 +28,8 @@ export class AttachmentsComponent implements OnInit, OnChanges
     // @Input() withCredentials: boolean;                       // property for XMLHttpRequest object
 
     // View elements
-    @ViewChild('attachmentFrame', {static: true})  attachmentFrame;
-    @ViewChild('attachmentMask', {static: false}) attachmentMask;
+    @ViewChild('attachmentFrame', { static: true })  attachmentFrame;
+    @ViewChild('attachmentMask', { static: false }) attachmentMask;
     @ViewChildren(AttachmentItemComponent) attachmentItems: QueryList<AttachmentItemComponent>;
 
     items: FormArray;
@@ -40,32 +40,43 @@ export class AttachmentsComponent implements OnInit, OnChanges
 
     constructor(
         private _fb: FormBuilder,
-        private _renderer: Renderer2,
+        private renderer: Renderer2,
         private _sanitizer: DomSanitizer,
         private _attachmentsService: AttachmentsService,
         private _dialog: MatDialog,
-        private _configService: ConfigService
+        private _configService: ConfigService,
     ) { }
 
     ngOnInit(): void
     {
         // TODO, use drag and drop angular native
-        this._renderer.listen(this.attachmentFrame.nativeElement, 'dragenter', ($event) => 
-        {
-            this._dragEnterHandler($event);
-        });
-        this._renderer.listen(this.attachmentFrame.nativeElement, 'dragover', ($event) => 
-        {
-            this._dragOverHandler($event);
-        });
-        this._renderer.listen(this.attachmentFrame.nativeElement, 'dragleave', ($event) => 
-        {
-            this._dragLeaveHandler($event);
-        });
-        this._renderer.listen(this.attachmentFrame.nativeElement, 'drop', ($event) => 
-        {
-            this._dropHandler($event);
-        });
+        this.renderer
+            .listen(
+                this.attachmentFrame.nativeElement,
+                'dragenter',
+                $event => this._dragEnterHandler($event),
+            );
+
+        this.renderer
+            .listen(
+                this.attachmentFrame.nativeElement,
+                'dragover',
+                $event => this._dragOverHandler($event),
+            );
+
+        this.renderer
+            .listen(
+                this.attachmentFrame.nativeElement,
+                'dragleave',
+                $event => this._dragLeaveHandler($event),
+            );
+
+        this.renderer
+            .listen(
+                this.attachmentFrame.nativeElement,
+                'drop',
+                $event => this._dropHandler($event),
+            );
 
         if (! this.endpoint) this.endpoint = this._configService.config.restUrl + '/api/v1/admin/attachment/upload';
     }
@@ -73,22 +84,22 @@ export class AttachmentsComponent implements OnInit, OnChanges
     ngOnChanges(): void
     {
         // load values from input
-        // set value from component, to init with values only 
+        // set value from component, to init with values only
         // when the component is created or change value input
         if (this.value) this._setValue(this.value);
     }
 
     /**
      * Function to manage drop items over attachment component
-     * 
-     * @param event 
+     *
+     * @param event
      */
-    drop(event: CdkDragDrop<string[]>) 
+    drop(event: CdkDragDrop<string[]>)
     {
         moveItemInArray(this.attachments.controls, event.previousIndex, event.currentIndex);
 
         // set attachments sort
-        for (let i = 0; this.attachments.controls.length > i; i++) 
+        for (let i = 0; this.attachments.controls.length > i; i++)
         {
             this.attachments.at(i).get('sort').setValue(i);
         }
@@ -106,8 +117,8 @@ export class AttachmentsComponent implements OnInit, OnChanges
     {
         // create and set attachments FormGroup
         for (const attachment of attachments) this._createAttachment(attachment);
-    
-        if (this.attachments.length > 0) this._disablePlaceholder();    
+
+        if (this.attachments.length > 0) this._disablePlaceholder();
     }
 
     private _createAttachment(attachment?): void
@@ -115,49 +126,49 @@ export class AttachmentsComponent implements OnInit, OnChanges
         // add attachment FormGroup to attachments FormArray
         // with function attachments get FormArray
         const attachmentFg = this._fb.group({
-            id: '',
-            uuid: '',
-            langUuid: '',
-            attachableType: '',
-            attachableUuid: '',
-            familyUuid: '',
-            sort: '',
-            alt: '',
-            title: '',
-            pathname: ['', Validators.required ],
-            filename: ['', Validators.required ],
-            url: ['', Validators.required ],
-            mime: ['', Validators.required ],
-            extension: ['', Validators.required ],
-            size: ['', Validators.required ],
-            width: '',
-            height: '',
-            libraryUuid: '',
+            id             : '',
+            uuid           : '',
+            langUuid       : '',
+            attachableType : '',
+            attachableUuid : '',
+            familyUuid     : '',
+            sort           : '',
+            alt            : '',
+            title          : '',
+            pathname       : ['', Validators.required],
+            filename       : ['', Validators.required],
+            url            : ['', Validators.required],
+            mime           : ['', Validators.required],
+            extension      : ['', Validators.required],
+            size           : ['', Validators.required],
+            width          : '',
+            height         : '',
+            libraryUuid    : '',
             libraryFilename: '',
 
             // need implement attachment library fields to avoid send __typename field that is included in response from graphQL
             // this field contain AdminAttachmentLibrary value, when we try send values GraphQL expect to obtain AdminAttachmentLibraryInput
             library: this._fb.group({
-                id: '',
-                uuid: '',
-                name: '',
-                pathname: '',
-                filename: '',
-                url: '',
-                mime: '',
+                id       : '',
+                uuid     : '',
+                name     : '',
+                pathname : '',
+                filename : '',
+                url      : '',
+                mime     : '',
                 extension: '',
-                size: '',
-                width: '',
-                height: '',
-                data: ''
+                size     : '',
+                width    : '',
+                height   : '',
+                data     : '',
             }),
-            data: '',
+            data      : '',
             isUploaded: false,
-            isChanged: false
+            isChanged : false,
         });
 
         if (attachment !== undefined) attachmentFg.patchValue(attachment);
-        
+
         this.attachments.push(attachmentFg);
     }
 
@@ -171,7 +182,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
         // get files after drop files on active area
         const files = $event.dataTransfer ? $event.dataTransfer.files : $event.target.files;
 
-        for (let i = 0; i < files.length; i++) 
+        for (let i = 0; i < files.length; i++)
         {
             const file = files[i];
             // get urls across sanitizer to avoid security cross domain
@@ -193,7 +204,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
         // });
 
         // add files to formData to send to server
-        for (const file of this.files) 
+        for (const file of this.files)
         {
             formData.append('files[]', file, file.name);
             if (environment.debug) console.log('DEBUG - append file: ', file);
@@ -207,26 +218,26 @@ export class AttachmentsComponent implements OnInit, OnChanges
           }, false);*/
 
         // set function  onreadystatechange that will be called
-        xhr.onreadystatechange = () => 
+        xhr.onreadystatechange = () =>
         {
-            if (xhr.readyState === 4) 
+            if (xhr.readyState === 4)
             {
                 // this.progress = 0;
 
-                if (xhr.status >= 200 && xhr.status < 300) 
+                if (xhr.status >= 200 && xhr.status < 300)
                 {
                     const response = <any>JSON.parse(xhr.response);
 
                     // save attachments from file uploaded
-                    for (const attachment of response.data.tmpAttachments) 
+                    for (const attachment of response.data.tmpAttachments)
                     {
                         attachment.isUploaded   = true;                                     // mark all attachments that have been loaded
                         attachment.sort         = this.attachments.controls.length + 1;     // set sort value
                         this._createAttachment(attachment);                                 // create formGroup and patch value
                         this._touchFormAttachments();
                     }
-                } 
-                else 
+                }
+                else
                 {
                     // this.onError.emit({xhr: xhr, files: this.files});
                 }
@@ -248,13 +259,13 @@ export class AttachmentsComponent implements OnInit, OnChanges
 
         // show dialog image
         const dialog = this._dialog.open(CropperDialogComponent, {
-            data: { 
-                attachment: $event.attachment,
-                attachmentFamily: _.find(this.attachmentFamilies, {'uuid': $event.familyUuid}),
-                form: this.form
+            data: {
+                attachment      : $event.attachment,
+                attachmentFamily: _.find(this.attachmentFamilies, { uuid: $event.familyUuid }),
+                form            : this.form,
             },
             height: '90%',
-            width: '90%'
+            width : '90%',
         });
     }
 
@@ -264,14 +275,14 @@ export class AttachmentsComponent implements OnInit, OnChanges
 
         this._attachmentsService.
             deleteAttachment(attachment.value)
-            .subscribe(({data}) => 
+            .subscribe(({ data }) =>
             {
                 // file deleted
-                for (let i = 0; this.attachments.length; i++) 
+                for (let i = 0; this.attachments.length; i++)
                 {
                     const formGroup = this.attachments.at(i) as FormGroup;
 
-                    if (formGroup.get('filename').value === attachment.get('filename').value) 
+                    if (formGroup.get('filename').value === attachment.get('filename').value)
                     {
                         // delete attachment from FormArray
                         this.attachments.removeAt(i);
@@ -284,7 +295,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
                 }
 
                 // show placeholder if has not any item
-                if (this.attachments.length === 0) 
+                if (this.attachments.length === 0)
                 {
                     this._enablePlaceholder();
                 }
@@ -301,7 +312,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
     private _dragEnterHandler($event): void
     {
         $event.preventDefault();
-        if ($event.currentTarget === this.attachmentFrame.nativeElement) 
+        if ($event.currentTarget === this.attachmentFrame.nativeElement)
         {
             if (! this.attachmentMask.nativeElement.classList.contains('active-mask')) this._activateMask();
         }
@@ -313,8 +324,8 @@ export class AttachmentsComponent implements OnInit, OnChanges
         if ($event.currentTarget === this.attachmentFrame.nativeElement)
         {
             if (! this.attachmentMask.nativeElement.classList.contains('active-mask')) this._activateMask();
-        } 
-        else 
+        }
+        else
         {
             if (this.attachmentMask.nativeElement.classList.contains('active-mask')) this._deactivateMask();
         }
@@ -323,7 +334,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
     private _dragLeaveHandler($event): void
     {
         $event.preventDefault();
-        if ($event.currentTarget === this.attachmentFrame.nativeElement) 
+        if ($event.currentTarget === this.attachmentFrame.nativeElement)
         {
             if (this.attachmentMask.nativeElement.classList.contains('active-mask')) this._deactivateMask();
         }
@@ -332,7 +343,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
     private _dropHandler($event): void
     {
         $event.preventDefault();
-        if (this.attachmentMask.nativeElement.classList.contains('active-mask')) 
+        if (this.attachmentMask.nativeElement.classList.contains('active-mask'))
         {
             this._deactivateMask();
             this._disablePlaceholder();
@@ -342,21 +353,21 @@ export class AttachmentsComponent implements OnInit, OnChanges
 
     private _enablePlaceholder(): void
     {
-        this._renderer.removeClass(this.attachmentFrame.nativeElement, 'has-attachment');
+        this.renderer.removeClass(this.attachmentFrame.nativeElement, 'has-attachment');
     }
 
     private _disablePlaceholder(): void
     {
-        this._renderer.addClass(this.attachmentFrame.nativeElement, 'has-attachment');
+        this.renderer.addClass(this.attachmentFrame.nativeElement, 'has-attachment');
     }
 
     private _activateMask(): void
     {
-        this._renderer.addClass(this.attachmentMask.nativeElement, 'active-mask');
+        this.renderer.addClass(this.attachmentMask.nativeElement, 'active-mask');
     }
 
     private _deactivateMask(): void
     {
-        this._renderer.removeClass(this.attachmentMask.nativeElement, 'active-mask');
+        this.renderer.removeClass(this.attachmentMask.nativeElement, 'active-mask');
     }
 }
