@@ -61,7 +61,7 @@
                         [isMultiple]="false"
                         (files)="
                             actionService.action({
-                                id          : 'kitchenSink::fileUpload.detail.stagingOneFile',
+                                id          : 'kitchenSink::fileUpload.detail.stagingExample1',
                                 isViewAction: false,
                                 meta: {
                                     files: $event
@@ -76,7 +76,7 @@
                         [isMultiple]="true"
                         (files)="
                             actionService.action({
-                                id          : 'kitchenSink::fileUpload.detail.stagingMultipleFiles',
+                                id          : 'kitchenSink::fileUpload.detail.stagingExample2',
                                 isViewAction: false,
                                 meta: {
                                     files: $event
@@ -85,6 +85,88 @@
                         "
                     >
                     </au-file-upload>
+
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>Multiple input select</mat-label>
+                        <ngx-mat-file-input
+                            formControlName="example3"
+                            multiple
+                            (files)="
+                                actionService.action({
+                                    id          : 'kitchenSink::fileUpload.detail.stagingExample3',
+                                    isViewAction: false,
+                                    meta: {
+                                        files: $event
+                                    }
+                                })
+                            "
+                        >
+                        </ngx-mat-file-input>
+                        <mat-icon
+                            matSuffix
+                            class="mr-2"
+                            svgIcon="mat_solid:folder"
+                        >
+                        </mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>Single input select</mat-label>
+                        <ngx-mat-file-input
+                            formControlName="example4"
+                            (files)="
+                                actionService.action({
+                                    id          : 'kitchenSink::fileUpload.detail.stagingExample3',
+                                    isViewAction: false,
+                                    meta: {
+                                        files: $event
+                                    }
+                                })
+                            "
+                        >
+                        </ngx-mat-file-input>
+                        <mat-icon
+                            matSuffix
+                            class="mr-2"
+                            svgIcon="mat_solid:folder"
+                        >
+                        </mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>Single input select with clear button</mat-label>
+                        <ngx-mat-file-input
+                            #removableInput
+                            formControlName="example5"
+                        >
+                        </ngx-mat-file-input>
+                        <button
+                            mat-icon-button
+                            matSuffix
+                            *ngIf="!removableInput.empty"
+                            class="mr-2"
+                            (click)="removableInput.clear($event)"
+                        >
+                          <mat-icon svgIcon="mat_outline:clear"></mat-icon>
+                        </button>
+                        <mat-icon
+                            *ngIf="removableInput.empty"
+                            matSuffix
+                            svgIcon="mat_solid:folder"
+                            class="mr-2"
+                        >
+                        </mat-icon>
+                    </mat-form-field>
+
 
                 </div>
 

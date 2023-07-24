@@ -2,9 +2,11 @@
 import { NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { Action, Crumb, DecimalDirective, FileUploadComponent, Utils, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
-import { FileUploadService } from './file-upload.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Action, Crumb, DecimalDirective, FileInputComponent, FileUploadComponent, Utils, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
 import { lastValueFrom } from 'rxjs';
+import { FileUploadService } from './file-upload.service';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
     selector       : 'kitchen-sink-file-upload',
@@ -14,7 +16,8 @@ import { lastValueFrom } from 'rxjs';
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
-        DecimalDirective, FileUploadComponent, NgIf, NgForOf,
+        DecimalDirective, FileUploadComponent, MatDividerModule, MatToolbarModule, NgIf, NgForOf,
+        FileInputComponent,
     ],
 })
 export class FilesUploadComponent extends ViewDetailComponent
@@ -28,8 +31,9 @@ export class FilesUploadComponent extends ViewDetailComponent
     // It should not be used habitually, since the source of truth is the form.
     managedObject: any;
     uploadFileResponse: any;
-    stagingOneFile: { id: string; file: File; }[] = [];
-    stagingMultipleFiles: { id: string; file: File; } [] = [];
+    stagingExample1: { id: string; file: File; }[] = [];
+    stagingExample2: { id: string; file: File; } [] = [];
+    stagingExample3: { id: string; file: File; } [] = [];
     enableSubmitButton: boolean = false;
 
     // breadcrumb component definition
@@ -71,7 +75,15 @@ export class FilesUploadComponent extends ViewDetailComponent
         this.fg = this.fb.group({
             example1: ['', [Validators.required]],
             example2: ['', [Validators.required]],
+            example3: ['', [Validators.required]],
+            example4: ['', [Validators.required]],
+            example5: ['', [Validators.required]],
         });
+    }
+
+    test(): void
+    {
+        console.log(this.fg.get('example3')?.value);
     }
 
     async handleAction(action: Action): Promise<void>
@@ -79,16 +91,16 @@ export class FilesUploadComponent extends ViewDetailComponent
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
-            case 'kitchenSink::fileUpload.detail.stagingOneFile':
+            case 'kitchenSink::fileUpload.detail.stagingExample1':
                 if (action.meta.files.length === 0) return;
 
-                this.stagingOneFile = [];
+                this.stagingExample1 = [];
                 for (const file of action.meta.files)
                 {
                     const fileEntry = file.file.fileEntry as FileSystemFileEntry;
                     fileEntry.file((file: File) =>
                     {
-                        this.stagingOneFile.push({
+                        this.stagingExample1.push({
                             id: Utils.uuid(),
                             file,
                         });
@@ -98,19 +110,34 @@ export class FilesUploadComponent extends ViewDetailComponent
                 this.enableSubmitButton = true;
                 break;
 
-            case 'kitchenSink::fileUpload.detail.stagingMultipleFiles':
+            case 'kitchenSink::fileUpload.detail.stagingExample2':
                 if (action.meta.files.length === 0) return;
 
-                this.stagingMultipleFiles = [];
+                this.stagingExample2 = [];
                 for (const file of action.meta.files)
                 {
                     const fileEntry = file.file.fileEntry as FileSystemFileEntry;
                     fileEntry.file((file: File) =>
                     {
-                        this.stagingMultipleFiles.push({
+                        this.stagingExample2.push({
                             id: Utils.uuid(),
                             file,
                         });
+                    });
+                }
+
+                this.enableSubmitButton = true;
+                break;
+
+            case 'kitchenSink::fileUpload.detail.stagingExample3':
+                if (action.meta.files.length === 0) return;
+
+                this.stagingExample3 = [];
+                for (const file of action.meta.files)
+                {
+                    this.stagingExample3.push({
+                        id: Utils.uuid(),
+                        file,
                     });
                 }
 
@@ -125,14 +152,15 @@ export class FilesUploadComponent extends ViewDetailComponent
                         this.fileUploadService
                             .uploadFiles({
                                 files: [
-                                    ...this.stagingMultipleFiles,
-                                    ...this.stagingOneFile,
+                                    ...this.stagingExample1,
+                                    ...this.stagingExample2,
+                                    ...this.stagingExample3,
                                 ],
                             }),
                     );
 
                     this.snackBar.open(
-                        `${this.translocoService.translate('common.Lang')} ${this.translocoService.translate('Created.M')}`,
+                        `${this.translocoService.translate('kitchenSink.File')} ${this.translocoService.translate('Created.M')}`,
                         undefined,
                         {
                             verticalPosition: 'top',
