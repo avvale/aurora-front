@@ -15,11 +15,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/resource/resource-detail.component.ts",
-            "integrity": "sha1:bea66ab5e37f58e605ad2925a541c20d8e3404cd"
+            "integrity": "sha1:a7448215d1326341580b552b7e502a682aa08e1d"
         },
         {
             "path": "src/app/modules/admin/apps/common/resource/resource-list.component.html",
-            "integrity": "sha1:33e26b35e7c350d480c4cc7330d1730fc38b784a"
+            "integrity": "sha1:72c9b855dfa788572e62ed52eb9af55f6f199e9f"
         },
         {
             "path": "src/app/modules/admin/apps/common/resource/resource-list.component.ts",
@@ -35,7 +35,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/resource/resource.resolvers.ts",
-            "integrity": "sha1:ec43f9a83daa59260fcec15b46ebcf1ddc31239f"
+            "integrity": "sha1:fb5292a2d8f9afba638d4c70e0114bac8b431a4a"
         },
         {
             "path": "src/app/modules/admin/apps/common/resource/resource.service.ts",

@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Action, Crumb, Utils, ViewDetailComponent, defaultDetailImports, log, mapActions } from '@aurora';
-import { lastValueFrom, takeUntil } from 'rxjs';
 import { CommonResource } from '../common.types';
 import { ResourceService } from './resource.service';
+import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { Action, Crumb, Utils, ViewDetailComponent, defaultDetailImports, log, mapActions } from '@aurora';
+import { lastValueFrom, takeUntil } from 'rxjs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
     selector       : 'common-resource-detail',
@@ -36,8 +36,8 @@ export class ResourceDetailComponent extends ViewDetailComponent
     ];
 
     constructor(
-		protected readonly injector: Injector,
-		private readonly resourceService: ResourceService,
+        protected readonly injector: Injector,
+        private readonly resourceService: ResourceService,
     )
     {
         super(injector);

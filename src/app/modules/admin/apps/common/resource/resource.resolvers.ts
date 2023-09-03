@@ -40,7 +40,7 @@ export const resourceNewResolver: ResolveFn<Action> = (
     state: RouterStateSnapshot,
 ) =>
 {
-	const actionService = inject(ActionService);
+    const actionService = inject(ActionService);
 
     return actionService.action({
         id          : 'common::resource.detail.new',
@@ -49,14 +49,14 @@ export const resourceNewResolver: ResolveFn<Action> = (
 };
 
 export const resourceEditResolver: ResolveFn<{
-	object: CommonResource;
+    object: CommonResource;
 }> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) =>
 {
-	const actionService = inject(ActionService);
-	const resourceService = inject(ResourceService);
+    const actionService = inject(ActionService);
+    const resourceService = inject(ResourceService);
 
     actionService.action({
         id          : 'common::resource.detail.edit',
