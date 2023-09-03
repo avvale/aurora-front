@@ -41,9 +41,9 @@ export class AttachmentFamilyDetailComponent extends ViewDetailComponent
     ];
 
     constructor(
-		private readonly attachmentFamilyService: AttachmentFamilyService,
-		protected readonly injector: Injector,
-		private readonly resourceService: ResourceService,
+        private readonly attachmentFamilyService: AttachmentFamilyService,
+        protected readonly injector: Injector,
+        private readonly resourceService: ResourceService,
     )
     {
         super(injector);

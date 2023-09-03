@@ -15,11 +15,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family-detail.component.ts",
-            "integrity": "sha1:5dd803f3c8811df4912f20011acae9e089e43187"
+            "integrity": "sha1:7199d12bf14f13cc54c9ffecad3a7465b902f18d"
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family-list.component.html",
-            "integrity": "sha1:0b236fabf725b492e617d26ee072c1f849170a36"
+            "integrity": "sha1:df9c1d429e4cb9b700cb8afd3598add293c4b59a"
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family-list.component.ts",
@@ -35,7 +35,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family.resolvers.ts",
-            "integrity": "sha1:10984b1091e665a7b16ff3e2cff386f573207ac2"
+            "integrity": "sha1:a1a620105ba6bbdb737403a23661aa2d6fbabbcc"
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family.service.ts",

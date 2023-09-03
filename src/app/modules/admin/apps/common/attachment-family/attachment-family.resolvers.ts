@@ -43,8 +43,8 @@ export const attachmentFamilyNewResolver: ResolveFn<{
     state: RouterStateSnapshot,
 ) =>
 {
-	const actionService = inject(ActionService);
-	const attachmentFamilyService = inject(AttachmentFamilyService);
+    const actionService = inject(ActionService);
+    const attachmentFamilyService = inject(AttachmentFamilyService);
 
     actionService.action({
         id          : 'common::attachmentFamily.detail.new',
@@ -55,15 +55,15 @@ export const attachmentFamilyNewResolver: ResolveFn<{
 };
 
 export const attachmentFamilyEditResolver: ResolveFn<{
-	commonGetResources: CommonResource[];
-	object: CommonAttachmentFamily;
+    commonGetResources: CommonResource[];
+    object: CommonAttachmentFamily;
 }> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) =>
 {
-	const actionService = inject(ActionService);
-	const attachmentFamilyService = inject(AttachmentFamilyService);
+    const actionService = inject(ActionService);
+    const attachmentFamilyService = inject(AttachmentFamilyService);
 
     actionService.action({
         id          : 'common::attachmentFamily.detail.edit',
