@@ -31,7 +31,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang.graphql.ts",
-            "integrity": "sha1:801021b818578658d521121c37d85c6b8920d70f"
+            "integrity": "sha1:9ffd3a951d27711d449f6ad97f0c8ac869f30870"
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang.resolvers.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang.service.ts",
-            "integrity": "sha1:f0a34146fd543a4f4f7ab4bedcdc8f89cc4a4e62"
+            "integrity": "sha1:b9e794011e8ee1760fd4f1a6395f5e4aa075d49c"
         }
     ]
 }
