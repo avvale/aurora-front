@@ -11,11 +11,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang-detail.component.html",
-            "integrity": "sha1:b9865fe4f596a8a2eb3b76eedfd3e49539617fec"
+            "integrity": "sha1:128c88f33493a9627ffad3a884766cbffafcf3df"
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang-detail.component.ts",
-            "integrity": "sha1:6dd3f27052e388512a0e2b21e3ea2cc1f9eb05a5"
+            "integrity": "sha1:8e17864a31987ad901e4f7977493cab8b09c1fa7"
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang-list.component.html",
@@ -31,15 +31,15 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang.graphql.ts",
-            "integrity": "sha1:9ffd3a951d27711d449f6ad97f0c8ac869f30870"
+            "integrity": "sha1:801021b818578658d521121c37d85c6b8920d70f"
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang.resolvers.ts",
-            "integrity": "sha1:02550631a4278cf621d306f6e6c0536abcfecde8"
+            "integrity": "sha1:2fd35157507aef34a2a4ab7786058a5f472892b5"
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang.service.ts",
-            "integrity": "sha1:b9e794011e8ee1760fd4f1a6395f5e4aa075d49c"
+            "integrity": "sha1:f0a34146fd543a4f4f7ab4bedcdc8f89cc4a4e62"
         }
     ]
 }
