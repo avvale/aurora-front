@@ -15,11 +15,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/iam/bounded-context/bounded-context-detail.component.ts",
-            "integrity": "sha1:1e00db2015909a0f1626ddc86758f26ca48bc1f5"
+            "integrity": "sha1:b36653c9115a30d8657af94e67886d49a734c94b"
         },
         {
             "path": "src/app/modules/admin/apps/iam/bounded-context/bounded-context-list.component.html",
-            "integrity": "sha1:a4eb7aab9cc92822ff9426a1d17beda10837100e"
+            "integrity": "sha1:094c5962cf9c2d2625e0fcafb94f9262e70bd693"
         },
         {
             "path": "src/app/modules/admin/apps/iam/bounded-context/bounded-context-list.component.ts",
@@ -35,7 +35,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/iam/bounded-context/bounded-context.resolvers.ts",
-            "integrity": "sha1:fa182195a8affcb3013c5ae877775ab2d0941342"
+            "integrity": "sha1:9a8d8b682326b6a11f382a3eb995b73a42d4ff47"
         },
         {
             "path": "src/app/modules/admin/apps/iam/bounded-context/bounded-context.service.ts",
