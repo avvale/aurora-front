@@ -15,7 +15,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/iam/role/role-detail.component.ts",
-            "integrity": "sha1:89a591afd2a557c4a27ab40726c925725e54c8c2"
+            "integrity": "sha1:7f21d9098b133c9e62049f17f9407ce6a169a097"
         },
         {
             "path": "src/app/modules/admin/apps/iam/role/role-list.component.html",

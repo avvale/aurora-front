@@ -187,7 +187,7 @@ export class RoleDetailComponent extends ViewDetailComponent
         });
     }
 
-    /* #region methods for permissions roles grid */
+    /* #region methods to manage PermissionsRoles grid */
     handleOpenPermissionsDialog(): void
     {
         this.actionService.action({
@@ -239,9 +239,9 @@ export class RoleDetailComponent extends ViewDetailComponent
             });
         }
     }
-    /* #endregion methods for permissions roles grid */
+    /* #endregion methods to manage PermissionsRoles gird */
 
-    /* #region methods for permissions grid dialog */
+    /* #region methods to manage PermissionsRoles dialog */
     handleDialogPermissionsRowsSectionChange($event: SelectionChange<IamPermission>): void
     {
         this.permissionsSelectedRows = $event.source.selected;
@@ -262,7 +262,7 @@ export class RoleDetailComponent extends ViewDetailComponent
             this.permissionsComponent.elementsDialogRef.close();
         }
     }
-    /* #endregion methods for permissions grid dialog */
+    /* #endregion methods to manage PermissionsRoles dialog */
 
     async handleAction(action: Action): Promise<void>
     {
