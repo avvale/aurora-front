@@ -25,7 +25,7 @@ aggregateProperties:
     type: relationship
     nullable: true
     webComponent:
-      type: grid-select-elements
+      type: grid-select-multiple-elements
     relationship:
       type: many-to-many
       singularName: permission

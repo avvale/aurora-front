@@ -26,7 +26,16 @@ import { RoleService } from './role.service';
 export class RoleDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
-    // permissions <au-select-multiple-elements-grid> component
+    // ..
+
+    // Object retrieved from the database request,
+    // it should only be used to obtain uninitialized
+    // data in the form, such as relations, etc.
+    // It should not be used habitually, since the source of truth is the form.
+    managedObject: IamRole;
+
+    // relationships
+    /* #region variables to manage grid-select-multiple-elements permissions */
     // start dialog permissions grid
     @ViewChild('permissionsGridSelectMultipleElements') permissionsComponent: GridSelectMultipleElementsComponent;
     permissionsSelectedRows: IamPermission[] = [];
@@ -73,7 +82,8 @@ export class RoleDetailComponent extends ViewDetailComponent
         ...permissionColumnsConfig,
     ];
 
-    // start dialog permissions of role grid
+    // start permissions of role grid
+    rolePermissionsId: string[];
     permissionsRolesGridState: GridState = {};
     permissionsRolesSelectedRows: IamPermissionRole[] = [];
     permissionsRolesGridId: string = 'iam::role.detail.permissionsRolesGridList';
@@ -107,15 +117,7 @@ export class RoleDetailComponent extends ViewDetailComponent
         },
         ...permissionRoleColumnsConfig,
     ];
-
-    // Object retrieved from the database request,
-    // it should only be used to obtain uninitialized
-    // data in the form, such as relations, etc.
-    // It should not be used habitually, since the source of truth is the form.
-    managedObject: IamRole;
-
-    // relationships
-    rolePermissionsId: string[];
+    /* #endregion variables to manage grid-select-multiple-elements permissions }} */
 
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
@@ -178,9 +180,9 @@ export class RoleDetailComponent extends ViewDetailComponent
     createForm(): void
     {
         this.fg = this.fb.group({
-            id           : ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
-            name         : ['', [Validators.required, Validators.maxLength(255)]],
-            isMaster     : false,
+            id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
+            name: ['', [Validators.required, Validators.maxLength(255)]],
+            isMaster: false,
             permissionIds: [],
         });
     }
