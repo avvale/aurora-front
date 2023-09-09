@@ -155,15 +155,12 @@
                                 edit: t('Edit'),
                                 delete: t('Delete'),
                                 unlink: t('Unlink'),
-                                createDeliveryNote: t('orion.CreateDeliveryNote'),
                                 cancel: t('Cancel'),
-                                close: t('Close'),
-                                createInHesa: t('orion.CreateInHesa')
+                                close: t('Close')
                             }"
                         >
                             <au-grid-column-translation
                                 *ngFor="let columnConfig of originStagesColumnsConfig"
-                                [gridId]="'stagesGrid'"
                                 [field]="columnConfig.field"
                             >
                                 {{ t(columnConfig.translation ? columnConfig.translation : columnConfig.field.toPascalCase()) }}
