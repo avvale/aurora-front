@@ -97,8 +97,7 @@
                             {{ t('iam.IsMaster') }}
                         </mat-checkbox>
                     </div>
-
-                    <!-- iam::role.detail.edit grid select multiple elements -->
+                    <!-- #region component to manage permissions -->
                     <au-grid-select-multiple-elements
                         *ngIf="currentViewAction.id === 'iam::role.detail.edit'"
                         class="col-12 mt-0"
@@ -166,7 +165,6 @@
                                 {{ t(columnConfig.translation ? columnConfig.translation : columnConfig.field.toPascalCase()) }}
                             </au-grid-column-translation>
                         </au-grid-translations>
-
                         <ng-template
                             auGridSelectMultipleCustomHeaderTemplate
                             position="left"
@@ -196,7 +194,6 @@
                                 </button>
                             </div>
                         </ng-template>
-
                         <ng-template
                             auGridSelectMultipleCustomHeaderDialogTemplate
                             position="left"
@@ -212,9 +209,8 @@
                                 </button>
                             </ng-container>
                         </ng-template>
-
                     </au-grid-select-multiple-elements>
-                    <!-- / PERMISSIONS grid select multiple elements -->
+                    <!-- #endregion component to manage permissions -->
 
                 </div>
 

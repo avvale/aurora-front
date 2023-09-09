@@ -111,6 +111,8 @@ export class RoleDetailComponent extends ViewDetailComponent
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
     managedObject: IamRole;
+
+    // relationships
     rolePermissionsId: string[];
 
     // breadcrumb component definition
