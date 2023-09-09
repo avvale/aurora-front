@@ -27,6 +27,7 @@ export class RoleDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
     // permissions <au-select-multiple-elements-grid> component
+    // start dialog permissions grid
     @ViewChild('permissionsGridSelectMultipleElements') permissionsComponent: GridSelectMultipleElementsComponent;
     permissionsSelectedRows: IamPermission[] = [];
     permissionsGridId: string = 'iam::role.detail.permissionsGridList';
@@ -72,6 +73,7 @@ export class RoleDetailComponent extends ViewDetailComponent
         ...permissionColumnsConfig,
     ];
 
+    // start dialog permissions of role grid
     permissionsRolesGridState: GridState = {};
     permissionsRolesSelectedRows: IamPermissionRole[] = [];
     permissionsRolesGridId: string = 'iam::role.detail.permissionsRolesGridList';
