@@ -2,7 +2,7 @@ import { NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleCustomHeaderDialogTemplateDirective, GridSelectMultipleCustomHeaderTemplateDirective, GridSelectMultipleElementsComponent, GridState, GridStateService, QueryStatementHandler, SelectionChange, SelectionModel, Utils, ViewDetailComponent, defaultDetailImports, exportRows, log, mapActions } from '@aurora';
+import { Action, ColumnConfig, ColumnDataType, Crumb, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleCustomHeaderDialogTemplateDirective, GridSelectMultipleCustomHeaderTemplateDirective, GridSelectMultipleElementsComponent, GridState, GridStateService, Operator, QueryStatementHandler, SelectionChange, SelectionModel, Utils, ViewDetailComponent, defaultDetailImports, exportRows, log, mapActions } from '@aurora';
 import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 import { IamPermission, IamPermissionRole, IamRole } from '../iam.types';
 import { permissionRoleColumnsConfig } from '../permission-role/permission-role.columns-config';
@@ -388,11 +388,15 @@ export class RoleDetailComponent extends ViewDetailComponent
                     await lastValueFrom(
                         this.permissionRoleService
                             .delete({
-                                objects: action.meta.rows
-                                    .map(row => ({
-                                        permissionId: row.permissionId,
-                                        roleId      : this.managedObject.id,
-                                    })),
+                                query: {
+                                    where: {
+                                        [Operator.or]: action.meta.rows
+                                            .map(row => ({
+                                                permissionId: row.permissionId,
+                                                roleId      : this.managedObject.id,
+                                            })),
+                                    },
+                                },
                             }),
                     );
 
@@ -526,10 +530,8 @@ export class RoleDetailComponent extends ViewDetailComponent
 
             case 'iam::role.detail.removePermissionRole':
                 await lastValueFrom(this.permissionRoleService.deleteById({
-                    object: {
-                        permissionId: action.meta.row.permissionId,
-                        roleId      : this.managedObject.id,
-                    },
+                    permissionId: action.meta.row.permissionId,
+                    roleId      : this.managedObject.id,
                 }));
 
                 this.actionService.action({

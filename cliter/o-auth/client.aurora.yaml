@@ -63,7 +63,7 @@ aggregateProperties:
     relationship:
       type: many-to-many
       singularName: application
-      aggregate: OAuthApplication
+      aggregateName: OAuthApplication
       modulePath: o-auth/application
       avoidConstraint: true
       pivot:
@@ -76,7 +76,7 @@ aggregateProperties:
     relationship:
       type: one-to-many
       singularName: accessToken
-      aggregate: OAuthAccessToken
+      aggregateName: OAuthAccessToken
       modulePath: o-auth/access-token
       avoidConstraint: true
   - name: createdAt
