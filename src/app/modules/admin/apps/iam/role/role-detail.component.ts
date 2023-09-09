@@ -127,13 +127,13 @@ export class RoleDetailComponent extends ViewDetailComponent
     ];
 
     constructor(
-        protected readonly injector: Injector,
         private readonly gridColumnsConfigStorageService: GridColumnsConfigStorageService,
         private readonly gridFiltersStorageService: GridFiltersStorageService,
         private readonly gridStateService: GridStateService,
-        private readonly roleService: RoleService,
-        private readonly permissionService: PermissionService,
+        protected readonly injector: Injector,
         private readonly permissionRoleService: PermissionRoleService,
+        private readonly permissionService: PermissionService,
+        private readonly roleService: RoleService,
     )
     {
         super(injector);
