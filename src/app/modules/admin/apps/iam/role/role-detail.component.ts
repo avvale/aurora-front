@@ -283,6 +283,7 @@ export class RoleDetailComponent extends ViewDetailComponent
                         this.managedObject = item;
                         this.fg.patchValue(item);
                     });
+
                 /* #region edit action to manage PermissionsRoles grid-select-multiple-elements */
                 // we need to get the permissions of the role to be able to
                 // marked permissions as selected in the dialog
@@ -314,7 +315,6 @@ export class RoleDetailComponent extends ViewDetailComponent
                     .pipe(takeUntil(this.unsubscribeAll$));
                 this.permissionsGridData$ = this.permissionService.pagination$;
                 /* #endregion edit action to manage PermissionsRoles grid-select-multiple-elements */
-
                 break;
 
             case 'iam::role.detail.create':
