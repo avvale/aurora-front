@@ -54,7 +54,7 @@ export const clientNewResolver: ResolveFn<{
 };
 
 export const clientEditResolver: ResolveFn<{
-	object: OAuthClient;
+    object: OAuthClient;
     oAuthGetScopes: OAuthScope[];
 }> = (
     route: ActivatedRouteSnapshot,
