@@ -42,7 +42,7 @@ export const clientNewResolver: ResolveFn<{
     state: RouterStateSnapshot,
 ) =>
 {
-	const actionService = inject(ActionService);
+    const actionService = inject(ActionService);
     const clientService = inject(ClientService);
 
     actionService.action({

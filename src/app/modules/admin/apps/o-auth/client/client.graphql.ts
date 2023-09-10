@@ -55,6 +55,12 @@ export const getQuery = gql`
     }
 `;
 
+export const getRelations = gql`
+    query IamClientRelations {
+        ${relationsFields}
+    }
+`;
+
 export const findByIdQuery = gql`
     query OAuthFindClientById (
         $id: ID
@@ -182,12 +188,5 @@ export const deleteMutation = gql`
         ) {
             ${fields}
         }
-    }
-`;
-
-// ---- customizations ----
-export const getRelations = gql`
-    query IamClientRelations {
-        ${relationsFields}
     }
 `;
