@@ -254,12 +254,14 @@ export class ClientService
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<{
+        oAuthGetApplications: OAuthApplication[];
         oAuthGetScopes: OAuthScope[];
     }>
     {
         return this.graphqlService
             .client()
             .watchQuery<{
+                oAuthGetApplications: OAuthApplication[];
                 oAuthGetScopes: OAuthScope[];
             }>({
                 query    : getRelations,
@@ -274,6 +276,7 @@ export class ClientService
                 map(result => result.data),
                 tap(data =>
                 {
+                    this.applicationService.applicationsSubject$.next(data.oAuthGetApplications);
                     this.scopeService.scopesSubject$.next(data.oAuthGetScopes);
                 }),
             );

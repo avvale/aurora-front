@@ -16,6 +16,11 @@ export const fields = `
 `;
 
 export const relationsFields = `
+    oAuthGetApplications {
+        id
+        code
+        name
+    }
     oAuthGetScopes {
         id
         code
@@ -93,16 +98,7 @@ export const findByIdWithRelationsQuery = gql`
                 name
             }
         }
-        oAuthGetScopes {
-            id
-            code
-            name
-        }
-        oAuthGetApplications {
-            id
-            code
-            name
-        }
+        ${relationsFields}
     }
 `;
 

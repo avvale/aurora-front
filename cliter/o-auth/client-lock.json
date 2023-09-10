@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/client/client.service.ts",
-            "integrity": "sha1:31e3562b0395c41e1fff67aeb6347658a07f535a"
+            "integrity": "sha1:24d1a7f98da9cde054e284116f2581223365ceea"
         }
     ]
 }
