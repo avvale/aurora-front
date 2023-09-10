@@ -88,6 +88,8 @@ aggregateProperties:
             nullable: false
             aggregateName: OAuthClient
             modulePath: o-auth/client
+    webComponent:
+      type: multiple-select
   - name: accessTokens
     type: relationship
     nullable: true
@@ -106,4 +108,3 @@ aggregateProperties:
   - name: deletedAt
     type: timestamp
     nullable: true
-additionalApis: []
