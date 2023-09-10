@@ -20,6 +20,39 @@ aggregateProperties:
       - PASSWORD
       - REFRESH_TOKEN
     nullable: false
+  - name: applications
+    type: relationship
+    nullable: true
+    relationship:
+      type: many-to-many
+      singularName: application
+      aggregateName: OAuthApplication
+      modulePath: o-auth/application
+      avoidConstraint: true
+      pivot:
+        boundedContextName: o-auth
+        moduleName: application-client
+        moduleNames: applications-clients
+        aggregateName: OAuthApplicationClient
+        hasOAuth: true
+        hasAuditing: true
+        aggregateProperties:
+          - name: applicationId
+            type: id
+            primaryKey: true
+            length: 36
+            nullable: false
+            aggregateName: OAuthApplication
+            modulePath: o-auth/application
+          - name: clientId
+            type: id
+            primaryKey: true
+            length: 36
+            nullable: false
+            aggregateName: OAuthClient
+            modulePath: o-auth/client
+    webComponent:
+      type: multiple-select
   - name: name
     type: varchar
     maxLength: 255
@@ -57,39 +90,6 @@ aggregateProperties:
     nullable: false
     defaultValue: false
     example: false
-  - name: applications
-    type: relationship
-    nullable: true
-    relationship:
-      type: many-to-many
-      singularName: application
-      aggregateName: OAuthApplication
-      modulePath: o-auth/application
-      avoidConstraint: true
-      pivot:
-        boundedContextName: o-auth
-        moduleName: application-client
-        moduleNames: applications-clients
-        aggregateName: OAuthApplicationClient
-        hasOAuth: true
-        hasAuditing: true
-        aggregateProperties:
-          - name: applicationId
-            type: id
-            primaryKey: true
-            length: 36
-            nullable: false
-            aggregateName: OAuthApplication
-            modulePath: o-auth/application
-          - name: clientId
-            type: id
-            primaryKey: true
-            length: 36
-            nullable: false
-            aggregateName: OAuthClient
-            modulePath: o-auth/client
-    webComponent:
-      type: multiple-select
   - name: accessTokens
     type: relationship
     nullable: true

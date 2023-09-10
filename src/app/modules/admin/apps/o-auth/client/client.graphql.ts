@@ -70,6 +70,36 @@ export const findByIdQuery = gql`
     }
 `;
 
+export const findByIdWithRelationsQuery = gql`
+    query OAuthFindClientById (
+        $id: ID
+        $constraint: QueryStatement
+    ) {
+        object: oAuthFindClientById (
+            id: $id
+            constraint: $constraint
+        ) {
+            id
+            #FIELDS
+            applications {
+                id
+                code
+                name
+            }
+        }
+        oAuthGetScopes {
+            id
+            code
+            name
+        }
+        oAuthGetApplications {
+            id
+            code
+            name
+        }
+    }
+`;
+
 export const findQuery = gql`
     query OAuthFindClient (
         $query: QueryStatement
@@ -159,35 +189,5 @@ export const deleteMutation = gql`
 export const getRelations = gql`
     query IamClientRelations {
         ${relationsFields}
-    }
-`;
-
-export const findByIdWithRelationsQuery = gql`
-    query OAuthFindClientById (
-        $id: ID
-        $constraint: QueryStatement
-    ) {
-        object: oAuthFindClientById (
-            id: $id
-            constraint: $constraint
-        ) {
-            id
-            #FIELDS
-            applications {
-                id
-                code
-                name
-            }
-        }
-        oAuthGetScopes {
-            id
-            code
-            name
-        }
-        oAuthGetApplications {
-            id
-            code
-            name
-        }
     }
 `;

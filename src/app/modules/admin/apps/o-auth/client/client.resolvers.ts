@@ -61,8 +61,8 @@ export const clientEditResolver: ResolveFn<{
     state: RouterStateSnapshot,
 ) =>
 {
-	const actionService = inject(ActionService);
-	const clientService = inject(ClientService);
+    const actionService = inject(ActionService);
+    const clientService = inject(ClientService);
 
     actionService.action({
         id          : 'oAuth::client.detail.edit',
