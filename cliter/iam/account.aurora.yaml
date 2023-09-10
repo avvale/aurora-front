@@ -123,6 +123,8 @@ aggregateProperties:
             nullable: false
             aggregateName: IamAccount
             modulePath: iam/account
+    webComponent:
+      type: multiple-select
   - name: user
     type: relationship
     nullable: true
