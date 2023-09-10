@@ -36,7 +36,7 @@ export class RoleDetailComponent extends ViewDetailComponent
 
     // relationships
     /* #region variables to manage grid-select-multiple-elements permissions */
-    // start dialog permissions grid
+    // start permissions dialog
     @ViewChild('permissionsGridSelectMultipleElements') permissionsComponent: GridSelectMultipleElementsComponent;
     permissionsSelectedRows: IamPermission[] = [];
     permissionsGridId: string = 'iam::role.detail.permissionsGridList';
@@ -188,6 +188,27 @@ export class RoleDetailComponent extends ViewDetailComponent
     }
 
     /* #region methods to manage PermissionsRoles grid */
+    handlePermissionsRowsSectionChange($event: SelectionChange<IamPermissionRole>): void
+    {
+        this.permissionsRolesSelectedRows = $event.source.selected;
+    }
+
+    handleRemovePermissionsSelected(): void
+    {
+        if (this.permissionsRolesSelectedRows.length > 0)
+        {
+            this.actionService.action({
+                id          : 'iam::role.detail.removePermissionsRoles',
+                isViewAction: false,
+                meta        : {
+                    rows: this.permissionsRolesSelectedRows,
+                },
+            });
+        }
+    }
+    /* #endregion methods to manage PermissionsRoles grid */
+
+    /* #region methods to manage Permissions dialog */
     handleOpenPermissionsDialog(): void
     {
         this.actionService.action({
@@ -221,27 +242,6 @@ export class RoleDetailComponent extends ViewDetailComponent
         });
     }
 
-    handlePermissionsRowsSectionChange($event: SelectionChange<IamPermissionRole>): void
-    {
-        this.permissionsRolesSelectedRows = $event.source.selected;
-    }
-
-    handleRemovePermissionsSelected(): void
-    {
-        if (this.permissionsRolesSelectedRows.length > 0)
-        {
-            this.actionService.action({
-                id          : 'iam::role.detail.removePermissionsRoles',
-                isViewAction: false,
-                meta        : {
-                    rows: this.permissionsRolesSelectedRows,
-                },
-            });
-        }
-    }
-    /* #endregion methods to manage PermissionsRoles gird */
-
-    /* #region methods to manage PermissionsRoles dialog */
     handleDialogPermissionsRowsSectionChange($event: SelectionChange<IamPermission>): void
     {
         this.permissionsSelectedRows = $event.source.selected;
@@ -262,7 +262,7 @@ export class RoleDetailComponent extends ViewDetailComponent
             this.permissionsComponent.elementsDialogRef.close();
         }
     }
-    /* #endregion methods to manage PermissionsRoles dialog */
+    /* #endregion methods to manage Permissions dialog */
 
     async handleAction(action: Action): Promise<void>
     {
@@ -295,7 +295,7 @@ export class RoleDetailComponent extends ViewDetailComponent
                         this.rolePermissionsId = permissionsRoles.map(permissionRole => permissionRole.permissionId);
                     });
 
-                // permission role grid
+                // permissions grid
                 this.permissionsRolesColumnsConfig$ = this.gridColumnsConfigStorageService
                     .getColumnsConfig(this.permissionsRolesGridId, this.originPermissionsRolesColumnsConfig)
                     .pipe(takeUntil(this.unsubscribeAll$));
@@ -309,7 +309,7 @@ export class RoleDetailComponent extends ViewDetailComponent
 
                 this.permissionsRolesGridData$ = this.permissionRoleService.pagination$;
 
-                // permission grid
+                // permissions grid
                 this.permissionsColumnsConfig$ = this.gridColumnsConfigStorageService
                     .getColumnsConfig(this.permissionsGridId, this.permissionsOriginColumnsConfig)
                     .pipe(takeUntil(this.unsubscribeAll$));
