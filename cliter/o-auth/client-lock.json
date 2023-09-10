@@ -35,11 +35,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/client/client.resolvers.ts",
-            "integrity": "sha1:b79e3e5840473b00ebb62a4bd688033b3daa8e20"
+            "integrity": "sha1:2b7d03cd8b3920d5db6aed0905ebf83594ac4326"
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/client/client.service.ts",
-            "integrity": "sha1:ffcd26cb37a13302f6d6cbfcb9a2d992560b8764"
+            "integrity": "sha1:31e3562b0395c41e1fff67aeb6347658a07f535a"
         }
     ]
 }
