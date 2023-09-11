@@ -6,6 +6,8 @@ aggregateName: IamRole
 hasOAuth: true
 hasTenant: false
 hasAuditing: true
+solidIcon: mat_solid:groups
+outlineIcon: mat_outline:groups
 aggregateProperties:
   - name: id
     type: id
