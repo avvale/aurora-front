@@ -11,7 +11,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/refresh-token/refresh-token-detail.component.html",
-            "integrity": "sha1:b96a9de04015796019de2a1636c018a9d0cb801d"
+            "integrity": "sha1:26c589cfe1275107ff31e4f85c2e9885fb5e9559"
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/refresh-token/refresh-token-detail.component.ts",
@@ -19,7 +19,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/refresh-token/refresh-token-list.component.html",
-            "integrity": "sha1:c15ffaa286ddb69f2f30b81459471430cd3d6544"
+            "integrity": "sha1:c9184dddd1c34e1d83c0cf6522196e402e7beb89"
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/refresh-token/refresh-token-list.component.ts",

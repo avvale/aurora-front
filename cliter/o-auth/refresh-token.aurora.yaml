@@ -6,6 +6,8 @@ aggregateName: OAuthRefreshToken
 hasOAuth: true
 hasTenant: false
 hasAuditing: false
+solidIcon: mat_solid:password
+outlineIcon: mat_outline:password
 aggregateProperties:
   - name: id
     type: id
