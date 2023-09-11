@@ -6,6 +6,8 @@ aggregateName: IamBoundedContext
 hasOAuth: true
 hasTenant: false
 hasAuditing: true
+solidIcon: mat_solid:extension
+outlineIcon: mat_outline:extension
 aggregateProperties:
   - name: id
     type: id

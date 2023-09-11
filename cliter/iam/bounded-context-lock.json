@@ -11,15 +11,15 @@
         },
         {
             "path": "src/app/modules/admin/apps/iam/bounded-context/bounded-context-detail.component.html",
-            "integrity": "sha1:5e7e1da0cff59ade9c376c99eb21f9b4f9800b4a"
+            "integrity": "sha1:29980b723ded31afebbe08ee2eb7369777b4523a"
         },
         {
             "path": "src/app/modules/admin/apps/iam/bounded-context/bounded-context-detail.component.ts",
-            "integrity": "sha1:b36653c9115a30d8657af94e67886d49a734c94b"
+            "integrity": "sha1:969c7a61575ee8e39bdbed5ae39cf410a41387fa"
         },
         {
             "path": "src/app/modules/admin/apps/iam/bounded-context/bounded-context-list.component.html",
-            "integrity": "sha1:094c5962cf9c2d2625e0fcafb94f9262e70bd693"
+            "integrity": "sha1:77b4a7f34ccf5b90d524be3a2700794d3a1ea3e9"
         },
         {
             "path": "src/app/modules/admin/apps/iam/bounded-context/bounded-context-list.component.ts",
