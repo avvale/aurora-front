@@ -11,7 +11,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/access-token/access-token-detail.component.html",
-            "integrity": "sha1:2ab6167641d270f31bc660633d428953655d1062"
+            "integrity": "sha1:50cc2be8a09dfa1dbdcd964b2754295284fa00d2"
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/access-token/access-token-detail.component.ts",
@@ -19,7 +19,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/access-token/access-token-list.component.html",
-            "integrity": "sha1:3e1cdbec456ed84e11d7df15bfa2e535cfb14094"
+            "integrity": "sha1:186ae5c85d59746da1fd86b07ba59ffc2c36bfe0"
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/access-token/access-token-list.component.ts",
