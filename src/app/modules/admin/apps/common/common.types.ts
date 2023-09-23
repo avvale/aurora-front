@@ -73,7 +73,7 @@ export interface CommonCountry {
     longitude?: number;
     zoom?: number;
     mapType: CommonCountryMapType;
-    availableLangs?: any;
+    availableLangs?: string[];
     createdAt?: string;
     updatedAt?: string;
     deletedAt?: string;
