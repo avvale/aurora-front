@@ -1,3 +1,4 @@
+export * from './administrative-areas';
 export * from './breadcrumb';
 export * from './chip';
 export * from './date-adapters';
@@ -18,6 +19,8 @@ export * from './grid-select-multiple-elements';
 export * from './mat-form-field-appearance';
 export * from './navigation';
 export * from './ribbon-environment';
+export * from './select-search';
+export * from './slug';
 export * from './split-button';
 export * from './template-dialog';
 export * from './title';
