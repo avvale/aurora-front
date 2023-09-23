@@ -66,7 +66,7 @@ export class HttpCommunicationListComponent extends ViewBaseComponent
         private readonly httpCommunicationService: HttpCommunicationService,
     )
     {
-        super(injector);
+        super();
     }
 
     // this method will be called after the ngOnInit of

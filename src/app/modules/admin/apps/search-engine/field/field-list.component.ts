@@ -66,7 +66,7 @@ export class FieldListComponent extends ViewBaseComponent
         private readonly fieldService: FieldService,
     )
     {
-        super(injector);
+        super();
     }
 
     // this method will be called after the ngOnInit of

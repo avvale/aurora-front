@@ -15,7 +15,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang-detail.component.ts",
-            "integrity": "sha1:8e17864a31987ad901e4f7977493cab8b09c1fa7"
+            "integrity": "sha1:935dcc7e06b985fbe74a108c79a5327874fe848b"
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang-list.component.html",
@@ -23,7 +23,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang-list.component.ts",
-            "integrity": "sha1:08b1acbba0572db0981cc958db401becb573e1be"
+            "integrity": "sha1:df15edd29eb9eecd8307982825df397b0b85c084"
         },
         {
             "path": "src/app/modules/admin/apps/common/lang/lang.columns-config.ts",
@@ -40,6 +40,14 @@
         {
             "path": "src/app/modules/admin/apps/common/lang/lang.service.ts",
             "integrity": "sha1:b9e794011e8ee1760fd4f1a6395f5e4aa075d49c"
+        },
+        {
+            "path": "src/app/modules/admin/apps/common/lang/index.ts",
+            "integrity": "sha1:0668bfe7d206f064143571f4c397ca726db8cdaf"
+        },
+        {
+            "path": "src/app/modules/admin/apps/common/lang/public-api.ts",
+            "integrity": "sha1:bfbd7d9f580a161f824cdd604c45e3b0454d70ce"
         }
     ]
 }

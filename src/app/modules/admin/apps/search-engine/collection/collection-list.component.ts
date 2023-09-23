@@ -71,7 +71,7 @@ export class CollectionListComponent extends ViewBaseComponent
         private readonly collectionService: CollectionService,
     )
     {
-        super(injector);
+        super();
     }
 
     // this method will be called after the ngOnInit of

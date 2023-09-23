@@ -66,7 +66,7 @@ export class AttachmentFamilyListComponent extends ViewBaseComponent
         private readonly attachmentFamilyService: AttachmentFamilyService,
     )
     {
-        super(injector);
+        super();
     }
 
     // this method will be called after the ngOnInit of

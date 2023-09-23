@@ -47,7 +47,7 @@ export class FilesUploadComponent extends ViewDetailComponent
         private readonly fileUploadService: FileUploadService,
     )
     {
-        super(injector);
+        super();
     }
 
     // this method will be called after the ngOnInit of

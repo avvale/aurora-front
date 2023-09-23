@@ -35,7 +35,7 @@ export class DecimalsComponent extends ViewDetailComponent
         protected injector: Injector,
     )
     {
-        super(injector);
+        super();
     }
 
     // this method will be called after the ngOnInit of
