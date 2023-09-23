@@ -1,3 +1,4 @@
+import { NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -15,7 +16,7 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
-        MatCheckboxModule, MatSelectModule,
+        MatCheckboxModule, MatSelectModule, NgForOf,
     ],
 })
 export class LangDetailComponent extends ViewDetailComponent
