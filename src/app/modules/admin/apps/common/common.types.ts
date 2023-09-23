@@ -68,7 +68,7 @@ export interface CommonCountry {
     prefix?: string;
     image?: string;
     sort?: number;
-    administrativeAreas?: any;
+    administrativeAreas?: string[];
     latitude?: number;
     longitude?: number;
     zoom?: number;
