@@ -1,4 +1,5 @@
 export * from './administrative-areas';
+export * from './attachments';
 export * from './breadcrumb';
 export * from './chip';
 export * from './date-adapters';

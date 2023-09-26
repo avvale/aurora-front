@@ -1,5 +1,5 @@
-import { Component, ViewChildren, QueryList, Input, OnInit, OnChanges, ViewChild, Renderer2, forwardRef } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, ViewChildren, QueryList, Input, OnInit, OnChanges, ViewChild, Renderer2 } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,47 +7,28 @@ import { AttachmentsService } from './../attachments.service';
 import { AttachmentItemComponent } from './../attachment-item/attachment-item.component';
 import { CropperDialogComponent } from './../cropper-dialog.component';
 // import { ConfigService } from '@horus/services/config.service';
-import { AdminAttachmentFamily, AdminAttachment } from 'app/main/admin/admin.types';
 import { environment } from 'environments/environment';
 import * as _ from 'lodash';
+import { Attachment, AttachmentFamily } from '../attachments.types';
+import { log } from '@aurora';
 
 @Component({
     selector   : 'au-attachments',
     templateUrl: './attachments.component.html',
     styleUrls  : ['./attachments.component.scss'],
-    providers  : [
-        {
-            provide    : NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => AttachmentsComponent),
-            multi      : true,
-        },
-    ],
-    standalone: true,
+    standalone : true,
+    imports    : [
+        ReactiveFormsModule,
+    ]
 })
 export class AttachmentsComponent implements OnInit, OnChanges
 {
-    @Input() placeholder: string;
-    @Input('value')
-    set value(val: any[])
-    {
-        this._value = val;
-    }
-
-    get value(): any[] | null
-    {
-        return this._value;
-    }
-    private _value: any[] | null;
-
-    isDisabled: boolean;
-
-    // OLD
     // Input elements
-    
+    @Input() placeholder: string;
     @Input() form: FormGroup;
     @Input() name: string;                                      // name of input that contain attachments FormArray
-    @Input() value: AdminAttachment[];                          // array of attachments to init component
-    @Input() attachmentFamilies: AdminAttachmentFamily[] = [];  // families for AttachmentItemComponent
+    @Input() value: Attachment[];                          // array of attachments to init component
+    @Input() attachmentFamilies: AttachmentFamily[] = [];  // families for AttachmentItemComponent
     @Input() endpoint: string;                                  // API url where call once drop elements
     // @Input() withCredentials: boolean;                       // property for XMLHttpRequest object
 
@@ -59,69 +40,38 @@ export class AttachmentsComponent implements OnInit, OnChanges
     items: FormArray;
     files: File[];                              // files uploaded across XMLHttpRequest
     attachment: FormGroup;                      // formGroup that contain attachment that will be crop
-    attachmentFamily: AdminAttachmentFamily;    // variable to contain attachment family where we take crop properties
+    attachmentFamily: AttachmentFamily;    // variable to contain attachment family where we take crop properties
     progress = 0;
 
     constructor(
         private _fb: FormBuilder,
-        private renderer: Renderer2,
+        private readonly renderer: Renderer2,
         private _sanitizer: DomSanitizer,
         private _attachmentsService: AttachmentsService,
         private _dialog: MatDialog,
-        //private _configService: ConfigService,
     ) { }
-
-    registerOnTouched = (): void => { /**/ };
-    propagateChange = (_: any): void => { /**/ };
-    registerOnChange = (fn: (value: any) => void): void => { this.propagateChange = fn; };
-    setDisabledState = (isDisabled: boolean): void => { this.isDisabled = isDisabled; };
-
-    writeValue(value: any): void
-    {
-        this._value = value;
-    }
-
-
-
-
-
-
-
-
-    /// OLD
 
     ngOnInit(): void
     {
-        // TODO, use drag and drop angular native
-        this.renderer
-            .listen(
-                this.attachmentFrame.nativeElement,
-                'dragenter',
-                $event => this._dragEnterHandler($event),
-            );
+        this.renderer.listen(this.attachmentFrame.nativeElement, 'dragenter', $event =>
+        {
+            this.dragEnterHandler($event);
+        });
+        this.renderer.listen(this.attachmentFrame.nativeElement, 'dragover', $event =>
+        {
+            this._dragOverHandler($event);
+        });
+        this.renderer.listen(this.attachmentFrame.nativeElement, 'dragleave', $event =>
+        {
+            this._dragLeaveHandler($event);
+        });
+        this.renderer.listen(this.attachmentFrame.nativeElement, 'drop', $event =>
+        {
+            this._dropHandler($event);
+        });
 
-        this.renderer
-            .listen(
-                this.attachmentFrame.nativeElement,
-                'dragover',
-                $event => this._dragOverHandler($event),
-            );
-
-        this.renderer
-            .listen(
-                this.attachmentFrame.nativeElement,
-                'dragleave',
-                $event => this._dragLeaveHandler($event),
-            );
-
-        this.renderer
-            .listen(
-                this.attachmentFrame.nativeElement,
-                'drop',
-                $event => this._dropHandler($event),
-            );
-
-        //if (! this.endpoint) this.endpoint = this._configService.config.restUrl + '/api/v1/admin/attachment/upload';
+        // if (! this.endpoint) this.endpoint = this._configService.config.restUrl + '/api/v1/admin/attachment/upload';
+        if (! this.endpoint) this.endpoint = 'http://localhost/api/v1/admin/attachment/upload';
     }
 
     ngOnChanges(): void
@@ -148,7 +98,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
         }
         this._touchFormAttachments();
 
-        if (environment.debug) console.log('DEBUG - attachments: ', this.attachments.controls);
+        log('DEBUG - attachments: ', this.attachments.controls);
     }
 
     get attachments(): FormArray
@@ -156,7 +106,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
         return this.form.get(this.name) as FormArray;
     }
 
-    private _setValue(attachments: AdminAttachment[]): void
+    private _setValue(attachments: Attachment[]): void
     {
         // create and set attachments FormGroup
         for (const attachment of attachments) this._createAttachment(attachment);
@@ -190,7 +140,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
             libraryFilename: '',
 
             // need implement attachment library fields to avoid send __typename field that is included in response from graphQL
-            // this field contain AdminAttachmentLibrary value, when we try send values GraphQL expect to obtain AdminAttachmentLibraryInput
+            // this field contain AttachmentLibrary value, when we try send values GraphQL expect to obtain AttachmentLibraryInput
             library: this._fb.group({
                 id       : '',
                 uuid     : '',
@@ -352,12 +302,12 @@ export class AttachmentsComponent implements OnInit, OnChanges
     }
 
     // methods to manage layers
-    private _dragEnterHandler($event): void
+    private dragEnterHandler($event): void
     {
         $event.preventDefault();
         if ($event.currentTarget === this.attachmentFrame.nativeElement)
         {
-            if (! this.attachmentMask.nativeElement.classList.contains('active-mask')) this._activateMask();
+            if (!this.attachmentMask.nativeElement.classList.contains('active-mask')) this._activateMask();
         }
     }
 

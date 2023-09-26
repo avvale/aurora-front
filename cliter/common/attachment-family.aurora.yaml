@@ -15,43 +15,15 @@ aggregateProperties:
     primaryKey: true
     length: 36
     nullable: false
-  - name: resources
-    type: relationship
-    nullable: true
-    relationship:
-      type: many-to-many
-      singularName: resource
-      aggregateName: CommonResource
-      modulePath: common/resource
-      avoidConstraint: false
-      pivot:
-        boundedContextName: common
-        moduleName: attachment-family-resource
-        moduleNames: attachment-families-resources
-        aggregateName: CommonAttachmentFamilyResource
-        hasOAuth: true
-        hasAuditing: true
-        aggregateProperties:
-          - name: attachmentFamilyId
-            type: id
-            primaryKey: true
-            length: 36
-            nullable: false
-            aggregateName: CommonAttachmentFamily
-            modulePath: common/attachment-family
-          - name: resourceId
-            type: id
-            primaryKey: true
-            length: 36
-            nullable: false
-            aggregateName: CommonResource
-            modulePath: common/resource
-    webComponent:
-      type: multiple-select
   - name: name
     type: varchar
     maxLength: 100
     nullable: false
+  - name: code
+    type: varchar
+    maxLength: 25
+    nullable: false
+    index: unique
   - name: width
     type: smallint.unsigned
     maxLength: 5

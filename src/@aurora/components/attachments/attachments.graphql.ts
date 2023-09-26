@@ -36,5 +36,5 @@ const relationsFields = `
 
 export const graphQL = {
     fields,
-    relationsFields
+    relationsFields,
 };

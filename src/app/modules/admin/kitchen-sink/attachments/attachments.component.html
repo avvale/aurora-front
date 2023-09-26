@@ -11,7 +11,7 @@
                     class="icon-size-8 mr-2"
                 >
                 </mat-icon>
-                {{ t('kitchenSink.Decimals') }}
+                {{ t('kitchenSink.Attachments') }}
             </au-title>
         </div>
 
@@ -49,20 +49,30 @@
 
                 <div class="layout__container">
 
-                    <au-attachments
+                    <!-- <au-attachments
                         formControlName="attachments"
-
                         placeholder="{{ 'APPS.DRAG_FILES' }}"
+                        [families]="attachmentFamilies">
+                    </au-attachments> -->
+
+                    <au-attachments
+                        class="col-12"
+                        name="attachments"
+                        placeholder="{{ 'APPS.DRAG_FILES' }}"
+                        [value]="[]"
+                        [form]="fg"
                         [families]="attachmentFamilies">
                     </au-attachments>
 
-                    <!-- <au-attachments
-                        name="attachments"
-                        placeholder="{{ 'APPS.DRAG_FILES' }}"
-                        [value]="object.attachments"
-                        [form]="fg"
-                        [families]="attachmentFamilies">
-                    </au-attachments> -->
+                    <mat-form-field appearance="outline" class="col-4">
+                        <mat-label>TEST</mat-label>
+                        <input
+                            matInput
+                            formControlName="attachments"
+                            required
+                        >
+                        <mat-error>{{ formErrors?.attachment | async }}</mat-error>
+                    </mat-form-field>
 
                 </div>
 

@@ -2,6 +2,7 @@
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { Action, Crumb, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
+import { AttachmentsComponent as Attachments } from '@aurora';
 
 @Component({
     selector       : 'kitchen-sink-attachments',
@@ -11,6 +12,7 @@ import { Action, Crumb, ViewDetailComponent, defaultDetailImports, log } from '@
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
+        Attachments,
     ],
 })
 export class AttachmentsComponent extends ViewDetailComponent

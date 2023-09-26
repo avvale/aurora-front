@@ -1,14 +1,16 @@
 import { Injectable, Injector } from '@angular/core';
-import { HttpService } from '@horus/services/http.service';
+// import { HttpService } from '@horus/services/http.service';
 import { environment } from 'environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import gql from 'graphql-tag';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AttachmentsService
 {
     constructor(
-        private _http: HttpService
+        //private _http: HttpService,
     )
     {
         //this.setEndpoint('/api/v1/admin/attachment-upload'); // set api URL
@@ -18,7 +20,8 @@ export class AttachmentsService
     {
         if (environment.debug) console.log('DEBUG - Crop image with parameters: ', parameters);
 
-        return this
+        return from([]);
+        /* return this
             ._http
             .graphQLClient()
             .mutate({
@@ -28,15 +31,16 @@ export class AttachmentsService
                     }`,
                 variables: {
                     payload: parameters // add object to arguments
-                },
-            });
+                }
+            }); */
     }
 
-    deleteAttachment(attachment): Observable<any>
+    deleteAttachment(attachment): Observable<any> 
     {
         if (environment.debug) console.log('DEBUG - Trigger delete attachment: ', attachment);
 
-        return this
+        return from([]);
+        /* return this
             ._http
             .graphQLClient()
             .mutate({
@@ -45,8 +49,8 @@ export class AttachmentsService
                         adminDeleteAttachment (attachment:$attachment)
                     }`,
                 variables: {
-                    attachment,
-                },
-            });
+                    attachment: attachment
+                }
+            }); */
     }
 }
