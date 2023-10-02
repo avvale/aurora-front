@@ -1,4 +1,3 @@
-export * from './administrative-areas';
 export * from './attachments';
 export * from './breadcrumb';
 export * from './chip';
@@ -10,6 +9,7 @@ export * from './environments-information';
 export * from './file-input';
 export * from './file-preview-overlay';
 export * from './file-upload';
+export * from './file-uploader';
 export * from './flag-icon';
 export * from './flag-lang';
 export * from './grid';
