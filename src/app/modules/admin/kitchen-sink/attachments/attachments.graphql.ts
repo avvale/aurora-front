@@ -1,10 +1,10 @@
 import gql from 'graphql-tag';
 
 export const uploadFileMutation = gql`
-    mutation KitchenSinkUploadFile (
+    mutation CommonUploadAttachment (
         $file: CoreFileUploaded!
     ) {
-        kitchenSinkUploadFile (
+        commonUploadAttachment (
             file: $file
         )
         {
@@ -17,10 +17,10 @@ export const uploadFileMutation = gql`
 `;
 
 export const uploadFilesMutation = gql`
-    mutation KitchenSinkUploadFiles (
+    mutation CommonUploadAttachments (
         $files: [CoreFileUploaded!]!
     ) {
-        kitchenSinkUploadFiles (
+        commonUploadAttachment (
             files: $files
         )
         {

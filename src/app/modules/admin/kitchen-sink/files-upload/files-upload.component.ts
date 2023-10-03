@@ -30,7 +30,6 @@ export class FilesUploadComponent extends ViewDetailComponent
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
     managedObject: any;
-    uploadFileResponse: any;
     stagingExample1: { id: string; file: File; }[] = [];
     stagingExample2: { id: string; file: File; } [] = [];
     stagingExample3: { id: string; file: File; } [] = [];
@@ -148,7 +147,7 @@ export class FilesUploadComponent extends ViewDetailComponent
             case 'kitchenSink::fileUpload.detail.submitFiles':
                 try
                 {
-                    this.uploadFileResponse = await lastValueFrom(
+                    await lastValueFrom(
                         this.fileUploadService
                             .uploadFiles({
                                 files: [

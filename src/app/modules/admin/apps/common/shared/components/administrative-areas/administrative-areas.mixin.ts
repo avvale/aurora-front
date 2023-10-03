@@ -2,12 +2,13 @@ import { inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CommonAdministrativeArea, CommonAdministrativeAreaLevel1, CommonAdministrativeAreaLevel2, CommonAdministrativeAreaLevel3, CommonCountry } from '@apps/common/common.types';
 import { Observable, ReplaySubject, lastValueFrom } from 'rxjs';
-import { AdministrativeAreasService, CoreCurrentLangService, SelectSearchService, SessionService } from '@aurora';
+import { CoreCurrentLangService, SelectSearchService, SessionService } from '@aurora';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AdministrativeAreaLevel3Service } from '@apps/common/administrative-area-level-3';
 import { AdministrativeAreaLevel2Service } from '@apps/common/administrative-area-level-2';
 import { AdministrativeAreaLevel1Service } from '@apps/common/administrative-area-level-1';
 import { CountryService } from '@apps/common/country/country.service';
+import { AdministrativeAreasService } from './administrative-areas.service';
 
 type GConstructor<T> = new (...args: any[]) => T;
 type GConstructorBase = GConstructor<{

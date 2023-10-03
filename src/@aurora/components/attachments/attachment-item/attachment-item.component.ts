@@ -1,6 +1,6 @@
-import { Component, Input, Output, OnInit, EventEmitter, ViewChild, Renderer2 } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AttachmentFamily, CropType, File } from './../attachments.types';
+import { Component, Input, Output, OnInit, EventEmitter, ViewChild, Renderer2, forwardRef, ChangeDetectionStrategy } from '@angular/core';
+import { FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { Attachment, AttachmentFamily, CropType, File } from './../attachments.types';
 import * as _ from 'lodash';
 import { SizeFormatPipe } from '../pipes/size-format.pipe';
 
@@ -9,22 +9,35 @@ import { SizeFormatPipe } from '../pipes/size-format.pipe';
 // declare const jQuery: any; // jQuery definition
 
 @Component({
-    selector   : 'au-attachment-item',
-    templateUrl: './attachment-item.component.html',
-    styleUrls  : ['./attachment-item.component.scss'],
-    standalone : true,
-    imports    : [
+    selector       : 'au-attachment-item',
+    templateUrl    : './attachment-item.component.html',
+    styleUrls      : ['./attachment-item.component.scss'],
+    standalone     : true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports        : [
         FormsModule, ReactiveFormsModule, SizeFormatPipe,
+    ],
+    providers: [
+        {
+            provide    : NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => AttachmentItemComponent),
+            multi      : true,
+        },
     ],
 })
 
 export class AttachmentItemComponent implements OnInit
 {
+    attachment: Attachment;
+
+
+
+
     @Input() form: FormGroup;
     @Input() name: string; // name of form array attachment
     @Input() index: number; // id to identify attachment item
     @Input() attachmentFamilies: AttachmentFamily[] = [];
-    @Input() attachment: FormGroup;
+    //@Input() attachment: FormGroup;
     @Output() enableCrop: EventEmitter<any> = new EventEmitter();
     @Output() removeItem: EventEmitter<any> = new EventEmitter();
 
@@ -40,6 +53,28 @@ export class AttachmentItemComponent implements OnInit
     )
     {}
 
+    private propagateChange: (value: any) => void;
+    private onTouched: () => void;
+
+    writeValue(attachment: Attachment): void
+    {
+        if (attachment) this.attachment = attachment;
+    }
+
+    // registers a callback function is called by the forms API on initialization
+    registerOnChange(fn: (value: any) => void): void
+    {
+        this.propagateChange = fn;
+    }
+
+    registerOnTouched(fn: any): void
+    {
+        this.onTouched = fn;
+    }
+
+
+
+
     ngOnInit(): void
     {
         this._renderer.listen(this.openOver.nativeElement, 'click', $event =>
@@ -52,7 +87,7 @@ export class AttachmentItemComponent implements OnInit
             this._renderer.removeClass($event.target.closest('.attachment-item'), 'covered');
         });
 
-        this.attachmentFamilySelect = <AttachmentFamily>_.find(this.attachmentFamilies, { uuid: this.attachment.get('familyUuid').value });
+        //this.attachmentFamilySelect = <AttachmentFamily>_.find(this.attachmentFamilies, { uuid: this.attachment.get('familyUuid').value });
 
         this.setShowCropButton();
     }
@@ -79,6 +114,7 @@ export class AttachmentItemComponent implements OnInit
 
     activeCropHandler($event): void
     {
+        /*
         // click to active cropper
         if (this.attachment.get('familyUuid').value !== '')
         {
@@ -88,6 +124,7 @@ export class AttachmentItemComponent implements OnInit
                 familyUuid: this.attachment.get('familyUuid').value,
             });
         }
+        */
     }
 
     setShowCropButton(): void
@@ -101,7 +138,7 @@ export class AttachmentItemComponent implements OnInit
 
     download(): void
     {
-        const attachmentValue = this.attachment.value;
+        /*const attachmentValue = this.attachment.value;
 
         const file = {
             url     : attachmentValue.url,
@@ -109,7 +146,7 @@ export class AttachmentItemComponent implements OnInit
             pathname: attachmentValue.base_path.slice(attachmentValue.base_path.indexOf('app/public')) + '/' + attachmentValue.file_name,
             mime    : attachmentValue.mime,
             size    : attachmentValue.size,
-        };
+        };*/
 
         // call download service
         // this._downloadService.download(<File>file);

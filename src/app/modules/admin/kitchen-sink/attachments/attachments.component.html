@@ -56,23 +56,38 @@
                     </au-attachments> -->
 
                     <au-attachments
+                        formControlName="attachments"
+                        placeholder="{{ 'APPS.DRAG_FILES' }}"
+                        (files)="
+                            actionService.action({
+                                id          : 'kitchenSink::attachments.detail.attachment',
+                                isViewAction: false,
+                                meta    : {
+                                    files: $event
+                                }
+                            })
+                        "
+
+
                         class="col-12"
                         name="attachments"
-                        placeholder="{{ 'APPS.DRAG_FILES' }}"
-                        [value]="[]"
-                        [form]="fg"
-                        [families]="attachmentFamilies">
+                        [families]="attachmentFamilies"
+                    >
                     </au-attachments>
 
-                    <mat-form-field appearance="outline" class="col-4">
-                        <mat-label>TEST</mat-label>
-                        <input
-                            matInput
-                            formControlName="attachments"
-                            required
-                        >
-                        <mat-error>{{ formErrors?.attachment | async }}</mat-error>
-                    </mat-form-field>
+                    <au-file-upload
+                        class="col-12"
+                        (files)="
+                            actionService.action({
+                                id          : 'kitchenSink::attachments.detail.file-upload',
+                                isViewAction: false,
+                                meta    : {
+                                    files: $event
+                                }
+                            })
+                        "
+                    >
+                    </au-file-upload>
 
                 </div>
 
