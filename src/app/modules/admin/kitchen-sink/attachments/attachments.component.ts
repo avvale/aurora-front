@@ -65,7 +65,7 @@ export class AttachmentsComponent extends ViewDetailComponent
     createForm(): void
     {
         this.fg = this.fb.group({
-            attachments: [[], [Validators.required]],
+            attachments: [],
         });
     }
 

@@ -22,7 +22,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports        : [
         NgForOf, ReactiveFormsModule,
-        AsyncPipe,
+        AsyncPipe, AttachmentItemComponent,
     ],
     providers: [
         {
@@ -35,16 +35,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AttachmentsComponent implements OnInit, OnChanges
 {
     @Output('files') files = new EventEmitter<File[]>();
-    filesContainer: File[] = []; // files uploaded across XMLHttpRequest
-
-    private filesSubject$: BehaviorSubject<File[]> = new BehaviorSubject([]);
-    get files$(): Observable<File[]>
-    {
-        return this.filesSubject$.asObservable();
-    }
+    attachments: FormArray = new FormArray([]);
 
 
-    @Input() endpoint: string; // API url where call once drop elements
+
+
+
+
 
 
     // OLD
@@ -73,14 +70,19 @@ export class AttachmentsComponent implements OnInit, OnChanges
         private _dialog: MatDialog,
         @Optional() private controlContainer: ControlContainer,
     )
-    { }
+    {
+        this.attachments
+            .valueChanges
+            .subscribe(value => this.propagateChange(value));
+    }
 
     private propagateChange: (value: any) => void;
     private onTouched: () => void;
 
+    // initialize the value.
     writeValue(attachments: Attachment[]): void
     {
-        // if (attachment) this.attachment = attachment;
+        if (attachments) this.attachments.setValue(attachments);
     }
 
     // registers a callback function is called by the forms API on initialization
@@ -101,21 +103,21 @@ export class AttachmentsComponent implements OnInit, OnChanges
         {
             this.dragEnterHandler($event);
         });
+
         this.renderer.listen(this.attachmentFrame.nativeElement, 'dragover', $event =>
         {
             this._dragOverHandler($event);
         });
+
         this.renderer.listen(this.attachmentFrame.nativeElement, 'dragleave', $event =>
         {
             this._dragLeaveHandler($event);
         });
+
         this.renderer.listen(this.attachmentFrame.nativeElement, 'drop', $event =>
         {
             this.dropHandler($event);
         });
-
-        // if (! this.endpoint) this.endpoint = this._configService.config.restUrl + '/api/v1/admin/attachment/upload';
-        if (! this.endpoint) this.endpoint = environment.api.graphql;
 
         //        this.form = this.form2;
         console.log('[DEBUG] AttachmentsComponent: ', this.form);
@@ -124,6 +126,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
 
     get form(): FormGroup
     {
+        console.log('[DEBUG] AttachmentsComponent: ', this.controlContainer.control);
         return this.controlContainer.control as FormGroup;
     }
 
@@ -138,7 +141,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
         // load values from input
         // set value from component, to init with values only
         // when the component is created or change value input
-        if (this.value) this._setValue(this.value);
+        //if (this.value) this._setValue(this.value);
     }
 
     /**
@@ -160,10 +163,10 @@ export class AttachmentsComponent implements OnInit, OnChanges
         log('[DEBUG] attachments: ', this.attachments.controls);
     }
 
-    get attachments(): FormArray
+   /*  get attachments(): FormArray
     {
         return this.form.get(this.name) as FormArray;
-    }
+    } */
 
     private _setValue(attachments: Attachment[]): void
     {
@@ -173,21 +176,37 @@ export class AttachmentsComponent implements OnInit, OnChanges
         if (this.attachments.length > 0) this._disablePlaceholder();
     }
 
-    private attachmentItemFormGroupFactory(attachment?): FormGroup
+    private attachmentItemFormGroupFactory(file?): FormGroup
     {
+        const attachmentItemFormGroup = this.fb.group({
+            // id      : '',
+            name: '',
+            size: 0,
+            type: '',
+        });
+
+        const { name, size, type } = file;
+
+        if (file) attachmentItemFormGroup.patchValue({
+            name,
+            size,
+            type,
+        });
+
+        return attachmentItemFormGroup;
+
         // add attachment FormGroup to attachments FormArray
         // with function attachments get FormArray
-        const attachmentItemFormGroup = this.fb.group({
+        return this.fb.group({
             id             : '',
-            uuid           : '',
-            langUuid       : '',
+            langId         : '',
             attachableType : '',
             attachableUuid : '',
             familyUuid     : '',
             sort           : '',
             alt            : '',
             title          : '',
-            pathname       : ['', Validators.required],
+            path           : ['', Validators.required],
             filename       : ['', Validators.required],
             url            : ['', Validators.required],
             mime           : ['', Validators.required],
@@ -197,6 +216,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
             height         : '',
             libraryUuid    : '',
             libraryFilename: '',
+            meta           : '',
 
             // need implement attachment library fields to avoid send __typename field that is included in response from graphQL
             // this field contain AttachmentLibrary value, when we try send values GraphQL expect to obtain AttachmentLibraryInput
@@ -219,45 +239,23 @@ export class AttachmentsComponent implements OnInit, OnChanges
             isChanged : false,
         });
 
-        if (attachment !== undefined) attachmentItemFormGroup.patchValue(attachment);
+        /* if (attachment !== undefined) attachmentItemFormGroup.patchValue(attachment);
 
         this.attachments.push(attachmentItemFormGroup);
 
-        return attachmentItemFormGroup;
+        return attachmentItemFormGroup; */
     }
 
-    /**
-     * Methods to upload files
-     */
+    //  methods called whe dop files
     private dropFile($event): void
     {
         // get files after drop files on active area
-        const files: File[] = $event.dataTransfer ? $event.dataTransfer.files : $event.target.files;
+        const filesObject = $event.dataTransfer ? $event.dataTransfer.files : $event.target.files;
+        const filesArray = [...filesObject];
 
-        this.filesSubject$.next([...this.filesSubject$.value, ...files]);
+        filesArray.forEach(file => this.attachments.push(this.attachmentItemFormGroupFactory(file)));
 
-        this.files.emit(this.filesSubject$.value);
-
-        //for (const file of files)
-        //{
-            // get urls across sanitizer to avoid security cross domain
-            /* file.objectURL = this.sanitizer
-                .bypassSecurityTrustUrl(
-                    window.URL.createObjectURL(file),
-                );
-
-                console.log('[DEBUG] File: ', tt); */
-
-            //this.filesContainer.push(file);
-       // }
-
-        //console.log('[DEBUG] Files to upload: ', this.filesContainer);
-        //this.files.emit(this.filesContainer);
-
-        /* this.fileUploaderService
-            .uploadFiles(this.filesContainer) */
-
-        // if (this.files && this.files.length > 0) this.upload();
+        this.files.emit(filesArray);
     }
 
     onEnableCrop($event): void

@@ -1,8 +1,9 @@
-import { Component, Input, Output, OnInit, EventEmitter, ViewChild, Renderer2, forwardRef, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input, Output, OnInit, EventEmitter, ViewChild, Renderer2, forwardRef, ChangeDetectionStrategy, Optional } from '@angular/core';
+import { ControlContainer, FormBuilder, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { Attachment, AttachmentFamily, CropType, File } from './../attachments.types';
 import * as _ from 'lodash';
 import { SizeFormatPipe } from '../pipes/size-format.pipe';
+import { NgIf } from '@angular/common';
 
 
 // import { DownloadService } from '@horus/services/download.service';
@@ -15,7 +16,7 @@ import { SizeFormatPipe } from '../pipes/size-format.pipe';
     standalone     : true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports        : [
-        FormsModule, ReactiveFormsModule, SizeFormatPipe,
+        FormsModule, NgIf, ReactiveFormsModule, SizeFormatPipe,
     ],
     providers: [
         {
@@ -28,14 +29,18 @@ import { SizeFormatPipe } from '../pipes/size-format.pipe';
 
 export class AttachmentItemComponent implements OnInit
 {
-    attachment: Attachment;
+    attachment: FormGroup;
+
+    // attachment: Attachment;
+
+    
 
 
 
 
-    @Input() form: FormGroup;
-    @Input() name: string; // name of form array attachment
-    @Input() index: number; // id to identify attachment item
+    //@Input() form: FormGroup;
+    //@Input() name: string; // name of form array attachment
+    //@Input() index: number; // id to identify attachment item
     @Input() attachmentFamilies: AttachmentFamily[] = [];
     //@Input() attachment: FormGroup;
     @Output() enableCrop: EventEmitter<any> = new EventEmitter();
@@ -49,15 +54,40 @@ export class AttachmentItemComponent implements OnInit
 
     constructor(
         private _renderer: Renderer2,
+        private readonly fb: FormBuilder,
+        @Optional() private controlContainer: ControlContainer,
         // private _downloadService: DownloadService
     )
-    {}
+    {
+        this.createForm();
+
+        this.attachment
+            .valueChanges
+            .subscribe(value => this.propagateChange(value));
+    }
+
+    createForm(): void
+    {
+        this.attachment = this.fb.group({
+            id      : '',
+            filename: '',
+            mimetype: '',
+            encoding: '',
+        });
+    }
+
+    get form(): FormGroup
+    {
+        console.log('[DEBUG] AttachmentItemComponent: ', this.controlContainer.control);
+        return this.controlContainer.control as FormGroup;
+    }
 
     private propagateChange: (value: any) => void;
     private onTouched: () => void;
 
-    writeValue(attachment: Attachment): void
+    writeValue(attachment: FormGroup): void
     {
+        console.log('[DEBUG] AttachmentItemComponent: ', attachment);
         if (attachment) this.attachment = attachment;
     }
 
