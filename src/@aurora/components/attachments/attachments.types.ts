@@ -1,16 +1,20 @@
 export interface Attachment
 {
     id: number;
+    url: string;
+    filename: string;
+    mimetype: string;
+    encoding: string;
+    size: number;
+    relativePathSegments: string[];
+    
+    
     familyId: string;
     sort: number;
     alt: string;
     title: string;
     path: string;
-    filename: string;
-    url: string;
-    mime: string;
     extension: string;
-    size: number;
     width: number;
     height: number;
     libraryId: string;
@@ -19,6 +23,17 @@ export interface Attachment
     createdAt: string;
     updatedAt: string;
     deletedAt: string;
+}
+
+export interface DisplayedFile
+{
+    id: string;
+    url: string;
+    filename: string;
+    mimetype: string;
+    encoding: string;
+    size: number;
+    relativePathSegments: string[];
 }
 
 export interface AttachmentFamily
@@ -46,13 +61,15 @@ export enum CropType
     FIT_HEIGHT_FREE_CROP    = 'FIT_HEIGHT_FREE_CROP',
 }
 
-export interface File
+export interface DisplayedFile
 {
+    id: string;
     url: string;
     filename: string;
-    path: string;
-    mime: string;
+    mimetype: string;
+    encoding: string;
     size: number;
+    relativePathSegments: string[];
 }
 
 export enum ImageFormat

@@ -50,9 +50,10 @@
                 <div class="layout__container">
 
                     <au-attachments
-                        formControlName="attachments"
+                        [fg]="fg"
+                        formArrayName="attachments"
                         placeholder="{{ 'APPS.DRAG_FILES' }}"
-                        (files)="
+                        (droppedFiles)="
                             actionService.action({
                                 id          : 'kitchenSink::attachments.detail.attachment',
                                 isViewAction: false,
@@ -61,6 +62,7 @@
                                 }
                             })
                         "
+                        [displayedFiles]="displayedFiles$ | async"
 
 
                         class="col-12"

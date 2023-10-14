@@ -1,9 +1,11 @@
 import { Component, Input, Output, OnInit, EventEmitter, ViewChild, Renderer2, forwardRef, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { ControlContainer, FormBuilder, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { Attachment, AttachmentFamily, CropType, File } from './../attachments.types';
+import { ControlContainer, ControlValueAccessor, FormBuilder, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { Attachment, AttachmentFamily, CropType, DisplayedFile } from './../attachments.types';
 import * as _ from 'lodash';
 import { SizeFormatPipe } from '../pipes/size-format.pipe';
 import { NgIf } from '@angular/common';
+import { ImageInputComponent } from '@aurora/components/image-input';
+
 
 
 // import { DownloadService } from '@horus/services/download.service';
@@ -16,7 +18,7 @@ import { NgIf } from '@angular/common';
     standalone     : true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports        : [
-        FormsModule, NgIf, ReactiveFormsModule, SizeFormatPipe,
+        FormsModule, ImageInputComponent, NgIf, ReactiveFormsModule, SizeFormatPipe,
     ],
     providers: [
         {
@@ -27,9 +29,15 @@ import { NgIf } from '@angular/common';
     ],
 })
 
-export class AttachmentItemComponent implements OnInit
+export class AttachmentItemComponent implements OnInit, ControlValueAccessor
 {
+    @Input() formGroupName: string;
     attachment: FormGroup;
+
+    get formGroup(): FormGroup
+    {
+        return this.controlContainer.control as FormGroup;
+    }
 
     // attachment: Attachment;
 
@@ -59,35 +67,34 @@ export class AttachmentItemComponent implements OnInit
         // private _downloadService: DownloadService
     )
     {
-        this.createForm();
+        //this.createForm();
 
-        this.attachment
+        /* this.attachment
             .valueChanges
-            .subscribe(value => this.propagateChange(value));
+            .subscribe(value => this.propagateChange(value)); */
     }
 
-    createForm(): void
+    /* createForm(): void
     {
         this.attachment = this.fb.group({
             id      : '',
+            url     : '',
             filename: '',
             mimetype: '',
             encoding: '',
         });
-    }
+    } */
 
-    get form(): FormGroup
-    {
-        console.log('[DEBUG] AttachmentItemComponent: ', this.controlContainer.control);
-        return this.controlContainer.control as FormGroup;
-    }
+    
+
+    
 
     private propagateChange: (value: any) => void;
     private onTouched: () => void;
 
     writeValue(attachment: FormGroup): void
     {
-        console.log('[DEBUG] AttachmentItemComponent: ', attachment);
+        console.log('[DEBUG] writeValue AttachmentItemComponent: ', attachment);
         if (attachment) this.attachment = attachment;
     }
 

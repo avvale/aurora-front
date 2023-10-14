@@ -1,12 +1,11 @@
 <div
     class="attachment-item"
-    [formGroup]="form"
->    
+    [formGroup]="formGroup"
+>
         <div>
-            
-            <input type="text" formControlName="name">
-            <input type="text" formControlName="size">
-            <input type="hidden" formControlName="type">
+            <input type="hidden" formControlName="filename">
+            <input type="hidden" formControlName="size">
+            <input type="hidden" formControlName="mimetype">
             <!-- <input type="hidden" formControlName="id">
             <input type="text" formControlName="filename">
             <input type="hidden" formControlName="mimetype">
@@ -20,12 +19,17 @@
             <input type="hidden" formControlName="meta"> -->
 
             <div class="attachment-img">
-                IMAGEN
-                <!-- <hr-image-input    *ngIf="attachment.get('mime').value === 'image/jpeg' || attachment.get('mime').value === 'image/png'"
-                                    #image
-                                    formControlName="url"
-                                    imgClass="img-fluid"></hr-image-input> -->
-                <!-- <fa-icon    *ngIf="attachment.get('mime').value === 'application/pdf'"
+                <au-image-input
+                    *ngIf="
+                        formGroup.get('mimetype').value === 'image/jpeg' ||
+                        formGroup.get('mimetype').value === 'image/png'
+                    "
+                    #image
+                    formControlName="url"
+                    imgClass="w-full h-auto"
+                >
+                </au-image-input>
+                <!-- <fa-icon    *ngIf="attachment.get('mimetype').value === 'application/pdf'"
                             [icon]="['fas', 'file-pdf']"
                             size="8x"></fa-icon> -->
             </div>
@@ -37,9 +41,9 @@
                     </h4>
                     <p class="attachment-sub">
                         attachment.title
-                        </p>
+                    </p>
                     <p class="attachment-size">
-                        attachment.size | sizeFormat
+                        {{ formGroup.get('size').value | sizeFormat }}
                     </p>
                     <a
                         class="attachment-download"
@@ -91,7 +95,9 @@
                             <option *ngFor="let attachmentFamily of attachmentFamilies" [value]="attachmentFamily.uuid">{{ attachmentFamily.name }}</option>
                         </select> -->
                         <div class="select-back">
-                            <i class="material-icons">keyboard_arrow_down</i>
+                            <i class="material-icons">
+                                keyboard_arrow_down
+                            </i>
                         </div>
                     </div>
 

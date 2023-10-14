@@ -1,10 +1,10 @@
 
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { Action, Crumb, FileUploadComponent, Utils, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
+import { FormArray, FormGroup, Validators } from '@angular/forms';
+import { Action, Crumb, DisplayedFile, FileUploadComponent, FileUploaded, Utils, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
 import { AttachmentsComponent as Attachments } from '@aurora';
 import { FileUploaderService } from '@aurora/components/file-uploader/file-uploader.service';
-import { lastValueFrom } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, map } from 'rxjs';
 import { uploadFilesMutation } from './attachments.graphql';
 
 @Component({
@@ -21,7 +21,7 @@ import { uploadFilesMutation } from './attachments.graphql';
 export class AttachmentsComponent extends ViewDetailComponent
 {
     // ---- customizations ----
-    filesContainer: { id: string; file: File; }[] = [];
+    displayedFiles$: BehaviorSubject<DisplayedFile[]> = new BehaviorSubject([]);
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -65,7 +65,7 @@ export class AttachmentsComponent extends ViewDetailComponent
     createForm(): void
     {
         this.fg = this.fb.group({
-            attachments: [],
+            attachments: this.fb.array([]),
         });
     }
 
@@ -81,10 +81,10 @@ export class AttachmentsComponent extends ViewDetailComponent
             case 'kitchenSink::attachments.detail.attachment':
                 if (action.meta.files.length === 0) return;
 
-                this.filesContainer = [];
+                const droppedFiles: FileUploaded[] = [];
                 for (const file of action.meta.files)
                 {
-                    this.filesContainer.push({
+                    droppedFiles.push({
                         id: Utils.uuid(),
                         file,
                     });
@@ -92,13 +92,22 @@ export class AttachmentsComponent extends ViewDetailComponent
 
                 try
                 {
-                    await lastValueFrom(
+                    log('[DEBUG] Dropped files on au-attachments: ', droppedFiles);
+
+                    const uploadedFiles = await lastValueFrom(
                         this.fileUploaderService
                             .uploadFiles({
                                 graphqlStatement: uploadFilesMutation,
-                                files           : this.filesContainer,
-                            }),
+                                files           : droppedFiles,
+                            })
+                            .pipe(
+                                map((response: any) => response.data.commonUploadAttachments),
+                            ),
                     );
+
+                    // add uploaded files to the displayed files to be displayed in attachments component
+                    this.displayedFiles$
+                        .next(uploadedFiles);
 
                     this.snackBar.open(
                         `${this.translocoService.translate('kitchenSink.File')} ${this.translocoService.translate('Created.M')}`,
@@ -113,8 +122,6 @@ export class AttachmentsComponent extends ViewDetailComponent
                 {
                     log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
                 }
-
-                log('Files upload from au-attachments: ', this.filesContainer);
 
                 break;
 

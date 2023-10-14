@@ -20,14 +20,17 @@ export const uploadFilesMutation = gql`
     mutation CommonUploadAttachments (
         $files: [CoreFileUploaded!]!
     ) {
-        commonUploadAttachment (
+        commonUploadAttachments (
             files: $files
         )
         {
             id
+            url
             filename
             mimetype
             encoding
+            size
+            relativePathSegments
         }
     }
 `;

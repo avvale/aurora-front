@@ -1,7 +1,7 @@
 import { Component, ViewChildren, QueryList, Input, OnInit, OnChanges, ViewChild, Renderer2, Output, EventEmitter, Optional, forwardRef, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, ControlContainer, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, ControlContainer, FormControl, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 import { AttachmentsService } from './../attachments.service';
 import { AttachmentItemComponent } from './../attachment-item/attachment-item.component';
@@ -9,10 +9,11 @@ import { CropperDialogComponent } from './../cropper-dialog.component';
 // import { ConfigService } from '@horus/services/config.service';
 import { environment } from 'environments/environment';
 import * as _ from 'lodash';
-import { Attachment, AttachmentFamily } from '../attachments.types';
-import { log } from '@aurora';
-import { AsyncPipe, NgForOf } from '@angular/common';
+import { Attachment, AttachmentFamily, DisplayedFile } from '../attachments.types';
+import { FileUploaderService, log } from '@aurora';
+import { AsyncPipe, JsonPipe, NgForOf } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { LogPipe } from '../../../pipes/log.pipe';
 
 @Component({
     selector       : 'au-attachments',
@@ -22,20 +23,35 @@ import { BehaviorSubject, Observable } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports        : [
         NgForOf, ReactiveFormsModule,
-        AsyncPipe, AttachmentItemComponent,
-    ],
-    providers: [
-        {
-            provide    : NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => AttachmentsComponent),
-            multi      : true,
-        },
+        AsyncPipe, AttachmentItemComponent, DragDropModule,
     ],
 })
 export class AttachmentsComponent implements OnInit, OnChanges
 {
-    @Output('files') files = new EventEmitter<File[]>();
+    @Input() formArrayName: string;
+    @Input() fg: FormGroup;
+    @Input() set displayedFiles(attachments: Attachment[])
+    {
+        console.log('[DEBUG] set displayedFiles: ', attachments);
+        attachments.forEach(attachment => this.attachments.push(
+            this.attachmentItemFormGroupFactory(attachment),
+        ));
+        console.log('[DEBUG] attachments: ', this.attachments);
+    }
+
+    @Output('droppedFiles') droppedFiles = new EventEmitter<File[]>();
     attachments: FormArray = new FormArray([]);
+
+    /* get form(): FormGroup
+    {
+        console.log('[DEBUG] form: ', this.controlContainer.control.parent);
+        return this.controlContainer.control.parent as FormGroup;
+    } */
+
+    /* get control(): FormArray
+    {
+        return this.formArrayName.get(this.formArrayName) as FormArray;
+    } */
 
 
 
@@ -71,22 +87,25 @@ export class AttachmentsComponent implements OnInit, OnChanges
         @Optional() private controlContainer: ControlContainer,
     )
     {
-        this.attachments
+        /* this.attachments
             .valueChanges
-            .subscribe(value => this.propagateChange(value));
+            .subscribe(value =>
+            {
+                this.propagateChange(value);
+            }); */
     }
 
-    private propagateChange: (value: any) => void;
-    private onTouched: () => void;
+    /* private propagateChange: (attachments: Attachment[]) => void;
+    private onTouched: () => void; */
 
     // initialize the value.
-    writeValue(attachments: Attachment[]): void
+    /* writeValue(attachments: Attachment[]): void
     {
-        if (attachments) this.attachments.setValue(attachments);
+        //if (Array.isArray(attachments) && attachments.length > 0) this.attachments.setValue(attachments);
     }
 
     // registers a callback function is called by the forms API on initialization
-    registerOnChange(fn: (value: any) => void): void
+    registerOnChange(fn: (attachments: Attachment[]) => void): void
     {
         this.propagateChange = fn;
     }
@@ -94,7 +113,17 @@ export class AttachmentsComponent implements OnInit, OnChanges
     registerOnTouched(fn: any): void
     {
         this.onTouched = fn;
-    }
+    } */
+
+
+
+
+
+
+
+
+
+
 
 
     ngOnInit(): void
@@ -119,25 +148,16 @@ export class AttachmentsComponent implements OnInit, OnChanges
             this.dropHandler($event);
         });
 
-        //        this.form = this.form2;
-        console.log('[DEBUG] AttachmentsComponent: ', this.form);
+        console.log(this.fg)
+        console.log(this.formArrayName)
     }
 
 
-    get form(): FormGroup
-    {
-        console.log('[DEBUG] AttachmentsComponent: ', this.controlContainer.control);
-        return this.controlContainer.control as FormGroup;
-    }
 
-    get control(): FormControl
-    {
-        return this.form.get('attachments') as FormControl;
-    }
 
     ngOnChanges(): void
     {
-        console.log('[DEBUG] ngOnChanges: ');
+        //console.log('[DEBUG] ngOnChanges: ');
         // load values from input
         // set value from component, to init with values only
         // when the component is created or change value input
@@ -163,36 +183,46 @@ export class AttachmentsComponent implements OnInit, OnChanges
         log('[DEBUG] attachments: ', this.attachments.controls);
     }
 
-   /*  get attachments(): FormArray
+    /*  get attachments(): FormArray
     {
         return this.form.get(this.name) as FormArray;
     } */
 
-    private _setValue(attachments: Attachment[]): void
+    /* private _setValue(attachments: Attachment[]): void
     {
         // create and set attachments FormGroup
         for (const attachment of attachments) this.attachmentItemFormGroupFactory(attachment);
 
         if (this.attachments.length > 0) this._disablePlaceholder();
-    }
+    } */
+
+    /* private createAttachmentItems(files: File[]): void
+    {
+        files
+            .forEach(file =>
+                this.attachments
+                    .push(
+                        this.attachmentItemFormGroupFactory(file),
+                    ),
+            );
+    } */
 
     private attachmentItemFormGroupFactory(file?): FormGroup
     {
         const attachmentItemFormGroup = this.fb.group({
-            // id      : '',
-            name: '',
-            size: 0,
-            type: '',
+            encoding            : '',
+            filename            : '',
+            id                  : '',
+            mimetype            : '',
+            relativePathSegments: '',
+            size                : 0,
+            url                 : '',
         });
 
-        const { name, size, type } = file;
+        // const { name, size, type } = file;
 
-        if (file) attachmentItemFormGroup.patchValue({
-            name,
-            size,
-            type,
-        });
-
+        if (file) attachmentItemFormGroup.patchValue(file);
+        console.log('[DEBUG] attachmentItemFormGroupFactory: ', file);
         return attachmentItemFormGroup;
 
         // add attachment FormGroup to attachments FormArray
@@ -246,18 +276,6 @@ export class AttachmentsComponent implements OnInit, OnChanges
         return attachmentItemFormGroup; */
     }
 
-    //  methods called whe dop files
-    private dropFile($event): void
-    {
-        // get files after drop files on active area
-        const filesObject = $event.dataTransfer ? $event.dataTransfer.files : $event.target.files;
-        const filesArray = [...filesObject];
-
-        filesArray.forEach(file => this.attachments.push(this.attachmentItemFormGroupFactory(file)));
-
-        this.files.emit(filesArray);
-    }
-
     onEnableCrop($event): void
     {
         if (environment.debug) log('[DEBUG] Trigger enableCropHandler with this event: ', $event);
@@ -267,7 +285,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
             data: {
                 attachment      : $event.attachment,
                 attachmentFamily: _.find(this.attachmentFamilies, { uuid: $event.familyUuid }),
-                form            : this.form,
+                form            : this.fg,
             },
             height: '90%',
             width : '90%',
@@ -309,8 +327,8 @@ export class AttachmentsComponent implements OnInit, OnChanges
 
     private _touchFormAttachments(): void
     {
-        this.form.markAsDirty();
-        this.form.markAsTouched();
+        this.fg.markAsDirty();
+        this.fg.markAsTouched();
     }
 
     // methods to manage layers
@@ -353,7 +371,12 @@ export class AttachmentsComponent implements OnInit, OnChanges
             this._deactivateMask();
             this._disablePlaceholder();
         }
-        this.dropFile($event);
+        // get files after drop files on active area
+        const filesObject = $event.dataTransfer ? $event.dataTransfer.files : $event.target.files;
+        // convert associate files object to array
+        const filesArray = [...filesObject];
+
+        this.droppedFiles.emit(filesArray);
     }
 
     private _enablePlaceholder(): void
