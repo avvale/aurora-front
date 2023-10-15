@@ -206,6 +206,9 @@ export class AttachmentsComponent implements OnInit, OnChanges
     private attachmentItemFormGroupFactory(file?): FormGroup
     {
         const attachmentItemFormGroup = this.fb.group({
+            title               : '',
+            alt                 : '',
+            familyId            : '',
             encoding            : '',
             filename            : ['', Validators.required],
             id                  : '',
@@ -214,10 +217,6 @@ export class AttachmentsComponent implements OnInit, OnChanges
             size                : [0, Validators.required],
             url                 : '',
             sort                : -1,
-
-            title               : '',
-            alt                 : '',
-            familyId: '',
         });
 
         if (file) attachmentItemFormGroup.patchValue(file);
