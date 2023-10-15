@@ -379,7 +379,7 @@ export interface CommonUpdateResources {
 
 export interface CommonAttachmentFamily {
     id: string;
-    resources?: CommonResource[];
+    resourceId: string;
     name: string;
     width?: number;
     height?: number;

@@ -4,8 +4,10 @@ import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { Action, Crumb, DisplayedFile, FileUploadComponent, FileUploaded, Utils, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
 import { AttachmentsComponent as Attachments } from '@aurora';
 import { FileUploaderService } from '@aurora/components/file-uploader/file-uploader.service';
-import { BehaviorSubject, lastValueFrom, map } from 'rxjs';
+import { BehaviorSubject, Observable, lastValueFrom, map } from 'rxjs';
 import { uploadFilesMutation } from './attachments.graphql';
+import { AttachmentFamilyService } from '@apps/common/attachment-family';
+import { CommonAttachmentFamily } from '@apps/common/common.types';
 
 @Component({
     selector       : 'kitchen-sink-attachments',
@@ -22,6 +24,7 @@ export class AttachmentsComponent extends ViewDetailComponent
 {
     // ---- customizations ----
     displayedFiles$: BehaviorSubject<DisplayedFile[]> = new BehaviorSubject([]);
+    attachmentFamilies$: Observable<CommonAttachmentFamily[]>;
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -37,6 +40,7 @@ export class AttachmentsComponent extends ViewDetailComponent
 
     constructor(
         private readonly fileUploaderService: FileUploaderService,
+        private readonly attachmentFamilyService: AttachmentFamilyService,
     )
     {
         super();
@@ -46,7 +50,7 @@ export class AttachmentsComponent extends ViewDetailComponent
     // the parent class you can use instead of ngOnInit
     init(): void
     {
-        /**/
+        this.attachmentFamilies$ = this.attachmentFamilyService.attachmentFamilies$;
     }
 
     onSubmit(): void

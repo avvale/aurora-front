@@ -3,7 +3,7 @@ import { ControlContainer, ControlValueAccessor, FormBuilder, FormGroup, FormsMo
 import { Attachment, AttachmentFamily, CropType, DisplayedFile } from './../attachments.types';
 import * as _ from 'lodash';
 import { SizeFormatPipe } from '../pipes/size-format.pipe';
-import { NgIf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { ImageInputComponent } from '@aurora/components/image-input';
 
 
@@ -18,7 +18,7 @@ import { ImageInputComponent } from '@aurora/components/image-input';
     standalone     : true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports        : [
-        FormsModule, ImageInputComponent, NgIf, ReactiveFormsModule, SizeFormatPipe,
+        FormsModule, ImageInputComponent, NgIf, NgForOf, ReactiveFormsModule, SizeFormatPipe,
     ],
     providers: [
         {
@@ -32,6 +32,7 @@ import { ImageInputComponent } from '@aurora/components/image-input';
 export class AttachmentItemComponent implements OnInit, ControlValueAccessor
 {
     @Input() formGroupName: string;
+    @Input() families: AttachmentFamily[] = [];
     attachment: FormGroup;
 
     get formGroup(): FormGroup
@@ -49,7 +50,7 @@ export class AttachmentItemComponent implements OnInit, ControlValueAccessor
     //@Input() form: FormGroup;
     //@Input() name: string; // name of form array attachment
     //@Input() index: number; // id to identify attachment item
-    @Input() attachmentFamilies: AttachmentFamily[] = [];
+    
     //@Input() attachment: FormGroup;
     @Output() enableCrop: EventEmitter<any> = new EventEmitter();
     @Output() removeItem: EventEmitter<any> = new EventEmitter();
@@ -144,7 +145,7 @@ export class AttachmentItemComponent implements OnInit, ControlValueAccessor
     onChangeAttachmentFamily($event): void
     {
         // get $event.target.value with ngValue that return a object
-        this.attachmentFamilySelect =  <AttachmentFamily>_.find(this.attachmentFamilies, { uuid: $event.target.value });
+        this.attachmentFamilySelect =  <AttachmentFamily>_.find(this.families, { uuid: $event.target.value });
 
         this.setShowCropButton();
     }

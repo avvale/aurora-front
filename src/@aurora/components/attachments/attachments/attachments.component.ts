@@ -30,6 +30,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
 {
     @Input() formArrayName: string;
     @Input() fg: FormGroup;
+    @Input() families: AttachmentFamily[] = [];
     @Input() set displayedFiles(attachments: Attachment[])
     {
         attachments.forEach(attachment => this.attachments.push(
@@ -64,7 +65,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
     //@Input() form: FormGroup;
     @Input() name: string;                                 // name of input that contain attachments FormArray
     @Input() value: Attachment[];                          // array of attachments to init component
-    @Input() attachmentFamilies: AttachmentFamily[] = [];  // families for AttachmentItemComponent
+    
 
     // View elements
     @ViewChild('attachmentFrame', { static: true })  attachmentFrame;
@@ -213,6 +214,10 @@ export class AttachmentsComponent implements OnInit, OnChanges
             size                : [0, Validators.required],
             url                 : '',
             sort                : -1,
+
+            title               : '',
+            alt                 : '',
+            familyId: '',
         });
 
         if (file) attachmentItemFormGroup.patchValue(file);
@@ -278,7 +283,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
         const dialog = this._dialog.open(CropperDialogComponent, {
             data: {
                 attachment      : $event.attachment,
-                attachmentFamily: _.find(this.attachmentFamilies, { uuid: $event.familyUuid }),
+                attachmentFamily: _.find(this.families, { uuid: $event.familyUuid }),
                 form            : this.fg,
             },
             height: '90%',

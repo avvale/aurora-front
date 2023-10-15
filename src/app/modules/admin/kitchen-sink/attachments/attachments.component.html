@@ -63,7 +63,7 @@
                             })
                         "
                         [displayedFiles]="displayedFiles$ | async"
-                        [families]="attachmentFamilies"
+                        [families]="attachmentFamilies$ | async"
                         class="col-12"
                     >
                     </au-attachments>
