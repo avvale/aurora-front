@@ -6,11 +6,12 @@ export interface Attachment
     mimetype: string;
     encoding: string;
     size: number;
+    sort: number;
     relativePathSegments: string[];
     
     
     familyId: string;
-    sort: number;
+    
     alt: string;
     title: string;
     path: string;

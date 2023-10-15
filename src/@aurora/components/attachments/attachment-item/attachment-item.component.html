@@ -3,19 +3,18 @@
     [formGroup]="formGroup"
 >
         <div>
+            <input type="hidden" formControlName="id">
             <input type="hidden" formControlName="filename">
             <input type="hidden" formControlName="size">
             <input type="hidden" formControlName="mimetype">
-            <!-- <input type="hidden" formControlName="id">
-            <input type="text" formControlName="filename">
-            <input type="hidden" formControlName="mimetype">
+            <input type="hidden" formControlName="sort">
+            <!--
             <input type="hidden" formControlName="encoding"> -->
             <!-- <input type="hidden" formControlName="extension">
             <input type="hidden" formControlName="path">
             <input type="hidden" formControlName="size">
             <input type="hidden" formControlName="width">
             <input type="hidden" formControlName="height">
-            <input type="hidden" formControlName="sort">
             <input type="hidden" formControlName="meta"> -->
 
             <div class="attachment-img">
@@ -68,21 +67,21 @@
                     </a>
 
                     <div class="form-group">
-                        <!-- <input
+                        <input
                             type="text"
                             class="form-control"
                             placeholder="{{ 'ATTACHMENTS.IMAGE_ALT' }}"
                             formControlName="alt"
-                        > -->
+                        >
                     </div>
 
                     <div class="form-group">
-                        <!-- <input
+                        <input
                             type="text"
                             class="form-control"
                             placeholder="{{ 'ATTACHMENTS.IMAGE_TITLE' }}"
                             formControlName="title"
-                        > -->
+                        >
                     </div>
 
                     <div class="form-group">

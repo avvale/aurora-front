@@ -32,11 +32,9 @@ export class AttachmentsComponent implements OnInit, OnChanges
     @Input() fg: FormGroup;
     @Input() set displayedFiles(attachments: Attachment[])
     {
-        console.log('[DEBUG] set displayedFiles: ', attachments);
         attachments.forEach(attachment => this.attachments.push(
             this.attachmentItemFormGroupFactory(attachment),
         ));
-        console.log('[DEBUG] attachments: ', this.attachments);
     }
 
     @Output('droppedFiles') droppedFiles = new EventEmitter<File[]>();
@@ -147,9 +145,6 @@ export class AttachmentsComponent implements OnInit, OnChanges
         {
             this.dropHandler($event);
         });
-
-        console.log(this.fg)
-        console.log(this.formArrayName)
     }
 
 
@@ -165,7 +160,7 @@ export class AttachmentsComponent implements OnInit, OnChanges
     }
 
     /**
-     * Function to manage drop items over attachment component
+     * Function to manage drag and drop items, to sort attachments
      *
      * @param event
      */
@@ -211,18 +206,17 @@ export class AttachmentsComponent implements OnInit, OnChanges
     {
         const attachmentItemFormGroup = this.fb.group({
             encoding            : '',
-            filename            : '',
+            filename            : ['', Validators.required],
             id                  : '',
-            mimetype            : '',
+            mimetype            : ['', Validators.required],
             relativePathSegments: '',
-            size                : 0,
+            size                : [0, Validators.required],
             url                 : '',
+            sort                : -1,
         });
 
-        // const { name, size, type } = file;
-
         if (file) attachmentItemFormGroup.patchValue(file);
-        console.log('[DEBUG] attachmentItemFormGroupFactory: ', file);
+
         return attachmentItemFormGroup;
 
         // add attachment FormGroup to attachments FormArray
