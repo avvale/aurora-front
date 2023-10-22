@@ -11,11 +11,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family-detail.component.html",
-            "integrity": "sha1:68a1d53b68b1f1ea2c86e2722ab8662968f13a72"
+            "integrity": "sha1:8b36c010450caf6a338c7979cae0f5e9235c09d6"
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family-detail.component.ts",
-            "integrity": "sha1:285a772f03a68a4f57acace053147d7acd17f259"
+            "integrity": "sha1:727d1e37f8dd5c9be9e1302a6555fd399a759829"
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family-list.component.html",
@@ -27,11 +27,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family.columns-config.ts",
-            "integrity": "sha1:6cb23e4fca1621d7432c25423446855826ac8499"
+            "integrity": "sha1:7a18698142783219147ec1a34fbb926621f37e8c"
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family.graphql.ts",
-            "integrity": "sha1:b8e2402b614ea6847d631a865a34d1814de45756"
+            "integrity": "sha1:a8f451ae16593ff6ee7c2e7d64ea8bfa241c25ef"
         },
         {
             "path": "src/app/modules/admin/apps/common/attachment-family/attachment-family.resolvers.ts",

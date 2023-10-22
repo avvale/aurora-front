@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 
 export const fields = `
     resourceId
+    code
     name
     width
     height

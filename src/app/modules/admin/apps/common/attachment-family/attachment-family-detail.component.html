@@ -96,6 +96,19 @@
                     </mat-form-field>
                     <mat-form-field
                         appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>{{ t('common.Code') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="code"
+                            maxlength="25"
+                            required
+                        >
+                        <mat-error>{{ formErrors?.code | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
                         class="col-12"
                     >
                         <mat-label>{{ t('common.Name') }}</mat-label>
