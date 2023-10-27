@@ -9,9 +9,23 @@ export const uploadFileMutation = gql`
         )
         {
             id
+            encoding
             filename
             mimetype
+            extension
             encoding
+            relativePathSegments
+            width
+            height
+            size
+            url
+            isCropable
+            library {
+                id
+                url
+                relativePathSegments
+            }
+            meta
         }
     }
 `;
@@ -25,12 +39,23 @@ export const uploadFilesMutation = gql`
         )
         {
             id
-            url
+            encoding
             filename
             mimetype
+            extension
             encoding
-            size
             relativePathSegments
+            width
+            height
+            size
+            url
+            isCropable
+            library {
+                id
+                url
+                relativePathSegments
+            }
+            meta
         }
     }
 `;
