@@ -7,6 +7,13 @@ export const kitchenSinkNavigation: FuseNavigationItem = {
     icon    : 'mat_outline:kitchen',
     children: [
         {
+            id   : 'icons',
+            title: 'Icons',
+            type : 'basic',
+            icon : 'mat_outline:insert_emoticon',
+            link : '/kitchen-sink/icons',
+        },
+        {
             id   : 'decimals',
             title: 'Decimals',
             type : 'basic',

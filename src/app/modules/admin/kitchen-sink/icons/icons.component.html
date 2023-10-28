@@ -1,0 +1,53 @@
+<div class="absolute inset-0 overflow-hidden flex flex-col w-full" *transloco="let t">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-4 sm:px-10 border-b bg-card dark:bg-transparent">
+
+        <div class="flex-1 min-w-0">
+            <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
+            <au-title>
+                <mat-icon
+                    svgIcon="mat_outline:insert_emoticon"
+                    class="icon-size-8 mr-2"
+                >
+                </mat-icon>
+                {{ t('kitchenSink.Icons') }}
+            </au-title>
+        </div>
+
+    </div>
+    <!-- / Header -->
+
+    <!-- Main -->
+    <div class="flex-auto pt-6 px-6 sm:pt-10 sm:px-10 overflow-y-auto" cdkScrollable>
+
+        <div class="form-card">
+
+                <div class="layout__container">
+
+                    <div class="col-1 flex flex-col items-center mx-4">
+                        <mat-icon
+                            svgIcon="aurora:sap"
+                            class="icon-size-8 mr-2"
+                        >
+                        </mat-icon>
+                        <p>aurora:sap</p>
+                    </div>
+
+                    <div class="col-1 flex flex-col items-center mx-4">
+                        <mat-icon
+                            svgIcon="aurora:scouts"
+                            class="icon-size-8 mr-2"
+                        >
+                        </mat-icon>
+                        <p>aurora:scouts</p>
+                    </div>
+
+                </div>
+
+        </div>
+
+    </div>
+    <!-- / Main -->
+
+</div>
