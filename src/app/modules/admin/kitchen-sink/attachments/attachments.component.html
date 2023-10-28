@@ -55,14 +55,14 @@
                         placeholder="{{ 'APPS.DRAG_FILES' }}"
                         (droppedFiles)="
                             actionService.action({
-                                id          : 'kitchenSink::attachments.detail.attachment',
+                                id          : 'kitchenSink::attachments.detail.attachments',
                                 isViewAction: false,
                                 meta    : {
                                     files: $event
                                 }
                             })
                         "
-                        [displayedFiles]="displayedFiles$ | async"
+                        [attachments]="attachments$ | async"
                         [families]="attachmentFamilies$ | async"
                         class="col-12"
                     >

@@ -1,13 +1,11 @@
 
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
-import { Action, Crumb, DisplayedFile, FileUploadComponent, FileUploaded, Utils, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
-import { AttachmentsComponent as Attachments } from '@aurora';
-import { FileUploaderService } from '@aurora/components/file-uploader/file-uploader.service';
-import { BehaviorSubject, Observable, lastValueFrom, map } from 'rxjs';
-import { uploadFilesMutation } from './attachments.graphql';
 import { AttachmentFamilyService } from '@apps/common/attachment-family';
 import { CommonAttachmentFamily } from '@apps/common/common.types';
+import { Action, Attachment, AttachmentsComponent as Attachments, Crumb, FileUploadComponent, FileUploaded, Utils, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log } from '@aurora';
+import { FileUploaderService } from '@aurora/components/file-uploader/file-uploader.service';
+import { BehaviorSubject, Observable, lastValueFrom, map } from 'rxjs';
 
 @Component({
     selector       : 'kitchen-sink-attachments',
@@ -23,7 +21,7 @@ import { CommonAttachmentFamily } from '@apps/common/common.types';
 export class AttachmentsComponent extends ViewDetailComponent
 {
     // ---- customizations ----
-    displayedFiles$: BehaviorSubject<DisplayedFile[]> = new BehaviorSubject([]);
+    attachments$: BehaviorSubject<Attachment[]> = new BehaviorSubject([]);
     attachmentFamilies$: Observable<CommonAttachmentFamily[]>;
 
     // Object retrieved from the database request,
@@ -78,18 +76,15 @@ export class AttachmentsComponent extends ViewDetailComponent
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
-            case 'kitchenSink::attachments.detail.file-upload':
-                log('Files upload from au-file-upload: ', action);
-                break;
-
-            case 'kitchenSink::attachments.detail.attachment':
+            case 'kitchenSink::attachments.detail.attachments':
                 if (action.meta.files.length === 0) return;
 
                 const droppedFiles: FileUploaded[] = [];
                 for (const file of action.meta.files)
                 {
                     droppedFiles.push({
-                        id: Utils.uuid(),
+                        id              : Utils.uuid(),
+                        hasCreateLibrary: true,
                         file,
                     });
                 }
@@ -101,7 +96,7 @@ export class AttachmentsComponent extends ViewDetailComponent
                     const uploadedFiles = await lastValueFrom(
                         this.fileUploaderService
                             .uploadFiles({
-                                graphqlStatement: uploadFilesMutation,
+                                graphqlStatement: commonUploadAttachments,
                                 files           : droppedFiles,
                             })
                             .pipe(
@@ -110,8 +105,7 @@ export class AttachmentsComponent extends ViewDetailComponent
                     );
 
                     // add uploaded files to the displayed files to be displayed in attachments component
-                    this.displayedFiles$
-                        .next(uploadedFiles);
+                    this.attachments$.next(uploadedFiles);
 
                     this.snackBar.open(
                         `${this.translocoService.translate('kitchenSink.File')} ${this.translocoService.translate('Created.M')}`,
@@ -127,6 +121,10 @@ export class AttachmentsComponent extends ViewDetailComponent
                     log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
                 }
 
+                break;
+
+            case 'kitchenSink::attachments.detail.file-upload':
+                log('Files upload from au-file-upload: ', action);
                 break;
 
             default:

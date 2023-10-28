@@ -88,7 +88,7 @@
                         <select
                             formControlName="familyId"
                             class="form-control"
-                            (change)="onChangeAttachmentFamily($event)"
+                            (change)="handlerChangeFamily($event)"
                         >
                             <option value="">
                                 {{ 'ATTACHMENTS.SELECT_FAMILY' }}
@@ -107,7 +107,10 @@
                         </div>
                     </div>
 
-                    <div class="form-group" *ngIf="showCropButton">
+                    <div
+                        *ngIf="showCropButton"
+                        class="form-group"
+                    >
                         <button
                             mat-raised-button
                             type="button"
