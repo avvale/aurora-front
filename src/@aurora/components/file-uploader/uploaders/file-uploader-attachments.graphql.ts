@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const uploadFileMutation = gql`
+export const commonUploadAttachment = gql`
     mutation CommonUploadAttachment (
         $file: CoreFileUploaded!
     ) {
@@ -20,17 +20,18 @@ export const uploadFileMutation = gql`
             size
             url
             isCropable
+            isUploaded
+            meta
             library {
                 id
                 url
                 relativePathSegments
             }
-            meta
         }
     }
 `;
 
-export const uploadFilesMutation = gql`
+export const commonUploadAttachments = gql`
     mutation CommonUploadAttachments (
         $files: [CoreFileUploaded!]!
     ) {
@@ -50,12 +51,13 @@ export const uploadFilesMutation = gql`
             size
             url
             isCropable
+            isUploaded
+            meta
             library {
                 id
                 url
                 relativePathSegments
             }
-            meta
         }
     }
 `;
