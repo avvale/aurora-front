@@ -3,9 +3,8 @@ import { NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Action, Crumb, DecimalDirective, FileInputComponent, FileUploadComponent, Utils, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
+import { Action, Crumb, DecimalDirective, FileInputComponent, FileUploadComponent, FileUploaderService, Utils, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log } from '@aurora';
 import { lastValueFrom } from 'rxjs';
-import { FileUploadService } from './file-upload.service';
 import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
@@ -43,7 +42,7 @@ export class FilesUploadComponent extends ViewDetailComponent
 
     constructor(
         protected injector: Injector,
-        private readonly fileUploadService: FileUploadService,
+        private readonly fileUploaderService: FileUploaderService,
     )
     {
         super();
@@ -148,9 +147,10 @@ export class FilesUploadComponent extends ViewDetailComponent
                 try
                 {
                     await lastValueFrom(
-                        this.fileUploadService
+                        this.fileUploaderService
                             .uploadFiles({
-                                files: [
+                                graphqlStatement: commonUploadAttachments,
+                                files           : [
                                     ...this.stagingExample1,
                                     ...this.stagingExample2,
                                     ...this.stagingExample3,
