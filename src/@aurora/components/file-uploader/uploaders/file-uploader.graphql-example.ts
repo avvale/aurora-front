@@ -9,11 +9,9 @@ export const uploadFileMutation = gql`
         )
         {
             id
-            encoding
             filename
             mimetype
             extension
-            encoding
             relativePathSegments
             width
             height
@@ -39,11 +37,9 @@ export const uploadFilesMutation = gql`
         )
         {
             id
-            encoding
             filename
             mimetype
             extension
-            encoding
             relativePathSegments
             width
             height

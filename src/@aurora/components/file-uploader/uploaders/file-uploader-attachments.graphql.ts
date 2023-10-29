@@ -9,11 +9,9 @@ export const commonUploadAttachment = gql`
         )
         {
             id
-            encoding
             filename
             mimetype
             extension
-            encoding
             relativePathSegments
             width
             height
@@ -24,8 +22,15 @@ export const commonUploadAttachment = gql`
             meta
             library {
                 id
-                url
+                filename
+                mimetype
+                extension
                 relativePathSegments
+                width
+                height
+                size
+                url
+                meta
             }
         }
     }
@@ -40,11 +45,9 @@ export const commonUploadAttachments = gql`
         )
         {
             id
-            encoding
             filename
             mimetype
             extension
-            encoding
             relativePathSegments
             width
             height
@@ -55,8 +58,15 @@ export const commonUploadAttachments = gql`
             meta
             library {
                 id
-                url
+                filename
+                mimetype
+                extension
                 relativePathSegments
+                width
+                height
+                size
+                url
+                meta
             }
         }
     }
