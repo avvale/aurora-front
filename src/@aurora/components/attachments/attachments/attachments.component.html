@@ -1,7 +1,7 @@
 <div
     #attachmentFrame
     id="attachment-library"
-    [formGroup]="fg"
+    [formGroup]="formGroup"
 >
     <div
         #attachmentMask
@@ -13,20 +13,19 @@
         id="library-sortable"
         cdkDropList
         cdkDropListOrientation="horizontal"
-        (cdkDropListDropped)="drop($event)"
+        (cdkDropListDropped)="sortDropHandler($event)"
         [formArrayName]="formArrayName"
     >
         <ng-container
-            *ngFor="let attachment of attachmentsFormArray.controls; let i=index"
+            *ngFor="let attachmentItem of attachmentsFormArray.controls; let i=index"
         >
             <au-attachment-item
-                class="relative w-full md:w-1/2 lg:w-1/3"
-                [formGroup]="attachment"
                 cdkDrag
-
+                class="relative w-full md:w-1/2 lg:w-1/3"
+                [formGroup]="attachmentItem"
                 [families]="families"
                 (enableCrop)="handlerEnableCrop($event)"
-                (removeItem)="onRemoveItem($event)"
+                (removeItem)="handlerRemoveItem($event)"
             >
             </au-attachment-item>
         </ng-container>
