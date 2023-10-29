@@ -1,11 +1,11 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
     selector: 'au-image-input',
     template: `
         <img
-            [src]="imgSrc"
+            [src]="taggedSrc"
             [class]="imgClass"
             [style]="imgStyle"
         >
@@ -21,24 +21,28 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class ImageInputComponent implements ControlValueAccessor
 {
-    imgSrc: string;
     @Input('imgClass') imgClass;
     @Input('imgStyle') imgStyle;
-    private _src: string;
 
+    taggedSrc: string;
+    private originSrc: string;
     get src(): string
     {
-        return this._src;
+        return this.originSrc;
     }
 
     private propagateChange: (value: any) => void;
     private onTouched: () => void;
 
+    constructor(
+        private readonly changeDetector: ChangeDetectorRef,
+    ) {}
+
     writeValue(value: string): void
     {
         if (value !== undefined)
         {
-            this._src = value;
+            this.originSrc = value;
             this.refresh();
         }
     }
@@ -56,6 +60,9 @@ export class ImageInputComponent implements ControlValueAccessor
 
     refresh(): void
     {
-        this.imgSrc = this._src + '?' + Math.random();
+        this.taggedSrc = `${this.originSrc}?${Math.random()}`;
+
+        // call changeDetector to render the new value
+        this.changeDetector.markForCheck();
     }
 }
