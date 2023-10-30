@@ -3,19 +3,19 @@
     [formGroup]="formGroup"
 >
         <div>
+
             <input type="hidden" formControlName="id">
+            <input type="hidden" formControlName="sort">
             <input type="hidden" formControlName="filename">
             <input type="hidden" formControlName="size">
             <input type="hidden" formControlName="mimetype">
-            <input type="hidden" formControlName="sort">
-            <!--
-            <input type="hidden" formControlName="encoding"> -->
-            <!-- <input type="hidden" formControlName="extension">
-            <input type="hidden" formControlName="path">
-            <input type="hidden" formControlName="size">
+            <input type="hidden" formControlName="extension">
+            <input type="hidden" formControlName="relativePathSegments">
             <input type="hidden" formControlName="width">
             <input type="hidden" formControlName="height">
-            <input type="hidden" formControlName="meta"> -->
+            <input type="hidden" formControlName="size">
+            <input type="hidden" formControlName="url">
+            <input type="hidden" formControlName="meta">
 
             <div class="attachment-img">
                 <au-image-input
@@ -114,7 +114,7 @@
                         <button
                             mat-raised-button
                             type="button"
-                            (click)="activeCropHandler($event)"
+                            (click)="activeCropHandler()"
                         >
                             <span>{{ 'ATTACHMENTS.CROP' }}</span>
                         </button>
@@ -126,7 +126,9 @@
 </div>
 <a
     class="remove-item"
-    (click)="onRemoveItem($event)"
+    (click)="handlerRemoveItem()"
 >
-    <i class="material-icons">clear</i>
+    <i class="material-icons">
+        clear
+    </i>
 </a>

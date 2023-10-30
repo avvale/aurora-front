@@ -1,42 +1,64 @@
-import { Component, Inject, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslocoService } from '@ngneat/transloco';
-import Cropper from 'cropperjs/dist/cropper.esm.js';
-import { environment } from 'environments/environment';
 import { AttachmentsService } from './attachments.service';
+import { MatButtonModule } from '@angular/material/button';
+import Cropper from 'cropperjs/dist/cropper.esm.js';
+import { FormGroup } from '@angular/forms';
+import { AttachmentFamily, ImageInputComponent } from '@aurora';
 
 @Component({
     selector: 'au-cropper-dialog',
     template: `
-        <h1 mat-dialog-title>{{ title }}</h1>
-
-        <div mat-dialog-content class="py-12">
-            <div class="image-container">
+        <div mat-dialog-content>
+            <div class="cropper-container">
                 <img #cropperImage>
             </div>
         </div>
-
-        <div mat-dialog-actions>
+        <div mat-dialog-actions class="justify-end">
             <button
-                mat-raised-button
+                mat-flat-button
                 class="mat-accent mr-16"
-                [mat-dialog-close]="true"
-                cdkFocusInitial
-                (click)="onCrop()"
-            >
-                {{ crop }}
-            </button>
-            <button
-                mat-raised-button
                 [mat-dialog-close]="false"
             >
-                {{ cancel }}
+                {{ cancel }} Cancelar
+            </button>
+            <button
+                mat-flat-button
+                cdkFocusInitial
+                class="mat-primary"
+                [mat-dialog-close]="true"
+                (click)="handlerCrop()"
+            >
+                {{ crop }} Cortar
             </button>
         </div>
     `,
-    standalone: true,
-    imports   : [
-        MatDialogModule,
+    styles: [`
+        :host {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .mat-mdc-dialog-content {
+            max-height: unset;
+        }
+
+        .cropper-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        ::ng-deep cropper-canvas {
+            flex: 1 !important;
+        }
+    `],
+    standalone     : true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports        : [
+        MatDialogModule, MatButtonModule,
     ],
 })
 export class CropperDialogComponent implements OnInit, OnDestroy
@@ -49,62 +71,73 @@ export class CropperDialogComponent implements OnInit, OnDestroy
     cancel: string;
 
     constructor(
-        @Inject(MAT_DIALOG_DATA) public data: any,
-        public dialogRef: MatDialogRef<CropperDialogComponent>,
-        private _renderer: Renderer2,
+        @Inject(MAT_DIALOG_DATA) public data: {
+            attachmentItemFormGroup: FormGroup;
+            attachmentItemImage: ImageInputComponent;
+            attachmentFamily: AttachmentFamily;
+        },
+        public readonly dialogRef: MatDialogRef<CropperDialogComponent>,
+        private readonly renderer: Renderer2,
+        private readonly attachmentsService: AttachmentsService,
         private _translocoService: TranslocoService,
-        private _attachmentsService: AttachmentsService,
     )
     { }
 
     ngOnInit(): void
     {
-        this._renderer.setProperty(this.cropperImage.nativeElement, 'src', this.data.attachment.get('library').value.url);
+        this.renderer
+            .setProperty(
+                this.cropperImage.nativeElement,
+                'src',
+                this.data.attachmentItemFormGroup.get('library').get('url').value,
+            );
 
         // load translations for component
-        this.title  = this.data.title ? this.data.title : this._translocoService.translate('TITLE');
-        this.crop   = this.data.crop ? this.data.crop : this._translocoService.translate('CROP');
-        this.cancel = this.data.cancel ? this.data.cancel : this._translocoService['CANCEL'];
+        // this.title  = this.data.title ? this.data.title : this._translocoService.translate('TITLE');
+        // this.crop   = this.data.crop ? this.data.crop : this._translocoService.translate('CROP');
+        // this.cancel = this.data.cancel ? this.data.cancel : this._translocoService['CANCEL'];
 
         const cropperParameters = {
             aspectRatio      : this.data.attachmentFamily.width && this.data.attachmentFamily.height ? this.data.attachmentFamily.width / this.data.attachmentFamily.height : NaN,
             viewMode         : 2,
             minContainerWidth: 0,
-            // preview: this.cropperPreview.nativeElement
         };
 
-        if (environment.debug) console.log('DEBUG - Cropper parameters ', cropperParameters);
-        console.log(this.cropperImage.nativeElement);
-
-        this.cropper = new Cropper(this.cropperImage.nativeElement, cropperParameters);
+        this.cropper = new Cropper(
+            this.cropperImage.nativeElement,
+            cropperParameters,
+        );
     }
 
     ngOnDestroy(): void
     {
-        this._renderer.setProperty(this.cropperImage.nativeElement, 'src', '');
+        this.renderer
+            .setProperty(
+                this.cropperImage.nativeElement,
+                'src',
+                '',
+            );
         this.cropper.destroy();
     }
 
-    onCrop(): void
+    handlerCrop(): void
     {
-        this._attachmentsService
+        this.attachmentsService
             .setCropImage({
-                crop            : this.cropper.getData(true),               // true to get data rounded
-                attachmentFamily: this.data.attachmentFamily,
-                attachment      : this.data.attachment.value,          // get values from formGroup
+                crop      : this.cropper.getData(true),                 // true to get data rounded
+                attachment: this.data.attachmentItemFormGroup.value,    // get values from formGroup
             })
-            .subscribe(({ data }) =>
+            .subscribe(data =>
             {
-                // set attachment image like changed
-                data.adminCropAttachment.attachment.isChanged = true;
-
-                if (environment.debug) console.log('DEBUG - response after crop image: ', data);
-
-                // set attachment family id
-                this.data.attachment.patchValue(data.adminCropAttachment.attachment);
+                console.log(data);
+                this.data.attachmentItemFormGroup.patchValue({
+                    ...data.attachment,
+                    // set attachment image like changed
+                    isChanged: true,
+                });
 
                 // set form like dirty
-                this.data.form.markAsDirty();
+                this.data.attachmentItemFormGroup.markAsDirty();
             });
     }
 }

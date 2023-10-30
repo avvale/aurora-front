@@ -1,40 +1,43 @@
 import { Injectable } from '@angular/core';
-// import { HttpService } from '@horus/services/http.service';
-import { environment } from 'environments/environment';
-import { Observable, from } from 'rxjs';
+import { GraphQLService, log } from '@aurora';
+import { Observable, from, map } from 'rxjs';
+import { cropAndCreateAttachmentMutation } from './attachments.graphql';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AttachmentsService
 {
+    constructor(
+        private readonly graphqlService: GraphQLService,
+    ) {}
+
     setCropImage(parameters): Observable<any>
     {
-        if (environment.debug) console.log('DEBUG - Crop image with parameters: ', parameters);
+        log('[DEBUG] - Crop image with parameters: ', parameters);
 
-        return from([]);
-        /* return this
-            ._http
-            .graphQLClient()
-            .mutate({
-                mutation: gql`
-                    mutation AdminCropAttachment ($payload:JSON!) {
-                        adminCropAttachment (payload:$payload)
-                    }`,
+        return this
+            .graphqlService
+            .client()
+            .mutate<string>({
+                mutation : cropAndCreateAttachmentMutation,
                 variables: {
-                    payload: parameters // add object to arguments
-                }
-            }); */
+                    payload: parameters,
+                },
+            })
+            .pipe(
+                map(({ data }) => data['commonCropAndCreateAttachment']),
+            );
     }
 
-    deleteAttachment(attachment): Observable<any>
+    deleteAttachment(parameters): Observable<any>
     {
-        if (environment.debug) console.log('DEBUG - Trigger delete attachment: ', attachment);
+        log('[DEBUG] - Delete attachment: ', parameters);
 
-        return from([]);
+        return from([true]);
         /* return this
-            ._http
             .graphQLClient()
+            .client()
             .mutate({
                 mutation: gql`
                     mutation AdminDeleteAttachment ($attachment:AdminAttachmentInput!) {

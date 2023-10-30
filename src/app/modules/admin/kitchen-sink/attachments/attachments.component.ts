@@ -1,6 +1,4 @@
-
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { AttachmentFamilyService } from '@apps/common/attachment-family';
 import { CommonAttachmentFamily } from '@apps/common/common.types';
 import { Action, Attachment, AttachmentsComponent as Attachments, Crumb, FileUploadComponent, FileUploaded, Utils, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log } from '@aurora';
@@ -61,12 +59,13 @@ export class AttachmentsComponent extends ViewDetailComponent
             return;
         }
 
-        log('[DEBUG] Error to validate form: ', this.fg.value);
+        log('[DEBUG] SUBMIT form: ', this.fg.value);
     }
 
     createForm(): void
     {
         this.fg = this.fb.group({
+            name       : '',
             attachments: this.fb.array([]),
         });
     }

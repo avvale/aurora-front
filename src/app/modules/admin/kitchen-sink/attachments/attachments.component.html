@@ -49,6 +49,18 @@
 
                 <div class="layout__container">
 
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>{{ t('kitchenSink.name') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="name"
+                        >
+                        <mat-error>{{ formErrors?.example1 | async }}</mat-error>
+                    </mat-form-field>
+
                     <au-attachments
                         [fg]="fg"
                         formArrayName="attachments"

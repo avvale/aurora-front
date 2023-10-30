@@ -1,58 +1,52 @@
 import gql from 'graphql-tag';
 
-const fields = `
-    id
-    uuid
-    commonUuid
-    langUuid
-    attachableType
-    attachableUuid
-    familyUuid
-    sort
-    alt
-    title
-    pathname
-    filename
-    url
-    mime
-    extension
-    size
-    width
-    height
-    libraryUuid
-    libraryFileName
-    library {
-        id
-        uuid
-        name
-    }
-`;
-
-const relationsFields = `
-    adminAttachmentFamilies (query:$attachmentFamilyQuery) {
-        id
-        uuid
-        name
-    }
-`;
-
-export const graphQL = {
-    fields,
-    relationsFields,
-};
-
-export const uploadFilesMutation = gql`
-    mutation CommonUploadFiles (
-        $files: [CoreFileUploaded!]!
-    ) {
-        commonUploadFiles (
-            files: $files
-        )
+export const cropAndCreateAttachmentMutation = gql`
+    mutation CommonCropAndCreateAttachment ($payload:CommonCropAndCreateAttachmentInput!)
+    {
+        commonCropAndCreateAttachment (payload:$payload)
         {
-            id
-            filename
-            mimetype
-            encoding
+            attachment {
+                id
+                familyId
+                sort
+                alt
+                title
+                filename
+                mimetype
+                extension
+                relativePathSegments
+                width
+                height
+                size
+                url
+                isCropable
+                isUploaded
+                isChanged
+                libraryId
+                libraryFilename
+                meta
+                library {
+                    id
+                    filename
+                    mimetype
+                    extension
+                    relativePathSegments
+                    width
+                    height
+                    size
+                    url
+                    meta
+                }
+            }
+            crop {
+                x
+                y
+                width
+                height
+                rotate
+                scaleX
+                scaleY
+            }
         }
-    }
+    },
 `;
