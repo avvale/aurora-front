@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { AttachmentFamilyService } from '@apps/common/attachment-family';
 import { CommonAttachmentFamily } from '@apps/common/common.types';
-import { Action, Attachment, AttachmentsComponent as Attachments, Crumb, FileUploadComponent, FileUploaded, Utils, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log } from '@aurora';
+import { Action, Attachment, AttachmentsComponent as Attachments, CoreFile, Crumb, FileUploadComponent, FileUploaded, Utils, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log } from '@aurora';
 import { FileUploaderService } from '@aurora/components/file-uploader/file-uploader.service';
 import { BehaviorSubject, Observable, lastValueFrom, map } from 'rxjs';
 
@@ -94,12 +94,12 @@ export class AttachmentsComponent extends ViewDetailComponent
 
                     const uploadedFiles = await lastValueFrom(
                         this.fileUploaderService
-                            .uploadFiles({
+                            .uploadFiles<{ commonUploadAttachments: Attachment[]; }>({
                                 graphqlStatement: commonUploadAttachments,
                                 files           : droppedFiles,
                             })
                             .pipe(
-                                map((response: any) => response.data.commonUploadAttachments),
+                                map(response => response.data.commonUploadAttachments),
                             ),
                     );
 
