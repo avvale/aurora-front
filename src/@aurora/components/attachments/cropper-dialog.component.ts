@@ -123,10 +123,10 @@ export class CropperDialogComponent implements OnInit, OnDestroy
     handlerCrop(): void
     {
         this.attachmentsService
-            .setCropImage({
-                crop      : this.cropper.getData(true),                 // true to get data rounded
-                attachment: this.data.attachmentItemFormGroup.value,    // get values from formGroup
-            })
+            .setCropImage(
+                this.data.attachmentItemFormGroup.value,    // get values from formGroup
+                this.cropper.getData(true),                 // true to get data rounded
+            )
             .subscribe(data =>
             {
                 console.log(data);

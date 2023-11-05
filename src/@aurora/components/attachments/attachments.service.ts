@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { GraphQLService, log } from '@aurora';
+import { CropProperties, GraphQLService, log } from '@aurora';
 import { Observable, from, map } from 'rxjs';
-import { cropAndCreateAttachmentMutation } from './attachments.graphql';
+import { commonCreateCropMutation } from './attachments.graphql';
 
 @Injectable({
     providedIn: 'root',
@@ -12,21 +12,28 @@ export class AttachmentsService
         private readonly graphqlService: GraphQLService,
     ) {}
 
-    setCropImage(parameters): Observable<any>
+    setCropImage(
+        attachment,
+        crop: CropProperties,
+    ): Observable<any>
     {
-        log('[DEBUG] - Crop image with parameters: ', parameters);
+        log('[DEBUG] - Crop image with parameters: ', {
+            attachment,
+            crop,
+        });
 
         return this
             .graphqlService
             .client()
             .mutate<string>({
-                mutation : cropAndCreateAttachmentMutation,
+                mutation : commonCreateCropMutation,
                 variables: {
-                    payload: parameters,
+                    attachment,
+                    crop,
                 },
             })
             .pipe(
-                map(({ data }) => data['commonCropAndCreateAttachment']),
+                map(({ data }) => data['commonCreateCrop']),
             );
     }
 

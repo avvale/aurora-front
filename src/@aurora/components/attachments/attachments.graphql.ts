@@ -1,9 +1,15 @@
 import gql from 'graphql-tag';
 
-export const cropAndCreateAttachmentMutation = gql`
-    mutation CommonCropAndCreateAttachment ($payload:CommonCropAndCreateAttachmentInput!)
+export const commonCreateCropMutation = gql`
+    mutation CommonCreateCrop (
+        $attachment: CommonCreateAttachmentInput!
+        $crop: CommonCropPropertiesInput!
+    )
     {
-        commonCropAndCreateAttachment (payload:$payload)
+        commonCreateCrop (
+            attachment:$attachment
+            crop:$crop
+        )
         {
             attachment {
                 id
