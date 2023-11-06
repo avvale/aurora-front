@@ -23,8 +23,14 @@ export const uploadFileMutation = gql`
                 id
                 originFilename
                 filename
-                url
+                mimetype
+                extension
                 relativePathSegments
+                width
+                height
+                size
+                url
+                meta
             }
             meta
         }
@@ -54,8 +60,14 @@ export const uploadFilesMutation = gql`
                 id
                 originFilename
                 filename
-                url
+                mimetype
+                extension
                 relativePathSegments
+                width
+                height
+                size
+                url
+                meta
             }
             meta
         }
