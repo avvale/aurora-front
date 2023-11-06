@@ -9,6 +9,7 @@ export const commonUploadAttachment = gql`
         )
         {
             id
+            originFilename
             filename
             mimetype
             extension
@@ -22,6 +23,7 @@ export const commonUploadAttachment = gql`
             meta
             library {
                 id
+                originFilename
                 filename
                 mimetype
                 extension
@@ -45,6 +47,7 @@ export const commonUploadAttachments = gql`
         )
         {
             id
+            originFilename
             filename
             mimetype
             extension
@@ -58,6 +61,7 @@ export const commonUploadAttachments = gql`
             meta
             library {
                 id
+                originFilename
                 filename
                 mimetype
                 extension

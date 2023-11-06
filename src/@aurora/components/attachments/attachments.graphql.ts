@@ -17,6 +17,7 @@ export const commonCreateCropMutation = gql`
                 sort
                 alt
                 title
+                originFilename
                 filename
                 mimetype
                 extension
@@ -33,6 +34,7 @@ export const commonCreateCropMutation = gql`
                 meta
                 library {
                     id
+                    originFilename
                     filename
                     mimetype
                     extension

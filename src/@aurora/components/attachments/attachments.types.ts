@@ -5,6 +5,7 @@ export interface Attachment {
     sort?: number;
     alt?: string;
     title?: string;
+    originFilename: string;
     filename: string;
     mimetype: string;
     extension: string;
@@ -24,6 +25,7 @@ export interface Attachment {
 
 export interface AttachmentLibrary {
     id: string;
+    originFilename: string;
     filename: string;
     mimetype: string;
     extension: string;

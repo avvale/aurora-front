@@ -9,6 +9,7 @@ export const uploadFileMutation = gql`
         )
         {
             id
+            originFilename
             filename
             mimetype
             extension
@@ -20,6 +21,8 @@ export const uploadFileMutation = gql`
             isCropable
             library {
                 id
+                originFilename
+                filename
                 url
                 relativePathSegments
             }
@@ -37,6 +40,7 @@ export const uploadFilesMutation = gql`
         )
         {
             id
+            originFilename
             filename
             mimetype
             extension
@@ -48,6 +52,8 @@ export const uploadFilesMutation = gql`
             isCropable
             library {
                 id
+                originFilename
+                filename
                 url
                 relativePathSegments
             }
