@@ -1,4 +1,27 @@
 import gql from 'graphql-tag';
+import { commonAttachmentLibraryFields } from './attachments-library.graphql';
+
+export const commonAttachmentFields = `
+    id
+    familyId
+    attachableId
+    sort
+    alt
+    title
+    originFilename
+    filename
+    mimetype
+    extension
+    relativePathSegments
+    width
+    height
+    size
+    url
+    isCropable
+    libraryId
+    libraryFilename
+    meta
+`;
 
 export const commonCreateCropMutation = gql`
     mutation CommonCreateCrop (
@@ -12,38 +35,11 @@ export const commonCreateCropMutation = gql`
         )
         {
             attachment {
-                id
-                familyId
-                sort
-                alt
-                title
-                originFilename
-                filename
-                mimetype
-                extension
-                relativePathSegments
-                width
-                height
-                size
-                url
-                isCropable
+                ${commonAttachmentFields}
                 isUploaded
                 isChanged
-                libraryId
-                libraryFilename
-                meta
                 library {
-                    id
-                    originFilename
-                    filename
-                    mimetype
-                    extension
-                    relativePathSegments
-                    width
-                    height
-                    size
-                    url
-                    meta
+                    ${commonAttachmentLibraryFields}
                 }
             }
             crop {

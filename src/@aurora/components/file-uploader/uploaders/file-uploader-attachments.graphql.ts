@@ -20,6 +20,8 @@ export const commonUploadAttachment = gql`
             url
             isCropable
             isUploaded
+            libraryId
+            libraryFilename
             meta
             library {
                 id
@@ -58,6 +60,8 @@ export const commonUploadAttachments = gql`
             url
             isCropable
             isUploaded
+            libraryId
+            libraryFilename
             meta
             library {
                 id

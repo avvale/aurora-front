@@ -19,6 +19,9 @@ export const uploadFileMutation = gql`
             size
             url
             isCropable
+            libraryId
+            libraryFilename
+            meta
             library {
                 id
                 originFilename
@@ -32,7 +35,6 @@ export const uploadFileMutation = gql`
                 url
                 meta
             }
-            meta
         }
     }
 `;
@@ -56,6 +58,9 @@ export const uploadFilesMutation = gql`
             size
             url
             isCropable
+            libraryId
+            libraryFilename
+            meta
             library {
                 id
                 originFilename
@@ -69,7 +74,6 @@ export const uploadFilesMutation = gql`
                 url
                 meta
             }
-            meta
         }
     }
 `;
