@@ -28,6 +28,7 @@ export class AttachmentsComponent implements OnInit, AfterViewInit
     @Input() set attachments(attachments: Attachment[])
     {
         attachments
+            .sort((a, b) => a.sort - b.sort) // sort attachments by sort field
             .forEach(attachment =>
             {
                 this.attachmentsFormArray.push(
