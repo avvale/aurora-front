@@ -20,6 +20,7 @@ export const commonAttachmentFields = `
     isCropable
     libraryId
     libraryFilename
+    sizes
     meta
 `;
 
