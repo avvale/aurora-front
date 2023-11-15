@@ -55,3 +55,22 @@ export const commonCreateCropMutation = gql`
         }
     },
 `;
+
+export const commonDeleteAttachmentByIdMutation = gql`
+    mutation CommonDeleteAttachmentById (
+        $id: ID!
+        $constraint: QueryStatement
+    )
+    {
+        commonDeleteAttachmentById (
+            id: $id
+            constraint: $constraint
+        )
+        {
+            ${commonAttachmentFields}
+            library {
+                ${commonAttachmentLibraryFields}
+            }
+        }
+    },
+`;

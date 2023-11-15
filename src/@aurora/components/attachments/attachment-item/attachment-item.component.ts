@@ -1,15 +1,13 @@
 import { Component, Input, Output, OnInit, EventEmitter, ViewChild, Renderer2, forwardRef, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, FormBuilder, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { Attachment, AttachmentFamily, CropType, DisplayedFile } from './../attachments.types';
-import * as _ from 'lodash';
+import { ControlContainer, ControlValueAccessor, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { AttachmentFamily, CropType } from './../attachments.types';
 import { SizeFormatPipe } from '../pipes/size-format.pipe';
 import { NgForOf, NgIf } from '@angular/common';
 import { ImageInputComponent } from '@aurora/components/image-input';
-
-
-
+import { log } from '@aurora';
+import { MatButtonModule } from '@angular/material/button';
+import { first, merge } from 'rxjs';
 // import { DownloadService } from '@horus/services/download.service';
-// declare const jQuery: any; // jQuery definition
 
 @Component({
     selector       : 'au-attachment-item',
@@ -28,42 +26,52 @@ import { ImageInputComponent } from '@aurora/components/image-input';
         },
     ],
 })
-
 export class AttachmentItemComponent implements OnInit, ControlValueAccessor
 {
     @Input() formGroupName: string;
     @Input() families: AttachmentFamily[] = [];
-    attachment: FormGroup;
 
+    @Output() enableCrop: EventEmitter<{
+        attachmentItemFormGroup: FormGroup;
+        attachmentItemImage: ImageInputComponent;
+    }> = new EventEmitter();
+    @Output() removeItem: EventEmitter<{
+        attachmentItemFormGroup: FormGroup;
+    }> = new EventEmitter();
+
+    @ViewChild('image', { static: false }) image: ImageInputComponent;
+    @ViewChild('openOver', { static: true }) openOver;
+    @ViewChild('closeOver', { static: true }) closeOver;
+
+    attachment: FormGroup;
+    familySelect: AttachmentFamily;
+    showCropButton = false;
+
+    // get attachment item form group
     get formGroup(): FormGroup
     {
         return this.controlContainer.control as FormGroup;
     }
 
-    // attachment: Attachment;
+    activeCropHandler(): void
+    {
+        // click to active cropper
+        if (this.formGroup.get('familyId').value !== '')
+        {
+            this.enableCrop
+                .emit({
+                    attachmentItemFormGroup: this.formGroup,
+                    attachmentItemImage    : this.image,
+                });
+        }
+    }
 
-    
 
 
-
-
-    //@Input() form: FormGroup;
-    //@Input() name: string; // name of form array attachment
-    //@Input() index: number; // id to identify attachment item
-    
+    // OLD desde aqui comprobar si es válido
     //@Input() attachment: FormGroup;
-    @Output() enableCrop: EventEmitter<any> = new EventEmitter();
-    @Output() removeItem: EventEmitter<any> = new EventEmitter();
-
-    @ViewChild('openOver', { static: true }) openOver;
-    @ViewChild('closeOver', { static: true }) closeOver;
-    @ViewChild('image', { static: false }) image;
-    attachmentFamilySelect: AttachmentFamily;
-    showCropButton = false;
-
     constructor(
         private _renderer: Renderer2,
-        private readonly fb: FormBuilder,
         @Optional() private controlContainer: ControlContainer,
         // private _downloadService: DownloadService
     )
@@ -75,27 +83,13 @@ export class AttachmentItemComponent implements OnInit, ControlValueAccessor
             .subscribe(value => this.propagateChange(value)); */
     }
 
-    /* createForm(): void
-    {
-        this.attachment = this.fb.group({
-            id      : '',
-            url     : '',
-            filename: '',
-            mimetype: '',
-            encoding: '',
-        });
-    } */
-
-    
-
-    
 
     private propagateChange: (value: any) => void;
     private onTouched: () => void;
 
     writeValue(attachment: FormGroup): void
     {
-        console.log('[DEBUG] writeValue AttachmentItemComponent: ', attachment);
+        log('[DEBUG] WriteValue AttachmentItemComponent: ', attachment);
         if (attachment) this.attachment = attachment;
     }
 
@@ -125,52 +119,37 @@ export class AttachmentItemComponent implements OnInit, ControlValueAccessor
             this._renderer.removeClass($event.target.closest('.attachment-item'), 'covered');
         });
 
-        //this.attachmentFamilySelect = <AttachmentFamily>_.find(this.attachmentFamilies, { uuid: this.attachment.get('familyUuid').value });
-
         this.setShowCropButton();
+
+        merge(
+            this.formGroup.get('alt').valueChanges,
+            this.formGroup.get('title').valueChanges,
+        )
+            .pipe(first())
+            .subscribe(value => this.formGroup.get('isChanged').setValue(true));
     }
 
-    onRemoveItem($event): void
+    handlerRemoveItem(): void
     {
         this.removeItem.emit({
-            attachment: this.attachment,
+            attachmentItemFormGroup: this.formGroup,
         });
-
-        /* jQuery($event.target.closest('au-attachment-item')).fadeOut(300, function ()
-        {
-            jQuery($event.target.closest('au-attachment-item')).remove();
-        }); */
     }
 
-    onChangeAttachmentFamily($event): void
+    handlerChangeFamily($event: { target: { value: number; }; }): void
     {
         // get $event.target.value with ngValue that return a object
-        this.attachmentFamilySelect =  <AttachmentFamily>_.find(this.families, { uuid: $event.target.value });
+        this.familySelect = <AttachmentFamily>this.families.find(family => family.id === $event.target.value);
 
         this.setShowCropButton();
-    }
-
-    activeCropHandler($event): void
-    {
-        /*
-        // click to active cropper
-        if (this.attachment.get('familyUuid').value !== '')
-        {
-            this.enableCrop.emit({
-                image     : this.image, // add to event image to be updated if crop image
-                attachment: this.attachment,
-                familyUuid: this.attachment.get('familyUuid').value,
-            });
-        }
-        */
     }
 
     setShowCropButton(): void
     {
-        this.showCropButton = this.attachmentFamilySelect && (
-            this.attachmentFamilySelect.fitType === CropType.FIT_CROP ||
-            this.attachmentFamilySelect.fitType === CropType.FIT_WIDTH_FREE_CROP ||
-            this.attachmentFamilySelect.fitType === CropType.FIT_HEIGHT_FREE_CROP
+        this.showCropButton = this.familySelect && (
+            this.familySelect.fitType === CropType.FIT_CROP ||
+            this.familySelect.fitType === CropType.FIT_WIDTH_FREE_CROP ||
+            this.familySelect.fitType === CropType.FIT_HEIGHT_FREE_CROP
         ) ? true : false;
     }
 

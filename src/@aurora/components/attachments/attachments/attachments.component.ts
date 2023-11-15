@@ -4,6 +4,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmi
 import { ControlContainer, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { log } from '@aurora';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Attachment, AttachmentFamily } from '../attachments.types';
 import { AttachmentItemComponent } from './../attachment-item/attachment-item.component';
 import { AttachmentsService } from './../attachments.service';
@@ -64,6 +65,7 @@ export class AttachmentsComponent implements OnInit, AfterViewInit
         private readonly fb: FormBuilder,
         private readonly renderer: Renderer2,
         private readonly attachmentsService: AttachmentsService,
+        private readonly confirmationService: FuseConfirmationService,
         private dialog: MatDialog,
         @Optional() private controlContainer: ControlContainer,
     )
@@ -256,33 +258,64 @@ export class AttachmentsComponent implements OnInit, AfterViewInit
 
     handlerRemoveItem($event): void
     {
-        const attachment = $event.attachmentItemFormGroup as FormGroup;
 
-        this.attachmentsService.
-            deleteAttachment(attachment.value)
-            .subscribe(({ data }) =>
+        const deleteDialogRef = this.confirmationService.open({
+            title  : `Título de borrar attachmenbt`,
+            message: 'texto de borrar attachment',
+            icon   : {
+                show : true,
+                name : 'heroicons_outline:exclamation-triangle',
+                color: 'warn',
+            },
+            actions: {
+                confirm: {
+                    show : true,
+                    label: 'Texto Borrar',
+                    color: 'warn',
+                },
+                cancel: {
+                    show : true,
+                    label: 'Texto Cancelar',
+                },
+            },
+            dismissible: true,
+        });
+
+        deleteDialogRef.afterClosed()
+            .subscribe(async result =>
             {
-                // file deleted
-                for (let i = 0; this.attachmentsFormArray.length; i++)
+                if (result === 'confirmed')
                 {
-                    const formGroup = this.attachmentsFormArray.at(i) as FormGroup;
+                    const attachment = $event.attachmentItemFormGroup as FormGroup;
 
-                    if (formGroup.get('filename').value === attachment.get('filename').value)
-                    {
-                        // delete attachment from FormArray
-                        this.attachmentsFormArray.removeAt(i);
+                    this.attachmentsService.
+                        deleteAttachment(attachment.value)
+                        .subscribe(attachment =>
+                        {
+                            console.log('[DEBUG] data: ', attachment);
+                            // file deleted
+                            for (let i = 0; this.attachmentsFormArray.length; i++)
+                            {
+                                const formGroup = this.attachmentsFormArray.at(i) as FormGroup;
 
-                        this.markAsDirty();
+                                if (formGroup.get('filename').value === attachment.filename)
+                                {
+                                    // delete attachment from FormArray
+                                    this.attachmentsFormArray.removeAt(i);
 
-                        // break to not continue with for, because length attachments has changed
-                        break;
-                    }
-                }
+                                    this.markAsDirty();
 
-                // show placeholder if has not any item
-                if (this.attachmentsFormArray.length === 0)
-                {
-                    this.enablePlaceholder();
+                                    // break to not continue with for, because length attachments has changed
+                                    break;
+                                }
+                            }
+
+                            // show placeholder if has not any item
+                            if (this.attachmentsFormArray.length === 0)
+                            {
+                                this.enablePlaceholder();
+                            }
+                        });
                 }
             });
     }
