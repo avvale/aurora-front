@@ -4,7 +4,7 @@ import { accountColumnsConfig } from './account.columns-config';
 import { AccountService } from './account.service';
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
-import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, QueryStatementHandler } from '@aurora';
+import { ActionService, GridData, GridFiltersStorageService, GridStateService, QueryStatementHandler } from '@aurora';
 
 export const accountPaginationResolver: ResolveFn<GridData<IamAccount>> = (
     route: ActivatedRouteSnapshot,
@@ -79,7 +79,7 @@ export const accountEditResolver: ResolveFn<{
     });
 
     return accountService.findByIdWithRelations({
-        id: route.paramMap.get('id'),
+        id        : route.paramMap.get('id'),
         constraint: {
             include: [
                 {

@@ -29,6 +29,7 @@ export const fields = `
         name
         surname
         mobile
+        langId
         username
     }
     createdAt

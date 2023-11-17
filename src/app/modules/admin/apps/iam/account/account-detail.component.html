@@ -263,6 +263,24 @@
 
                         <mat-form-field
                             appearance="outline"
+                            class="col-5"
+                        >
+                            <mat-label>{{ t('iam.LangId') }}</mat-label>
+                            <mat-select
+                                formControlName="langId"
+                            >
+                                <mat-option
+                                    *ngFor="let lang of langs$ | async"
+                                    [value]="lang.id"
+                                >
+                                    {{ lang.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error>{{ formErrors?.langId | async }}</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field
+                            appearance="outline"
                             class="col-start-1 col-6"
                         >
                             <mat-label>{{ t('iam.Password') }}</mat-label>
