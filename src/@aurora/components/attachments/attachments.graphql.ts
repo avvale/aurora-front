@@ -56,15 +56,13 @@ export const commonCreateCropMutation = gql`
     },
 `;
 
-export const commonDeleteAttachmentByIdMutation = gql`
-    mutation CommonDeleteAttachmentById (
-        $id: ID!
-        $constraint: QueryStatement
+export const commonDeleteAttachmentMutation = gql`
+    mutation CommonDeleteAttachment (
+        $payload: CommonAttachmentInput!
     )
     {
-        commonDeleteAttachmentById (
-            id: $id
-            constraint: $constraint
+        commonDeleteAttachment (
+            payload: $payload
         )
         {
             ${commonAttachmentFields}

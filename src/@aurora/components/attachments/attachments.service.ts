@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Attachment, CropProperties, GraphQLService, log } from '@aurora';
-import { Observable, from, map } from 'rxjs';
-import { commonCreateCropMutation, commonDeleteAttachmentByIdMutation } from './attachments.graphql';
+import { Observable, map } from 'rxjs';
+import { commonCreateCropMutation, commonDeleteAttachmentMutation } from './attachments.graphql';
 
 @Injectable({
     providedIn: 'root',
@@ -45,13 +45,13 @@ export class AttachmentsService
             .graphqlService
             .client()
             .mutate<string>({
-                mutation : commonDeleteAttachmentByIdMutation,
+                mutation : commonDeleteAttachmentMutation,
                 variables: {
-                    id: attachment.id,
+                    payload: attachment,
                 },
             })
             .pipe(
-                map(({ data }) => data['commonDeleteAttachmentById']),
+                map(({ data }) => data['commonDeleteAttachment']),
             );
     }
 }
