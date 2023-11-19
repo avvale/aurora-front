@@ -1,6 +1,6 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgForOf } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { ControlContainer, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { log } from '@aurora';
@@ -66,6 +66,7 @@ export class AttachmentsComponent implements OnInit, AfterViewInit
         private readonly renderer: Renderer2,
         private readonly attachmentsService: AttachmentsService,
         private readonly confirmationService: FuseConfirmationService,
+        private readonly changeDetectorRef: ChangeDetectorRef,
         private dialog: MatDialog,
         @Optional() private controlContainer: ControlContainer,
     )
@@ -216,7 +217,7 @@ export class AttachmentsComponent implements OnInit, AfterViewInit
         // add attachment item FormGroup to attachments FormArray
         const attachmentItemFormGroup = this.fb.group({
             id                  : '',
-            familyId            : '',
+            familyId            : null,
             attachableId        : '',
             sort                : null,
             alt                 : '',
@@ -292,7 +293,6 @@ export class AttachmentsComponent implements OnInit, AfterViewInit
                         deleteAttachment(attachment.value)
                         .subscribe(attachment =>
                         {
-                            console.log('[DEBUG] data: ', attachment);
                             // file deleted
                             for (let i = 0; this.attachmentsFormArray.length; i++)
                             {
@@ -302,6 +302,8 @@ export class AttachmentsComponent implements OnInit, AfterViewInit
                                 {
                                     // delete attachment from FormArray
                                     this.attachmentsFormArray.removeAt(i);
+
+                                    this.changeDetectorRef.markForCheck();
 
                                     this.markAsDirty();
 
