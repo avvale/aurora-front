@@ -5,6 +5,7 @@ export const commonAttachmentFields = `
     id
     familyId
     attachableId
+    langId
     sort
     alt
     title

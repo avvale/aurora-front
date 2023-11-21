@@ -10,6 +10,14 @@ import { AttachmentItemComponent } from './../attachment-item/attachment-item.co
 import { AttachmentsService } from './../attachments.service';
 import { CropperDialogComponent } from './../cropper-dialog.component';
 
+/******************************************************************************
+ * AttachmentsComponent is a component that wraps AttachmentItemComponent,
+ * it is not an NG_VALUE_ACCESSOR component, it manages the creation of
+ * AttachmentItemComponent, for this reason the attachments are transmitted
+ * through the attachments input, and based on the data received,
+ * AttachmentItemComponents are created, which are the ones that manage
+ * the input formArrayName.
+ ******************************************************************************/
 @Component({
     selector       : 'au-attachments',
     templateUrl    : './attachments.component.html',
