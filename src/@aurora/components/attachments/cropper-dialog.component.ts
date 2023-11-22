@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { TranslocoService } from '@ngneat/transloco';
-import { AttachmentsService } from './attachments.service';
-import { MatButtonModule } from '@angular/material/button';
-import Cropper from 'cropperjs/dist/cropper.esm.js';
 import { FormGroup } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { AttachmentFamily, ImageInputComponent } from '@aurora';
+import Cropper from 'cropperjs/dist/cropper.esm.js';
+import { AttachmentTranslatePipe } from './attachment-translations/attachment-translate.pipe';
+import { AttachmentsService } from './attachments.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'au-cropper-dialog',
@@ -21,7 +22,7 @@ import { AttachmentFamily, ImageInputComponent } from '@aurora';
                 class="mat-accent mr-16"
                 [mat-dialog-close]="false"
             >
-                {{ cancel }} Cancelar
+                {{ 'cancel' | attachmentTranslate | async }}
             </button>
             <button
                 mat-flat-button
@@ -30,7 +31,7 @@ import { AttachmentFamily, ImageInputComponent } from '@aurora';
                 [mat-dialog-close]="true"
                 (click)="handlerCrop()"
             >
-                {{ crop }} Cortar
+                {{ 'crop' | attachmentTranslate | async }}
             </button>
         </div>
     `,
@@ -58,7 +59,7 @@ import { AttachmentFamily, ImageInputComponent } from '@aurora';
     standalone     : true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports        : [
-        MatDialogModule, MatButtonModule,
+        AsyncPipe, AttachmentTranslatePipe, MatDialogModule, MatButtonModule,
     ],
 })
 export class CropperDialogComponent implements OnInit, OnDestroy
@@ -79,7 +80,6 @@ export class CropperDialogComponent implements OnInit, OnDestroy
         public readonly dialogRef: MatDialogRef<CropperDialogComponent>,
         private readonly renderer: Renderer2,
         private readonly attachmentsService: AttachmentsService,
-        private _translocoService: TranslocoService,
     )
     { }
 
@@ -91,11 +91,6 @@ export class CropperDialogComponent implements OnInit, OnDestroy
                 'src',
                 this.data.attachmentItemFormGroup.get('library').get('url').value,
             );
-
-        // load translations for component
-        // this.title  = this.data.title ? this.data.title : this._translocoService.translate('TITLE');
-        // this.crop   = this.data.crop ? this.data.crop : this._translocoService.translate('CROP');
-        // this.cancel = this.data.cancel ? this.data.cancel : this._translocoService['CANCEL'];
 
         const cropperParameters = {
             aspectRatio      : this.data.attachmentFamily.width && this.data.attachmentFamily.height ? this.data.attachmentFamily.width / this.data.attachmentFamily.height : NaN,
@@ -129,7 +124,6 @@ export class CropperDialogComponent implements OnInit, OnDestroy
             )
             .subscribe(data =>
             {
-                console.log(data);
                 this.data.attachmentItemFormGroup.patchValue({
                     ...data.attachment,
                     // set attachment image like changed

@@ -7,7 +7,7 @@
         #attachmentMask
         id="attachment-library-mask"
     >
-        {{ placeholder }}
+        {{ 'placeholder' | attachmentTranslate | async }}
     </div>
     <div
         id="library-sortable"

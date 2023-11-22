@@ -5,6 +5,7 @@ import { ControlContainer, FormArray, FormBuilder, FormGroup, ReactiveFormsModul
 import { MatDialog } from '@angular/material/dialog';
 import { log } from '@aurora';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { AttachmentTranslatePipe } from '../attachment-translations/attachment-translate.pipe';
 import { Attachment, AttachmentFamily } from '../attachments.types';
 import { AttachmentItemComponent } from './../attachment-item/attachment-item.component';
 import { AttachmentsService } from './../attachments.service';
@@ -16,6 +17,7 @@ import { CropperDialogComponent } from './../cropper-dialog.component';
  * AttachmentItemComponent, for this reason the attachments are transmitted
  * through the attachments input, and based on the data received,
  * AttachmentItemComponents are created, which are the ones that manage
+ * the data within the formArrayName of the formArrayName indicated in
  * the input formArrayName.
  ******************************************************************************/
 @Component({
@@ -26,13 +28,12 @@ import { CropperDialogComponent } from './../cropper-dialog.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports        : [
         NgForOf, ReactiveFormsModule,
-        AsyncPipe, AttachmentItemComponent, DragDropModule,
+        AttachmentTranslatePipe, AsyncPipe, AttachmentItemComponent, DragDropModule,
     ],
 })
 export class AttachmentsComponent implements OnInit, AfterViewInit
 {
     @Input() formArrayName: string;
-    @Input() placeholder: string;
     @Input() families: AttachmentFamily[] = [];
     @Input() set attachments(attachments: Attachment[])
     {
@@ -227,6 +228,7 @@ export class AttachmentsComponent implements OnInit, AfterViewInit
             id                  : '',
             familyId            : null,
             attachableId        : '',
+            langId              : null,
             sort                : null,
             alt                 : '',
             title               : '',

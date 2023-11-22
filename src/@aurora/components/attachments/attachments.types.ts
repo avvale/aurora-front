@@ -1,3 +1,5 @@
+import { BehaviorSubject } from 'rxjs';
+
 export interface Attachment {
     id: string;
     familyId?: string;
@@ -23,20 +25,6 @@ export interface Attachment {
     library?: AttachmentLibrary;
 }
 
-export interface AttachmentLibrary {
-    id: string;
-    originFilename: string;
-    filename: string;
-    mimetype: string;
-    extension: string;
-    relativePathSegments: any;
-    width: number;
-    height: number;
-    size: number;
-    url: string;
-    meta?: any;
-}
-
 export interface AttachmentFamily
 {
     id: number;
@@ -51,6 +39,30 @@ export interface AttachmentFamily
     createdAt: string;
     updatedAt: string;
     deletedAt: string;
+}
+
+export interface AttachmentLibrary {
+    id: string;
+    originFilename: string;
+    filename: string;
+    mimetype: string;
+    extension: string;
+    relativePathSegments: any;
+    width: number;
+    height: number;
+    size: number;
+    url: string;
+    meta?: any;
+}
+
+export interface AttachmentMessages
+{
+    alt: BehaviorSubject<string>;
+    cancel: BehaviorSubject<string>;
+    crop: BehaviorSubject<string>;
+    placeholder: BehaviorSubject<string>;
+    selectFamily: BehaviorSubject<string>;
+    title: BehaviorSubject<string>;
 }
 
 export enum CropType

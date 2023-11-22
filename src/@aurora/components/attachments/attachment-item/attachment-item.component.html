@@ -23,17 +23,17 @@
 
                 <div class="attachment-over-uncovered">
                     <h4 class="attachment-title">
-                        attachmentFamilySelect?.name
+                        {{ attachmentFamily.name }}
                     </h4>
                     <p class="attachment-sub">
-                        attachment.title
+                        {{ attachment.title }}
                     </p>
                     <p class="attachment-size">
-                        {{ formGroup.get('size').value | sizeFormat }}
+                        {{ attachment.size | sizeFormat }}
                     </p>
                     <a
                         class="attachment-download"
-                        (click)="download()"
+                        (click)="handlerDownload()"
                     >
                         <i class="material-icons">cloud_download</i>
                     </a>
@@ -57,7 +57,7 @@
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="{{ 'ATTACHMENTS.IMAGE_ALT' }}"
+                            [placeholder]="'alt' | attachmentTranslate | async"
                             formControlName="alt"
                         >
                     </div>
@@ -66,7 +66,7 @@
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="{{ 'ATTACHMENTS.IMAGE_TITLE' }}"
+                            [placeholder]="'title' | attachmentTranslate | async"
                             formControlName="title"
                         >
                     </div>
@@ -78,7 +78,7 @@
                             (change)="handlerChangeFamily($event)"
                         >
                             <option value="">
-                                {{ 'ATTACHMENTS.SELECT_FAMILY' }}
+                                {{ 'selectFamily' | attachmentTranslate | async }}
                             </option>
                             <option
                                 *ngFor="let family of families"
@@ -104,7 +104,7 @@
                             type="button"
                             (click)="activeCropHandler()"
                         >
-                            <span>{{ 'ATTACHMENTS.CROP' }}</span>
+                            <span>{{ 'crop' | attachmentTranslate | async }}</span>
                         </button>
                     </div>
 

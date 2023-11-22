@@ -73,3 +73,14 @@ export const commonDeleteAttachmentMutation = gql`
         }
     },
 `;
+
+export const commonCreateBlobAttachmentMutation = gql`
+    mutation CommonCreateBlobAttachment (
+        $payload: CommonAttachmentInput!
+    )
+    {
+        commonCreateBlobAttachment(
+            payload: $payload
+        )
+    },
+`;
