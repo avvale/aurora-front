@@ -70,5 +70,9 @@ export const provideAurora = (): Array<Provider | EnvironmentProviders> =>
             provide : MTX_DATETIME_FORMATS,
             useValue: DatetimePickerDayjsFormats,
         },
+        {
+            provide : AuthorizationService,
+            useClass: AuthorizationDisabledService
+        },
     ];
 };
