@@ -111,7 +111,7 @@ export class AuthSignInComponent implements OnInit
                         {
                             // set user preferred lang
                             const langs = this.sessionService.get('langs');
-                            const userPreferredLang = langs.find(lang => lang.id === data .me.user.langId);
+                            const userPreferredLang = langs.find(lang => lang.id === data.me.user.langId);
                             if (userPreferredLang) this.translocoService.setActiveLang(userPreferredLang.iso6392);
 
                             // Navigate to the redirect url
