@@ -139,7 +139,7 @@ async function cleanAdminNavigation()
     sourceFile.saveSync();
 }
 
-async function cleanAppModule()
+async function cleanAuroraProvider()
 {
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', '@aurora', 'aurora.provider.ts']);
@@ -272,7 +272,7 @@ exports.publishApplication = series(
     editPackageJson,
     cleanAppRoutes,
     cleanAdminNavigation,
-    cleanAppModule,
+    cleanAuroraProvider,
     cleanEnvironments,
     copyToCLI,
     clean,

@@ -72,7 +72,7 @@ export const provideAurora = (): Array<Provider | EnvironmentProviders> =>
         },
         {
             provide : AuthorizationService,
-            useClass: AuthorizationDisabledService
+            useClass: AuthorizationDisabledService,
         },
     ];
 };

@@ -192,7 +192,7 @@ exports.removeDecoratorPropertyAdapter = (sourceFile, moduleName, decoratorName,
     const decoratorProperty = moduleDecoratorArguments.getProperty(propertyName);
     const decoratorArrayProperty = decoratorProperty.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
 
-    this.deleteProviderArray(decoratorArrayProperty, provide)
+    this.deleteProviderArray(decoratorArrayProperty, provide);
 };
 
 exports.deleteProviderArray = (providerArray, provide) =>
@@ -207,7 +207,7 @@ exports.deleteProviderArray = (providerArray, provide) =>
             {
                 if (property.getName() === 'provide' && property.getInitializer().getText() === provide)
                 {
-                    decoratorArrayProperty.removeElement(index);
+                    providerArray.removeElement(index);
                     break;
                 }
             }
