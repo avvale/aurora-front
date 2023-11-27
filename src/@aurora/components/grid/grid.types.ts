@@ -8,6 +8,7 @@ export interface ColumnConfig
 {
     type: ColumnDataType;
     field?: string;
+    searchableField?: string;
     translation?: string;
     hidden?: boolean;
     sort?: string | string[];
