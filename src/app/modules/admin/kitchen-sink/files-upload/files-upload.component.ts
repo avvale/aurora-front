@@ -32,6 +32,7 @@ export class FilesUploadComponent extends ViewDetailComponent
     stagingExample1: { id: string; file: File; }[] = [];
     stagingExample2: { id: string; file: File; } [] = [];
     stagingExample3: { id: string; file: File; } [] = [];
+    stagingExample4: { id: string; file: File; } [] = [];
     enableSubmitButton: boolean = false;
 
     // breadcrumb component definition
@@ -142,6 +143,20 @@ export class FilesUploadComponent extends ViewDetailComponent
                 this.enableSubmitButton = true;
                 break;
 
+            case 'kitchenSink::fileUpload.detail.stagingExample4':
+                if (action.meta.files.length === 0) return;
+
+                this.stagingExample4 = [];
+                for (const file of action.meta.files)
+                {
+                    this.stagingExample4.push({
+                        id: Utils.uuid(),
+                        file,
+                    });
+                }
+
+                this.enableSubmitButton = true;
+                break;
 
             case 'kitchenSink::fileUpload.detail.submitFiles':
                 try
@@ -154,6 +169,7 @@ export class FilesUploadComponent extends ViewDetailComponent
                                     ...this.stagingExample1,
                                     ...this.stagingExample2,
                                     ...this.stagingExample3,
+                                    ...this.stagingExample4,
                                 ],
                             }),
                     );
