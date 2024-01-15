@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AccountService } from '@apps/iam/account';
 import { IamAccount } from '@apps/iam/iam.types';
-import { Action, CoreGetLangsService, CoreLang, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { Action, CoreGetLangsService, CoreLang, Crumb, defaultDetailImports, log, mapActions, OAuthClientGrantType, Utils, ViewDetailComponent } from '@aurora';
 import { BehaviorSubject, lastValueFrom, Observable, takeUntil } from 'rxjs';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { OAuthClient, OAuthScope } from '@apps/o-auth/o-auth.types';
