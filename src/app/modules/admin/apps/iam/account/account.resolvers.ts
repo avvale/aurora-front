@@ -1,9 +1,9 @@
-import { OAuthClient } from '../../o-auth/o-auth.types';
-import { IamAccount, IamRole, IamTenant } from '../iam.types';
-import { accountColumnsConfig } from './account.columns-config';
-import { AccountService } from './account.service';
+import { IamRole, IamTenant } from '../iam.types';
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
+import { accountColumnsConfig, AccountService } from '@apps/iam/account';
+import { IamAccount } from '@apps/iam/iam.types';
+import { OAuthClient } from '@apps/o-auth/o-auth.types';
 import { ActionService, GridData, GridFiltersStorageService, GridStateService, QueryStatementHandler } from '@aurora';
 
 export const accountPaginationResolver: ResolveFn<GridData<IamAccount>> = (

@@ -1,20 +1,19 @@
-import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
+import { IamAccountType, IamRole, IamTenant } from '../iam.types';
+import { TenantService } from '../tenant/tenant.service';
 import { KeyValuePipe, NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Action, CoreGetLangsService, CoreLang, Crumb, Utils, ViewDetailComponent, defaultDetailImports, log, mapActions } from '@aurora';
-import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { BehaviorSubject, Observable, lastValueFrom, takeUntil } from 'rxjs';
-import { ClientService } from '../../o-auth/client/client.service';
-import { OAuthClient, OAuthClientGrantType, OAuthScope } from '../../o-auth/o-auth.types';
-import { IamAccount, IamAccountType, IamRole, IamTenant } from '../iam.types';
-import { RoleService } from '../role/role.service';
-import { TenantService } from '../tenant/tenant.service';
-import { AccountService } from './account.service';
+import { AccountService } from '@apps/iam/account';
+import { IamAccount } from '@apps/iam/iam.types';
+import { Action, CoreGetLangsService, CoreLang, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { BehaviorSubject, lastValueFrom, Observable, takeUntil } from 'rxjs';
+import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
+import { OAuthClient, OAuthScope } from '@apps/o-auth/o-auth.types';
+import { RoleService } from '../role';
+import { ClientService } from '@apps/o-auth/client/client.service';
 
 @Component({
     selector       : 'iam-account-detail',
@@ -31,7 +30,6 @@ export class AccountDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
     iamAccountType = IamAccountType;
-    tenants$: Observable<IamTenant[]>;
     roles$: Observable<IamRole[]>;
     clients$: Observable<OAuthClient[]>;
     originClients: OAuthClient[];
@@ -44,6 +42,9 @@ export class AccountDetailComponent extends ViewDetailComponent
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
     managedObject: IamAccount;
+
+    // relationships
+    tenants$: Observable<IamTenant[]>;
 
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
@@ -58,7 +59,6 @@ export class AccountDetailComponent extends ViewDetailComponent
     }
 
     constructor(
-        protected readonly injector: Injector,
         private readonly accountService: AccountService,
         private readonly tenantService: TenantService,
         private readonly roleService: RoleService,

@@ -103,7 +103,7 @@
                         <input
                             matInput
                             formControlName="code"
-                            maxlength="50"
+                            maxlength="63"
                         >
                         <mat-error>{{ formErrors?.code | async }}</mat-error>
                     </mat-form-field>
@@ -139,7 +139,7 @@
                         <input
                             matInput
                             formControlName="email"
-                            maxlength="120"
+                            maxlength="127"
                             required
                         >
                         <mat-error>{{ formErrors?.email | async }}</mat-error>
@@ -353,7 +353,6 @@
                         </mat-form-field>
 
                     </ng-container>
-
 
                 </div>
 
