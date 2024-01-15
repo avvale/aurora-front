@@ -87,12 +87,14 @@ export class ScopeDetailComponent extends ViewDetailComponent
 
     createForm(): void
     {
+        /* eslint-disable key-spacing */
         this.fg = this.fb.group({
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             code: ['', [Validators.required, Validators.maxLength(63)]],
             name: ['', [Validators.required, Validators.maxLength(127)]],
             roleIds: [],
         });
+        /* eslint-enable key-spacing */
     }
 
     async handleAction(action: Action): Promise<void>

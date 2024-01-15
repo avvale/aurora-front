@@ -15,7 +15,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/scope/scope-detail.component.ts",
-            "integrity": "sha1:5d8dc230be91e6818f60de8c3a2f942025bca7c7"
+            "integrity": "sha1:a72d7e36fea43c9af5252af7de88fea23e6ea625"
         },
         {
             "path": "src/app/modules/admin/apps/o-auth/scope/scope-list.component.html",
