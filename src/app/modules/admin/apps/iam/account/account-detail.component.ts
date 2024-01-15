@@ -11,11 +11,11 @@ import { IamAccount } from '@apps/iam/iam.types';
 import { Action, CoreGetLangsService, CoreLang, Crumb, defaultDetailImports, log, mapActions, OAuthClientGrantType, Utils, ViewDetailComponent } from '@aurora';
 import { BehaviorSubject, lastValueFrom, Observable, takeUntil } from 'rxjs';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
-import { OAuthClient, OAuthScope } from '@apps/o-auth/o-auth.types';
 import { RoleService } from '../role';
-import { ClientService } from '@apps/o-auth/client/client.service';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { OAuthClient, OAuthScope } from '@apps/o-auth/o-auth.types';
+import { ClientService } from '@apps/o-auth/client';
 
 @Component({
     selector       : 'iam-account-detail',

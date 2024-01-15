@@ -8,7 +8,7 @@ import { IamAccount, IamCreateAccount, IamUpdateAccountById, IamUpdateAccounts }
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
 import { RoleService } from '../role';
-import { ClientService } from '@apps/o-auth/client/client.service';
+import { ClientService } from '@apps/o-auth/client';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
 
 @Injectable({
