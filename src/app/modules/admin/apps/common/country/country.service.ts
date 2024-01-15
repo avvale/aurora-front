@@ -350,7 +350,7 @@ export class CountryService
         return this.graphqlService
             .client()
             .watchQuery<{
-                objects: CommonCountry;
+                objects: CommonCountry[];
             }>({
                 query    : graphqlStatement,
                 variables: {
