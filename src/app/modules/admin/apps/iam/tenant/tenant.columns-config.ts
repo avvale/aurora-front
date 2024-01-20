@@ -18,17 +18,13 @@ export const tenantColumnsConfig: ColumnConfig[] = [
         field      : 'logo',
         sort       : 'logo',
         translation: 'iam.Logo',
+        searchable : false,
     },
     {
         type       : ColumnDataType.BOOLEAN,
         field      : 'isActive',
         sort       : 'isActive',
         translation: 'iam.IsActive',
-    },
-    {
-        type       : ColumnDataType.STRING,
-        field      : 'accountIds',
-        sort       : 'accountIds',
-        translation: 'iam.AccountIds',
+        searchable : false,
     },
 ];
