@@ -1,0 +1,15 @@
+{
+    "AccountIds": "AccountIds",
+    "AccountTenantOperator": "AccountTenantOperator",
+    "Attachments": "Attachments",
+    "Body": "Body",
+    "IsImportant": "IsImportant",
+    "Meta": "Meta",
+    "OutBoxNotification": "OutBoxNotification",
+    "OutBoxNotifications": "OutBoxNotifications",
+    "Scopes": "Scopes",
+    "Sort": "Sort",
+    "Subject": "Subject",
+    "TenantId": "TenantId",
+    "TenantIds": "TenantIds"
+}

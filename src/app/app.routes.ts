@@ -82,6 +82,7 @@ export const appRoutes: Route[] = [
             { path: 'iam', loadChildren: () => import('app/modules/admin/apps/iam/iam.routes') },
             { path: 'search-engine', loadChildren: () => import('app/modules/admin/apps/search-engine/search-engine.routes') },
             { path: 'kitchen-sink', loadChildren: () => import('app/modules/admin/kitchen-sink/kitchen-sink.routes') },
+            { path: 'notification', loadChildren: () => import('app/modules/admin/apps/notification/notification.routes') },
         ],
     },
 

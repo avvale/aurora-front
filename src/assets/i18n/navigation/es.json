@@ -18,6 +18,7 @@
     "httpCommunications": "Http Communications",
     "jobsRegistry": "Registro de Jobs",
     "langs": "Idiomas",
+    "outBoxNotifications": "OutBoxNotifications",
     "permissions": "Permisos",
     "queues": "Queues",
     "refreshTokens": "Refresh Tokens",

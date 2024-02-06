@@ -6,6 +6,7 @@ import { queueManagerNavigation } from './apps/queue-manager/queue-manager.navig
 import { commonNavigation } from './apps/common/common.navigation';
 import { searchEngineNavigation } from './apps/search-engine/search-engine.navigation';
 import { kitchenSinkNavigation } from './kitchen-sink/kitchen-sink.navigation';
+import { notificationNavigation } from './apps/notification/notification.navigation';
 
 export const adminNavigation: FuseNavigationItem[] = [
     oAuthNavigation,
@@ -15,4 +16,5 @@ export const adminNavigation: FuseNavigationItem[] = [
     commonNavigation,
     searchEngineNavigation,
     kitchenSinkNavigation,
+    notificationNavigation
 ];

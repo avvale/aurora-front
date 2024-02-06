@@ -1,0 +1,75 @@
+version: 0.0.1
+boundedContextName: notification
+moduleName: out-box-notification
+moduleNames: out-box-notifications
+aggregateName: NotificationOutBoxNotification
+hasOAuth: true
+hasTenant: false
+hasAuditing: true
+front:
+  solidIcon: mat_solid:language
+  outlineIcon: mat_outline:language
+aggregateProperties:
+  - name: id
+    type: id
+    primaryKey: true
+    length: 36
+    nullable: false
+  - name: sort
+    type: int
+    autoIncrement: true
+    nullable: false
+  - name: tenantId
+    type: id
+    length: 36
+    nullable: true
+    index: index
+  - name: accountIds
+    type: array
+    arrayOptions:
+      type: id
+    nullable: true
+    index: index
+  - name: accountTenantOperator
+    type: enum
+    enumOptions:
+      - AND
+      - OR
+    nullable: true
+  - name: tenantIds
+    type: array
+    arrayOptions:
+      type: id
+    nullable: true
+    index: index
+  - name: scopes
+    type: array
+    arrayOptions:
+      type: varchar
+    nullable: true
+    index: index
+  - name: isImportant
+    type: boolean
+    nullable: false
+  - name: subject
+    type: varchar
+    maxLength: 255
+    nullable: false
+  - name: body
+    type: text
+    nullable: false
+  - name: attachments
+    type: json
+    nullable: true
+  - name: meta
+    type: json
+    nullable: true
+  - name: createdAt
+    type: timestamp
+    nullable: true
+  - name: updatedAt
+    type: timestamp
+    nullable: true
+  - name: deletedAt
+    type: timestamp
+    nullable: true
