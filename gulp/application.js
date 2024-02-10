@@ -39,6 +39,7 @@ function copyApplication()
             '!src/app/modules/admin/apps/o-auth/**',
             '!src/app/modules/admin/apps/queue-manager/**',
             '!src/app/modules/admin/apps/search-engine/**',
+            '!src/app/modules/admin/apps/notification/**',
             '!src/app/modules/admin/kitchen-sink/**',
             '!src/app/modules/azure-ad/**',
             '!src/assets/i18n/auditing/**',
@@ -121,6 +122,7 @@ async function cleanAdminNavigation()
     codeWriter.removeImport(sourceFile, './apps/o-auth/o-auth.navigation');
     codeWriter.removeImport(sourceFile, './apps/queue-manager/queue-manager.navigation');
     codeWriter.removeImport(sourceFile, './apps/search-engine/search-engine.navigation');
+    codeWriter.removeImport(sourceFile, './apps/notification/notification.navigation');
     codeWriter.removeImport(sourceFile, './kitchen-sink/kitchen-sink.navigation');
 
     const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
@@ -134,6 +136,7 @@ async function cleanAdminNavigation()
         'queueManagerNavigation',
         'searchEngineNavigation',
         'kitchenSinkNavigation',
+        'notificationNavigation',
     ]);
 
     sourceFile.saveSync();
