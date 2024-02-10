@@ -23,9 +23,6 @@ aggregateProperties:
   - name: sort
     type: int
     nullable: false
-  - name: checkedAt
-    type: timestamp
-    nullable: true
   - name: createdAt
     type: timestamp
     nullable: true

@@ -15,9 +15,10 @@ aggregateProperties:
     primaryKey: true
     length: 36
     nullable: false
-  - name: tenantId
-    type: id
-    length: 36
+  - name: tenantIds
+    type: array
+    arrayOptions:
+      type: id
     nullable: true
     index: index
   - name: notificationId
@@ -60,6 +61,9 @@ aggregateProperties:
   - name: isRead
     type: boolean
     nullable: false
+  - name: isReadAtLeastOnce
+    type: boolean
+    nullable: false
   - name: meta
     type: json
     nullable: true
@@ -72,3 +76,7 @@ aggregateProperties:
   - name: deletedAt
     type: timestamp
     nullable: true
+additionalApis:
+  - path: notification/inbox/check-notifications
+    resolverType: mutation
+    httpMethod: post
