@@ -1,53 +1,56 @@
 version: 0.0.1
 boundedContextName: notification
-moduleName: out-box-notification
-moduleNames: out-box-notifications
-aggregateName: NotificationOutBoxNotification
+moduleName: notification
+moduleNames: notifications
+aggregateName: NotificationNotification
 hasOAuth: true
-hasTenant: false
+hasTenant: true
 hasAuditing: true
 front:
-  solidIcon: mat_solid:language
-  outlineIcon: mat_outline:language
+  solidFontSetIcon: material-symbols-outlined
+  solidIcon: notification_multiple
+  outlineFontSetIcon: material-symbols-outlined
+  outlineIcon: notification_multiple
 aggregateProperties:
   - name: id
     type: id
     primaryKey: true
     length: 36
     nullable: false
-  - name: sort
-    type: int
-    autoIncrement: true
-    nullable: false
-  - name: tenantId
-    type: id
-    length: 36
-    nullable: true
-    index: index
-  - name: accountIds
-    type: array
-    arrayOptions:
-      type: id
-    nullable: true
-    index: index
-  - name: accountTenantOperator
-    type: enum
-    enumOptions:
-      - AND
-      - OR
-    nullable: true
   - name: tenantIds
     type: array
     arrayOptions:
       type: id
     nullable: true
     index: index
-  - name: scopes
+  - name: status
+    type: enum
+    enumOptions:
+      - DRAFT
+      - PENDING
+      - SENT
+    nullable: false
+  - name: accountRecipientIds
+    type: array
+    arrayOptions:
+      type: id
+    nullable: true
+    index: index
+  - name: tenantRecipientIds
+    type: array
+    arrayOptions:
+      type: id
+    nullable: true
+    index: index
+  - name: scopeRecipients
     type: array
     arrayOptions:
       type: varchar
     nullable: true
     index: index
+  - name: sendAt
+    type: timestamp
+    nullable: true
   - name: isImportant
     type: boolean
     nullable: false
@@ -61,6 +64,16 @@ aggregateProperties:
   - name: attachments
     type: json
     nullable: true
+  - name: totalRecipients
+    type: int
+    nullable: false
+    unsigned: true
+    defaultValue: 0
+  - name: reads
+    type: int
+    nullable: false
+    unsigned: true
+    defaultValue: 0
   - name: meta
     type: json
     nullable: true

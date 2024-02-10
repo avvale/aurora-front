@@ -1,0 +1,53 @@
+{
+    "version": "0.0.1",
+    "files": [
+        {
+            "path": "src/app/modules/admin/apps/notification/notification.component.html",
+            "integrity": "sha1:a6aab421500581830708e34385e2166e7a039ba7"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/notification.component.ts",
+            "integrity": "sha1:df1e813aa853d8284c6e40306443dc022547b4c1"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/inbox/inbox-detail.component.html",
+            "integrity": "sha1:6113af51ebbec1628d22e070bc6422e619f6fcbb"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/inbox/inbox-detail.component.ts",
+            "integrity": "sha1:9e990a5288a42cffa9d48c7a3249e161d17cca0a"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/inbox/inbox-list.component.html",
+            "integrity": "sha1:f09a92f68c3a1eef350a0fe2b8f69ab59bf123c4"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/inbox/inbox-list.component.ts",
+            "integrity": "sha1:04b5381c846b8d6919b6798ab76b1746e52d633d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/inbox/inbox.columns-config.ts",
+            "integrity": "sha1:40d3a87ebc24e4a4a11775976d616026f51dbb72"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/inbox/inbox.graphql.ts",
+            "integrity": "sha1:7778464f26b16d19f85668e8be227054f69fe329"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/inbox/inbox.resolvers.ts",
+            "integrity": "sha1:df246a34189ecfff04de01b1dd26a12607452e88"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/inbox/inbox.service.ts",
+            "integrity": "sha1:d6d77c7269ff694cbf70299d839e53161907fd5c"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/inbox/index.ts",
+            "integrity": "sha1:0668bfe7d206f064143571f4c397ca726db8cdaf"
+        },
+        {
+            "path": "src/app/modules/admin/apps/notification/inbox/public-api.ts",
+            "integrity": "sha1:c873838b8dc3d01cee16efdf7ff5e7f609818f92"
+        }
+    ]
+}

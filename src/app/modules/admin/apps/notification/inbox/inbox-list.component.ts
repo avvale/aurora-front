@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { NotificationOutBoxNotification } from '@apps/notification/notification.types';
-import { outBoxNotificationColumnsConfig, OutBoxNotificationService } from '@apps/notification/out-box-notification';
+import { inboxColumnsConfig, InboxService } from '@apps/notification/inbox';
+import { NotificationInbox } from '@apps/notification/notification.types';
 import { Action, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'notification-out-box-notification-list',
-    templateUrl    : './out-box-notification-list.component.html',
+    selector       : 'notification-inbox-list',
+    templateUrl    : './inbox-list.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
@@ -14,17 +14,17 @@ import { lastValueFrom, Observable, takeUntil } from 'rxjs';
         ...defaultListImports,
     ],
 })
-export class OutBoxNotificationListComponent extends ViewBaseComponent
+export class InboxListComponent extends ViewBaseComponent
 {
     // ---- customizations ----
     // ..
 
     breadcrumb: Crumb[] = [
         { translation: 'App', routerLink: ['/']},
-        { translation: 'notification.OutBoxNotifications' },
+        { translation: 'notification.Inboxes' },
     ];
-    gridId: string = 'notification::outBoxNotification.list.mainGridList';
-    gridData$: Observable<GridData<NotificationOutBoxNotification>>;
+    gridId: string = 'notification::inbox.list.mainGridList';
+    gridData$: Observable<GridData<NotificationInbox>>;
     gridState: GridState = {};
     columnsConfig$: Observable<ColumnConfig[]>;
     originColumnsConfig: ColumnConfig[] = [
@@ -36,12 +36,12 @@ export class OutBoxNotificationListComponent extends ViewBaseComponent
             {
                 return [
                     {
-                        id         : 'notification::outBoxNotification.list.edit',
+                        id         : 'notification::inbox.list.edit',
                         translation: 'edit',
                         icon       : 'mode_edit',
                     },
                     {
-                        id         : 'notification::outBoxNotification.list.delete',
+                        id         : 'notification::inbox.list.delete',
                         translation: 'delete',
                         icon       : 'delete',
                     },
@@ -54,14 +54,14 @@ export class OutBoxNotificationListComponent extends ViewBaseComponent
             translation: 'Selects',
             sticky     : true,
         },
-        ...outBoxNotificationColumnsConfig,
+        ...inboxColumnsConfig,
     ];
 
     constructor(
         private readonly gridColumnsConfigStorageService: GridColumnsConfigStorageService,
         private readonly gridFiltersStorageService: GridFiltersStorageService,
         private readonly gridStateService: GridStateService,
-        private readonly outBoxNotificationService: OutBoxNotificationService,
+        private readonly inboxService: InboxService,
     )
     {
         super();
@@ -77,7 +77,7 @@ export class OutBoxNotificationListComponent extends ViewBaseComponent
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
-            case 'notification::outBoxNotification.list.view':
+            case 'notification::inbox.list.view':
                 this.columnsConfig$ = this.gridColumnsConfigStorageService
                     .getColumnsConfig(this.gridId, this.originColumnsConfig)
                     .pipe(takeUntil(this.unsubscribeAll$));
@@ -89,16 +89,16 @@ export class OutBoxNotificationListComponent extends ViewBaseComponent
                     search       : this.gridStateService.getSearchState(this.gridId),
                 };
 
-                this.gridData$ = this.outBoxNotificationService.pagination$;
+                this.gridData$ = this.inboxService.pagination$;
                 break;
 
-            case 'notification::outBoxNotification.list.pagination':
+            case 'notification::inbox.list.pagination':
                 await lastValueFrom(
-                    this.outBoxNotificationService.pagination({
+                    this.inboxService.pagination({
                         query: action.meta.query ?
                             action.meta.query :
                             QueryStatementHandler
-                                .init({ columnsConfig: outBoxNotificationColumnsConfig })
+                                .init({ columnsConfig: inboxColumnsConfig })
                                 .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.gridId))
                                 .setSort(this.gridStateService.getSort(this.gridId))
                                 .setPage(this.gridStateService.getPage(this.gridId))
@@ -108,18 +108,18 @@ export class OutBoxNotificationListComponent extends ViewBaseComponent
                 );
                 break;
 
-            case 'notification::outBoxNotification.list.edit':
+            case 'notification::inbox.list.edit':
                 this.router
                     .navigate([
-                        'notification/out-box-notification/edit',
+                        'notification/inbox/edit',
                         action.meta.row.id,
                     ]);
                 break;
 
-            case 'notification::outBoxNotification.list.delete':
+            case 'notification::inbox.list.delete':
                 const deleteDialogRef = this.confirmationService.open({
-                    title  : `${this.translocoService.translate('Delete')} ${this.translocoService.translate('notification.OutBoxNotification')}`,
-                    message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('notification.OutBoxNotification') }),
+                    title  : `${this.translocoService.translate('Delete')} ${this.translocoService.translate('notification.Inbox')}`,
+                    message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('notification.Inbox') }),
                     icon   : {
                         show : true,
                         name : 'heroicons_outline:exclamation-triangle',
@@ -147,14 +147,14 @@ export class OutBoxNotificationListComponent extends ViewBaseComponent
                             try
                             {
                                 await lastValueFrom(
-                                    this.outBoxNotificationService
-                                        .deleteById<NotificationOutBoxNotification>({
+                                    this.inboxService
+                                        .deleteById<NotificationInbox>({
                                             id: action.meta.row.id,
                                         }),
                                 );
 
                                 this.actionService.action({
-                                    id          : 'notification::outBoxNotification.list.pagination',
+                                    id          : 'notification::inbox.list.pagination',
                                     isViewAction: false,
                                 });
                             }
@@ -166,9 +166,9 @@ export class OutBoxNotificationListComponent extends ViewBaseComponent
                     });
                 break;
 
-            case 'notification::outBoxNotification.list.export':
+            case 'notification::inbox.list.export':
                 const rows = await lastValueFrom(
-                    this.outBoxNotificationService
+                    this.inboxService
                         .get({
                             query: action.meta.query,
                         }),
@@ -180,12 +180,12 @@ export class OutBoxNotificationListComponent extends ViewBaseComponent
                     // row.id = row.id;
                 });
 
-                const columns: string[] = outBoxNotificationColumnsConfig.map(outBoxNotificationColumnConfig => outBoxNotificationColumnConfig.field);
+                const columns: string[] = inboxColumnsConfig.map(inboxColumnConfig => inboxColumnConfig.field);
                 const headers: string[] = columns.map(column => this.translocoService.translate('notification.' + column.toPascalCase()));
 
                 exportRows(
                     rows.objects,
-                    'outBoxNotifications.' + action.meta.format,
+                    'inboxes.' + action.meta.format,
                     columns,
                     headers,
                     action.meta.format,

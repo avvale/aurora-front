@@ -11,48 +11,48 @@
                     class="icon-size-8 mr-2"
                 >
                 </mat-icon>
-                {{ t('notification.OutBoxNotification') }}
+                {{ t('notification.Inbox') }}
             </au-title>
         </div>
 
         <!-- Actions -->
         <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
             <button
-                *ngIf="currentViewAction.id === 'notification::outBoxNotification.detail.edit'"
+                *ngIf="currentViewAction.id === 'notification::inbox.detail.edit'"
                 mat-flat-button
                 type="submit"
                 class="ml-3"
-                form="notificationOutBoxNotificationFormDetail"
+                form="notificationInboxFormDetail"
                 color="accent"
-                [disabled]="fg.pristine || ('notification::outBoxNotification.detail.update' | getSpinnerFlag | async)"
+                [disabled]="fg.pristine || ('notification::inbox.detail.update' | getSpinnerFlag | async)"
             >
                 <mat-icon
-                    *ngIf="!('notification::outBoxNotification.detail.update' | getSpinnerFlag | async)"
+                    *ngIf="!('notification::inbox.detail.update' | getSpinnerFlag | async)"
                     svgIcon="mat_solid:edit"
                     class="icon-size-5 mr-2"
                 >
                 </mat-icon>
-                <mat-icon *ngIf="'notification::outBoxNotification.detail.update' | getSpinnerFlag | async">
+                <mat-icon *ngIf="'notification::inbox.detail.update' | getSpinnerFlag | async">
                     <mat-spinner diameter="20"></mat-spinner>
                 </mat-icon>
                 {{ t('Update') }}
             </button>
             <button
-                *ngIf="currentViewAction.id === 'notification::outBoxNotification.detail.new'"
+                *ngIf="currentViewAction.id === 'notification::inbox.detail.new'"
                 mat-flat-button
                 type="submit"
-                form="notificationOutBoxNotificationFormDetail"
+                form="notificationInboxFormDetail"
                 class="ml-3"
                 color="accent"
-                [disabled]="fg.pristine || ('notification::outBoxNotification.detail.create' | getSpinnerFlag | async)"
+                [disabled]="fg.pristine || ('notification::inbox.detail.create' | getSpinnerFlag | async)"
             >
                 <mat-icon
-                    *ngIf="!('notification::outBoxNotification.detail.create' | getSpinnerFlag | async)"
+                    *ngIf="!('notification::inbox.detail.create' | getSpinnerFlag | async)"
                     svgIcon="mat_solid:save"
                     class="icon-size-5 mr-2"
                 >
                 </mat-icon>
-                <mat-icon *ngIf="'notification::outBoxNotification.detail.create' | getSpinnerFlag | async">
+                <mat-icon *ngIf="'notification::inbox.detail.create' | getSpinnerFlag | async">
                     <mat-spinner diameter="20"></mat-spinner>
                 </mat-icon>
                 {{ t('Create') }}
@@ -69,7 +69,7 @@
         <div class="form-card">
 
             <form
-                id="notificationOutBoxNotificationFormDetail"
+                id="notificationInboxFormDetail"
                 novalidate
                 [formGroup]="fg"
                 (ngSubmit)="onSubmit($event)"
@@ -79,14 +79,26 @@
 
                     <mat-form-field
                         appearance="outline"
-                        class="col-4"
+                        class="col-12"
                     >
-                        <mat-label>{{ t('notification.AccountTenantOperator') }}</mat-label>
-                        <mat-select formControlName="accountTenantOperator">
-                            <mat-option value="AND">AND</mat-option>
-                            <mat-option value="OR">OR</mat-option>
-                        </mat-select>
-                        <mat-error>{{ formErrors?.accountTenantOperator | async }}</mat-error>
+                        <mat-label>{{ t('notification.Sort') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="sort"
+                            type="number"
+                        >
+                        <mat-error>{{ formErrors?.sort | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>{{ t('notification.AccountCode') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="accountCode"
+                        >
+                        <mat-error>{{ formErrors?.accountCode | async }}</mat-error>
                     </mat-form-field>
                     <div class="col-4 pt-5">
                         <mat-checkbox
@@ -120,6 +132,13 @@
                         </textarea>
                         <mat-error>{{ formErrors?.body | async }}</mat-error>
                     </mat-form-field>
+                    <div class="col-4 pt-5">
+                        <mat-checkbox
+                            formControlName="isRead"
+                        >
+                            {{ t('notification.IsRead') }}
+                        </mat-checkbox>
+                    </div>
 
                 </div>
 

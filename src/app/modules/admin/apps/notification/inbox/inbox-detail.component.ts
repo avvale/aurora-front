@@ -2,24 +2,23 @@ import { NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select';
-import { NotificationOutBoxNotification } from '@apps/notification/notification.types';
-import { OutBoxNotificationService } from '@apps/notification/out-box-notification';
+import { InboxService } from '@apps/notification/inbox';
+import { NotificationInbox } from '@apps/notification/notification.types';
 import { Action, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'notification-out-box-notification-detail',
-    templateUrl    : './out-box-notification-detail.component.html',
+    selector       : 'notification-inbox-detail',
+    templateUrl    : './inbox-detail.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
-        MatCheckboxModule, MatSelectModule, NgForOf,
+        MatCheckboxModule, NgForOf,
     ],
 })
-export class OutBoxNotificationDetailComponent extends ViewDetailComponent
+export class InboxDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
     // ..
@@ -28,17 +27,17 @@ export class OutBoxNotificationDetailComponent extends ViewDetailComponent
     // it should only be used to obtain uninitialized
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
-    managedObject: NotificationOutBoxNotification;
+    managedObject: NotificationInbox;
 
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
         { translation: 'App' },
-        { translation: 'notification.OutBoxNotifications', routerLink: ['/notification/out-box-notification']},
-        { translation: 'notification.OutBoxNotification' },
+        { translation: 'notification.Inboxes', routerLink: ['/notification/inbox']},
+        { translation: 'notification.Inbox' },
     ];
 
     constructor(
-        private readonly outBoxNotificationService: OutBoxNotificationService,
+        private readonly inboxService: InboxService,
     )
     {
         super();
@@ -74,8 +73,8 @@ export class OutBoxNotificationDetailComponent extends ViewDetailComponent
             id: mapActions(
                 this.currentViewAction.id,
                 {
-                    'notification::outBoxNotification.detail.new' : 'notification::outBoxNotification.detail.create',
-                    'notification::outBoxNotification.detail.edit': 'notification::outBoxNotification.detail.update',
+                    'notification::inbox.detail.new' : 'notification::inbox.detail.create',
+                    'notification::inbox.detail.edit': 'notification::inbox.detail.update',
                 },
             ),
             isViewAction: false,
@@ -88,14 +87,15 @@ export class OutBoxNotificationDetailComponent extends ViewDetailComponent
         this.fg = this.fb.group({
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             tenantId: ['', [Validators.minLength(36), Validators.maxLength(36)]],
-            accountIds: [],
-            accountTenantOperator: null,
-            tenantIds: [],
-            scopes: [],
+            notificationId: [null, [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
+            sort: [null, [Validators.required]],
+            accountId: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
+            accountCode: ['', [Validators.minLength(127), Validators.maxLength(127)]],
             isImportant: [false, [Validators.required]],
             subject: ['', [Validators.required, Validators.maxLength(255)]],
             body: ['', [Validators.required]],
             attachments: null,
+            isRead: [false, [Validators.required]],
         });
         /* eslint-enable key-spacing */
     }
@@ -106,13 +106,13 @@ export class OutBoxNotificationDetailComponent extends ViewDetailComponent
         switch (action?.id)
         {
             /* #region common actions */
-            case 'notification::outBoxNotification.detail.new':
+            case 'notification::inbox.detail.new':
                 this.fg.get('id').setValue(Utils.uuid());
                 break;
 
-            case 'notification::outBoxNotification.detail.edit':
-                this.outBoxNotificationService
-                    .outBoxNotification$
+            case 'notification::inbox.detail.edit':
+                this.inboxService
+                    .inbox$
                     .pipe(takeUntil(this.unsubscribeAll$))
                     .subscribe(item =>
                     {
@@ -121,18 +121,18 @@ export class OutBoxNotificationDetailComponent extends ViewDetailComponent
                     });
                 break;
 
-            case 'notification::outBoxNotification.detail.create':
+            case 'notification::inbox.detail.create':
                 try
                 {
                     await lastValueFrom(
-                        this.outBoxNotificationService
-                            .create<NotificationOutBoxNotification>({
+                        this.inboxService
+                            .create<NotificationInbox>({
                                 object: this.fg.value,
                             }),
                     );
 
                     this.snackBar.open(
-                        `${this.translocoService.translate('notification.OutBoxNotification')} ${this.translocoService.translate('Created.M')}`,
+                        `${this.translocoService.translate('notification.Inbox')} ${this.translocoService.translate('Created.M')}`,
                         undefined,
                         {
                             verticalPosition: 'top',
@@ -140,7 +140,7 @@ export class OutBoxNotificationDetailComponent extends ViewDetailComponent
                         },
                     );
 
-                    this.router.navigate(['notification/out-box-notification']);
+                    this.router.navigate(['notification/inbox']);
                 }
                 catch(error)
                 {
@@ -148,18 +148,18 @@ export class OutBoxNotificationDetailComponent extends ViewDetailComponent
                 }
                 break;
 
-            case 'notification::outBoxNotification.detail.update':
+            case 'notification::inbox.detail.update':
                 try
                 {
                     await lastValueFrom(
-                        this.outBoxNotificationService
-                            .updateById<NotificationOutBoxNotification>({
+                        this.inboxService
+                            .updateById<NotificationInbox>({
                                 object: this.fg.value,
                             }),
                     );
 
                     this.snackBar.open(
-                        `${this.translocoService.translate('notification.OutBoxNotification')} ${this.translocoService.translate('Saved.M')}`,
+                        `${this.translocoService.translate('notification.Inbox')} ${this.translocoService.translate('Saved.M')}`,
                         undefined,
                         {
                             verticalPosition: 'top',
@@ -167,7 +167,7 @@ export class OutBoxNotificationDetailComponent extends ViewDetailComponent
                         },
                     );
 
-                    this.router.navigate(['notification/out-box-notification']);
+                    this.router.navigate(['notification/inbox']);
                 }
                 catch(error)
                 {

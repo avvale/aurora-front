@@ -1,13 +1,12 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 import { IamTenant } from '@apps/iam/iam.types';
-import { NotificationOutBoxNotification } from '@apps/notification/notification.types';
-import { outBoxNotificationColumnsConfig, OutBoxNotificationService } from '@apps/notification/out-box-notification';
-import { ClientService } from '@apps/o-auth/client';
+import { notificationColumnsConfig, NotificationService } from '@apps/notification/notification';
+import { NotificationNotification } from '@apps/notification/notification.types';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
 import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, IamService, QueryStatementHandler } from '@aurora';
 
-export const outBoxNotificationPaginationResolver: ResolveFn<GridData<NotificationOutBoxNotification>> = (
+export const notificationPaginationResolver: ResolveFn<GridData<NotificationNotification>> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) =>
@@ -15,20 +14,20 @@ export const outBoxNotificationPaginationResolver: ResolveFn<GridData<Notificati
     const actionService = inject(ActionService);
     const gridFiltersStorageService = inject(GridFiltersStorageService);
     const gridStateService = inject(GridStateService);
-    const outBoxNotificationService = inject(OutBoxNotificationService);
+    const notificationService = inject(NotificationService);
 
     actionService.action({
-        id          : 'notification::outBoxNotification.list.view',
+        id          : 'notification::notification.list.view',
         isViewAction: true,
     });
 
-    const gridId = 'notification::outBoxNotification.list.mainGridList';
-    gridStateService.setPaginationActionId(gridId, 'notification::outBoxNotification.list.pagination');
-    gridStateService.setExportActionId(gridId, 'notification::outBoxNotification.list.export');
+    const gridId = 'notification::notification.list.mainGridList';
+    gridStateService.setPaginationActionId(gridId, 'notification::notification.list.pagination');
+    gridStateService.setExportActionId(gridId, 'notification::notification.list.export');
 
-    return outBoxNotificationService.pagination({
+    return notificationService.pagination({
         query: QueryStatementHandler
-            .init({ columnsConfig: outBoxNotificationColumnsConfig })
+            .init({ columnsConfig: notificationColumnsConfig })
             .setColumFilters(gridFiltersStorageService.getColumnFilterState(gridId))
             .setSort(gridStateService.getSort(gridId))
             .setPage(gridStateService.getPage(gridId))
@@ -37,7 +36,7 @@ export const outBoxNotificationPaginationResolver: ResolveFn<GridData<Notificati
     });
 };
 
-export const outBoxNotificationNewResolver: ResolveFn<{
+export const notificationNewResolver: ResolveFn<{
     iamGetTenants: IamTenant[];
     oAuthFindClientById: OAuthClient;
 }> = (
@@ -46,37 +45,40 @@ export const outBoxNotificationNewResolver: ResolveFn<{
 ) =>
 {
     const actionService = inject(ActionService);
-    const outBoxNotificationService = inject(OutBoxNotificationService);
+    const notificationService = inject(NotificationService);
     const iamService = inject(IamService);
 
     actionService.action({
-        id          : 'notification::outBoxNotification.detail.new',
+        id          : 'notification::notification.detail.new',
         isViewAction: true,
     });
 
-    console.log('iamService.me.clientId', iamService.me);
-
-    return outBoxNotificationService.getRelations({
-        clientId: iamService.me.clientId,
+    return notificationService.getRelations({
+        clientId         : iamService.me.clientId,
+        constraintTenants: {
+            where: {
+                id: iamService.me.dTenants,
+            },
+        },
     });
 };
 
-export const outBoxNotificationEditResolver: ResolveFn<{
-    object: NotificationOutBoxNotification;
+export const notificationEditResolver: ResolveFn<{
+    object: NotificationNotification;
 }> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) =>
 {
     const actionService = inject(ActionService);
-    const outBoxNotificationService = inject(OutBoxNotificationService);
+    const notificationService = inject(NotificationService);
 
     actionService.action({
-        id          : 'notification::outBoxNotification.detail.edit',
+        id          : 'notification::notification.detail.edit',
         isViewAction: true,
     });
 
-    return outBoxNotificationService
+    return notificationService
         .findById({
             id: route.paramMap.get('id'),
         });

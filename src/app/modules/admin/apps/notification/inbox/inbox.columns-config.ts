@@ -1,6 +1,6 @@
 import { ColumnConfig, ColumnDataType } from '@aurora';
 
-export const outBoxNotificationColumnsConfig: ColumnConfig[] = [
+export const inboxColumnsConfig: ColumnConfig[] = [
     {
         type       : ColumnDataType.NUMBER,
         field      : 'sort',
@@ -9,27 +9,10 @@ export const outBoxNotificationColumnsConfig: ColumnConfig[] = [
     },
     {
         type       : ColumnDataType.STRING,
-        field      : 'accountIds',
-        sort       : 'accountIds',
-        translation: 'notification.AccountIds',
-    },
-    {
-        type       : ColumnDataType.ENUM,
-        field      : 'accountTenantOperator',
-        sort       : 'accountTenantOperator',
-        translation: 'notification.AccountTenantOperator',
-    },
-    {
-        type       : ColumnDataType.STRING,
-        field      : 'tenantIds',
-        sort       : 'tenantIds',
-        translation: 'notification.TenantIds',
-    },
-    {
-        type       : ColumnDataType.STRING,
-        field      : 'scopes',
-        sort       : 'scopes',
-        translation: 'notification.Scopes',
+        field      : 'accountCode',
+        sort       : 'accountCode',
+        translation: 'notification.AccountCode',
+        isUnaccent : true,
     },
     {
         type       : ColumnDataType.BOOLEAN,
@@ -57,5 +40,11 @@ export const outBoxNotificationColumnsConfig: ColumnConfig[] = [
         sort       : 'attachments',
         translation: 'notification.Attachments',
         isUnaccent : true,
+    },
+    {
+        type       : ColumnDataType.BOOLEAN,
+        field      : 'isRead',
+        sort       : 'isRead',
+        translation: 'notification.IsRead',
     },
 ];

@@ -4,14 +4,22 @@ export const notificationNavigation: FuseNavigationItem = {
     id      : 'notification',
     title   : 'Notification',
     type    : 'collapsable',
-    icon    : 'heroicons_outline:tag',
+    icon    : 'notifications',
     children: [
         {
-            id   : 'outBoxNotifications',
-            title: 'OutBoxNotification',
+            id         : 'notifications',
+            title      : 'Notification',
+            type       : 'basic',
+            iconFontSet: 'material-symbols-outlined',
+            icon       : 'notification_multiple',
+            link       : '/notification/notification',
+        },
+        {
+            id   : 'inboxes',
+            title: 'Inbox',
             type : 'basic',
             icon : 'mat_outline:language',
-            link : '/notification/out-box-notification',
+            link : '/notification/inbox',
         },
     ],
 };

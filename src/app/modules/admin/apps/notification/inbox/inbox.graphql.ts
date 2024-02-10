@@ -1,47 +1,31 @@
 import gql from 'graphql-tag';
 
 export const fields = `
-    sort
     tenantId
-    accountIds
-    accountTenantOperator
-    tenantIds
-    scopes
+    notificationId
+    sort
+    accountId
+    accountCode
     isImportant
     subject
     body
     attachments
+    isRead
     meta
     createdAt
     updatedAt
 `;
 
 export const relationsFields = `
-    iamGetTenants (
-        query: $queryTenants
-        constraint: $constraintTenants
-    ) {
-        parentId
-        name
-        code
-        meta
-    }
-    oAuthFindClientById (
-        id: $clientId
-        constraint: $constraintClient
-    ) {
-        id
-        scopeOptions
-    }
 `;
 
 // default methods
 export const paginationQuery = gql`
-    query NotificationPaginateOutBoxNotifications (
+    query NotificationPaginateInboxes (
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        pagination: notificationPaginateOutBoxNotifications (
+        pagination: notificationPaginateInboxes (
             query: $query
             constraint: $constraint
         ) {
@@ -53,11 +37,11 @@ export const paginationQuery = gql`
 `;
 
 export const getQuery = gql`
-    query NotificationGetOutBoxNotifications (
+    query NotificationGetInboxes (
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        objects: notificationGetOutBoxNotifications (
+        objects: notificationGetInboxes (
             query: $query
             constraint: $constraint
         ) {
@@ -67,23 +51,12 @@ export const getQuery = gql`
     }
 `;
 
-export const getRelations = gql`
-    query IamGetNotificationsRelations(
-        $queryTenants: QueryStatement
-        $constraintTenants: QueryStatement
-        $clientId: ID
-        $constraintClient: QueryStatement
-    ) {
-        ${relationsFields}
-    }
-`;
-
 export const findByIdQuery = gql`
-    query NotificationFindOutBoxNotificationById (
+    query NotificationFindInboxById (
         $id: ID
         $constraint: QueryStatement
     ) {
-        object: notificationFindOutBoxNotificationById (
+        object: notificationFindInboxById (
             id: $id
             constraint: $constraint
         ) {
@@ -94,11 +67,11 @@ export const findByIdQuery = gql`
 `;
 
 export const findQuery = gql`
-    query NotificationFindOutBoxNotification (
+    query NotificationFindInbox (
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        object: notificationFindOutBoxNotification (
+        object: notificationFindInbox (
             query: $query
             constraint: $constraint
         ) {
@@ -109,10 +82,10 @@ export const findQuery = gql`
 `;
 
 export const createMutation = gql`
-    mutation NotificationCreateOutBoxNotification (
-        $payload: NotificationCreateOutBoxNotificationInput!
+    mutation NotificationCreateInbox (
+        $payload: NotificationCreateInboxInput!
     ) {
-        notificationCreateOutBoxNotification (
+        notificationCreateInbox (
             payload: $payload
         ) {
             ${fields}
@@ -121,11 +94,11 @@ export const createMutation = gql`
 `;
 
 export const updateByIdMutation = gql`
-    mutation NotificationUpdateOutBoxNotificationById (
-        $payload: NotificationUpdateOutBoxNotificationByIdInput!
+    mutation NotificationUpdateInboxById (
+        $payload: NotificationUpdateInboxByIdInput!
         $constraint: QueryStatement
     ) {
-        notificationUpdateOutBoxNotificationById (
+        notificationUpdateInboxById (
             payload: $payload
             constraint: $constraint
         ) {
@@ -135,12 +108,12 @@ export const updateByIdMutation = gql`
 `;
 
 export const updateMutation = gql`
-    mutation NotificationUpdateOutBoxNotifications (
-        $payload: NotificationUpdateOutBoxNotificationsInput!
+    mutation NotificationUpdateInboxes (
+        $payload: NotificationUpdateInboxesInput!
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        notificationUpdateOutBoxNotifications (
+        notificationUpdateInboxes (
             payload: $payload
             query: $query
             constraint: $constraint
@@ -151,11 +124,11 @@ export const updateMutation = gql`
 `;
 
 export const deleteByIdMutation = gql`
-    mutation NotificationDeleteOutBoxNotificationById (
+    mutation NotificationDeleteInboxById (
         $id: ID!
         $constraint: QueryStatement
     ) {
-        notificationDeleteOutBoxNotificationById (
+        notificationDeleteInboxById (
             id: $id
             constraint: $constraint
         ) {
@@ -165,11 +138,11 @@ export const deleteByIdMutation = gql`
 `;
 
 export const deleteMutation = gql`
-    mutation NotificationDeleteOutBoxNotifications (
+    mutation NotificationDeleteInboxes (
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        notificationDeleteOutBoxNotifications (
+        notificationDeleteInboxes (
             query: $query
             constraint: $constraint
         ) {

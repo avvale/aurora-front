@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { IamTenant } from '@apps/iam/iam.types';
 import { TenantService } from '@apps/iam/tenant';
-import { NotificationCreateOutBoxNotification, NotificationOutBoxNotification, NotificationUpdateOutBoxNotificationById, NotificationUpdateOutBoxNotifications } from '@apps/notification/notification.types';
-import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, getRelations, paginationQuery, updateByIdMutation, updateMutation } from '@apps/notification/out-box-notification';
+import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, getRelations, paginationQuery, updateByIdMutation, updateMutation } from '@apps/notification/notification';
+import { NotificationCreateNotification, NotificationNotification, NotificationUpdateNotificationById, NotificationUpdateNotifications } from '@apps/notification/notification.types';
 import { ClientService } from '@apps/o-auth/client';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
@@ -12,11 +12,11 @@ import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-export class OutBoxNotificationService
+export class NotificationService
 {
-    paginationSubject$: BehaviorSubject<GridData<NotificationOutBoxNotification> | null> = new BehaviorSubject(null);
-    outBoxNotificationSubject$: BehaviorSubject<NotificationOutBoxNotification | null> = new BehaviorSubject(null);
-    outBoxNotificationsSubject$: BehaviorSubject<NotificationOutBoxNotification[] | null> = new BehaviorSubject(null);
+    paginationSubject$: BehaviorSubject<GridData<NotificationNotification> | null> = new BehaviorSubject(null);
+    notificationSubject$: BehaviorSubject<NotificationNotification | null> = new BehaviorSubject(null);
+    notificationsSubject$: BehaviorSubject<NotificationNotification[] | null> = new BehaviorSubject(null);
 
     constructor(
         private readonly graphqlService: GraphQLService,
@@ -27,19 +27,19 @@ export class OutBoxNotificationService
     /**
     * Getters
     */
-    get pagination$(): Observable<GridData<NotificationOutBoxNotification>>
+    get pagination$(): Observable<GridData<NotificationNotification>>
     {
         return this.paginationSubject$.asObservable();
     }
 
-    get outBoxNotification$(): Observable<NotificationOutBoxNotification>
+    get notification$(): Observable<NotificationNotification>
     {
-        return this.outBoxNotificationSubject$.asObservable();
+        return this.notificationSubject$.asObservable();
     }
 
-    get outBoxNotifications$(): Observable<NotificationOutBoxNotification[]>
+    get notifications$(): Observable<NotificationNotification[]>
     {
-        return this.outBoxNotificationsSubject$.asObservable();
+        return this.notificationsSubject$.asObservable();
     }
 
     pagination(
@@ -54,12 +54,12 @@ export class OutBoxNotificationService
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
         } = {},
-    ): Observable<GridData<NotificationOutBoxNotification>>
+    ): Observable<GridData<NotificationNotification>>
     {
         // get result, map ang throw data across observable
         return this.graphqlService
             .client()
-            .watchQuery<{ pagination: GridData<NotificationOutBoxNotification>; }>({
+            .watchQuery<{ pagination: GridData<NotificationNotification>; }>({
                 query    : graphqlStatement,
                 variables: {
                     query,
@@ -90,13 +90,13 @@ export class OutBoxNotificationService
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<{
-        object: NotificationOutBoxNotification;
+        object: NotificationNotification;
     }>
     {
         return this.graphqlService
             .client()
             .watchQuery<{
-                object: NotificationOutBoxNotification;
+                object: NotificationNotification;
             }>({
                 query    : parseGqlFields(graphqlStatement, fields, constraint),
                 variables: {
@@ -113,7 +113,7 @@ export class OutBoxNotificationService
                 map(result => result.data),
                 tap(data =>
                 {
-                    this.outBoxNotificationSubject$.next(data.object);
+                    this.notificationSubject$.next(data.object);
                 }),
             );
     }
@@ -131,13 +131,13 @@ export class OutBoxNotificationService
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<{
-        object: NotificationOutBoxNotification;
+        object: NotificationNotification;
     }>
     {
         return this.graphqlService
             .client()
             .watchQuery<{
-                object: NotificationOutBoxNotification;
+                object: NotificationNotification;
             }>({
                 query    : parseGqlFields(graphqlStatement, fields, query, constraint),
                 variables: {
@@ -154,7 +154,7 @@ export class OutBoxNotificationService
                 map(result => result.data),
                 tap(data =>
                 {
-                    this.outBoxNotificationSubject$.next(data.object);
+                    this.notificationSubject$.next(data.object);
                 }),
             );
     }
@@ -172,13 +172,13 @@ export class OutBoxNotificationService
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<{
-        objects: NotificationOutBoxNotification[];
+        objects: NotificationNotification[];
     }>
     {
         return this.graphqlService
             .client()
             .watchQuery<{
-                objects: NotificationOutBoxNotification[];
+                objects: NotificationNotification[];
             }>({
                 query    : parseGqlFields(graphqlStatement, fields, query, constraint),
                 variables: {
@@ -195,7 +195,7 @@ export class OutBoxNotificationService
                 map(result => result.data),
                 tap(data =>
                 {
-                    this.outBoxNotificationsSubject$.next(data.objects);
+                    this.notificationsSubject$.next(data.objects);
                 }),
             );
     }
@@ -255,7 +255,7 @@ export class OutBoxNotificationService
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            object?: NotificationCreateOutBoxNotification;
+            object?: NotificationCreateNotification;
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<FetchResult<T>>
@@ -280,7 +280,7 @@ export class OutBoxNotificationService
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            object?: NotificationUpdateOutBoxNotificationById;
+            object?: NotificationUpdateNotificationById;
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<FetchResult<T>>
@@ -307,7 +307,7 @@ export class OutBoxNotificationService
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            object?: NotificationUpdateOutBoxNotifications;
+            object?: NotificationUpdateNotifications;
             query?: QueryStatement;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
