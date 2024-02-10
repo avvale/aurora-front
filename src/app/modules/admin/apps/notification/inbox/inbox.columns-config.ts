@@ -2,6 +2,12 @@ import { ColumnConfig, ColumnDataType } from '@aurora';
 
 export const inboxColumnsConfig: ColumnConfig[] = [
     {
+        type       : ColumnDataType.STRING,
+        field      : 'tenantIds',
+        sort       : 'tenantIds',
+        translation: 'notification.TenantIds',
+    },
+    {
         type       : ColumnDataType.NUMBER,
         field      : 'sort',
         sort       : 'sort',
@@ -46,5 +52,11 @@ export const inboxColumnsConfig: ColumnConfig[] = [
         field      : 'isRead',
         sort       : 'isRead',
         translation: 'notification.IsRead',
+    },
+    {
+        type       : ColumnDataType.BOOLEAN,
+        field      : 'isReadAtLeastOnce',
+        sort       : 'isReadAtLeastOnce',
+        translation: 'notification.IsReadAtLeastOnce',
     },
 ];

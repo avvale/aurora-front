@@ -3,6 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { Message } from 'app/layout/common/messages/messages.types';
 import { map, Observable, ReplaySubject, switchMap, take, tap } from 'rxjs';
 import { InboxService } from '../inbox';
+import { NotificationInbox } from '../notification.types';
+import { GridData } from '@aurora';
 
 @Injectable({
     providedIn: 'root',
@@ -40,7 +42,23 @@ export class MessagesService
      */
     getAll(): Observable<any>
     {
-        return this.inboxService.pagination$
+        return this.inboxService
+            .checkNotificationsInbox({
+                query: {
+                    limit : 10,
+                    offset: 0,
+                    order : [['sort', 'desc']],
+                },
+            })
+            .pipe(
+                tap(pagination =>
+                {
+                    console.log('pagination', pagination);
+                    //this._messages.next(messages);
+                }),
+            );
+
+        /* return this.inboxService.pagination$
             .pipe(
                 tap(pagination =>
                 {
@@ -55,7 +73,7 @@ export class MessagesService
             {
                 this._messages.next(messages);
             }),
-        );
+        ); */
     }
 
     /**

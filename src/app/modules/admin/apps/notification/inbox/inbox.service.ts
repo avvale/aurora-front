@@ -1,3 +1,4 @@
+import { checkNotificationsInboxMutation } from './inbox.graphql';
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, paginationQuery, updateByIdMutation, updateMutation } from '@apps/notification/inbox';
@@ -327,6 +328,27 @@ export class InboxService
                 },
                 context: {
                     headers,
+                },
+            });
+    }
+
+    // Mutation additionalApis
+    checkNotificationsInbox<T>(
+        {
+            graphqlStatement = checkNotificationsInboxMutation,
+            query = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            query?: QueryStatement;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    query,
                 },
             });
     }

@@ -11,11 +11,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/notification/inbox/inbox-detail.component.html",
-            "integrity": "sha1:6113af51ebbec1628d22e070bc6422e619f6fcbb"
+            "integrity": "sha1:7447c2d93aa003addebbf2ffc6fa8fa2f0e30b7b"
         },
         {
             "path": "src/app/modules/admin/apps/notification/inbox/inbox-detail.component.ts",
-            "integrity": "sha1:9e990a5288a42cffa9d48c7a3249e161d17cca0a"
+            "integrity": "sha1:e8a78b9092d92c6edf7174ccc8c47c60c5d111a8"
         },
         {
             "path": "src/app/modules/admin/apps/notification/inbox/inbox-list.component.html",
@@ -27,11 +27,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/notification/inbox/inbox.columns-config.ts",
-            "integrity": "sha1:40d3a87ebc24e4a4a11775976d616026f51dbb72"
+            "integrity": "sha1:52b7972844ba1561eb28749ce7c2ad49b365e765"
         },
         {
             "path": "src/app/modules/admin/apps/notification/inbox/inbox.graphql.ts",
-            "integrity": "sha1:7778464f26b16d19f85668e8be227054f69fe329"
+            "integrity": "sha1:03c45391d3ea047b5ccfd762ab32a6f69e82d9e0"
         },
         {
             "path": "src/app/modules/admin/apps/notification/inbox/inbox.resolvers.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/notification/inbox/inbox.service.ts",
-            "integrity": "sha1:d6d77c7269ff694cbf70299d839e53161907fd5c"
+            "integrity": "sha1:a744d41f1d32fd2a7dbd268f7654b39e68d6e4d3"
         },
         {
             "path": "src/app/modules/admin/apps/notification/inbox/index.ts",

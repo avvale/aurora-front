@@ -1,4 +1,3 @@
-import { NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -15,7 +14,7 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
-        MatCheckboxModule, NgForOf,
+        MatCheckboxModule,
     ],
 })
 export class InboxDetailComponent extends ViewDetailComponent
@@ -86,7 +85,7 @@ export class InboxDetailComponent extends ViewDetailComponent
         /* eslint-disable key-spacing */
         this.fg = this.fb.group({
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
-            tenantId: ['', [Validators.minLength(36), Validators.maxLength(36)]],
+            tenantIds: [],
             notificationId: [null, [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             sort: [null, [Validators.required]],
             accountId: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
@@ -96,6 +95,7 @@ export class InboxDetailComponent extends ViewDetailComponent
             body: ['', [Validators.required]],
             attachments: null,
             isRead: [false, [Validators.required]],
+            isReadAtLeastOnce: [false, [Validators.required]],
         });
         /* eslint-enable key-spacing */
     }

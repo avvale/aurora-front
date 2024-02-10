@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const fields = `
-    tenantId
+    tenantIds
     notificationId
     sort
     accountId
@@ -11,6 +11,7 @@ export const fields = `
     body
     attachments
     isRead
+    isReadAtLeastOnce
     meta
     createdAt
     updatedAt
@@ -147,6 +148,21 @@ export const deleteMutation = gql`
             constraint: $constraint
         ) {
             ${fields}
+        }
+    }
+`;
+
+// Mutation additionalApis
+export const checkNotificationsInboxMutation = gql`
+    mutation NotificationCheckNotificationsInbox (
+        $query: QueryStatement
+    ) {
+        notificationCheckNotificationsInbox (
+            query: $query
+        ) {
+            total
+            rows
+            count
         }
     }
 `;
