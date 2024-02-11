@@ -87,7 +87,7 @@ export class InboxDetailComponent extends ViewDetailComponent
         this.fg = this.fb.group({
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             tenantIds: [],
-            messageId: [null, [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
+            messageId: [null, [Validators.minLength(36), Validators.maxLength(36)]],
             sort: [null, [Validators.required]],
             accountId: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             accountCode: ['', [Validators.minLength(127), Validators.maxLength(127)]],

@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Mail, MailCategory, MailFilter, MailFolder, MailLabel } from './mailbox.types';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
+import { MessageInbox } from '../message.types';
+import { GraphQLService, GridData } from '@aurora';
 
 @Injectable({
     providedIn: 'root',
 })
 export class MailboxService
 {
-    private _pagination: BehaviorSubject<any> = new BehaviorSubject(null);
-    
-    
+    private graphqlService = inject(GraphQLService);
+    private paginationSubject$: BehaviorSubject<GridData<MessageInbox> | null> = new BehaviorSubject(null);
     
     
     selectedMailChanged: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -32,6 +33,13 @@ export class MailboxService
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
+    get pagination$(): Observable<GridData<MessageInbox>>
+    {
+        return this.paginationSubject$.asObservable();
+    }
+
+
+
 
     /**
      * Getter for category
@@ -89,13 +97,7 @@ export class MailboxService
         return this._mail.asObservable();
     }
 
-    /**
-     * Getter for pagination
-     */
-    get pagination$(): Observable<any>
-    {
-        return this._pagination.asObservable();
-    }
+    
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
@@ -145,8 +147,9 @@ export class MailboxService
      */
     getMailsByFilter(filter: string, page: string = '1'): Observable<any>
     {
+        return of(true);
         // Execute the mails loading with true
-        this._mailsLoading.next(true);
+        /* this._mailsLoading.next(true);
 
         return this._httpClient.get<Mail[]>('api/apps/mailbox/mails', {
             params: {
@@ -176,7 +179,7 @@ export class MailboxService
 
                 return of(response);
             }),
-        );
+        ); */
     }
 
     /**
@@ -184,8 +187,9 @@ export class MailboxService
      */
     getMailsByFolder(folder: string, page: string = '1'): Observable<any>
     {
+        return of(true);
         // Execute the mails loading with true
-        this._mailsLoading.next(true);
+        /* this._mailsLoading.next(true);
 
         return this._httpClient.get<Mail[]>('api/apps/mailbox/mails', {
             params: {
@@ -215,7 +219,7 @@ export class MailboxService
 
                 return of(response);
             }),
-        );
+        ); */
     }
 
     /**
@@ -223,8 +227,9 @@ export class MailboxService
      */
     getMailsByLabel(label: string, page: string = '1'): Observable<any>
     {
+        return of(true);
         // Execute the mails loading with true
-        this._mailsLoading.next(true);
+        /* this._mailsLoading.next(true);
 
         return this._httpClient.get<Mail[]>('api/apps/mailbox/mails', {
             params: {
@@ -254,7 +259,7 @@ export class MailboxService
 
                 return of(response);
             }),
-        );
+        ); */
     }
 
     /**
@@ -262,7 +267,8 @@ export class MailboxService
      */
     getMailById(id: string): Observable<any>
     {
-        return this._mails.pipe(
+        return of(true);
+        /* return this._mails.pipe(
             take(1),
             map((mails) =>
             {
@@ -284,7 +290,7 @@ export class MailboxService
 
                 return of(mail);
             }),
-        );
+        ); */
     }
 
     /**

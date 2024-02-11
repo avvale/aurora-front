@@ -78,7 +78,7 @@ export class MessageClientListComponent implements OnInit, OnDestroy
             });
 
         // Mails
-        this.inboxService
+        /* this.inboxService
             .checkMessagesInbox({
                 query: {
                     limit : 10,
@@ -89,7 +89,7 @@ export class MessageClientListComponent implements OnInit, OnDestroy
             .subscribe((messageInboxPagination : GridData<MessageInbox>) =>
             {
                 //this.messages.next(data.rows);
-            });
+            }); */
 
         // Mails
         /* this._mailboxService.mails$

@@ -6,6 +6,7 @@ import { NotificationNotification } from '@apps/notification/notification.types'
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
 import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, IamService, QueryStatementHandler } from '@aurora';
 import { MessageInbox } from '../message.types';
+import { InboxService } from '../inbox';
 
 export const messageCenterPaginationResolver: ResolveFn<GridData<MessageInbox>> = (
     route: ActivatedRouteSnapshot,
@@ -15,7 +16,7 @@ export const messageCenterPaginationResolver: ResolveFn<GridData<MessageInbox>> 
     const actionService = inject(ActionService);
     const gridFiltersStorageService = inject(GridFiltersStorageService);
     const gridStateService = inject(GridStateService);
-    const notificationService = inject(NotificationService);
+    const inboxService = inject(InboxService);
 
     actionService.action({
         id          : 'notification::notification.list.view',
@@ -26,7 +27,7 @@ export const messageCenterPaginationResolver: ResolveFn<GridData<MessageInbox>> 
     gridStateService.setPaginationActionId(gridId, 'notification::notification.list.pagination');
     gridStateService.setExportActionId(gridId, 'notification::notification.list.export');
 
-    return notificationService.pagination({
+    return inboxService.pagination({
         query: QueryStatementHandler
             .init({ columnsConfig: notificationColumnsConfig })
             .setColumFilters(gridFiltersStorageService.getColumnFilterState(gridId))

@@ -24,7 +24,7 @@ aggregateProperties:
   - name: messageId
     type: id
     length: 36
-    nullable: false
+    nullable: true
     relationship:
       type: many-to-one
       aggregateName: MessageMessage
@@ -95,5 +95,8 @@ aggregateProperties:
     nullable: true
 additionalApis:
   - path: message/inbox/check-messages
+    resolverType: mutation
+    httpMethod: post
+  - path: message/inbox/paginate-customer-messages
     resolverType: query
     httpMethod: post

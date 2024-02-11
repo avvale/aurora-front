@@ -158,16 +158,25 @@ export const deleteMutation = gql`
 `;
 
 // Queries additionalApis
-export const checkMessagesInboxQuery = gql`
-    query MessageCheckMessagesInbox (
+export const paginateCustomerMessagesInboxQuery = gql`
+    query MessagePaginateCustomerMessagesInbox (
         $query: QueryStatement
+        $constraint: QueryStatement
     ) {
-        messageCheckMessagesInbox (
+        pagination: messagePaginateCustomerMessagesInbox (
             query: $query
-        ) {
+            constraint: $constraint
+        ){
             total
             rows
             count
         }
+    }
+`;
+
+// Mutation additionalApis
+export const checkMessagesInboxMutation = gql`
+    mutation MessageCheckMessagesInbox {
+        messageCheckMessagesInbox
     }
 `;

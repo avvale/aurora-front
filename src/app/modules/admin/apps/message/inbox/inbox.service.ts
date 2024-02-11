@@ -1,4 +1,4 @@
-import { checkMessagesInboxQuery } from './inbox.graphql';
+import { checkMessagesInboxMutation, paginateCustomerMessagesInboxQuery } from './inbox.graphql';
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, paginationQuery, updateByIdMutation, updateMutation } from '@apps/message/inbox';
@@ -14,6 +14,10 @@ export class InboxService
     paginationSubject$: BehaviorSubject<GridData<MessageInbox> | null> = new BehaviorSubject(null);
     inboxSubject$: BehaviorSubject<MessageInbox | null> = new BehaviorSubject(null);
     inboxesSubject$: BehaviorSubject<MessageInbox[] | null> = new BehaviorSubject(null);
+
+    // ---- customizations ----
+    paginationCustomerCenterSubject$: BehaviorSubject<GridData<MessageInbox> | null> = new BehaviorSubject(null);
+    paginationCustomerQuickViewSubject$: BehaviorSubject<GridData<MessageInbox> | null> = new BehaviorSubject(null);
 
     constructor(
         private readonly graphqlService: GraphQLService,
@@ -35,6 +39,17 @@ export class InboxService
     get inboxes$(): Observable<MessageInbox[]>
     {
         return this.inboxesSubject$.asObservable();
+    }
+
+    // ---- customizations ----
+    get paginationCustomerCenter$(): Observable<GridData<MessageInbox>>
+    {
+        return this.paginationCustomerCenterSubject$.asObservable();
+    }
+
+    get paginationCustomerQuickView$(): Observable<GridData<MessageInbox>>
+    {
+        return this.paginationCustomerQuickViewSubject$.asObservable();
     }
 
     pagination(
@@ -333,14 +348,16 @@ export class InboxService
     }
 
     // Queries additionalApis
-    checkMessagesInbox(
+    paginateCustomerCenterMessagesInbox(
         {
-            graphqlStatement = checkMessagesInboxQuery,
+            graphqlStatement = paginateCustomerMessagesInboxQuery,
             query = {},
+            constraint = {},
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
             query?: QueryStatement;
+            constraint?: QueryStatement;
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<GridData<MessageInbox>>
@@ -348,11 +365,12 @@ export class InboxService
         return this.graphqlService
             .client()
             .watchQuery<{
-                messageCheckMessagesInbox: GridData<MessageInbox>;
+                pagination: GridData<MessageInbox>;
             }>({
                 query    : graphqlStatement,
                 variables: {
                     query,
+                    constraint,
                 },
                 context: {
                     headers,
@@ -361,7 +379,66 @@ export class InboxService
             .valueChanges
             .pipe(
                 first(),
-                map(result => result.data.messageCheckMessagesInbox),
+                map(result => result.data.pagination),
+                tap(pagination => this.paginationCustomerCenterSubject$.next(pagination)),
             );
+    }
+
+    paginateCustomerQuickVewMessagesInbox(
+        {
+            graphqlStatement = paginateCustomerMessagesInboxQuery,
+            query = {},
+            constraint = {},
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            query?: QueryStatement;
+            constraint?: QueryStatement;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<GridData<MessageInbox>>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                pagination: GridData<MessageInbox>;
+            }>({
+                query    : graphqlStatement,
+                variables: {
+                    query,
+                    constraint,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data.pagination),
+                tap(pagination => this.paginationCustomerQuickViewSubject$.next(pagination)),
+            );
+    }
+
+    // Mutation additionalApis
+    checkMessagesInbox<T>(
+        {
+            graphqlStatement = checkMessagesInboxMutation,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        // check messages in outbox and copy to inbox
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation: graphqlStatement,
+                context : {
+                    headers,
+                },
+            });
     }
 }
