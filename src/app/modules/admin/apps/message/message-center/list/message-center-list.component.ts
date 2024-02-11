@@ -1,5 +1,5 @@
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -7,20 +7,30 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { MailboxService } from '../mailbox.service';
 import { Mail, MailCategory } from '../mailbox.types';
 import { Subject, takeUntil } from 'rxjs';
+import { InboxService } from '@apps/message/inbox';
+import { MessageInbox } from '@apps/message/message.types';
+import { GridData } from '@aurora';
 
 @Component({
-    selector     : 'au-message-client-list',
-    templateUrl  : './message-client-list.component.html',
+    selector     : 'au-message-center-list',
+    templateUrl  : './message-center-list.component.html',
     encapsulation: ViewEncapsulation.None,
     standalone   : true,
     imports      : [NgIf, MatButtonModule, MatIconModule, RouterLink, MatProgressBarModule, NgFor, NgClass, RouterOutlet, DatePipe],
 })
 export class MessageClientListComponent implements OnInit, OnDestroy
 {
+    messages: MessageInbox[];
+
+
+    // OLD
+
+
     @ViewChild('mailList') mailList: ElementRef;
 
     category: MailCategory;
-    mails: Mail[] = [{
+    
+   /*  mails: Mail[] = [{
         id  : '1',
         type: 'sdf',
         from: {
@@ -33,11 +43,13 @@ export class MessageClientListComponent implements OnInit, OnDestroy
         ccCount: 3,
         unread : true,
         important: true,
-    }];
+    }]; */
     mailsLoading: boolean = false;
     pagination: any;
     selectedMail: Mail;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    private inboxService = inject(InboxService);
 
     /**
      * Constructor
@@ -63,6 +75,20 @@ export class MessageClientListComponent implements OnInit, OnDestroy
             .subscribe((category: MailCategory) =>
             {
                 this.category = category;
+            });
+
+        // Mails
+        this.inboxService
+            .checkMessagesInbox({
+                query: {
+                    limit : 10,
+                    offset: 0,
+                    order : [['sort', 'desc']],
+                },
+            })
+            .subscribe((messageInboxPagination : GridData<MessageInbox>) =>
+            {
+                //this.messages.next(data.rows);
             });
 
         // Mails

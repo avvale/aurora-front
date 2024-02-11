@@ -5,8 +5,9 @@ import { notificationColumnsConfig, NotificationService } from '@apps/notificati
 import { NotificationNotification } from '@apps/notification/notification.types';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
 import { Action, ActionService, GridData, GridFiltersStorageService, GridStateService, IamService, QueryStatementHandler } from '@aurora';
+import { MessageInbox } from '../message.types';
 
-export const inboxPaginationResolver: ResolveFn<GridData<NotificationNotification>> = (
+export const messageCenterPaginationResolver: ResolveFn<GridData<MessageInbox>> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) =>

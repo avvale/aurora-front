@@ -17,13 +17,13 @@ import { Mail } from '../mailbox.types';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector     : 'inbox-details',
-    templateUrl  : './message-client-details.component.html',
+    selector     : 'message-center-details',
+    templateUrl  : './message-center-details.component.html',
     encapsulation: ViewEncapsulation.None,
     standalone   : true,
     imports      : [NgIf, MatButtonModule, RouterLink, MatIconModule, MatMenuModule, NgFor, MatRippleModule, MatCheckboxModule, NgClass, FuseScrollResetDirective, NgPlural, NgPluralCase, MatFormFieldModule, MatInputModule, FuseFindByKeyPipe, DecimalPipe, DatePipe],
 })
-export class MessageClientDetailsComponent implements OnInit, OnDestroy
+export class MessageCenterDetailsComponent implements OnInit, OnDestroy
 {
     @ViewChild('infoDetailsPanelOrigin') private _infoDetailsPanelOrigin: MatButton;
     @ViewChild('infoDetailsPanel') private _infoDetailsPanel: TemplateRef<any>;

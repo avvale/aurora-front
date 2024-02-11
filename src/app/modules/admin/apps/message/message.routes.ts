@@ -7,8 +7,8 @@ import { messageEditResolver, messageNewResolver, messagePaginationResolver } fr
 import { InboxListComponent } from './inbox/inbox-list.component';
 import { InboxDetailComponent } from './inbox/inbox-detail.component';
 import { inboxEditResolver, inboxNewResolver, inboxPaginationResolver } from './inbox/inbox.resolvers';
-import { InboxComponent } from './messages-client/inbox.component';
-import { MessageClientDetailsComponent, MessageClientEmptyDetailsComponent, MessageClientListComponent } from './messages-client';
+import { InboxComponent } from './message-center/inbox.component';
+import { MessageCenterDetailsComponent, MessageClientEmptyDetailsComponent, MessageClientListComponent } from './message-center';
 
 export default [
     {
@@ -23,8 +23,9 @@ export default [
             { path: 'inbox/edit/:id', component: InboxDetailComponent, resolve: { data: inboxEditResolver }, data: { permission: 'message.inbox.get' }},
 
             {
-                path     : 'message-client',
+                path     : 'message-center',
                 component: InboxComponent,
+                // pathMatch: 'full',
                 //resolve  : { data: inboxPaginationResolver },
                 //data     : { permission: 'notification.inbox.get' },
                 children : [
@@ -44,7 +45,7 @@ export default [
                             },
                             {
                                 path     : ':id',
-                                component: MessageClientDetailsComponent,
+                                component: MessageCenterDetailsComponent,
                                 resolve  : {
                                     // mail: mailResolver,
                                 },

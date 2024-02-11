@@ -3,9 +3,16 @@ import { Injectable } from '@angular/core';
 import { Mail, MailCategory, MailFilter, MailFolder, MailLabel } from './mailbox.types';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 
-@Injectable({providedIn: 'root'})
+@Injectable({
+    providedIn: 'root',
+})
 export class MailboxService
 {
+    private _pagination: BehaviorSubject<any> = new BehaviorSubject(null);
+    
+    
+    
+    
     selectedMailChanged: BehaviorSubject<any> = new BehaviorSubject(null);
     private _category: BehaviorSubject<MailCategory> = new BehaviorSubject(null);
     private _filters: BehaviorSubject<MailFilter[]> = new BehaviorSubject(null);
@@ -14,7 +21,6 @@ export class MailboxService
     private _mails: BehaviorSubject<Mail[]> = new BehaviorSubject(null);
     private _mailsLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
     private _mail: BehaviorSubject<Mail> = new BehaviorSubject(null);
-    private _pagination: BehaviorSubject<any> = new BehaviorSubject(null);
 
     /**
      * Constructor

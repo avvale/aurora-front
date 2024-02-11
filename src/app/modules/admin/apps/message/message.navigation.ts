@@ -23,12 +23,12 @@ export const messageNavigation: FuseNavigationItem = {
             link       : '/message/inbox',
         },
         {
-            id         : 'inboxes',
-            title      : 'Inbox',
+            id         : 'messageCenter',
+            title      : 'MessageCenter',
             type       : 'basic',
             iconFontSet: 'material-symbols-outlined',
-            icon       : 'move_to_inbox',
-            link       : '/message/message-client',
+            icon       : 'all_inbox',
+            link       : '/message/message-center',
         },
     ],
 };
