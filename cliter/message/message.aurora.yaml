@@ -1,0 +1,102 @@
+version: 0.0.1
+boundedContextName: message
+moduleName: message
+moduleNames: messages
+aggregateName: MessageMessage
+hasOAuth: true
+hasTenant: true
+hasAuditing: true
+front:
+  solidFontSetIcon: material-symbols-outlined
+  solidIcon: notification_multiple
+  outlineFontSetIcon: material-symbols-outlined
+  outlineIcon: notification_multiple
+aggregateProperties:
+  - name: id
+    type: id
+    primaryKey: true
+    length: 36
+    nullable: false
+  - name: tenantIds
+    type: array
+    arrayOptions:
+      type: id
+    nullable: true
+    index: index
+  - name: status
+    type: enum
+    enumOptions:
+      - DRAFT
+      - PENDING
+      - SENT
+    nullable: false
+  - name: accountRecipientIds
+    type: array
+    arrayOptions:
+      type: id
+    nullable: true
+    index: index
+  - name: tenantRecipientIds
+    type: array
+    arrayOptions:
+      type: id
+    nullable: true
+    index: index
+  - name: scopeRecipients
+    type: array
+    arrayOptions:
+      type: varchar
+    nullable: true
+    index: index
+  - name: sendAt
+    type: timestamp
+    nullable: true
+  - name: isImportant
+    type: boolean
+    nullable: false
+  - name: title
+    type: varchar
+    maxLength: 255
+    nullable: false
+  - name: description
+    type: text
+    nullable: false
+  - name: link
+    type: varchar
+    maxLength: 2046
+    nullable: true
+  - name: isInternalLink
+    type: boolean
+    nullable: true
+  - name: image
+    type: json
+    nullable: true
+  - name: icon
+    type: varchar
+    maxLength: 63
+    nullable: true
+  - name: attachments
+    type: json
+    nullable: true
+  - name: totalRecipients
+    type: int
+    nullable: false
+    unsigned: true
+    defaultValue: 0
+  - name: reads
+    type: int
+    nullable: false
+    unsigned: true
+    defaultValue: 0
+  - name: meta
+    type: json
+    nullable: true
+  - name: createdAt
+    type: timestamp
+    nullable: true
+  - name: updatedAt
+    type: timestamp
+    nullable: true
+  - name: deletedAt
+    type: timestamp
+    nullable: true

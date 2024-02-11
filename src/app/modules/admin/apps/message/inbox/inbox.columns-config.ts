@@ -1,0 +1,95 @@
+import { ColumnConfig, ColumnDataType } from '@aurora';
+
+export const inboxColumnsConfig: ColumnConfig[] = [
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'tenantIds',
+        sort       : 'tenantIds',
+        translation: 'message.TenantIds',
+    },
+    {
+        type       : ColumnDataType.NUMBER,
+        field      : 'sort',
+        sort       : 'sort',
+        translation: 'message.Sort',
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'accountCode',
+        sort       : 'accountCode',
+        translation: 'message.AccountCode',
+        isUnaccent : true,
+    },
+    {
+        type       : ColumnDataType.BOOLEAN,
+        field      : 'isImportant',
+        sort       : 'isImportant',
+        translation: 'message.IsImportant',
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'sentAt',
+        sort       : 'sentAt',
+        translation: 'message.SentAt',
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'title',
+        sort       : 'title',
+        translation: 'message.Title',
+        isUnaccent : true,
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'description',
+        sort       : 'description',
+        translation: 'message.Description',
+        isUnaccent : true,
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'link',
+        sort       : 'link',
+        translation: 'message.Link',
+        isUnaccent : true,
+    },
+    {
+        type       : ColumnDataType.BOOLEAN,
+        field      : 'isInternalLink',
+        sort       : 'isInternalLink',
+        translation: 'message.IsInternalLink',
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'image',
+        sort       : 'image',
+        translation: 'message.Image',
+        isUnaccent : true,
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'icon',
+        sort       : 'icon',
+        translation: 'message.Icon',
+        isUnaccent : true,
+    },
+    {
+        type       : ColumnDataType.STRING,
+        field      : 'attachments',
+        sort       : 'attachments',
+        translation: 'message.Attachments',
+        isUnaccent : true,
+    },
+    {
+        type       : ColumnDataType.BOOLEAN,
+        field      : 'isRead',
+        sort       : 'isRead',
+        translation: 'message.IsRead',
+    },
+    {
+        type       : ColumnDataType.BOOLEAN,
+        field      : 'isReadAtLeastOnce',
+        sort       : 'isReadAtLeastOnce',
+        translation: 'message.IsReadAtLeastOnce',
+    },
+];

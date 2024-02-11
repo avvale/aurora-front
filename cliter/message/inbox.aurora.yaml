@@ -1,0 +1,99 @@
+version: 0.0.1
+boundedContextName: message
+moduleName: inbox
+moduleNames: inboxes
+aggregateName: MessageInbox
+hasOAuth: true
+hasTenant: true
+hasAuditing: true
+front:
+  solidIcon: mat_solid:move_to_inbox
+  outlineIcon: mat_outline:move_to_inbox
+aggregateProperties:
+  - name: id
+    type: id
+    primaryKey: true
+    length: 36
+    nullable: false
+  - name: tenantIds
+    type: array
+    arrayOptions:
+      type: id
+    nullable: true
+    index: index
+  - name: messageId
+    type: id
+    length: 36
+    nullable: false
+    relationship:
+      type: many-to-one
+      aggregateName: MessageMessage
+      modulePath: message/message
+      key: id
+      field: message
+      avoidConstraint: true
+  - name: sort
+    type: int
+    nullable: false
+  - name: accountId
+    type: id
+    length: 36
+    nullable: false
+    index: index
+  - name: accountCode
+    type: varchar
+    length: 127
+    nullable: true
+    index: index
+  - name: isImportant
+    type: boolean
+    nullable: false
+  - name: sentAt
+    type: timestamp
+    nullable: false
+  - name: title
+    type: varchar
+    maxLength: 255
+    nullable: false
+  - name: description
+    type: text
+    nullable: false
+  - name: link
+    type: varchar
+    maxLength: 2046
+    nullable: true
+  - name: isInternalLink
+    type: boolean
+    nullable: true
+  - name: image
+    type: json
+    nullable: true
+  - name: icon
+    type: varchar
+    maxLength: 63
+    nullable: true
+  - name: attachments
+    type: json
+    nullable: true
+  - name: isRead
+    type: boolean
+    nullable: false
+  - name: isReadAtLeastOnce
+    type: boolean
+    nullable: false
+  - name: meta
+    type: json
+    nullable: true
+  - name: createdAt
+    type: timestamp
+    nullable: true
+  - name: updatedAt
+    type: timestamp
+    nullable: true
+  - name: deletedAt
+    type: timestamp
+    nullable: true
+additionalApis:
+  - path: message/inbox/check-messages
+    resolverType: query
+    httpMethod: post
