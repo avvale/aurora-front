@@ -1,1 +1,1 @@
-export * from './repeat-latest-when';
+export * from './public-api';

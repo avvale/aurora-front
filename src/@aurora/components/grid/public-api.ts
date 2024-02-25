@@ -10,7 +10,9 @@ export * from '@aurora/components/grid/grid-managers/implementations/aurora-grid
 export * from '@aurora/components/grid/grid-state/grid-state.service';
 export * from '@aurora/components/grid/grid-translations/grid-column-translation.component';
 export * from '@aurora/components/grid/grid-translations/grid-translations.component';
+export * from '@aurora/components/grid/grid-translations/grid-translations.service';
 export * from '@aurora/components/grid/grid.functions';
 export * from '@aurora/components/grid/grid.types';
 export * from '@aurora/components/grid/grid/grid.component';
+export * from '@aurora/components/grid/grid/paginator-intl.service';
 export * from '@aurora/components/grid/selection-model/selection-model';
