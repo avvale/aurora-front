@@ -66,12 +66,14 @@
     "Operator": "Operador",
     "Operators": {
         "Contains": "Contiene",
+        "ContainsAny": "Contiene alguno",
         "EndsWith": "Termina por",
         "Equals": "Igual a",
         "GreaterThan": "Mayor que",
         "GreaterThanEqual": "Mayor que, igual",
         "LessThan": "Menor que",
         "LessThanEqual": "Menor que, igual",
+        "MustContain": "Tiene que contener",
         "NotEquals": "No igual a",
         "StartsWith": "Empieza por"
     },
