@@ -27,7 +27,6 @@ function copyApplication()
             '.editorconfig',
             '.eslintrc.json',
             '.gitignore',
-            '.npmrc',
             '.nvmrc',
             '!cliter/**',
             '!dist/**',
@@ -39,7 +38,7 @@ function copyApplication()
             '!src/app/modules/admin/apps/o-auth/**',
             '!src/app/modules/admin/apps/queue-manager/**',
             '!src/app/modules/admin/apps/search-engine/**',
-            '!src/app/modules/admin/apps/notification/**',
+            '!src/app/modules/admin/apps/message/**',
             '!src/app/modules/admin/kitchen-sink/**',
             '!src/app/modules/azure-ad/**',
             '!src/assets/i18n/auditing/**',
@@ -48,6 +47,7 @@ function copyApplication()
             '!src/assets/i18n/o-auth/**',
             '!src/assets/i18n/queue-manager/**',
             '!src/assets/i18n/search-engine/**',
+            '!src/assets/i18n/message/**',
             '!src/assets/i18n/kitchen-sink/**',
             '!src/index.ts',
             '!gulpfile.js',
@@ -71,6 +71,7 @@ function editPackageJson()
         .pipe(
             jeditor(function(json)
             {
+                delete json.dependencies['@angular-material-extensions/password-strength'];
                 delete json.dependencies['@azure/msal-angular'];
                 delete json.dependencies['@azure/msal-browser'];
 
@@ -105,6 +106,7 @@ async function cleanAppRoutes()
         'o-auth',
         'queue-manager',
         'search-engine',
+        'message',
         'kitchen-sink',
     ]);
 
@@ -122,7 +124,7 @@ async function cleanAdminNavigation()
     codeWriter.removeImport(sourceFile, './apps/o-auth/o-auth.navigation');
     codeWriter.removeImport(sourceFile, './apps/queue-manager/queue-manager.navigation');
     codeWriter.removeImport(sourceFile, './apps/search-engine/search-engine.navigation');
-    codeWriter.removeImport(sourceFile, './apps/notification/notification.navigation');
+    codeWriter.removeImport(sourceFile, './apps/message/message.navigation');
     codeWriter.removeImport(sourceFile, './kitchen-sink/kitchen-sink.navigation');
 
     const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
@@ -136,7 +138,7 @@ async function cleanAdminNavigation()
         'queueManagerNavigation',
         'searchEngineNavigation',
         'kitchenSinkNavigation',
-        'notificationNavigation',
+        'messageNavigation',
     ]);
 
     sourceFile.saveSync();
