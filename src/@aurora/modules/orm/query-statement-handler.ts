@@ -155,6 +155,10 @@ export class QueryStatementHandler
                         });
                         break;
 
+                    case ColumnDataType.ACTIONS:
+                        // do nothing
+                        break;
+
                     default:
                         log(`[DEBUG] Search is not implemented for ${columnConfig.type} yet`);
                         break;

@@ -34,7 +34,7 @@ import { SelectionChange, SelectionModel } from '../selection-model/selection-mo
     imports        : [
         AsyncPipe, DragDropModule, FilterGridCustomHeaderTemplatesPositionPipe, FlagIconComponent, GetActionsPipe, GetCellValuePipe, GetGridSpinnerFlagPipe, GridSearchComponent, GridTranslatePipe, GetTranslationIconColorPipe,
         HasCellValueTemplatePipe, HasCellValueWithFieldTemplatePipe, JoinPipe, IsOriginColumnConfigPipe, MatBadgeModule, MatButtonModule, MatCheckboxModule, MatIconModule, MatMenuModule, MatPaginatorModule, MatSortModule, MatTableModule,
-        NgForOf, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet, TransformDataCellPipe, NgClass,
+        NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet, TransformDataCellPipe,
     ],
 })
 export class GridComponent implements OnInit, AfterViewInit
