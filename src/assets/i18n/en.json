@@ -46,6 +46,8 @@
     "Images": "Images",
     "Index": "Index",
     "Inherit": "Inherit",
+    "InvalidForm": "You have errors in the form, please check the fields.",
+    "InvalidFormOk": "Ok!",
     "Issues": "Issues",
     "Language": "Language",
     "Latitude": "Latitude",

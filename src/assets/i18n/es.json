@@ -46,6 +46,8 @@
     "Images": "Imágenes",
     "Index": "Indexar",
     "Inherit": "Heredar",
+    "InvalidForm": "Tiene errores en el formulario, por favor revise los campos.",
+    "InvalidFormOk": "¡Entendido!",
     "Issues": "Asuntos",
     "Language": "Idioma",
     "Latitude": "Latitud",
