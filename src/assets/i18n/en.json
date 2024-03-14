@@ -62,6 +62,8 @@
     "NotAccount": "Don't have an account?",
     "NoAuthorized": "No authorized",
     "NoAuthorizedMessage": "You are not authorized to access this section, permission {{ permission }} is required. Please check with your administrator to gain access..",
+    "None.F": "None",
+    "None.M": "None",
     "NoResultsFound": "No results found",
     "Of": "Of",
     "Operations": "Operations",

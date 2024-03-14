@@ -62,6 +62,8 @@
     "NotAccount": "¿No tiene una cuenta?",
     "NoAuthorized": "No autorizado",
     "NoAuthorizedMessage": "No está autorizado para acceder a esta sección, requiere del permiso {{ permission }}. consulte con el administrador para poder acceder.",
+    "None.F": "Ninguna",
+    "None.M": "Ninguno",
     "NoResultsFound": "No se encuentran resultados",
     "Of": "De",
     "Operations": "Operaciones",
