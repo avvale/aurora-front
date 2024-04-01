@@ -15,7 +15,6 @@ aggregateProperties:
   - name: id
     type: id
     primaryKey: true
-    length: 36
     nullable: false
   - name: tenantIds
     type: array
@@ -46,6 +45,14 @@ aggregateProperties:
     type: array
     arrayOptions:
       type: varchar
+      maxLength: 64
+    nullable: true
+    index: index
+  - name: tagRecipients
+    type: array
+    arrayOptions:
+      type: varchar
+      maxLength: 64
     nullable: true
     index: index
   - name: sendAt
@@ -69,14 +76,14 @@ aggregateProperties:
     type: boolean
     nullable: true
   - name: image
-    type: json
+    type: jsonb
     nullable: true
   - name: icon
     type: varchar
-    maxLength: 63
+    maxLength: 64
     nullable: true
   - name: attachments
-    type: json
+    type: jsonb
     nullable: true
   - name: totalRecipients
     type: int
@@ -89,7 +96,7 @@ aggregateProperties:
     unsigned: true
     defaultValue: 0
   - name: meta
-    type: json
+    type: jsonb
     nullable: true
   - name: createdAt
     type: timestamp

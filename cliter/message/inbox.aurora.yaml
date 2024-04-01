@@ -13,7 +13,6 @@ aggregateProperties:
   - name: id
     type: id
     primaryKey: true
-    length: 36
     nullable: false
   - name: tenantIds
     type: array
@@ -23,7 +22,6 @@ aggregateProperties:
     index: index
   - name: messageId
     type: id
-    length: 36
     nullable: true
     relationship:
       type: many-to-one
@@ -37,12 +35,11 @@ aggregateProperties:
     nullable: false
   - name: accountId
     type: id
-    length: 36
     nullable: false
     index: index
   - name: accountCode
     type: varchar
-    length: 127
+    length: 128
     nullable: true
     index: index
   - name: isImportant
@@ -66,14 +63,14 @@ aggregateProperties:
     type: boolean
     nullable: true
   - name: image
-    type: json
+    type: jsonb
     nullable: true
   - name: icon
     type: varchar
-    maxLength: 63
+    maxLength: 64
     nullable: true
   - name: attachments
-    type: json
+    type: jsonb
     nullable: true
   - name: isRead
     type: boolean
@@ -82,7 +79,7 @@ aggregateProperties:
     type: boolean
     nullable: false
   - name: meta
-    type: json
+    type: jsonb
     nullable: true
   - name: createdAt
     type: timestamp
@@ -99,4 +96,16 @@ additionalApis:
     httpMethod: post
   - path: message/inbox/paginate-customer-messages
     resolverType: query
+    httpMethod: post
+  - path: message/inbox/find-customer-message
+    resolverType: query
+    httpMethod: post
+  - path: message/inbox/delete-customer-message
+    resolverType: mutation
+    httpMethod: post
+  - path: message/inbox/read-customer-message
+    resolverType: mutation
+    httpMethod: post
+  - path: message/inbox/unread-customer-message
+    resolverType: mutation
     httpMethod: post

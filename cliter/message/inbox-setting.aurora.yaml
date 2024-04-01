@@ -13,11 +13,9 @@ aggregateProperties:
   - name: id
     type: id
     primaryKey: true
-    length: 36
     nullable: false
   - name: accountId
     type: id
-    length: 36
     nullable: false
     index: unique
   - name: sort

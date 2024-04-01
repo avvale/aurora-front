@@ -13,11 +13,9 @@ aggregateProperties:
   - name: id
     type: id
     primaryKey: true
-    length: 36
     nullable: false
   - name: messageId
     type: id
-    length: 36
     nullable: false
     relationship:
       type: many-to-one
@@ -46,10 +44,18 @@ aggregateProperties:
     type: array
     arrayOptions:
       type: varchar
+      maxLength: 64
+    nullable: true
+    index: index
+  - name: tagRecipients
+    type: array
+    arrayOptions:
+      type: varchar
+      maxLength: 64
     nullable: true
     index: index
   - name: meta
-    type: json
+    type: jsonb
     nullable: true
   - name: createdAt
     type: timestamp
