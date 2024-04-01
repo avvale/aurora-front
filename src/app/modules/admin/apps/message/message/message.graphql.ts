@@ -6,6 +6,7 @@ export const fields = `
     accountRecipientIds
     tenantRecipientIds
     scopeRecipients
+    tagRecipients
     sendAt
     isImportant
     title

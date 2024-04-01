@@ -82,7 +82,7 @@
                         appearance="outline"
                         class="col-12"
                     >
-                        <mat-label>{{ t('iam.TenantIds') }}</mat-label>
+                        <mat-label>{{ t('Tenants') }}</mat-label>
                         <mat-select
                             formControlName="tenantIds"
                             multiple
@@ -137,7 +137,9 @@
                         class="col-4"
                     >
                         <mat-label>{{ t('message.Status') }}</mat-label>
-                        <mat-select formControlName="status">
+                        <mat-select
+                            formControlName="status"
+                        >
                             <mat-option value="DRAFT">DRAFT</mat-option>
                             <mat-option value="PENDING">PENDING</mat-option>
                             <mat-option value="SENT">SENT</mat-option>
@@ -232,7 +234,7 @@
                         <input
                             matInput
                             formControlName="icon"
-                            maxlength="63"
+                            maxlength="64"
                         >
                         <mat-error>{{ formErrors?.icon | async }}</mat-error>
                     </mat-form-field>

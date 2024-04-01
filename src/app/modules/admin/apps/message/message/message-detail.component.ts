@@ -9,7 +9,7 @@ import { MessageService } from '@apps/message/message';
 import { MessageMessage } from '@apps/message/message.types';
 import { ClientService } from '@apps/o-auth/client';
 import { OAuthScope } from '@apps/o-auth/o-auth.types';
-import { Action, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { Action, Crumb, defaultDetailImports, log, mapActions, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { Observable, lastValueFrom, map, takeUntil } from 'rxjs';
 
@@ -77,6 +77,19 @@ export class MessageDetailComponent extends ViewDetailComponent
         {
             log('[DEBUG] Error to validate form: ', this.fg);
             this.validationMessagesService.validate();
+
+            this.snackBar.openFromComponent(
+                SnackBarInvalidFormComponent,
+                {
+                    data: {
+                        message   : `${this.translocoService.translate('InvalidForm')}`,
+                        textButton: `${this.translocoService.translate('InvalidFormOk')}`,
+                    },
+                    panelClass      : 'error-snackbar',
+                    verticalPosition: 'top',
+                    duration        : 10000,
+                },
+            );
             return;
         }
 
@@ -102,6 +115,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             accountRecipientIds: [],
             tenantRecipientIds: [],
             scopeRecipients: [],
+            tagRecipients: [],
             sendAt: '',
             isImportant: [false, [Validators.required]],
             title: ['', [Validators.required, Validators.maxLength(255)]],
@@ -109,7 +123,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             link: ['', [Validators.maxLength(2046)]],
             isInternalLink: false,
             image: null,
-            icon: ['', [Validators.maxLength(63)]],
+            icon: ['', [Validators.maxLength(64)]],
             attachments: null,
             totalRecipients: null,
             reads: null,

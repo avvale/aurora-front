@@ -33,6 +33,12 @@ export const messageColumnsConfig: ColumnConfig[] = [
     },
     {
         type       : ColumnDataType.STRING,
+        field      : 'tagRecipients',
+        sort       : 'tagRecipients',
+        translation: 'message.TagRecipients',
+    },
+    {
+        type       : ColumnDataType.TIMESTAMP,
         field      : 'sendAt',
         sort       : 'sendAt',
         translation: 'message.SendAt',
@@ -71,7 +77,7 @@ export const messageColumnsConfig: ColumnConfig[] = [
         translation: 'message.IsInternalLink',
     },
     {
-        type       : ColumnDataType.STRING,
+        type       : ColumnDataType.JSONB,
         field      : 'image',
         sort       : 'image',
         translation: 'message.Image',
@@ -85,7 +91,7 @@ export const messageColumnsConfig: ColumnConfig[] = [
         isUnaccent : true,
     },
     {
-        type       : ColumnDataType.STRING,
+        type       : ColumnDataType.JSONB,
         field      : 'attachments',
         sort       : 'attachments',
         translation: 'message.Attachments',
