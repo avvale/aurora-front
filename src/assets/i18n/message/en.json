@@ -9,8 +9,8 @@
     "Image": "Image",
     "Inbox": "Inbox",
     "Inboxes": "Inboxes",
-    "IsImportant": "Es importante",
-    "IsInternalLink": "IsInternalLink",
+    "IsImportant": "Is important",
+    "IsInternalLink": "Is internal link",
     "IsRead": "IsRead",
     "IsReadAtLeastOnce": "IsReadAtLeastOnce",
     "Link": "Link",
@@ -32,6 +32,7 @@
     "Subject": "Subject",
     "TagRecipients": "TagRecipients",
     "TenantIds": "TenantIds",
+    "TenantRecipientIds": "TenantRecipientIds",
     "TenantRecipients": "Tenant recipients",
     "TotalRecipients": "TotalRecipients"
 }
