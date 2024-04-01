@@ -137,6 +137,7 @@
     "SynchronizeWarning": "You are going to synchronize record {{ entity }} {{ id }}",
     "SyncStatus": "Sync Status",
     "Tenant": "Tenant",
+    "Tenants": "Tenants",
     "Translations": "Translations",
     "ToggleFullscreen": "Toggle Fullscreen",
     "Type": "Type",
