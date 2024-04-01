@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
-import { Action, Crumb, defaultDetailImports, log, mapActions, Utils, ViewDetailComponent } from '@aurora';
+import { Action, Crumb, defaultDetailImports, log, mapActions, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { lastValueFrom, takeUntil } from 'rxjs';
 
@@ -66,6 +66,19 @@ export class InboxDetailComponent extends ViewDetailComponent
         {
             log('[DEBUG] Error to validate form: ', this.fg);
             this.validationMessagesService.validate();
+
+            this.snackBar.openFromComponent(
+                SnackBarInvalidFormComponent,
+                {
+                    data: {
+                        message   : `${this.translocoService.translate('InvalidForm')}`,
+                        textButton: `${this.translocoService.translate('InvalidFormOk')}`,
+                    },
+                    panelClass      : 'error-snackbar',
+                    verticalPosition: 'top',
+                    duration        : 10000,
+                },
+            );
             return;
         }
 
@@ -90,15 +103,15 @@ export class InboxDetailComponent extends ViewDetailComponent
             messageId: [null, [Validators.minLength(36), Validators.maxLength(36)]],
             sort: [null, [Validators.required]],
             accountId: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
-            accountCode: ['', [Validators.minLength(127), Validators.maxLength(127)]],
+            accountCode: ['', [Validators.minLength(128), Validators.maxLength(128)]],
             isImportant: [false, [Validators.required]],
             sentAt: ['', [Validators.required]],
-            title: ['', [Validators.required, Validators.maxLength(255)]],
-            description: ['', [Validators.required]],
+            subject: ['', [Validators.required, Validators.maxLength(255)]],
+            body: ['', [Validators.required]],
             link: ['', [Validators.maxLength(2046)]],
             isInternalLink: false,
             image: null,
-            icon: ['', [Validators.maxLength(63)]],
+            icon: ['', [Validators.maxLength(64)]],
             attachments: null,
             isRead: [false, [Validators.required]],
             isReadAtLeastOnce: [false, [Validators.required]],

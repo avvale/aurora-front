@@ -11,15 +11,15 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message-detail.component.html",
-            "integrity": "sha1:4b35ec350242e6902b5eded9f058b799e0b2c38e"
+            "integrity": "sha1:7acc348c3fa33ceefd1c07291f0ac2ae96480aa8"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message-detail.component.ts",
-            "integrity": "sha1:f90761057ffb7e8c11f30e6c0d754818a1ae3bb2"
+            "integrity": "sha1:07bb0a906cb625ad4595b894d69f2aac80f76dc7"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message-list.component.html",
-            "integrity": "sha1:133fad66d7be5686231fd72d0be284204b856223"
+            "integrity": "sha1:2cd7ddae4dfc69db1e2f5d99be25869da0c38233"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message-list.component.ts",
@@ -27,11 +27,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.columns-config.ts",
-            "integrity": "sha1:208d8d1a217b41db4dd7d3c9fbeb4099d0436c58"
+            "integrity": "sha1:b7d6fd809d723fde29ed50356ec7642123678564"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.graphql.ts",
-            "integrity": "sha1:8fb322119dca732fa9938c247f285888f7b0effa"
+            "integrity": "sha1:0b80fba33762310890c6264b0eae82b33831120c"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.resolvers.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.service.ts",
-            "integrity": "sha1:1d9e88298dd90b27f208dcf48839636e91e58181"
+            "integrity": "sha1:13ecb60c67b8333961d771be59a2b6b0e65ff51f"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/index.ts",

@@ -9,8 +9,8 @@ export const fields = `
     tagRecipients
     sendAt
     isImportant
-    title
-    description
+    subject
+    body
     link
     isInternalLink
     image

@@ -48,11 +48,11 @@ aggregateProperties:
   - name: sentAt
     type: timestamp
     nullable: false
-  - name: title
+  - name: subject
     type: varchar
     maxLength: 255
     nullable: false
-  - name: description
+  - name: body
     type: text
     nullable: false
   - name: link

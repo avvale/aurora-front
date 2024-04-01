@@ -34,16 +34,16 @@ export const inboxColumnsConfig: ColumnConfig[] = [
     },
     {
         type       : ColumnDataType.STRING,
-        field      : 'title',
-        sort       : 'title',
-        translation: 'message.Title',
+        field      : 'subject',
+        sort       : 'subject',
+        translation: 'message.Subject',
         isUnaccent : true,
     },
     {
         type       : ColumnDataType.STRING,
-        field      : 'description',
-        sort       : 'description',
-        translation: 'message.Description',
+        field      : 'body',
+        sort       : 'body',
+        translation: 'message.Body',
         isUnaccent : true,
     },
     {
@@ -61,23 +61,9 @@ export const inboxColumnsConfig: ColumnConfig[] = [
     },
     {
         type       : ColumnDataType.STRING,
-        field      : 'image',
-        sort       : 'image',
-        translation: 'message.Image',
-        isUnaccent : true,
-    },
-    {
-        type       : ColumnDataType.STRING,
         field      : 'icon',
         sort       : 'icon',
         translation: 'message.Icon',
-        isUnaccent : true,
-    },
-    {
-        type       : ColumnDataType.STRING,
-        field      : 'attachments',
-        sort       : 'attachments',
-        translation: 'message.Attachments',
         isUnaccent : true,
     },
     {

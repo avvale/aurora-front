@@ -1,4 +1,4 @@
-import { checkMessagesInboxMutation, paginateCustomerMessagesInboxQuery } from './inbox.graphql';
+import { checkMessagesInboxMutation, deleteCustomerMessageInboxMutation, findCustomerMessageInboxQuery, paginateCustomerMessagesInboxQuery, readCustomerMessageInboxMutation, unreadCustomerMessageInboxMutation } from './inbox.graphql';
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, paginationQuery, updateByIdMutation, updateMutation } from '@apps/message/inbox';
@@ -17,6 +17,7 @@ export class InboxService
 
     // ---- customizations ----
     paginationCustomerCenterSubject$: BehaviorSubject<GridData<MessageInbox> | null> = new BehaviorSubject(null);
+    inboxCustomerCenterSubject$: BehaviorSubject<MessageInbox | null> = new BehaviorSubject(null);
     paginationCustomerQuickViewSubject$: BehaviorSubject<GridData<MessageInbox> | null> = new BehaviorSubject(null);
 
     constructor(
@@ -45,6 +46,11 @@ export class InboxService
     get paginationCustomerCenter$(): Observable<GridData<MessageInbox>>
     {
         return this.paginationCustomerCenterSubject$.asObservable();
+    }
+
+    get inboxCustomerCenter$(): Observable<MessageInbox>
+    {
+        return this.inboxCustomerCenterSubject$.asObservable();
     }
 
     get paginationCustomerQuickView$(): Observable<GridData<MessageInbox>>
@@ -420,6 +426,47 @@ export class InboxService
             );
     }
 
+    findCustomerMessageInbox(
+        {
+            graphqlStatement = findCustomerMessageInboxQuery,
+            query = {},
+            constraint = {},
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            query?: QueryStatement;
+            constraint?: QueryStatement;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<{
+        object: MessageInbox;
+    }>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                object: MessageInbox;
+            }>({
+                query    : graphqlStatement,
+                variables: {
+                    query,
+                    constraint,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data),
+                tap(data =>
+                {
+                    this.inboxCustomerCenterSubject$.next(data.object);
+                }),
+            );
+    }
+
     // Mutation additionalApis
     checkMessagesInbox<T>(
         {
@@ -437,6 +484,81 @@ export class InboxService
             .mutate({
                 mutation: graphqlStatement,
                 context : {
+                    headers,
+                },
+            });
+    }
+
+    deleteCustomerMessageInbox<T>(
+        {
+            graphqlStatement = deleteCustomerMessageInboxMutation,
+            object = null,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            object?: MessageUpdateInboxById;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    payload: object,
+                },
+                context: {
+                    headers,
+                },
+            });
+    }
+
+    readCustomerMessageInbox<T>(
+        {
+            graphqlStatement = readCustomerMessageInboxMutation,
+            object = null,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            object?: MessageUpdateInboxById;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    payload: object,
+                },
+                context: {
+                    headers,
+                },
+            });
+    }
+
+    unreadCustomerMessageInbox<T>(
+        {
+            graphqlStatement = unreadCustomerMessageInboxMutation,
+            object = null,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            object?: MessageUpdateInboxById;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    payload: object,
+                },
+                context: {
                     headers,
                 },
             });

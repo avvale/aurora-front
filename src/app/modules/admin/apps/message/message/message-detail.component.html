@@ -189,26 +189,26 @@
                         appearance="outline"
                         class="col-12"
                     >
-                        <mat-label>{{ t('message.Title') }}</mat-label>
+                        <mat-label>{{ t('message.Subject') }}</mat-label>
                         <input
                             matInput
-                            formControlName="title"
+                            formControlName="subject"
                             maxlength="255"
                             required
                         >
-                        <mat-error>{{ formErrors?.title | async }}</mat-error>
+                        <mat-error>{{ formErrors?.subject | async }}</mat-error>
                     </mat-form-field>
                     <mat-form-field
                         appearance="outline"
                         class="col-12"
                     >
-                        <mat-label>{{ t('message.Description') }}</mat-label>
+                        <mat-label>{{ t('message.Body') }}</mat-label>
                         <textarea
                             matInput
-                            formControlName="description"
+                            formControlName="body"
                         >
                         </textarea>
-                        <mat-error>{{ formErrors?.description | async }}</mat-error>
+                        <mat-error>{{ formErrors?.body | async }}</mat-error>
                     </mat-form-field>
                     <mat-form-field
                         appearance="outline"

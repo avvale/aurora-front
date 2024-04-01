@@ -8,8 +8,8 @@ export const fields = `
     accountCode
     isImportant
     sentAt
-    title
-    description
+    subject
+    body
     link
     isInternalLink
     image
@@ -174,9 +174,59 @@ export const paginateCustomerMessagesInboxQuery = gql`
     }
 `;
 
+export const findCustomerMessageInboxQuery = gql`
+    query MessageFindCustomerMessageInbox (
+        $query: QueryStatement
+        $constraint: QueryStatement
+    ) {
+        object: messageFindCustomerMessageInbox (
+            query: $query
+            constraint: $constraint
+        ){
+            ${fields}
+        }
+    }
+`;
+
 // Mutation additionalApis
 export const checkMessagesInboxMutation = gql`
     mutation MessageCheckMessagesInbox {
         messageCheckMessagesInbox
+    }
+`;
+
+export const deleteCustomerMessageInboxMutation = gql`
+    mutation MessageDeleteCustomerMessageInbox (
+        $payload: MessageUpdateInboxByIdInput!
+        $constraint: QueryStatement
+    ) {
+        messageDeleteCustomerMessageInbox (
+            payload: $payload
+            constraint: $constraint
+        )
+    }
+`;
+
+export const readCustomerMessageInboxMutation = gql`
+    mutation MessageReadCustomerMessageInbox (
+        $payload: MessageUpdateInboxByIdInput!
+        $constraint: QueryStatement
+    ) {
+        messageReadCustomerMessageInbox (
+            payload: $payload
+            constraint: $constraint
+        )
+    }
+`;
+
+export const unreadCustomerMessageInboxMutation = gql`
+    mutation MessageUnreadCustomerMessageInbox (
+        $payload: MessageUpdateInboxByIdInput!
+        $constraint: QueryStatement
+    ) {
+        messageUnreadCustomerMessageInbox (
+            payload: $payload
+            constraint: $constraint
+        )
     }
 `;
