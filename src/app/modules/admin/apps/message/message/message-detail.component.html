@@ -100,7 +100,7 @@
                         appearance="outline"
                         class="col-12"
                     >
-                        <mat-label>{{ t('iam.RecipientTenants') }}</mat-label>
+                        <mat-label>{{ t('message.TenantRecipients') }}</mat-label>
                         <mat-select
                             formControlName="tenantRecipientIds"
                             multiple
@@ -118,7 +118,7 @@
                         appearance="outline"
                         class="col-12"
                     >
-                        <mat-label>{{ t('iam.Scopes') }}</mat-label>
+                        <mat-label>{{ t('message.ScopeRecipients') }}</mat-label>
                         <mat-select
                             formControlName="scopeRecipients"
                             multiple
@@ -136,13 +136,16 @@
                         appearance="outline"
                         class="col-4"
                     >
-                        <mat-label>{{ t('message.Status') }}</mat-label>
+                        <mat-label>{{ t('Status') }}</mat-label>
                         <mat-select
                             formControlName="status"
                         >
-                            <mat-option value="DRAFT">DRAFT</mat-option>
-                            <mat-option value="PENDING">PENDING</mat-option>
-                            <mat-option value="SENT">SENT</mat-option>
+                            <mat-option
+                                *ngFor="let status  of messageMessageStatus | keyvalue"
+                                [value]="status.key"
+                            >
+                                {{ t('message.MessageStatus.' + status.value) }}
+                            </mat-option>
                         </mat-select>
                         <mat-error>{{ formErrors?.status | async }}</mat-error>
                     </mat-form-field>

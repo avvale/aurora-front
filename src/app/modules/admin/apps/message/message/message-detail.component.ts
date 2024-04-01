@@ -1,4 +1,4 @@
-import { NgForOf } from '@angular/common';
+import { NgForOf, KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -6,7 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { IamTenant } from '@apps/iam/iam.types';
 import { TenantService } from '@apps/iam/tenant';
 import { MessageService } from '@apps/message/message';
-import { MessageMessage } from '@apps/message/message.types';
+import { MessageMessage, MessageMessageStatus } from '@apps/message';
 import { ClientService } from '@apps/o-auth/client';
 import { OAuthScope } from '@apps/o-auth/o-auth.types';
 import { Action, Crumb, defaultDetailImports, log, mapActions, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
@@ -22,6 +22,7 @@ import { Observable, lastValueFrom, map, takeUntil } from 'rxjs';
     imports        : [
         ...defaultDetailImports,
         MatCheckboxModule, MatSelectModule, MtxDatetimepickerModule, NgForOf,
+        KeyValuePipe,
     ],
 })
 export class MessageDetailComponent extends ViewDetailComponent
@@ -29,6 +30,7 @@ export class MessageDetailComponent extends ViewDetailComponent
     // ---- customizations ----
     scopeRecipients$: Observable<OAuthScope[]>;
     tenants$: Observable<IamTenant[]>;
+    messageMessageStatus = MessageMessageStatus;
 
     private clientService  = inject(ClientService);
     private tenantService = inject(TenantService);

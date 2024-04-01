@@ -1,4 +1,5 @@
-export interface MessageMessage {
+export interface MessageMessage
+{
     id: string;
     tenantIds?;
     status: string;
@@ -18,7 +19,8 @@ export interface MessageMessage {
     deletedAt?: string;
 }
 
-export interface MessageCreateMessage {
+export interface MessageCreateMessage
+{
     id: string;
     tenantIds?: string[];
     status: string;
@@ -35,7 +37,8 @@ export interface MessageCreateMessage {
     meta?: any;
 }
 
-export interface MessageUpdateMessageById {
+export interface MessageUpdateMessageById
+{
     id: string;
     tenantIds?;
     status?: string;
@@ -52,7 +55,8 @@ export interface MessageUpdateMessageById {
     meta?: any;
 }
 
-export interface MessageUpdateMessages {
+export interface MessageUpdateMessages
+{
     id?: string;
     tenantIds?: string[];
     status?: string;
@@ -69,7 +73,8 @@ export interface MessageUpdateMessages {
     meta?: any;
 }
 
-export interface MessageInbox {
+export interface MessageInbox
+{
     id: string;
     tenantIds?;
     messageId: string;
@@ -88,7 +93,8 @@ export interface MessageInbox {
     deletedAt?: string;
 }
 
-export interface MessageCreateInbox {
+export interface MessageCreateInbox
+{
     id: string;
     tenantIds?: string[];
     messageId: string;
@@ -104,7 +110,8 @@ export interface MessageCreateInbox {
     meta?: any;
 }
 
-export interface MessageUpdateInboxById {
+export interface MessageUpdateInboxById
+{
     id: string;
     tenantIds?;
     messageId?: string;
@@ -120,7 +127,8 @@ export interface MessageUpdateInboxById {
     meta?: any;
 }
 
-export interface MessageUpdateInboxes {
+export interface MessageUpdateInboxes
+{
     id?: string;
     tenantIds?: string[];
     messageId?: string;
@@ -134,4 +142,11 @@ export interface MessageUpdateInboxes {
     isRead?: boolean;
     isReadAtLeastOnce?: boolean;
     meta?: any;
+}
+
+export enum MessageMessageStatus
+{
+    DRAFT = 'DRAFT',
+    PENDING = 'PENDING',
+    SENT = 'SENT'
 }
