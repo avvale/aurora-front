@@ -46,6 +46,10 @@ export const relationsFields = `
         id
         name
     }
+    iamGetTags {
+        id
+        name
+    }
     oAuthGetClients (
         query: $queryGetClients
         constraint: $constraintGetClients
