@@ -29,7 +29,8 @@ import { MessageQuickViewComponent } from '@apps/message';
     imports      : [
         // ---- customizations ----
         EnvironmentsInformationComponent, MessageQuickViewComponent,
-        FuseLoadingBarComponent, FuseVerticalNavigationComponent, NotificationsComponent, UserComponent, NgIf, MatIconModule, MatButtonModule, LanguagesComponent, FuseFullscreenComponent, SearchComponent, ShortcutsComponent, RouterOutlet, QuickChatComponent
+        FuseLoadingBarComponent, FuseVerticalNavigationComponent, NotificationsComponent, UserComponent, NgIf, MatIconModule, MatButtonModule,
+        LanguagesComponent, FuseFullscreenComponent, SearchComponent, ShortcutsComponent, RouterOutlet, QuickChatComponent,
     ],
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy
