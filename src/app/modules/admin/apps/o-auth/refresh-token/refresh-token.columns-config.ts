@@ -6,6 +6,7 @@ export const refreshTokenColumnsConfig: ColumnConfig[] = [
         field      : 'token',
         sort       : 'token',
         translation: 'oAuth.Token',
+        isUnaccent : true,
     },
     {
         type       : ColumnDataType.BOOLEAN,
@@ -14,7 +15,7 @@ export const refreshTokenColumnsConfig: ColumnConfig[] = [
         translation: 'oAuth.IsRevoked',
     },
     {
-        type       : ColumnDataType.STRING,
+        type       : ColumnDataType.TIMESTAMP,
         field      : 'expiresAt',
         sort       : 'expiresAt',
         translation: 'oAuth.ExpiresAt',
