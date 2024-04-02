@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AccountService } from '@apps/iam/account';
 import { IamAccount } from '@apps/iam/iam.types';
-import { Action, CoreGetLangsService, CoreLang, Crumb, defaultDetailImports, log, mapActions, OAuthClientGrantType, SelectSearchService, Utils, ViewDetailComponent } from '@aurora';
+import { Action, CoreGetLangsService, CoreLang, Crumb, defaultDetailImports, log, mapActions, OAuthClientGrantType, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { BehaviorSubject, lastValueFrom, Observable, ReplaySubject, takeUntil } from 'rxjs';
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { RoleService } from '../role';
@@ -27,7 +27,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
-        KeyValuePipe, MatCheckboxModule, MatPasswordStrengthModule, MatSelectModule, MatToolbarModule, NgForOf, NgxMatSelectSearchModule,
+        MatCheckboxModule, MatSelectModule, NgForOf,
+        KeyValuePipe, MatPasswordStrengthModule, MatToolbarModule, NgxMatSelectSearchModule
     ],
 })
 export class AccountDetailComponent extends ViewDetailComponent
@@ -132,6 +133,19 @@ export class AccountDetailComponent extends ViewDetailComponent
         {
             log('[DEBUG] Error to validate form: ', this.fg);
             this.validationMessagesService.validate();
+
+            this.snackBar.openFromComponent(
+                SnackBarInvalidFormComponent,
+                {
+                    data: {
+                        message   : `${this.translocoService.translate('InvalidForm')}`,
+                        textButton: `${this.translocoService.translate('InvalidFormOk')}`,
+                    },
+                    panelClass      : 'error-snackbar',
+                    verticalPosition: 'top',
+                    duration        : 10000,
+                },
+            );
             return;
         }
 
@@ -152,27 +166,28 @@ export class AccountDetailComponent extends ViewDetailComponent
 
     createForm(): void
     {
+        /* eslint-disable key-spacing */
         this.fg = this.fb.group({
-            id                : ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
-            type              : ['', [Validators.required]],
-            code              : ['', [Validators.maxLength(50)]],
-            email             : ['', [Validators.required, Validators.maxLength(120)]],
-            isActive          : false,
-            clientId          : '',
-            scopes            : [],
-            tenantIds         : [],
+            id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
+            type: [null, [Validators.required]],
+            code: ['', [Validators.maxLength(64)]],
+            email: ['', [Validators.required, Validators.maxLength(128)]],
+            isActive: false,
+            clientId: null,
+            tenantIds: [],
             hasAddChildTenants: false,
-            roleIds           : [],
-            user              : this.fb.group({
-                id            : '',
-                name          : ['', [Validators.required, Validators.maxLength(255)]],
-                surname       : ['', [Validators.required, Validators.maxLength(255)]],
-                langId        : '',
-                username      : ['', [Validators.required, Validators.email, Validators.maxLength(120)]],
-                password      : '',
+            roleIds: [],
+            user: this.fb.group({
+                id: '',
+                name: ['', [Validators.required, Validators.maxLength(255)]],
+                surname: ['', [Validators.required, Validators.maxLength(255)]],
+                langId: null,
+                username: ['', [Validators.required, Validators.email, Validators.maxLength(120)]],
+                password: '',
                 repeatPassword: '',
             }),
         });
+        /* eslint-enable key-spacing */
     }
 
     handleCreatePassword(): void

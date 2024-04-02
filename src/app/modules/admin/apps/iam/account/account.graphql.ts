@@ -11,6 +11,7 @@ export const fields = `
         grantType
         scopeOptions
     }
+    tags
     scopes
     dApplicationCodes
     dPermissions
