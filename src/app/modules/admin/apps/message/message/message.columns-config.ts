@@ -3,9 +3,17 @@ import { ColumnConfig, ColumnDataType } from '@aurora';
 export const messageColumnsConfig: ColumnConfig[] = [
     {
         type       : ColumnDataType.STRING,
+        field      : 'subject',
+        sort       : 'subject',
+        translation: 'message.Subject',
+        isUnaccent : true,
+    },
+    {
+        type       : ColumnDataType.STRING,
         field      : 'tenantIds',
         sort       : 'tenantIds',
         translation: 'message.TenantIds',
+        hidden     : true,
     },
     {
         type       : ColumnDataType.ENUM,
@@ -18,24 +26,28 @@ export const messageColumnsConfig: ColumnConfig[] = [
         field      : 'accountRecipientIds',
         sort       : 'accountRecipientIds',
         translation: 'message.AccountRecipientIds',
+        hidden     : true,
     },
     {
         type       : ColumnDataType.STRING,
         field      : 'tenantRecipientIds',
         sort       : 'tenantRecipientIds',
         translation: 'message.TenantRecipientIds',
+        hidden     : true,
     },
     {
         type       : ColumnDataType.STRING,
         field      : 'scopeRecipients',
         sort       : 'scopeRecipients',
         translation: 'message.ScopeRecipients',
+        hidden     : true,
     },
     {
         type       : ColumnDataType.STRING,
         field      : 'tagRecipients',
         sort       : 'tagRecipients',
         translation: 'message.TagRecipients',
+        hidden     : true,
     },
     {
         type       : ColumnDataType.STRING,
@@ -51,17 +63,11 @@ export const messageColumnsConfig: ColumnConfig[] = [
     },
     {
         type       : ColumnDataType.STRING,
-        field      : 'subject',
-        sort       : 'subject',
-        translation: 'message.Subject',
-        isUnaccent : true,
-    },
-    {
-        type       : ColumnDataType.STRING,
         field      : 'body',
         sort       : 'body',
         translation: 'message.Body',
         isUnaccent : true,
+        hidden     : true,
     },
     {
         type       : ColumnDataType.STRING,
@@ -69,6 +75,7 @@ export const messageColumnsConfig: ColumnConfig[] = [
         sort       : 'link',
         translation: 'message.Link',
         isUnaccent : true,
+        hidden     : true,
     },
     {
         type       : ColumnDataType.BOOLEAN,
@@ -82,6 +89,7 @@ export const messageColumnsConfig: ColumnConfig[] = [
         sort       : 'icon',
         translation: 'message.Icon',
         isUnaccent : true,
+        hidden     : true,
     },
     {
         type       : ColumnDataType.NUMBER,

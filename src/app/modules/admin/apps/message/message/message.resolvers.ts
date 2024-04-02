@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
-import { IamTenant } from '@apps/iam/iam.types';
+import { IamTag, IamTenant } from '@apps/iam/iam.types';
 import { messageColumnsConfig, MessageService } from '@apps/message/message';
 import { MessageMessage } from '@apps/message/message.types';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
@@ -37,6 +37,7 @@ export const messagePaginationResolver: ResolveFn<GridData<MessageMessage>> = (
 };
 
 export const messageNewResolver: ResolveFn<{
+    iamGetTags: IamTag[];
     iamGetTenants: IamTenant[];
     oAuthFindClientById: OAuthClient;
 }> = (

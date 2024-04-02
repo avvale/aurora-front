@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
-import { IamTenant } from '@apps/iam/iam.types';
+import { IamTag, IamTenant } from '@apps/iam';
+import { TagService } from '@apps/iam/tag';
 import { TenantService } from '@apps/iam/tenant';
 import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, getRelations, paginationQuery, updateByIdMutation, updateMutation } from '@apps/message/message';
 import { MessageCreateMessage, MessageMessage, MessageUpdateMessageById, MessageUpdateMessages } from '@apps/message/message.types';
@@ -18,6 +19,7 @@ export class MessageService
     messageSubject$: BehaviorSubject<MessageMessage | null> = new BehaviorSubject(null);
     messagesSubject$: BehaviorSubject<MessageMessage[] | null> = new BehaviorSubject(null);
 
+    private tagService = inject(TagService);
     private tenantService = inject(TenantService);
     private clientService = inject(ClientService);
 
@@ -203,12 +205,16 @@ export class MessageService
 
     getRelations(
         {
+            queryTags = {},
+            constraintTags = {},
             queryTenants = {},
             constraintTenants = {},
             clientId = '',
             constraintClient = {},
             headers = {},
         }: {
+            queryTags?: QueryStatement;
+            constraintTags?: QueryStatement;
             queryTenants?: QueryStatement;
             constraintTenants?: QueryStatement;
             clientId?: string;
@@ -216,6 +222,7 @@ export class MessageService
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<{
+        iamGetTags: IamTag[];
         iamGetTenants: IamTenant[];
         oAuthFindClientById: OAuthClient;
     }>
@@ -223,11 +230,14 @@ export class MessageService
         return this.graphqlService
             .client()
             .watchQuery<{
+                iamGetTags: IamTag[];
                 iamGetTenants: IamTenant[];
                 oAuthFindClientById: OAuthClient;
             }>({
                 query    : getRelations,
                 variables: {
+                    queryTags,
+                    constraintTags,
                     queryTenants,
                     constraintTenants,
                     clientId,
@@ -243,6 +253,7 @@ export class MessageService
                 map(result => result.data),
                 tap(data =>
                 {
+                    this.tagService.tagsSubject$.next(data.iamGetTags);
                     this.tenantService.tenantsSubject$.next(data.iamGetTenants);
                     this.clientService.clientSubject$.next(data.oAuthFindClientById);
                 }),

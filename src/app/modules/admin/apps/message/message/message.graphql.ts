@@ -24,6 +24,13 @@ export const fields = `
 `;
 
 export const relationsFields = `
+    iamGetTags (
+        query: $queryTags
+        constraint: $constraintTags
+    ) {
+        id
+        name
+    }
     iamGetTenants (
         query: $queryTenants
         constraint: $constraintTenants
@@ -77,6 +84,8 @@ export const getQuery = gql`
 
 export const getRelations = gql`
     query MessageGetMessagesRelations(
+        $queryTags: QueryStatement
+        $constraintTags: QueryStatement
         $queryTenants: QueryStatement
         $constraintTenants: QueryStatement
         $clientId: ID

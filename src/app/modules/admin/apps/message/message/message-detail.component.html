@@ -124,13 +124,31 @@
                             multiple
                         >
                             <mat-option
-                                *ngFor="let scopeRecipient of scopeRecipients$ | async"
-                                [value]="scopeRecipient"
+                                *ngFor="let scope of scopes$ | async"
+                                [value]="scope"
                             >
-                                {{ scopeRecipient }}
+                                {{ scope }}
                             </mat-option>
                         </mat-select>
                         <mat-error>{{ formErrors?.scopeRecipients | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>{{ t('message.TagRecipients') }}</mat-label>
+                        <mat-select
+                            formControlName="tagRecipients"
+                            multiple
+                        >
+                            <mat-option
+                                *ngFor="let tag of tags$ | async"
+                                [value]="tag.name"
+                            >
+                                {{ tag.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error>{{ formErrors?.tagRecipients | async }}</mat-error>
                     </mat-form-field>
                     <mat-form-field
                         appearance="outline"

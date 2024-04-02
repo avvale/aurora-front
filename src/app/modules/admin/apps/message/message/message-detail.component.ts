@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@
 import { Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
-import { IamTenant } from '@apps/iam/iam.types';
+import { IamTag, IamTenant } from '@apps/iam';
 import { TenantService } from '@apps/iam/tenant';
 import { MessageService } from '@apps/message/message';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
@@ -12,6 +12,7 @@ import { OAuthScope } from '@apps/o-auth/o-auth.types';
 import { Action, Crumb, defaultDetailImports, log, mapActions, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { Observable, lastValueFrom, map, takeUntil } from 'rxjs';
+import { TagService } from '@apps/iam/tag';
 
 @Component({
     selector       : 'message-message-detail',
@@ -28,12 +29,14 @@ import { Observable, lastValueFrom, map, takeUntil } from 'rxjs';
 export class MessageDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
-    scopeRecipients$: Observable<OAuthScope[]>;
+    scopes$: Observable<OAuthScope[]>;
     tenants$: Observable<IamTenant[]>;
+    tags$: Observable<IamTag[]>;
     messageMessageStatus = MessageMessageStatus;
 
     private clientService  = inject(ClientService);
     private tenantService = inject(TenantService);
+    private tagService = inject(TagService);
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -59,8 +62,13 @@ export class MessageDetailComponent extends ViewDetailComponent
     // the parent class you can use instead of ngOnInit
     init(): void
     {
-        this.scopeRecipients$ = this.clientService.client$.pipe(map(client => client?.scopeOptions as OAuthScope[]));
+        // get scopes from client, the client is request in message resolver
+        this.scopes$ = this.clientService
+            .client$
+            .pipe(map(client => client?.scopeOptions as OAuthScope[]));
+
         this.tenants$ = this.tenantService.tenants$;
+        this.tags$ = this.tagService.tags$;
     }
 
     onSubmit($event): void
