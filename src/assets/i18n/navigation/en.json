@@ -30,6 +30,7 @@
     "roles": "Roles",
     "scopes": "Scopes",
     "sideEffects": "Side Effects",
+    "tags": "Tags",
     "tenants": "Tenants",
     "users": "Users"
 }
