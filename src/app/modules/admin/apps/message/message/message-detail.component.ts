@@ -1,6 +1,6 @@
 import { NgForOf, KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, WritableSignal, inject, signal } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { IamTag, IamTenant } from '@apps/iam';
@@ -9,10 +9,11 @@ import { MessageService } from '@apps/message/message';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
 import { ClientService } from '@apps/o-auth/client';
 import { OAuthScope } from '@apps/o-auth/o-auth.types';
-import { Action, Crumb, defaultDetailImports, log, mapActions, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
+import { Action, Crumb, defaultDetailImports, log, mapActions, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
-import { Observable, lastValueFrom, map, takeUntil } from 'rxjs';
+import { Observable, ReplaySubject, lastValueFrom, map, takeUntil } from 'rxjs';
 import { TagService } from '@apps/iam/tag';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @Component({
     selector       : 'message-message-detail',
@@ -23,16 +24,20 @@ import { TagService } from '@apps/iam/tag';
     imports        : [
         ...defaultDetailImports,
         MatCheckboxModule, MatSelectModule, MtxDatetimepickerModule, NgForOf,
-        KeyValuePipe,
+        KeyValuePipe, NgxMatSelectSearchModule,
     ],
 })
 export class MessageDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
     scopes$: Observable<OAuthScope[]>;
-    tenants$: Observable<IamTenant[]>;
     tags$: Observable<IamTag[]>;
     messageMessageStatus = MessageMessageStatus;
+    tenantRecipientFilterCtrl: FormControl = new FormControl<string>('');
+    filteredTenantsRecipients$: ReplaySubject<IamTenant[]> = new ReplaySubject<IamTenant[]>(1);
+    tenantBelongFilterCtrl: FormControl = new FormControl<string>('');
+    filteredTenantsBelongs$: ReplaySubject<IamTenant[]> = new ReplaySubject<IamTenant[]>(1);
+    showTenantsBelongsInput: WritableSignal<boolean> = signal(true);
 
     private clientService  = inject(ClientService);
     private tenantService = inject(TenantService);
@@ -53,6 +58,7 @@ export class MessageDetailComponent extends ViewDetailComponent
 
     constructor(
         private readonly messageService: MessageService,
+        private readonly selectSearchService: SelectSearchService,
     )
     {
         super();
@@ -67,8 +73,57 @@ export class MessageDetailComponent extends ViewDetailComponent
             .client$
             .pipe(map(client => client?.scopeOptions as OAuthScope[]));
 
-        this.tenants$ = this.tenantService.tenants$;
+        // tenants
+        this.initTenantsBelongsFilter(this.activatedRoute.snapshot.data.data.iamGetTenants);
+        this.initTenantsRecipientsFilter(this.activatedRoute.snapshot.data.data.iamGetTenants);
+
         this.tags$ = this.tagService.tags$;
+    }
+
+    initTenantsBelongsFilter(tenants: IamTenant[]): void
+    {
+        if (tenants.length === 1)
+        {
+            this.fg.get('tenantIds').setValue([tenants[0].id]);
+            this.showTenantsBelongsInput.set(false);
+        }
+
+        // init select filter with all items
+        this.filteredTenantsBelongs$.next(tenants);
+
+        // listen for country search field value changes
+        this.tenantBelongFilterCtrl
+            .valueChanges
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe(async () =>
+            {
+                this.selectSearchService
+                    .filterSelect<IamTenant>(
+                        this.tenantBelongFilterCtrl,
+                        tenants,
+                        this.filteredTenantsBelongs$,
+                    );
+            });
+    }
+
+    initTenantsRecipientsFilter(tenants: IamTenant[]): void
+    {
+        // init select filter with all items
+        this.filteredTenantsRecipients$.next(tenants);
+
+        // listen for country search field value changes
+        this.tenantRecipientFilterCtrl
+            .valueChanges
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe(async () =>
+            {
+                this.selectSearchService
+                    .filterSelect<IamTenant>(
+                        this.tenantRecipientFilterCtrl,
+                        tenants,
+                        this.filteredTenantsRecipients$,
+                    );
+            });
     }
 
     onSubmit($event): void
@@ -120,7 +175,7 @@ export class MessageDetailComponent extends ViewDetailComponent
         /* eslint-disable key-spacing */
         this.fg = this.fb.group({
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
-            tenantIds: [],
+            tenantIds: [[]],
             status: [null, [Validators.required]],
             accountRecipientIds: [],
             tenantRecipientIds: [],
