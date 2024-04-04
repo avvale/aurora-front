@@ -14,6 +14,10 @@ export const environment = {
         applicationCode  : 'aurora',
         applicationSecret: '$2y$10$EOA/SKEwKRgHPw64kO4LZ.6oy5b8kl6JzW/mCROMfSq6S38/IiywG',
     },
+    appearance: {
+        theme : 'theme-default',
+        layout: 'classy',
+    },
     azureAd: {
         tenant     : 'a42e5409-0ade-4beb-8099-84afd4e0f1ec',
         authority  : 'https://login.microsoftonline.com/a42e5409-0ade-4beb-8099-84afd4e0f1ec',
