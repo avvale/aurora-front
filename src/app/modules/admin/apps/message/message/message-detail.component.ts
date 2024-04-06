@@ -12,6 +12,7 @@ import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { Observable, ReplaySubject, lastValueFrom, takeUntil, map } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { AccountService, accountColumnsConfig } from '@apps/iam/account';
+import { QuillEditorComponent } from 'ngx-quill';
 
 export const accountsDialogGridId = 'message::message.detail.accountsDialogGridList';
 export const messageAccountsGridId = 'message::message.detail.messageAccountsGridList';
@@ -27,7 +28,7 @@ export const messageAccountsScopePagination = 'message::messageAccounts';
         ...defaultDetailImports,
         MatCheckboxModule, MatSelectModule, MtxDatetimepickerModule, NgForOf,
         GridSelectMultipleElementsModule, KeyValuePipe, NgxMatSelectSearchModule,
-        MatTabsModule,
+        MatTabsModule, QuillEditorComponent,
     ],
 })
 export class MessageDetailComponent extends ViewDetailComponent
@@ -43,6 +44,13 @@ export class MessageDetailComponent extends ViewDetailComponent
     filteredTagRecipients$: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
     showTenantsBelongsInput: WritableSignal<boolean> = signal(true);
     messageMessageStatus = MessageMessageStatus;
+    quillModules: any = {
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ align: []}, { list: 'ordered' }, { list: 'bullet' }],
+            ['clean'],
+        ],
+    };
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -67,7 +75,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             {
                 const actions = [];
 
-                if (this.messageAccountsId.includes(row.id))
+                if (this.fg.get('accountRecipientIds').value.includes(row.id))
                 {
                     actions.push({
                         id          : 'message::message.detail.noAction',
@@ -99,7 +107,6 @@ export class MessageDetailComponent extends ViewDetailComponent
     ];
 
     // start message accounts grid
-    messageAccountsId: string[] = [];
     messageAccountsGridState: GridState = {};
     messageAccountsSelectedRows: IamAccount[] = [];
     messageAccountsGridId: string = messageAccountsGridId;
@@ -439,7 +446,6 @@ export class MessageDetailComponent extends ViewDetailComponent
                     {
                         this.managedObject = item;
                         this.fg.patchValue(item);
-                        this.messageAccountsId = [...item.accountRecipientIds];
                     });
 
                 /* #region edit action to manage MessagesAccounts grid-select-multiple-elements */
@@ -544,7 +550,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                                     .getQueryStatement(),
                             constraint: {
                                 where: {
-                                    id: this.messageAccountsId,
+                                    id: this.fg.get('accountRecipientIds').value,
                                 },
                                 include: [
                                     {
@@ -560,7 +566,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             case 'message::message.detail.addMessageAccount':
                 const accountRecipientIdAdded = new Set<string>([...this.fg.get('accountRecipientIds').value, action.meta.row.id]);
                 this.fg.get('accountRecipientIds').setValue([...accountRecipientIdAdded]);
-                this.messageAccountsId = [...accountRecipientIdAdded];
+                this.fg.markAsDirty();
 
                 this.actionService.action({
                     id          : 'message::message.detail.messageAccountsPagination',
@@ -586,7 +592,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                 const rowIds = action.meta.rows.map(row => row.id);
                 const accountRecipientIdsAdded = new Set<string>([...this.fg.get('accountRecipientIds').value, ...rowIds]);
                 this.fg.get('accountRecipientIds').setValue([...accountRecipientIdsAdded]);
-                this.messageAccountsId = [...accountRecipientIdsAdded];
+                this.fg.markAsDirty();
 
                 this.actionService.action({
                     id          : 'message::message.detail.messageAccountsPagination',
@@ -612,7 +618,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                 const accountRecipientIdRemoved = new Set<string>(this.fg.get('accountRecipientIds').value);
                 accountRecipientIdRemoved.delete(action.meta.row.id);
                 this.fg.get('accountRecipientIds').setValue([...accountRecipientIdRemoved]);
-                this.messageAccountsId = [...accountRecipientIdRemoved];
+                this.fg.markAsDirty();
 
                 this.actionService.action({
                     id          : 'message::message.detail.messageAccountsPagination',
@@ -638,7 +644,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                 const accountRecipientIdsRemoved = new Set<string>(this.fg.get('accountRecipientIds').value);
                 action.meta.rows.forEach(row => accountRecipientIdsRemoved.delete(row.id));
                 this.fg.get('accountRecipientIds').setValue([...accountRecipientIdsRemoved]);
-                this.messageAccountsId = [...accountRecipientIdsRemoved];
+                this.fg.markAsDirty();
 
                 this.selectedCheckboxRowModel.clear();
 
