@@ -48,6 +48,14 @@ export const relationsFields = `
         id
         scopeOptions
     }
+    iamPaginateAccounts (
+        query: $queryPaginateAccounts
+        constraint: $constraintPaginateAccounts
+    ) {
+        total
+        rows
+        count
+    }
 `;
 
 // default methods
@@ -88,6 +96,8 @@ export const getRelations = gql`
         $constraintTags: QueryStatement
         $queryTenants: QueryStatement
         $constraintTenants: QueryStatement
+        $queryPaginateAccounts: QueryStatement
+        $constraintPaginateAccounts: QueryStatement
         $clientId: ID
         $constraintClient: QueryStatement
     ) {

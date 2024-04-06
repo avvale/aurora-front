@@ -67,6 +67,67 @@
     <!-- Main -->
     <div class="flex-auto pt-6 px-6 sm:pt-10 sm:px-10 overflow-y-auto" cdkScrollable>
 
+        <div class="layout__container mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0 col-12">
+                <!-- Summary -->
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Summary</div>
+                    </div>
+                    <div class="flex flex-col items-center mt-2">
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">21</div>
+                        <div class="text-lg font-medium text-blue-600 dark:text-blue-500">Due Tasks</div>
+                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                            <div class="text-md font-medium truncate">Completed:</div>
+                            <div class="ml-1.5 text-lg font-semibold">13</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Overdue -->
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Overdue</div>
+                    </div>
+                    <div class="flex flex-col items-center mt-2">
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">17</div>
+                        <div class="text-lg font-medium text-red-600 dark:text-red-500">Tasks</div>
+                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                            <div class="text-md font-medium truncate">From yesterday:</div>
+                            <div class="ml-1.5 text-lg font-semibold">9</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Issues -->
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Issues</div>
+                    </div>
+                    <div class="flex flex-col items-center mt-2">
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">24</div>
+                        <div class="text-lg font-medium text-amber-600 dark:text-amber-500">Open</div>
+                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                            <div class="text-md font-medium truncate">Closed today:</div>
+                            <div class="ml-1.5 text-lg font-semibold">19</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Features -->
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Features</div>
+                    </div>
+                    <div class="flex flex-col items-center mt-2">
+                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">38</div>
+                        <div class="text-lg font-medium text-green-600 dark:text-green-500">Proposals</div>
+                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
+                            <div class="text-md font-medium truncate">Implemented:</div>
+                            <div class="ml-1.5 text-lg font-semibold">16</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="form-card">
 
             <form
@@ -75,238 +136,381 @@
                 [formGroup]="fg"
                 (ngSubmit)="onSubmit($event)"
             >
+                <mat-tab-group>
 
-                <div class="layout__container">
+                    <mat-tab [label]="t('message.Recipients')">
+                        <div class="layout__container">
 
-                    @if (showTenantsBelongsInput())
-                    {
-                        <mat-form-field
-                            appearance="outline"
-                            class="col-12"
-                        >
-                            <mat-label>{{ t('Tenants') }}</mat-label>
-                            <mat-select
-                                formControlName="tenantIds"
-                                multiple
-                            >
-                                <mat-option>
-                                    <ngx-mat-select-search
-                                        [formControl]="tenantBelongFilterCtrl"
-                                        [placeholderLabel]="t('message.FindTenant')"
-                                        [noEntriesFoundLabel]="t('NoResultsFound')"
-                                    >
-                                    </ngx-mat-select-search>
-                                </mat-option>
-                                @for (tenant of filteredTenantsBelongs$ | async; track tenant.id)
-                                {
-                                    <mat-option [value]="tenant.id">
-                                        {{ tenant.name }}
-                                    </mat-option>
-
-                                }
-                            </mat-select>
-                            <mat-error>{{ formErrors?.tenantIds | async }}</mat-error>
-                        </mat-form-field>
-                    }
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('message.TenantRecipients') }}</mat-label>
-                        <mat-select
-                            formControlName="tenantRecipientIds"
-                            multiple
-                        >
-                            <mat-option>
-                                <ngx-mat-select-search
-                                    [formControl]="tenantRecipientFilterCtrl"
-                                    [placeholderLabel]="t('message.FindTenant')"
-                                    [noEntriesFoundLabel]="t('NoResultsFound')"
-                                >
-                                </ngx-mat-select-search>
-                            </mat-option>
-                            @for (tenant of filteredTenantsRecipients$ | async; track tenant.id)
+                            @if (showTenantsBelongsInput())
                             {
-                                <mat-option [value]="tenant.id">
-                                    {{ tenant.name }}
-                                </mat-option>
-                            }
-                        </mat-select>
-                        <mat-error>{{ formErrors?.tenantRecipientIds | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('message.ScopeRecipients') }}</mat-label>
-                        <mat-select
-                            formControlName="scopeRecipients"
-                            multiple
-                        >
-                            <mat-option
-                                *ngFor="let scope of scopes$ | async"
-                                [value]="scope"
-                            >
-                                {{ scope }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error>{{ formErrors?.scopeRecipients | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('message.TagRecipients') }}</mat-label>
-                        <mat-select
-                            formControlName="tagRecipients"
-                            multiple
-                        >
-                            <mat-option
-                                *ngFor="let tag of tags$ | async"
-                                [value]="tag.name"
-                            >
-                                {{ tag.name }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error>{{ formErrors?.tagRecipients | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-4"
-                    >
-                        <mat-label>{{ t('Status') }}</mat-label>
-                        <mat-select
-                            formControlName="status"
-                        >
-                            <mat-option
-                                *ngFor="let status  of messageMessageStatus | keyvalue"
-                                [value]="status.key"
-                            >
-                                {{ t('message.MessageStatus.' + status.value) }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error>{{ formErrors?.status | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="au-datepicker col-4"
-                    >
-                        <mat-label>{{ t('message.SendAt') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="sendAt"
-                            [auDatetimepickerSqlFormat]
-                            [mtxDatetimepicker]="sendAtPicker"
-                        >
-                        <mtx-datetimepicker-toggle
-                            [for]="sendAtPicker"
-                            matSuffix
-                        >
-                        </mtx-datetimepicker-toggle>
-                        <mtx-datetimepicker
-                            #sendAtPicker
-                            type="datetime"
-                            mode="landscape"
-                            [multiYearSelector]="false"
-                            startView="month"
-                            [twelvehour]="false"
-                            [timeInterval]="1"
-                            [touchUi]="false"
-                        >
-                        </mtx-datetimepicker>
-                        <mat-error>{{ formErrors?.sendAt | async }}</mat-error>
-                    </mat-form-field>
-                    <div class="col-4 pt-5">
-                        <mat-checkbox
-                            formControlName="isImportant"
-                        >
-                            {{ t('message.IsImportant') }}
-                        </mat-checkbox>
-                    </div>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('message.Subject') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="subject"
-                            maxlength="255"
-                            required
-                        >
-                        <mat-error>{{ formErrors?.subject | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('message.Body') }}</mat-label>
-                        <textarea
-                            matInput
-                            formControlName="body"
-                        >
-                        </textarea>
-                        <mat-error>{{ formErrors?.body | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('message.Link') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="link"
-                            maxlength="2046"
-                        >
-                        <mat-error>{{ formErrors?.link | async }}</mat-error>
-                    </mat-form-field>
-                    <div class="col-4 pt-5">
-                        <mat-checkbox
-                            formControlName="isInternalLink"
-                        >
-                            {{ t('message.IsInternalLink') }}
-                        </mat-checkbox>
-                    </div>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-8"
-                    >
-                        <mat-label>{{ t('message.Icon') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="icon"
-                            maxlength="64"
-                        >
-                        <mat-error>{{ formErrors?.icon | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        *ngIf="currentViewAction.id === 'message::message.detail.edit'"
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('message.TotalRecipients') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="totalRecipients"
-                            type="number"
-                        >
-                        <mat-error>{{ formErrors?.totalRecipients | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        *ngIf="currentViewAction.id === 'message::message.detail.edit'"
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('message.Reads') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="reads"
-                            type="number"
-                        >
-                        <mat-error>{{ formErrors?.reads | async }}</mat-error>
-                    </mat-form-field>
+                                <mat-form-field
+                                    appearance="outline"
+                                    class="col-12"
+                                >
+                                    <mat-label>{{ t('Tenants') }}</mat-label>
+                                    <mat-select
+                                        formControlName="tenantIds"
+                                        multiple
+                                    >
+                                        <mat-option>
+                                            <ngx-mat-select-search
+                                                [formControl]="tenantBelongFilterCtrl"
+                                                [placeholderLabel]="t('message.FindTenant')"
+                                                [noEntriesFoundLabel]="t('NoResultsFound')"
+                                            >
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        @for (tenant of filteredTenantBelongs$ | async; track tenant.id)
+                                        {
+                                            <mat-option [value]="tenant.id">
+                                                {{ tenant.name }}
+                                            </mat-option>
 
-                </div>
+                                        }
+                                    </mat-select>
+                                    <mat-error>{{ formErrors?.tenantIds | async }}</mat-error>
+                                </mat-form-field>
+                            }
+                            <mat-form-field
+                                appearance="outline"
+                                class="col-12"
+                            >
+                                <mat-label>{{ t('message.TenantRecipients') }}</mat-label>
+                                <mat-select
+                                    formControlName="tenantRecipientIds"
+                                    multiple
+                                >
+                                    <mat-option>
+                                        <ngx-mat-select-search
+                                            [formControl]="tenantRecipientFilterCtrl"
+                                            [placeholderLabel]="t('message.FindTenant')"
+                                            [noEntriesFoundLabel]="t('NoResultsFound')"
+                                        >
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    @for (tenant of filteredTenantRecipients$ | async; track tenant.id)
+                                    {
+                                        <mat-option [value]="tenant.id">
+                                            {{ tenant.name }}
+                                        </mat-option>
+                                    }
+                                </mat-select>
+                                <mat-error>{{ formErrors?.tenantRecipientIds | async }}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field
+                                appearance="outline"
+                                class="col-12"
+                            >
+                                <mat-label>{{ t('message.ScopeRecipients') }}</mat-label>
+                                <mat-select
+                                    formControlName="scopeRecipients"
+                                    multiple
+                                >
+                                    <mat-option>
+                                        <ngx-mat-select-search
+                                            [formControl]="scopeRecipientFilterCtrl"
+                                            [placeholderLabel]="t('message.FindScope')"
+                                            [noEntriesFoundLabel]="t('NoResultsFound')"
+                                        >
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    @for (scope of filteredScopeRecipients$ | async; track scope.id)
+                                    {
+                                        <mat-option [value]="scope">
+                                            {{ scope }}
+                                        </mat-option>
+                                    }
+                                </mat-select>
+                                <mat-error>{{ formErrors?.scopeRecipients | async }}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field
+                                appearance="outline"
+                                class="col-12"
+                            >
+                                <mat-label>{{ t('message.TagRecipients') }}</mat-label>
+                                <mat-select
+                                    formControlName="tagRecipients"
+                                    multiple
+                                >
+                                    <mat-option>
+                                        <ngx-mat-select-search
+                                            [formControl]="tagRecipientFilterCtrl"
+                                            [placeholderLabel]="t('message.FindTag')"
+                                            [noEntriesFoundLabel]="t('NoResultsFound')"
+                                        >
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    @for (tag of filteredTagRecipients$ | async; track tag.name)
+                                    {
+                                        <mat-option [value]="tag.name">
+                                            {{ tag.name }}
+                                        </mat-option>
+                                    }
+                                </mat-select>
+                                <mat-error>{{ formErrors?.tagRecipients | async }}</mat-error>
+                            </mat-form-field>
+
+                            <!-- #region component to manage account recipients -->
+                            <au-grid-select-multiple-elements
+                                class="col-12 mt-0"
+                                [columnsConfig]="messageAccountsColumnsConfig$ | async"
+                                [dialogColumnsConfig]="accountsDialogColumnsConfig$ | async"
+                                [dialogGridData]="accountsDialogGridData$ | async"
+                                [dialogGridId]="accountsDialogGridId"
+                                [dialogOriginColumnsConfig]="accountsDialogColumnsConfig$ | async"
+                                [gridData]="messageAccountsGridData$ | async"
+                                [gridId]="messageAccountsGridId"
+                                [gridState]="messageAccountsGridState"
+                                [id]="messageAccountsGridId"
+                                [label]="t('message.AccountRecipients')"
+                                [originColumnsConfig]="originMessageAccountsColumnsConfig"
+                                [selectedCheckboxRowModel]="selectedCheckboxRowModel"
+                                (dialogSelectedCheckboxRowModelChange)="handleAccountsDialogRowsSectionChange($event)"
+                                (selectedCheckboxRowModelChange)="handleAccountsRowsSectionChange($event)"
+                                #messageAccountsGridSelectMultipleElements
+                            >
+                                <au-grid-translations
+                                    [for]="messageAccountsGridId"
+                                    [actions]="t('Actions')"
+                                    [AND]="t('AND')"
+                                    [clearFilters]="t('ClearFilters')"
+                                    [clickAndDragInfo]="t('ClickAndDragInfo')"
+                                    [columns]="t('Columns')"
+                                    [field]="t('Field')"
+                                    [filter]="t('Filter')"
+                                    [operator]="t('Operator')"
+                                    [OR]="t('OR')"
+                                    [pleaseSelectField]="t('PleaseSelectField')"
+                                    [translations]="t('Translations')"
+                                    [value]="t('Value')"
+                                    [noData]="t('NoData')"
+                                    [paginator]="{
+                                        firstPageLabel: t('Paginator.FirstPageLabel'),
+                                        itemsPerPageLabel: t('Paginator.ItemsPerPageLabel'),
+                                        lastPageLabel: t('Paginator.LastPageLabel'),
+                                        nextPageLabel: t('Paginator.NextPageLabel'),
+                                        ofLabel: t('Paginator.OfLabel'),
+                                        previousPageLabel: t('Paginator.PreviousPageLabel')
+                                    }"
+                                    [operators]="{
+                                        contains: t('Operators.Contains'),
+                                        endsWith: t('Operators.EndsWith'),
+                                        equals: t('Operators.Equals'),
+                                        greaterThan: t('Operators.GreaterThan'),
+                                        greaterThanEqual: t('Operators.GreaterThanEqual'),
+                                        lessThan: t('Operators.LessThan'),
+                                        lessThanEqual: t('Operators.LessThanEqual'),
+                                        notEquals: t('Operators.NotEquals'),
+                                        startsWith: t('Operators.StartsWith')
+                                    }"
+                                    [actionsMenu]="{
+                                        edit: t('Edit'),
+                                        delete: t('Delete'),
+                                        unlink: t('Unlink'),
+                                        cancel: t('Cancel'),
+                                        close: t('Close')
+                                    }"
+                                >
+                                    <au-grid-column-translation
+                                        *ngFor="let columnConfig of originStagesColumnsConfig"
+                                        [field]="columnConfig.field"
+                                    >
+                                        {{ t(columnConfig.translation ? columnConfig.translation : columnConfig.field.toPascalCase()) }}
+                                    </au-grid-column-translation>
+                                </au-grid-translations>
+                                <ng-template
+                                    auGridSelectMultipleCustomHeaderTemplate
+                                    position="left"
+                                >
+                                    <div class="flex justify-start items-center">
+                                        <button
+                                            mat-icon-button
+                                            class="mr-2"
+                                            type="button"
+                                            (click)="handleOpenAccountsDialog(newActionId)"
+                                        >
+                                            <mat-icon svgIcon="mat_solid:add"></mat-icon>
+                                            <span class="cdk-visually-hidden">
+                                                Add new item
+                                            </span>
+                                        </button>
+                                        <button
+                                            mat-flat-button
+                                            [disabled]="messageAccountsSelectedRows.length === 0"
+                                            (click)="handleRemoveMessageAccountsSelected()"
+                                        >
+                                            <mat-icon
+                                                class="mr-2"
+                                                svgIcon="mat_solid:link_off"
+                                            >
+                                            </mat-icon>
+                                            {{ t('RemoveSelected') }}
+                                        </button>
+                                    </div>
+                                </ng-template>
+                                <ng-template
+                                    auGridSelectMultipleCustomHeaderDialogTemplate
+                                    position="left"
+                                >
+                                    <ng-container>
+                                        <button
+                                            mat-flat-button
+                                            [disabled]="accountsDialogSelectedRows.length === 0"
+                                            (click)="handleAddAccountsSelected()"
+                                        >
+                                            <mat-icon class="mr-2">add_link</mat-icon>
+                                            {{ t('AddSelected') }}
+                                        </button>
+                                    </ng-container>
+                                </ng-template>
+                            </au-grid-select-multiple-elements>
+                            <!-- #endregion component to manage account recipients -->
+
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab [label]="t('message.Message')">
+                        <div class="layout__container">
+
+                            <mat-form-field
+                                appearance="outline"
+                                class="col-4"
+                            >
+                                <mat-label>{{ t('Status') }}</mat-label>
+                                <mat-select
+                                    formControlName="status"
+                                >
+                                    <mat-option
+                                        *ngFor="let status  of messageMessageStatus | keyvalue"
+                                        [value]="status.key"
+                                    >
+                                        {{ t('message.MessageStatus.' + status.value) }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>{{ formErrors?.status | async }}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field
+                                appearance="outline"
+                                class="au-datepicker col-4"
+                            >
+                                <mat-label>{{ t('message.SendAt') }}</mat-label>
+                                <input
+                                    matInput
+                                    formControlName="sendAt"
+                                    [auDatetimepickerSqlFormat]
+                                    [mtxDatetimepicker]="sendAtPicker"
+                                >
+                                <mtx-datetimepicker-toggle
+                                    [for]="sendAtPicker"
+                                    matSuffix
+                                >
+                                </mtx-datetimepicker-toggle>
+                                <mtx-datetimepicker
+                                    #sendAtPicker
+                                    type="datetime"
+                                    mode="landscape"
+                                    [multiYearSelector]="false"
+                                    startView="month"
+                                    [twelvehour]="false"
+                                    [timeInterval]="1"
+                                    [touchUi]="false"
+                                >
+                                </mtx-datetimepicker>
+                                <mat-error>{{ formErrors?.sendAt | async }}</mat-error>
+                            </mat-form-field>
+                            <div class="col-4 pt-5">
+                                <mat-checkbox
+                                    formControlName="isImportant"
+                                >
+                                    {{ t('message.IsImportant') }}
+                                </mat-checkbox>
+                            </div>
+                            <mat-form-field
+                                appearance="outline"
+                                class="col-12"
+                            >
+                                <mat-label>{{ t('message.Subject') }}</mat-label>
+                                <input
+                                    matInput
+                                    formControlName="subject"
+                                    maxlength="255"
+                                    required
+                                >
+                                <mat-error>{{ formErrors?.subject | async }}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field
+                                appearance="outline"
+                                class="col-12"
+                            >
+                                <mat-label>{{ t('message.Body') }}</mat-label>
+                                <textarea
+                                    matInput
+                                    formControlName="body"
+                                >
+                                </textarea>
+                                <mat-error>{{ formErrors?.body | async }}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field
+                                appearance="outline"
+                                class="col-12"
+                            >
+                                <mat-label>{{ t('message.Link') }}</mat-label>
+                                <input
+                                    matInput
+                                    formControlName="link"
+                                    maxlength="2046"
+                                >
+                                <mat-error>{{ formErrors?.link | async }}</mat-error>
+                            </mat-form-field>
+                            <div class="col-4 pt-5">
+                                <mat-checkbox
+                                    formControlName="isInternalLink"
+                                >
+                                    {{ t('message.IsInternalLink') }}
+                                </mat-checkbox>
+                            </div>
+                            <mat-form-field
+                                appearance="outline"
+                                class="col-8"
+                            >
+                                <mat-label>{{ t('message.Icon') }}</mat-label>
+                                <input
+                                    matInput
+                                    formControlName="icon"
+                                    maxlength="64"
+                                >
+                                <mat-error>{{ formErrors?.icon | async }}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field
+                                *ngIf="currentViewAction.id === 'message::message.detail.edit'"
+                                appearance="outline"
+                                class="col-12"
+                            >
+                                <mat-label>{{ t('message.TotalRecipients') }}</mat-label>
+                                <input
+                                    matInput
+                                    formControlName="totalRecipients"
+                                    type="number"
+                                >
+                                <mat-error>{{ formErrors?.totalRecipients | async }}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field
+                                *ngIf="currentViewAction.id === 'message::message.detail.edit'"
+                                appearance="outline"
+                                class="col-12"
+                            >
+                                <mat-label>{{ t('message.Reads') }}</mat-label>
+                                <input
+                                    matInput
+                                    formControlName="reads"
+                                    type="number"
+                                >
+                                <mat-error>{{ formErrors?.reads | async }}</mat-error>
+                            </mat-form-field>
+
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
 
             </form>
 

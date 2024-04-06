@@ -1,19 +1,21 @@
 import { NgForOf, KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, WritableSignal, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation, WritableSignal, inject, signal } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
-import { IamTag, IamTenant } from '@apps/iam';
-import { TenantService } from '@apps/iam/tenant';
+import { IamAccount, IamTenant } from '@apps/iam';
 import { MessageService } from '@apps/message/message';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
-import { ClientService } from '@apps/o-auth/client';
-import { OAuthScope } from '@apps/o-auth/o-auth.types';
-import { Action, Crumb, defaultDetailImports, log, mapActions, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
+import { Action, ColumnConfig, ColumnDataType, Crumb, defaultDetailImports, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, log, mapActions, QueryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
-import { Observable, ReplaySubject, lastValueFrom, map, takeUntil } from 'rxjs';
-import { TagService } from '@apps/iam/tag';
+import { Observable, ReplaySubject, lastValueFrom, takeUntil, map } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { AccountService, accountColumnsConfig } from '@apps/iam/account';
+
+export const accountsDialogGridId = 'message::message.detail.accountsDialogGridList';
+export const messageAccountsGridId = 'message::message.detail.messageAccountsGridList';
+export const messageAccountsScopePagination = 'message::messageAccounts';
 
 @Component({
     selector       : 'message-message-detail',
@@ -24,30 +26,114 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     imports        : [
         ...defaultDetailImports,
         MatCheckboxModule, MatSelectModule, MtxDatetimepickerModule, NgForOf,
-        KeyValuePipe, NgxMatSelectSearchModule,
+        GridSelectMultipleElementsModule, KeyValuePipe, NgxMatSelectSearchModule,
+        MatTabsModule,
     ],
 })
 export class MessageDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
-    scopes$: Observable<OAuthScope[]>;
-    tags$: Observable<IamTag[]>;
-    messageMessageStatus = MessageMessageStatus;
-    tenantRecipientFilterCtrl: FormControl = new FormControl<string>('');
-    filteredTenantsRecipients$: ReplaySubject<IamTenant[]> = new ReplaySubject<IamTenant[]>(1);
     tenantBelongFilterCtrl: FormControl = new FormControl<string>('');
-    filteredTenantsBelongs$: ReplaySubject<IamTenant[]> = new ReplaySubject<IamTenant[]>(1);
+    filteredTenantBelongs$: ReplaySubject<IamTenant[]> = new ReplaySubject<IamTenant[]>(1);
+    tenantRecipientFilterCtrl: FormControl = new FormControl<string>('');
+    filteredTenantRecipients$: ReplaySubject<IamTenant[]> = new ReplaySubject<IamTenant[]>(1);
+    scopeRecipientFilterCtrl: FormControl = new FormControl<string>('');
+    filteredScopeRecipients$: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+    tagRecipientFilterCtrl: FormControl = new FormControl<string>('');
+    filteredTagRecipients$: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
     showTenantsBelongsInput: WritableSignal<boolean> = signal(true);
-
-    private clientService  = inject(ClientService);
-    private tenantService = inject(TenantService);
-    private tagService = inject(TagService);
+    messageMessageStatus = MessageMessageStatus;
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
     managedObject: MessageMessage;
+
+    // relationships
+    /* #region variables to manage grid-select-multiple-elements messageAccountsGridSelectMultipleElementsComponent */
+    // start accounts dialog
+    @ViewChild('messageAccountsGridSelectMultipleElements') messageAccountsGridSelectMultipleElementsComponent: GridSelectMultipleElementsComponent;
+    accountsDialogSelectedRows: IamAccount[] = [];
+    accountsDialogGridId: string = accountsDialogGridId;
+    accountsDialogGridData$: Observable<GridData<IamAccount>>;
+    accountsDialogColumnsConfig$: Observable<ColumnConfig[]>;
+    accountsDialogOriginColumnsConfig: ColumnConfig[] = [
+        {
+            type   : ColumnDataType.ACTIONS,
+            field  : 'Actions',
+            sticky : true,
+            actions: row =>
+            {
+                const actions = [];
+
+                if (this.messageAccountsId.includes(row.id))
+                {
+                    actions.push({
+                        id          : 'message::message.detail.noAction',
+                        isViewAction: false,
+                        translation : 'select',
+                        icon        : 'done',
+                    });
+                }
+                else
+                {
+                    actions.push({
+                        id          : 'message::message.detail.addMessageAccount',
+                        isViewAction: false,
+                        translation : 'select',
+                        icon        : 'add_link',
+                    });
+                }
+
+                return actions;
+            },
+        },
+        {
+            type       : ColumnDataType.CHECKBOX,
+            field      : 'select',
+            translation: 'Selects',
+            sticky     : true,
+        },
+        ...accountColumnsConfig,
+    ];
+
+    // start message accounts grid
+    messageAccountsId: string[] = [];
+    messageAccountsGridState: GridState = {};
+    messageAccountsSelectedRows: IamAccount[] = [];
+    messageAccountsGridId: string = messageAccountsGridId;
+    messageAccountsGridData$: Observable<GridData<IamAccount>>;
+    messageAccountsColumnsConfig$: Observable<ColumnConfig[]>;
+    selectedCheckboxRowModel = new SelectionModel<IamAccount>(true, [], true, (a: IamAccount, b: IamAccount) => a.id === b.id);
+    originMessageAccountsColumnsConfig: ColumnConfig[] = [
+        {
+            type   : ColumnDataType.ACTIONS,
+            field  : 'actions',
+            sticky : true,
+            actions: row =>
+            {
+                const actions = [];
+
+                actions.push({
+                    id          : 'message::message.detail.removeMessageAccount',
+                    isViewAction: false,
+                    translation : 'unlink',
+                    icon        : 'link_off',
+                });
+
+                return actions;
+            },
+        },
+        {
+            type       : ColumnDataType.CHECKBOX,
+            field      : 'select',
+            translation: 'Selects',
+            sticky     : true,
+        },
+        ...accountColumnsConfig,
+    ];
+    /* #endregion variables to manage grid-select-multiple-elements accountRecipientIds */
 
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
@@ -57,8 +143,12 @@ export class MessageDetailComponent extends ViewDetailComponent
     ];
 
     constructor(
+        private readonly gridColumnsConfigStorageService: GridColumnsConfigStorageService,
+        private readonly gridFiltersStorageService: GridFiltersStorageService,
+        private readonly gridStateService: GridStateService,
         private readonly messageService: MessageService,
         private readonly selectSearchService: SelectSearchService,
+        private readonly accountService: AccountService,
     )
     {
         super();
@@ -68,19 +158,14 @@ export class MessageDetailComponent extends ViewDetailComponent
     // the parent class you can use instead of ngOnInit
     init(): void
     {
-        // get scopes from client, the client is request in message resolver
-        this.scopes$ = this.clientService
-            .client$
-            .pipe(map(client => client?.scopeOptions as OAuthScope[]));
-
         // tenants
-        this.initTenantsBelongsFilter(this.activatedRoute.snapshot.data.data.iamGetTenants);
-        this.initTenantsRecipientsFilter(this.activatedRoute.snapshot.data.data.iamGetTenants);
-
-        this.tags$ = this.tagService.tags$;
+        this.initTenantBelongsFilter(this.activatedRoute.snapshot.data.data.iamGetTenants);
+        this.initTenantRecipientsFilter(this.activatedRoute.snapshot.data.data.iamGetTenants);
+        this.initScopeRecipientsFilter(this.activatedRoute.snapshot.data.data.oAuthFindClientById.scopeOptions);
+        this.initTagRecipientsFilter(this.activatedRoute.snapshot.data.data.iamGetTags);
     }
 
-    initTenantsBelongsFilter(tenants: IamTenant[]): void
+    initTenantBelongsFilter(tenants: IamTenant[]): void
     {
         if (tenants.length === 1)
         {
@@ -89,9 +174,9 @@ export class MessageDetailComponent extends ViewDetailComponent
         }
 
         // init select filter with all items
-        this.filteredTenantsBelongs$.next(tenants);
+        this.filteredTenantBelongs$.next(tenants);
 
-        // listen for country search field value changes
+        // listen for tenant belong search field value changes
         this.tenantBelongFilterCtrl
             .valueChanges
             .pipe(takeUntil(this.unsubscribeAll$))
@@ -101,17 +186,17 @@ export class MessageDetailComponent extends ViewDetailComponent
                     .filterSelect<IamTenant>(
                         this.tenantBelongFilterCtrl,
                         tenants,
-                        this.filteredTenantsBelongs$,
+                        this.filteredTenantBelongs$,
                     );
             });
     }
 
-    initTenantsRecipientsFilter(tenants: IamTenant[]): void
+    initTenantRecipientsFilter(tenants: IamTenant[]): void
     {
         // init select filter with all items
-        this.filteredTenantsRecipients$.next(tenants);
+        this.filteredTenantRecipients$.next(tenants);
 
-        // listen for country search field value changes
+        // listen for tenant recipient search field value changes
         this.tenantRecipientFilterCtrl
             .valueChanges
             .pipe(takeUntil(this.unsubscribeAll$))
@@ -121,7 +206,48 @@ export class MessageDetailComponent extends ViewDetailComponent
                     .filterSelect<IamTenant>(
                         this.tenantRecipientFilterCtrl,
                         tenants,
-                        this.filteredTenantsRecipients$,
+                        this.filteredTenantRecipients$,
+                    );
+            });
+    }
+
+    initScopeRecipientsFilter(scopes: string[]): void
+    {
+        // init select filter with all items
+        this.filteredScopeRecipients$.next(scopes);
+
+        // listen for scope search field value changes
+        this.scopeRecipientFilterCtrl
+            .valueChanges
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe(async () =>
+            {
+                this.selectSearchService
+                    .filterSelect<string>(
+                        this.scopeRecipientFilterCtrl,
+                        scopes,
+                        this.filteredScopeRecipients$,
+                        scope => scope,
+                    );
+            });
+    }
+
+    initTagRecipientsFilter(tags: string[]): void
+    {
+        // init select filter with all items
+        this.filteredTagRecipients$.next(tags);
+
+        // listen for tag search field value changes
+        this.tagRecipientFilterCtrl
+            .valueChanges
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe(async () =>
+            {
+                this.selectSearchService
+                    .filterSelect<string>(
+                        this.tagRecipientFilterCtrl,
+                        tags,
+                        this.filteredTagRecipients$,
                     );
             });
     }
@@ -177,11 +303,11 @@ export class MessageDetailComponent extends ViewDetailComponent
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             tenantIds: [[]],
             status: [null, [Validators.required]],
-            accountRecipientIds: [],
-            tenantRecipientIds: [],
-            scopeRecipients: [],
-            tagRecipients: [],
-            sendAt: '',
+            accountRecipientIds: [[]],
+            tenantRecipientIds: [[]],
+            scopeRecipients: [[]],
+            tagRecipients: [[]],
+            sendAt: null,
             isImportant: [false, [Validators.required]],
             subject: ['', [Validators.required, Validators.maxLength(255)]],
             body: ['', [Validators.required]],
@@ -196,6 +322,83 @@ export class MessageDetailComponent extends ViewDetailComponent
         /* eslint-enable key-spacing */
     }
 
+    /* #region methods to manage Message Accounts grid */
+    handleAccountsRowsSectionChange($event: SelectionChange<IamAccount>): void
+    {
+        this.messageAccountsSelectedRows = $event.source.selected;
+    }
+
+    handleRemoveMessageAccountsSelected(): void
+    {
+        if (this.messageAccountsSelectedRows.length > 0)
+        {
+            this.actionService.action({
+                id          : 'message::message.detail.removeMessageAccounts',
+                isViewAction: false,
+                meta        : {
+                    rows: this.messageAccountsSelectedRows,
+                },
+            });
+        }
+    }
+    /* #endregion methods to manage Message Accounts  grid */
+
+    /* #region methods to manage Accounts dialog */
+    handleOpenAccountsDialog(): void
+    {
+        this.actionService.action({
+            id          : 'message::message.detail.accountsPagination',
+            isViewAction: false,
+            meta        : {
+                query: QueryStatementHandler
+                    .init({ columnsConfig: accountColumnsConfig })
+                    .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.accountsDialogGridId))
+                    .setSort(this.gridStateService.getSort(this.accountsDialogGridId))
+                    .setPage(this.gridStateService.getPage(this.accountsDialogGridId))
+                    .setSearch(this.gridStateService.getSearchState(this.accountsDialogGridId))
+                    .getQueryStatement(),
+            },
+            afterRunAction: () =>
+            {
+                this.gridStateService.setPaginationActionId(this.accountsDialogGridId, 'message::message.detail.accountsPagination');
+                this.gridStateService.setExportActionId(this.accountsDialogGridId, 'message::message.detail.exportAccounts');
+                this.messageAccountsGridSelectMultipleElementsComponent.handleElementsDialog({
+                    data: {
+                        gridId   : this.accountsDialogGridId,
+                        gridState: {
+                            columnFilters: this.gridFiltersStorageService.getColumnFilterState(this.accountsDialogGridId),
+                            page         : this.gridStateService.getPage(this.accountsDialogGridId),
+                            sort         : this.gridStateService.getSort(this.accountsDialogGridId),
+                            search       : this.gridStateService.getSearchState(this.accountsDialogGridId),
+                        },
+                    },
+                });
+            },
+        });
+    }
+
+    handleAccountsDialogRowsSectionChange($event: SelectionChange<IamAccount>): void
+    {
+        this.accountsDialogSelectedRows = $event.source.selected;
+    }
+
+    handleAddAccountsSelected(): void
+    {
+        if (this.accountsDialogSelectedRows.length > 0)
+        {
+            this.actionService.action({
+                id          : 'message::message.detail.addMessageAccounts',
+                isViewAction: false,
+                meta        : {
+                    rows: this.accountsDialogSelectedRows,
+                },
+            });
+
+            this.messageAccountsGridSelectMultipleElementsComponent.elementsDialogRef.close();
+        }
+    }
+    /* #endregion methods to manage Accounts dialog */
+
     async handleAction(action: Action): Promise<void>
     {
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
@@ -204,6 +407,28 @@ export class MessageDetailComponent extends ViewDetailComponent
             /* #region common actions */
             case 'message::message.detail.new':
                 this.fg.get('id').setValue(Utils.uuid());
+
+                /* #region new action to manage MessagesAccounts grid-select-multiple-elements */
+                // permissions grid
+                this.messageAccountsColumnsConfig$ = this.gridColumnsConfigStorageService
+                    .getColumnsConfig(this.messageAccountsGridId, this.originMessageAccountsColumnsConfig)
+                    .pipe(takeUntil(this.unsubscribeAll$));
+
+                this.messageAccountsGridState = {
+                    columnFilters: this.gridFiltersStorageService.getColumnFilterState(this.messageAccountsGridId),
+                    page         : this.gridStateService.getPage(this.messageAccountsGridId),
+                    sort         : this.gridStateService.getSort(this.messageAccountsGridId),
+                    search       : this.gridStateService.getSearchState(this.messageAccountsGridId),
+                };
+
+                this.messageAccountsGridData$ = this.accountService.getScopePagination(messageAccountsScopePagination);
+
+                // account dialog grid
+                this.accountsDialogColumnsConfig$ = this.gridColumnsConfigStorageService
+                    .getColumnsConfig(this.accountsDialogGridId, this.accountsDialogOriginColumnsConfig)
+                    .pipe(takeUntil(this.unsubscribeAll$));
+                this.accountsDialogGridData$ = this.accountService.pagination$;
+                /* #endregion edit action to manage MessagesAccounts grid-select-multiple-elements */
                 break;
 
             case 'message::message.detail.edit':
@@ -214,7 +439,30 @@ export class MessageDetailComponent extends ViewDetailComponent
                     {
                         this.managedObject = item;
                         this.fg.patchValue(item);
+                        this.messageAccountsId = [...item.accountRecipientIds];
                     });
+
+                /* #region edit action to manage MessagesAccounts grid-select-multiple-elements */
+                // permissions grid
+                this.messageAccountsColumnsConfig$ = this.gridColumnsConfigStorageService
+                    .getColumnsConfig(this.messageAccountsGridId, this.originMessageAccountsColumnsConfig)
+                    .pipe(takeUntil(this.unsubscribeAll$));
+
+                this.messageAccountsGridState = {
+                    columnFilters: this.gridFiltersStorageService.getColumnFilterState(this.messageAccountsGridId),
+                    page         : this.gridStateService.getPage(this.messageAccountsGridId),
+                    sort         : this.gridStateService.getSort(this.messageAccountsGridId),
+                    search       : this.gridStateService.getSearchState(this.messageAccountsGridId),
+                };
+
+                this.messageAccountsGridData$ = this.accountService.getScopePagination(messageAccountsScopePagination);
+
+                // account dialog grid
+                this.accountsDialogColumnsConfig$ = this.gridColumnsConfigStorageService
+                    .getColumnsConfig(this.accountsDialogGridId, this.accountsDialogOriginColumnsConfig)
+                    .pipe(takeUntil(this.unsubscribeAll$));
+                this.accountsDialogGridData$ = this.accountService.pagination$;
+                /* #endregion edit action to manage MessagesAccounts grid-select-multiple-elements */
                 break;
 
             case 'message::message.detail.create':
@@ -279,6 +527,160 @@ export class MessageDetailComponent extends ViewDetailComponent
                 }
                 break;
                 /* #endregion common actions */
+
+            /* #region actions to manage Message Accounts grid-select-multiple-elements */
+            case 'message::message.detail.messageAccountsPagination':
+                await lastValueFrom(
+                    this.accountService
+                        .pagination({
+                            query: action.meta.query ?
+                                action.meta.query :
+                                QueryStatementHandler
+                                    .init({ columnsConfig: accountColumnsConfig })
+                                    .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.messageAccountsGridId))
+                                    .setSort(this.gridStateService.getSort(this.messageAccountsGridId))
+                                    .setPage(this.gridStateService.getPage(this.messageAccountsGridId))
+                                    .setSearch(this.gridStateService.getSearchState(this.messageAccountsGridId))
+                                    .getQueryStatement(),
+                            constraint: {
+                                where: {
+                                    id: this.messageAccountsId,
+                                },
+                                include: [
+                                    {
+                                        association: 'user',
+                                    },
+                                ],
+                            },
+                            scope: messageAccountsScopePagination,
+                        }),
+                );
+                break;
+
+            case 'message::message.detail.addMessageAccount':
+                const accountRecipientIdAdded = new Set<string>([...this.fg.get('accountRecipientIds').value, action.meta.row.id]);
+                this.fg.get('accountRecipientIds').setValue([...accountRecipientIdAdded]);
+                this.messageAccountsId = [...accountRecipientIdAdded];
+
+                this.actionService.action({
+                    id          : 'message::message.detail.messageAccountsPagination',
+                    isViewAction: false,
+                });
+
+                this.actionService.action({
+                    id          : 'message::message.detail.accountsPagination',
+                    isViewAction: false,
+                });
+
+                this.snackBar.open(
+                    `${this.translocoService.translate('message.Account')} ${this.translocoService.translate('Saved.F')}`,
+                    undefined,
+                    {
+                        verticalPosition: 'top',
+                        duration        : 3000,
+                    },
+                );
+                break;
+
+            case 'message::message.detail.addMessageAccounts':
+                const rowIds = action.meta.rows.map(row => row.id);
+                const accountRecipientIdsAdded = new Set<string>([...this.fg.get('accountRecipientIds').value, ...rowIds]);
+                this.fg.get('accountRecipientIds').setValue([...accountRecipientIdsAdded]);
+                this.messageAccountsId = [...accountRecipientIdsAdded];
+
+                this.actionService.action({
+                    id          : 'message::message.detail.messageAccountsPagination',
+                    isViewAction: false,
+                });
+
+                this.actionService.action({
+                    id          : 'message::message.detail.accountsPagination',
+                    isViewAction: false,
+                });
+
+                this.snackBar.open(
+                    `${this.translocoService.translate('message.Accounts')} ${this.translocoService.translate('Saved.F.P')}`,
+                    undefined,
+                    {
+                        verticalPosition: 'top',
+                        duration        : 3000,
+                    },
+                );
+                break;
+
+            case 'message::message.detail.removeMessageAccount':
+                const accountRecipientIdRemoved = new Set<string>(this.fg.get('accountRecipientIds').value);
+                accountRecipientIdRemoved.delete(action.meta.row.id);
+                this.fg.get('accountRecipientIds').setValue([...accountRecipientIdRemoved]);
+                this.messageAccountsId = [...accountRecipientIdRemoved];
+
+                this.actionService.action({
+                    id          : 'message::message.detail.messageAccountsPagination',
+                    isViewAction: false,
+                });
+
+                this.actionService.action({
+                    id          : 'message::message.detail.accountsPagination',
+                    isViewAction: false,
+                });
+
+                this.snackBar.open(
+                    `${this.translocoService.translate('message.Account')} ${this.translocoService.translate('Deleted.F')}`,
+                    undefined,
+                    {
+                        verticalPosition: 'top',
+                        duration        : 3000,
+                    },
+                );
+                break;
+
+            case 'message::message.detail.removeMessageAccounts':
+                const accountRecipientIdsRemoved = new Set<string>(this.fg.get('accountRecipientIds').value);
+                action.meta.rows.forEach(row => accountRecipientIdsRemoved.delete(row.id));
+                this.fg.get('accountRecipientIds').setValue([...accountRecipientIdsRemoved]);
+                this.messageAccountsId = [...accountRecipientIdsRemoved];
+
+                this.selectedCheckboxRowModel.clear();
+
+                this.actionService.action({
+                    id          : 'message::message.detail.messageAccountsPagination',
+                    isViewAction: false,
+                });
+
+                this.actionService.action({
+                    id          : 'message::message.detail.accountsPagination',
+                    isViewAction: false,
+                });
+
+                this.snackBar.open(
+                    `${this.translocoService.translate('iam.Permissions')} ${this.translocoService.translate('Deleted.M.P')}`,
+                    undefined,
+                    {
+                        verticalPosition: 'top',
+                        duration        : 3000,
+                    },
+                );
+                break;
+                /* #endregion actions to manage Message Accounts grid-select-multiple-elements */
+
+            /* #region actions to manage Accounts grid-select-multiple-elements dialog */
+            case 'message::message.detail.accountsPagination':
+                await lastValueFrom(
+                    this.accountService
+                        .pagination({
+                            query: action.meta.query ?
+                                action.meta.query :
+                                QueryStatementHandler
+                                    .init({ columnsConfig: accountColumnsConfig })
+                                    .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.accountsDialogGridId))
+                                    .setSort(this.gridStateService.getSort(this.accountsDialogGridId))
+                                    .setPage(this.gridStateService.getPage(this.accountsDialogGridId))
+                                    .setSearch(this.gridStateService.getSearchState(this.accountsDialogGridId))
+                                    .getQueryStatement(),
+                        }),
+                );
+                break;
+                /* #endregion actions to manage Accounts grid-select-multiple-elements dialog */
         }
     }
 }
