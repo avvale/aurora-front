@@ -57,24 +57,24 @@
 
                     <!-- Message with a link -->
                     <ng-container *ngIf="message.link">
-                        <!-- Normal links -->
-                        <ng-container *ngIf="!message.useRouter">
-                            <a
-                                class="flex flex-auto py-5 pl-6 cursor-pointer"
-                                [href]="message.link"
+                        @if (message.isInternalLink)
+                        {
+                            <!-- Router links -->
+                            <a class="flex flex-auto py-5 pl-6 cursor-pointer"
+                               [routerLink]="message.link"
                             >
                                 <ng-container *ngTemplateOutlet="messageContent"></ng-container>
                             </a>
-                        </ng-container>
-                        <!-- Router links -->
-                        <ng-container *ngIf="message.useRouter">
-                            <a
-                                class="flex flex-auto py-5 pl-6 cursor-pointer"
-                                [routerLink]="message.link"
+                        }
+                        @else
+                        {
+                            <!-- Normal links -->
+                            <a class="flex flex-auto py-5 pl-6 cursor-pointer"
+                               [href]="message.link"
                             >
                                 <ng-container *ngTemplateOutlet="messageContent"></ng-container>
                             </a>
-                        </ng-container>
+                        }
                     </ng-container>
 
                     <!-- Message without a link -->
@@ -102,7 +102,7 @@
                         <button
                             class="w-6 h-6 min-h-6 sm:opacity-0 sm:group-hover:opacity-100"
                             mat-icon-button
-                            (click)="delete(message)"
+                            (click)="deleteMessage(message)"
                             [matTooltip]="'Remove'"
                         >
                             <mat-icon
@@ -133,31 +133,32 @@
                             [src]="message.image"
                             [alt]="'Message image'">
                     </ng-container>
-                    <!-- Title, description & time -->
+                    <!-- subject, body & time -->
                     <div class="flex flex-col flex-auto">
-                        <ng-container *ngIf="message.title">
-                            <div
-                                class="font-semibold line-clamp-1"
-                                [innerHTML]="message.title"
-                            >
+                        @if (message.subject)
+                        {
+                            <div class="font-semibold line-clamp-1">
+                                {{ message.subject }}
                             </div>
-                        </ng-container>
-                        <ng-container *ngIf="message.description">
+                        }
+                        @if (message.body)
+                        {
                             <div
                                 class="line-clamp-2"
-                                [innerHTML]="message.description"
+                                [innerHTML]="message.body"
                             >
                             </div>
-                        </ng-container>
+                        }
                         <div class="mt-2 text-sm leading-none text-secondary">
-                            {{ message.time | date:'MMM dd, h:mm a' }}
+                            {{ message.sentAt | date:'MMM dd, h:mm a' }}
                         </div>
                     </div>
                 </ng-template>
             </ng-container>
 
             <!-- No messages -->
-            <ng-container *ngIf="!messages || !messages.length">
+            @if (!messages || !messages.length)
+            {
                 <div class="flex flex-col flex-auto items-center justify-center sm:justify-start py-12 px-8">
                     <div class="flex flex-0 items-center justify-center w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-600">
                         <mat-icon
@@ -167,7 +168,7 @@
                     <div class="mt-5 text-2xl font-semibold tracking-tight">No messages</div>
                     <div class="w-full max-w-60 mt-1 text-md text-center text-secondary">When you have messages, they will appear here.</div>
                 </div>
-            </ng-container>
+            }
         </div>
     </div>
 </ng-template>

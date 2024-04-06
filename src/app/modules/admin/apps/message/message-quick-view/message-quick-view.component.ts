@@ -6,9 +6,10 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, lastValueFrom, takeUntil } from 'rxjs';
 import { MessageInbox } from '../message.types';
 import { InboxService } from '../inbox';
+import { MessageService } from '../message/message.service';
 import { GridData } from '@aurora';
 
 @Component({
@@ -28,10 +29,11 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     @ViewChild('messagesOrigin') private messagesOrigin: MatButton;
     @ViewChild('messagesPanel') private messagesPanel: TemplateRef<any>;
 
-    inboxService = inject(InboxService);
     inboxCustomerPagination: GridData<MessageInbox>;
     unreadCount: number = 0;
 
+    private inboxService = inject(InboxService);
+    private messageService = inject(MessageService);
     private unsubscribeAll: Subject<void> = new Subject<void>();
     private overlayRef: OverlayRef;
 
@@ -63,7 +65,8 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         // Subscribe to message changes
-        this.inboxService.paginationCustomerQuickView$
+        this.inboxService
+            .paginationCustomerQuickView$
             .pipe(takeUntil(this.unsubscribeAll))
             .subscribe((inboxCustomerPagination: GridData<MessageInbox>) =>
             {
@@ -78,13 +81,15 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
             });
 
         // Get the messages
-        this.inboxService.paginateCustomerQuickVewMessagesInbox({
-            query: {
-                limit : 10,
-                offset: 0,
-                order : [['sort', 'desc']],
-            },
-        }).subscribe();
+        this.inboxService
+            .paginateCustomerQuickVewMessagesInbox({
+                query: {
+                    limit : 10,
+                    offset: 0,
+                    order : [['sort', 'desc']],
+                },
+            })
+            .subscribe();
     }
 
     /**
@@ -141,6 +146,7 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
      */
     markAllAsRead(): void
     {
+        console.log('Mark all as read');
         // Mark all as read
         // this.messagesService.markAllAsRead().subscribe();
     }
@@ -148,20 +154,56 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     /**
      * Toggle read status of the given message
      */
-    toggleRead(message: MessageInbox): void
+    async toggleRead(message: MessageInbox): Promise<void>
     {
+        console.log('Mark message as read');
         // Toggle the read status
         message.isRead = !message.isRead;
 
-        // Update the message
-        // this.messagesService.update(message.id, message).subscribe();
+        if (message.isReadAtLeastOnce)
+        {
+            await lastValueFrom(
+                this.inboxService
+                    .update({
+                        object: {
+                            id               : message.id,
+                            isRead           : message.isRead,
+                            isReadAtLeastOnce: message.isRead,
+                        },
+                    }),
+            );
+
+            // increment the reads in message
+            lastValueFrom(
+                this.messageService
+                    .update({
+                        object: {
+                            id   : message.id,
+                            reads: 1,
+                        },
+                    }),
+            );
+
+            return;
+        }
+
+        await lastValueFrom(
+            this.inboxService
+                .update({
+                    object: {
+                        id    : message.id,
+                        isRead: message.isRead,
+                    },
+                }),
+        );
     }
 
     /**
      * Delete the given message
      */
-    delete(message: MessageInbox): void
+    deleteMessage(message: MessageInbox): void
     {
+        console.log('deleteMessage');
         // Delete the message
         // this.messagesService.delete(message.id).subscribe();
     }
