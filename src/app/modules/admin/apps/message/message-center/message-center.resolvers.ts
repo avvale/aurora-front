@@ -5,7 +5,7 @@ import { MessageInbox } from '../message.types';
 import { InboxService, inboxColumnsConfig } from '../inbox';
 import { messageCenterExportListAction, messageCenterMainListId, messageCenterPaginationListAction } from './list/message-center-list.component';
 import { MessageCenterService } from './message-center.service';
-import { from, of } from 'rxjs';
+import { of } from 'rxjs';
 
 export const messageCenterPaginationResolver: ResolveFn<GridData<MessageInbox>> = (
     route: ActivatedRouteSnapshot,
