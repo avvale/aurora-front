@@ -103,6 +103,7 @@ export class MessageCenterListComponent extends ViewBaseComponent
             .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe((selectedMessage: MessageInbox) =>
             {
+                console.log('selectedMessage', selectedMessage);
                 this.selectedMessage.set(selectedMessage);
             });
 
@@ -121,21 +122,6 @@ export class MessageCenterListComponent extends ViewBaseComponent
                     this.mailList.nativeElement.scrollTo(0, 0);
                 }
             });
-    }
-
-    onMessageSelected(message: MessageInbox): void
-    {
-        // If the mail is not read...
-        if (!message.isRead)
-        {
-            // Update the mail object
-            message.isRead = true;
-
-            // Update the mail on the server
-            // this._mailboxService.updateMail(mail.id, { unread: false }).subscribe();
-        }
-        console.log('message', message);
-        this.messageCenterService.selectedMessageSubject$.next(message);
     }
 
     async handleAction(action: Action): Promise<void>

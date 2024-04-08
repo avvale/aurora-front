@@ -1,7 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
 import { DatePipe, DecimalPipe, NgClass, NgFor, NgIf, NgPlural, NgPluralCase } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, inject, signal, WritableSignal } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
@@ -14,13 +13,14 @@ import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
 import { FuseScrollResetDirective } from '@fuse/directives/scroll-reset';
 import { FuseFindByKeyPipe } from '@fuse/pipes/find-by-key/find-by-key.pipe';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { MailboxService } from '../mailbox.service';
 import { Mail } from '../mailbox.types';
 import { MessageCenterService } from '../message-center.service';
 import { messageCustomerCenterMessage } from '../list/message-center-list.component';
 import { TranslocoModule } from '@ngneat/transloco';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Action, ViewBaseComponent } from '@aurora';
 
 @Component({
     selector     : 'message-center-details',
@@ -33,14 +33,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatFormFieldModule, MatInputModule, FuseFindByKeyPipe, DecimalPipe, DatePipe, TranslocoModule,
     ],
 })
-export class MessageCenterDetailsComponent implements OnInit, OnDestroy
+export class MessageCenterDetailsComponent extends ViewBaseComponent
 {
+    message: WritableSignal<MessageInbox> = signal(null);
     inboxService = inject(InboxService);
-    message: MessageInbox;
 
     private changeDetectorRef = inject(ChangeDetectorRef);
     private messageCenterService = inject(MessageCenterService);
-    private unsubscribeAll$: Subject<void> = new Subject<void>();
 
 
     // OLD
@@ -63,6 +62,7 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
         private _viewContainerRef: ViewContainerRef,
     )
     {
+        super();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -72,8 +72,9 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
+    init(): void
     {
+        console.log('MessageCenterDetailsComponent ngOnInit');
         // Mail
         /* this._mailboxService.mail$
             .pipe(takeUntil(this.unsubscribeAll$))
@@ -87,10 +88,10 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe(message =>
             {
-                this.message = message;
+                this.message.set(message);
 
                 // set selected message, this will be tagged in list component
-                // this.messageCenterService.selectedMessageSubject$.next(message);
+                this.messageCenterService.selectedMessageSubject$.next(message);
 
                 //this.changeDetectorRef.markForCheck();
             });
@@ -103,16 +104,6 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
                 // De-activate the reply form
                 this.replyFormActive = false;
             });
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this.unsubscribeAll$.next(null);
-        this.unsubscribeAll$.complete();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -154,82 +145,24 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
     {
     }
 
-    /**
-     * Open info details panel
-     */
-    openInfoDetailsPanel(): void
+    async handleAction(action: Action): Promise<void>
     {
-        // Create the overlay
-        this._overlayRef = this._overlay.create({
-            backdropClass   : '',
-            hasBackdrop     : true,
-            scrollStrategy  : this._overlay.scrollStrategies.block(),
-            positionStrategy: this._overlay.position()
-                .flexibleConnectedTo(this._infoDetailsPanelOrigin._elementRef.nativeElement)
-                .withFlexibleDimensions(true)
-                .withViewportMargin(16)
-                .withLockedPosition(true)
-                .withPositions([
-                    {
-                        originX : 'start',
-                        originY : 'bottom',
-                        overlayX: 'start',
-                        overlayY: 'top',
-                    },
-                    {
-                        originX : 'start',
-                        originY : 'top',
-                        overlayX: 'start',
-                        overlayY: 'bottom',
-                    },
-                    {
-                        originX : 'end',
-                        originY : 'bottom',
-                        overlayX: 'end',
-                        overlayY: 'top',
-                    },
-                    {
-                        originX : 'end',
-                        originY : 'top',
-                        overlayX: 'end',
-                        overlayY: 'bottom',
-                    },
-                ]),
-        });
-
-        // Create a portal from the template
-        const templatePortal = new TemplatePortal(this._infoDetailsPanel, this._viewContainerRef);
-
-        // Attach the portal to the overlay
-        this._overlayRef.attach(templatePortal);
-
-        // Subscribe to the backdrop click
-        this._overlayRef.backdropClick().subscribe(() =>
+        // add optional chaining (?.) to avoid first call where behaviour subject is undefined
+        switch (action?.id)
         {
-            // If overlay exists and attached...
-            if ( this._overlayRef && this._overlayRef.hasAttached() )
-            {
-                // Detach it
-                this._overlayRef.detach();
-            }
+            case 'message::messageCenter.detail.show':
+                /* // If the mail is not read...
+                if (!action.meta.message.isRead)
+                {
+                    // Update the mail object
+                    action.meta.message.isRead = true;
 
-            // If template portal exists and attached...
-            if ( templatePortal && templatePortal.isAttached )
-            {
-                // Detach it
-                templatePortal.detach();
-            }
-        });
-    }
-
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
-    trackByFn(index: number, item: any): any
-    {
-        return item.id || index;
+                    // Update the mail on the server
+                    // this._mailboxService.updateMail(mail.id, { unread: false }).subscribe();
+                }
+                */
+                //this.messageCenterService.selectedMessageSubject$.next(action.meta.message);
+                break;
+        }
     }
 }

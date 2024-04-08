@@ -1,7 +1,7 @@
 <div class="flex flex-col flex-auto overflow-y-auto lg:overflow-hidden bg-card dark:bg-default" *transloco="let t">
 
-    <ng-container *ngIf="message; else selectMessageToRead">
-
+    @if (message())
+    {
         <!-- Header -->
         <div class="z-10 relative flex flex-col flex-0 w-full border-b">
 
@@ -17,11 +17,11 @@
                     <mat-icon [svgIcon]="'heroicons_outline:arrow-long-left'"></mat-icon>
                 </a>
 
-                <!-- Toggle important button -->
+                <!-- important button -->
                 <mat-icon
                     class="ml-auto"
                     [matTooltip]="t('message.IsImportant')"
-                    [ngClass]="{ 'text-red-600 dark:text-red-500': message.isImportant }"
+                    [ngClass]="{ 'text-red-600 dark:text-red-500': message().isImportant }"
                     [svgIcon]="'heroicons_outline:exclamation-circle'"
                 >
                 </mat-icon>
@@ -35,20 +35,25 @@
                 </button>
                 <mat-menu #mailMenu="matMenu">
                     <!-- Mark as read / unread -->
-                    <button
-                        mat-menu-item
-                        *ngIf="!message.isRead"
-                        (click)="toggleUnread(false)">
-                        <mat-icon [svgIcon]="'heroicons_outline:envelope-open'"></mat-icon>
-                        <span>Mark as read</span>
-                    </button>
-                    <button
-                        mat-menu-item
-                        *ngIf="message.isRead"
-                        (click)="toggleUnread(true)">
-                        <mat-icon [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
-                        <span>Mark as unread</span>
-                    </button>
+                    @if (message().isRead)
+                    {
+                        <button
+                            mat-menu-item
+                            (click)="toggleUnread(true)">
+                            <mat-icon [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
+                            <span>Mark as unread</span>
+                        </button>
+                    }
+                    @else
+                    {
+                        <button
+                            mat-menu-item
+                            (click)="toggleUnread(false)">
+                            <mat-icon [svgIcon]="'heroicons_outline:envelope-open'"></mat-icon>
+                            <span>Mark as read</span>
+                        </button>
+                    }
+
                     <!-- Delete -->
                     <button
                         mat-menu-item
@@ -59,24 +64,12 @@
                 </mat-menu>
             </div>
 
-            <!-- Subject and Labels -->
+            <!-- Subject -->
             <div class="flex flex-wrap items-center py-5 px-6">
                 <!-- Subject -->
                 <div class="flex flex-auto my-1 mr-4 text-2xl">
-                    {{ message.subject }}
+                    {{ message().subject }}
                 </div>
-                <!-- Labels -->
-                <ng-container *ngIf="message.labels && message.labels.length > 0">
-                    <div class="flex flex-wrap items-center justify-start -mx-1">
-                        <ng-container *ngFor="let label of (message.labels | fuseFindByKey:'id':labels)">
-                            <div
-                                class="m-1 py-0.5 px-2.5 rounded-full text-sm font-medium whitespace-nowrap"
-                                [ngClass]="labelColors[label.color].combined">
-                                {{ label.title }}
-                            </div>
-                        </ng-container>
-                    </div>
-                </ng-container>
             </div>
 
         </div>
@@ -94,24 +87,24 @@
                     <!-- Content -->
                     <div
                         class="flex flex-col whitespace-pre-line leading-relaxed"
-                        [innerHTML]="message.body"
+                        [innerHTML]="message().body"
                     >
                     </div>
 
                     <!-- Attachments -->
-                    <ng-container *ngIf="message.attachments && message.attachments.length > 0">
+                    <ng-container *ngIf="message().attachments && message().attachments.length > 0">
                         <div class="flex flex-col w-full">
                             <!-- Title -->
                             <div class="flex items-center mt-12">
                                 <mat-icon
                                     class="icon-size-5"
                                     [svgIcon]="'heroicons_solid:paper-clip'"></mat-icon>
-                                <div class="ml-2 font-semibold">{{ message.attachments.length }} Attachments</div>
+                                <div class="ml-2 font-semibold">{{ message().attachments.length }} Attachments</div>
                             </div>
 
                             <!-- Files -->
                             <div class="flex flex-wrap -m-3 mt-3">
-                                <ng-container *ngFor="let attachment of message.attachments">
+                                <ng-container *ngFor="let attachment of message().attachments">
                                     <div class="flex items-center m-3">
                                         <!-- Preview -->
                                         <img
@@ -130,12 +123,12 @@
                                             <div
                                                 class="text-md font-medium truncate"
                                                 [title]="attachment.name">
-                                                {{attachment.name}}
+                                                {{ attachment.name }}
                                             </div>
                                             <div
                                                 class="text-sm font-medium truncate text-secondary"
                                                 [title]="attachment.size">
-                                                {{attachment.size / 1000 | number:'1.0-2'}} KB
+                                                {{ attachment.size / 1000 | number:'1.0-2' }} KB
                                             </div>
                                         </div>
                                     </div>
@@ -195,18 +188,15 @@
 
         </div>
 
-    </ng-container>
-
-    <!-- Select message to read template -->
-    <ng-template #selectMessageToRead>
-
+    }
+    @else
+    {
+        <!-- select message to read template -->
         <div class="flex flex-col flex-auto items-center justify-center bg-gray-100 dark:bg-transparent">
             <mat-icon
                 class="icon-size-24"
                 [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
             <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">Select a message to read</div>
         </div>
-
-    </ng-template>
-
+    }
 </div>

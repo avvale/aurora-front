@@ -47,7 +47,7 @@ export const messageCenterShowResolver: ResolveFn<{
     const inboxService = inject(InboxService);
 
     actionService.action({
-        id          : 'message::messageCenter.list.show',
+        id          : 'message::messageCenter.detail.show',
         isViewAction: true,
     });
 
