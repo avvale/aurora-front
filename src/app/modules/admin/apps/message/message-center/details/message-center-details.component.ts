@@ -120,14 +120,6 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
     // -----------------------------------------------------------------------------------------------------
 
     /**
-     * Get the current folder
-     */
-    getCurrentFolder(): any
-    {
-        return this._activatedRoute.snapshot.paramMap.get('folder');
-    }
-
-    /**
      * Toggle unread
      *
      * @param unread
@@ -146,14 +138,6 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
      */
     reply(): void
     {
-        // Activate the reply form
-        this.replyFormActive = true;
-
-        // Scroll to the bottom of the details pane
-        setTimeout(() =>
-        {
-            this._elementRef.nativeElement.scrollTop = this._elementRef.nativeElement.scrollHeight;
-        });
     }
 
     /**
@@ -161,14 +145,6 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
      */
     replyAll(): void
     {
-        // Activate the reply form
-        this.replyFormActive = true;
-
-        // Scroll to the bottom of the details pane
-        setTimeout(() =>
-        {
-            this._elementRef.nativeElement.scrollTop = this._elementRef.nativeElement.scrollHeight;
-        });
     }
 
     /**
@@ -176,32 +152,6 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
      */
     forward(): void
     {
-        // Activate the reply form
-        this.replyFormActive = true;
-
-        // Scroll to the bottom of the details pane
-        setTimeout(() =>
-        {
-            this._elementRef.nativeElement.scrollTop = this._elementRef.nativeElement.scrollHeight;
-        });
-    }
-
-    /**
-     * Discard
-     */
-    discard(): void
-    {
-        // Deactivate the reply form
-        this.replyFormActive = false;
-    }
-
-    /**
-     * Send
-     */
-    send(): void
-    {
-        // Deactivate the reply form
-        this.replyFormActive = false;
     }
 
     /**

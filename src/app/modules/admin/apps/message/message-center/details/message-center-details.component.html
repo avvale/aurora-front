@@ -49,25 +49,9 @@
                         <mat-icon [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
                         <span>Mark as unread</span>
                     </button>
-                    <!-- Marks as spam / not span-->
-                    <button
-                        mat-menu-item
-                        *ngIf="getCurrentFolder() !== 'spam' && getCurrentFolder() !== 'drafts'"
-                        (click)="moveToFolder('spam')">
-                        <mat-icon [svgIcon]="'heroicons_outline:exclamation-triangle'"></mat-icon>
-                        <span>Spam</span>
-                    </button>
-                    <button
-                        mat-menu-item
-                        *ngIf="getCurrentFolder() === 'spam'"
-                        (click)="moveToFolder('inbox')">
-                        <mat-icon [svgIcon]="'heroicons_outline:exclamation-triangle'"></mat-icon>
-                        <span>Not spam</span>
-                    </button>
                     <!-- Delete -->
                     <button
                         mat-menu-item
-                        *ngIf="getCurrentFolder() !== 'trash'"
                         (click)="moveToFolder('trash')">
                         <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                         <span>Delete</span>
@@ -202,69 +186,6 @@
                                     [svgIcon]="'heroicons_solid:chevron-double-right'"></mat-icon>
                                 <span class="ml-2">Forward</span>
                             </button>
-                        </div>
-                    </ng-container>
-
-                    <!-- Reply form -->
-                    <ng-container *ngIf="replyFormActive">
-                        <div
-                            class="flex flex-col w-full"
-                            #replyForm>
-
-                            <mat-form-field [subscriptSizing]="'dynamic'">
-                                <textarea
-                                    class="textarea"
-                                    matInput
-                                    [placeholder]="'Type your reply here'"
-                                    [rows]="4"></textarea>
-                            </mat-form-field>
-
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 sm:mt-6">
-                                <div class="-ml-2">
-                                    <!-- Attach file -->
-                                    <button mat-icon-button>
-                                        <mat-icon
-                                            class="icon-size-5"
-                                            [svgIcon]="'heroicons_solid:paper-clip'"></mat-icon>
-                                    </button>
-                                    <!-- Insert link -->
-                                    <button mat-icon-button>
-                                        <mat-icon
-                                            class="icon-size-5"
-                                            [svgIcon]="'heroicons_solid:link'"></mat-icon>
-                                    </button>
-                                    <!-- Insert emoji -->
-                                    <button mat-icon-button>
-                                        <mat-icon
-                                            class="icon-size-5"
-                                            [svgIcon]="'heroicons_solid:face-smile'"></mat-icon>
-                                    </button>
-                                    <!-- Insert image -->
-                                    <button mat-icon-button>
-                                        <mat-icon
-                                            class="icon-size-5"
-                                            [svgIcon]="'heroicons_solid:photo'"></mat-icon>
-                                    </button>
-                                </div>
-
-                                <div class="flex items-center mt-4 sm:mt-0">
-                                    <!-- Discard -->
-                                    <button
-                                        class="order-last sm:order-first ml-3 sm:ml-0"
-                                        mat-button
-                                        (click)="discard()">
-                                        Discard
-                                    </button>
-                                    <!-- Send -->
-                                    <button
-                                        class="sm:ml-3"
-                                        mat-flat-button
-                                        [color]="'primary'"
-                                        (click)="send()">
-                                        Send
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </ng-container>
 
