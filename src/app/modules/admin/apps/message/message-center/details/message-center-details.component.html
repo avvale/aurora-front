@@ -1,4 +1,4 @@
-<div class="flex flex-col flex-auto overflow-y-auto lg:overflow-hidden bg-card dark:bg-default">
+<div class="flex flex-col flex-auto overflow-y-auto lg:overflow-hidden bg-card dark:bg-default" *transloco="let t">
 
     <ng-container *ngIf="message; else selectMessageToRead">
 
@@ -12,21 +12,19 @@
                 <a
                     class="lg:hidden md:-ml-2"
                     mat-icon-button
-                    [routerLink]="['./../']">
+                    [routerLink]="['./../']"
+                >
                     <mat-icon [svgIcon]="'heroicons_outline:arrow-long-left'"></mat-icon>
                 </a>
 
                 <!-- Toggle important button -->
-                <button
+                <mat-icon
                     class="ml-auto"
-                    mat-icon-button
-                    (click)="toggleImportant()">
-                    <mat-icon
-                        [ngClass]="{'text-red-600 dark:text-red-500': message.important}"
-                        [svgIcon]="'heroicons_outline:exclamation-circle'"
-                    >
-                    </mat-icon>
-                </button>
+                    [matTooltip]="t('message.IsImportant')"
+                    [ngClass]="{ 'text-red-600 dark:text-red-500': message.isImportant }"
+                    [svgIcon]="'heroicons_outline:exclamation-circle'"
+                >
+                </mat-icon>
 
                 <!-- Other actions button & menu -->
                 <button
@@ -80,7 +78,9 @@
             <!-- Subject and Labels -->
             <div class="flex flex-wrap items-center py-5 px-6">
                 <!-- Subject -->
-                <div class="flex flex-auto my-1 mr-4 text-2xl">{{ message.subject }}</div>
+                <div class="flex flex-auto my-1 mr-4 text-2xl">
+                    {{ message.subject }}
+                </div>
                 <!-- Labels -->
                 <ng-container *ngIf="message.labels && message.labels.length > 0">
                     <div class="flex flex-wrap items-center justify-start -mx-1">
@@ -88,7 +88,7 @@
                             <div
                                 class="m-1 py-0.5 px-2.5 rounded-full text-sm font-medium whitespace-nowrap"
                                 [ngClass]="labelColors[label.color].combined">
-                                {{label.title}}
+                                {{ label.title }}
                             </div>
                         </ng-container>
                     </div>

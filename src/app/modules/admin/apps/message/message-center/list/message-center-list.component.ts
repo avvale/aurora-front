@@ -39,11 +39,7 @@ export class MessageCenterListComponent extends ViewBaseComponent
     lastMessageOfPage = computed(() => (this.currentPage() * this.limit) + this.limit > this.totalMessages() ? this.totalMessages() : (this.currentPage() * this.limit) + this.limit);
     previousOffset = computed(() => (this.currentPage() - 1) * this.limit);
     nextOffset = computed(() => (this.currentPage() * this.limit) + this.limit);
-
-
-    selectedMessage: MessageInbox;
-
-
+    selectedMessage: WritableSignal<MessageInbox> = signal(null);
 
     breadcrumb: Crumb[] = [
         { translation: 'App', routerLink: ['/']},
@@ -69,15 +65,16 @@ export class MessageCenterListComponent extends ViewBaseComponent
 
 
     // OLD
-    private messageCenterService = inject(MessageCenterService);
     @ViewChild('mailList') mailList: ElementRef;
     mailsLoading: boolean = false;
+
 
     /**
      * Constructor
      */
     constructor(
         private readonly _mailboxService: MailboxService,
+        private readonly messageCenterService: MessageCenterService,
         private readonly gridStateService: GridStateService,
         private readonly gridFiltersStorageService: GridFiltersStorageService,
         private readonly inboxService: InboxService,
@@ -101,6 +98,14 @@ export class MessageCenterListComponent extends ViewBaseComponent
                 this.totalMessages.set(inboxCustomerPagination.total);
             });
 
+        // Selected message
+        this.messageCenterService.selectedMessage$
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe((selectedMessage: MessageInbox) =>
+            {
+                this.selectedMessage.set(selectedMessage);
+            });
+
 
         // Mails loading
         this._mailboxService.mailsLoading$
@@ -116,34 +121,8 @@ export class MessageCenterListComponent extends ViewBaseComponent
                     this.mailList.nativeElement.scrollTo(0, 0);
                 }
             });
-
-        // Pagination
-        /* this._mailboxService.pagination$
-            .pipe(takeUntil(this.unsubscribeAll$))
-            .subscribe(pagination =>
-            {
-                this.pagination = pagination;
-            }); */
-
-        // Selected message
-        this.messageCenterService.selectedMessage$
-            .pipe(takeUntil(this.unsubscribeAll$))
-            .subscribe((selectedMessage: MessageInbox) =>
-            {
-                console.log(selectedMessage);
-                this.selectedMessage = selectedMessage;
-            });
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On mail selected
-     *
-     * @param mail
-     */
     onMessageSelected(message: MessageInbox): void
     {
         // If the mail is not read...
@@ -155,9 +134,8 @@ export class MessageCenterListComponent extends ViewBaseComponent
             // Update the mail on the server
             // this._mailboxService.updateMail(mail.id, { unread: false }).subscribe();
         }
-
-        // Execute the mailSelected observable
-        // this.messageCenterService.selectedMessageChanged.next(message);
+        console.log('message', message);
+        this.messageCenterService.selectedMessageSubject$.next(message);
     }
 
     async handleAction(action: Action): Promise<void>

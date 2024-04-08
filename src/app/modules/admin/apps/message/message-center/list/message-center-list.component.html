@@ -105,19 +105,21 @@
                     </div>
 
                     <!-- Loading bar -->
-                    <mat-progress-bar
-                        class="absolute inset-x-0 bottom-0 h-0.5"
-                        *ngIf="mailsLoading"
-                        [mode]="'indeterminate'"
-                    >
-                    </mat-progress-bar>
+                    @if(mailsLoading)
+                    {
+                        <mat-progress-bar
+                            class="absolute inset-x-0 bottom-0 h-0.5"
+                            [mode]="'indeterminate'"
+                        >
+                        </mat-progress-bar>
+                    }
                 </div>
 
                 <!-- Mail list -->
                 <div
                     class="overflow-y-auto"
-                    #mailList>
-
+                    #mailList
+                >
                     <!-- Item loop -->
                     @for (message of messages(); track message.id; let i = $index)
                     {
@@ -132,7 +134,7 @@
                                 class="flex flex-col items-start justify-start w-full py-6 pr-4 pl-5 border-l-4 border-transparent"
                                 [ngClass]="{
                                     'border-primary': !message.isRead,
-                                    'bg-primary-50 dark:bg-black dark:bg-opacity-5': selectedMessage && selectedMessage.id === message.id
+                                    'bg-primary-50 dark:bg-black dark:bg-opacity-5': selectedMessage()?.id === message.id
                                 }"
                             >
                                 <!-- Info -->
@@ -209,8 +211,11 @@
         {
             <div
                 class="flex-auto"
-                [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedMessage && selectedMessage.id,
-                            'hidden lg:flex': !selectedMessage || !selectedMessage.id}">
+                [ngClass]="{
+                    'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedMessage()?.id,
+                    'hidden lg:flex': !selectedMessage() || !selectedMessage()?.id
+                }"
+            >
                 <router-outlet></router-outlet>
             </div>
         }

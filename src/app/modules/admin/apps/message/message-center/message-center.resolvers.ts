@@ -4,6 +4,8 @@ import { ActionService, GridData, GridFiltersStorageService, GridStateService, Q
 import { MessageInbox } from '../message.types';
 import { InboxService, inboxColumnsConfig } from '../inbox';
 import { messageCenterExportListAction, messageCenterMainListId, messageCenterPaginationListAction } from './list/message-center-list.component';
+import { MessageCenterService } from './message-center.service';
+import { from, of } from 'rxjs';
 
 export const messageCenterPaginationResolver: ResolveFn<GridData<MessageInbox>> = (
     route: ActivatedRouteSnapshot,
@@ -28,11 +30,7 @@ export const messageCenterPaginationResolver: ResolveFn<GridData<MessageInbox>> 
             .init({ columnsConfig: inboxColumnsConfig })
             .setColumFilters(gridFiltersStorageService.getColumnFilterState(messageCenterMainListId))
             .setSort(gridStateService.getSort(messageCenterMainListId, { active: 'sort', direction: 'desc' }))
-            // .setPage(gridStateService.getPage(messageCenterMainListId))
-            .setPage({
-                pageIndex: 0,
-                pageSize : 2,
-            })
+            .setPage(gridStateService.getPage(messageCenterMainListId))
             .setSearch(gridStateService.getSearchState(messageCenterMainListId))
             .getQueryStatement(),
     });
@@ -53,8 +51,6 @@ export const messageCenterShowResolver: ResolveFn<{
         isViewAction: true,
     });
 
-    //messageCenterService.
-
     return inboxService
         .findCustomerMessageInbox({
             query: {
@@ -63,4 +59,16 @@ export const messageCenterShowResolver: ResolveFn<{
                 },
             },
         });
+};
+
+export const messageCenterShowEmptyResolver: ResolveFn<boolean> = (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+) =>
+{
+    const messageCenterService = inject(MessageCenterService);
+
+    messageCenterService.resetSelectedMessage();
+
+    return of(true);
 };

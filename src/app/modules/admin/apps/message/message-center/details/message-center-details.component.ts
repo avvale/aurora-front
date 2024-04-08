@@ -19,6 +19,8 @@ import { MailboxService } from '../mailbox.service';
 import { Mail } from '../mailbox.types';
 import { MessageCenterService } from '../message-center.service';
 import { messageCustomerCenterMessage } from '../list/message-center-list.component';
+import { TranslocoModule } from '@ngneat/transloco';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector     : 'message-center-details',
@@ -27,8 +29,8 @@ import { messageCustomerCenterMessage } from '../list/message-center-list.compon
     standalone   : true,
     imports      : [
         NgIf, MatButtonModule, RouterLink, MatIconModule, MatMenuModule, NgFor, MatRippleModule,
-        MatCheckboxModule, NgClass, FuseScrollResetDirective, NgPlural, NgPluralCase, MatFormFieldModule,
-        MatInputModule, FuseFindByKeyPipe, DecimalPipe, DatePipe,
+        MatCheckboxModule, MatTooltipModule, NgClass, FuseScrollResetDirective, NgPlural, NgPluralCase,
+        MatFormFieldModule, MatInputModule, FuseFindByKeyPipe, DecimalPipe, DatePipe, TranslocoModule,
     ],
 })
 export class MessageCenterDetailsComponent implements OnInit, OnDestroy
@@ -88,25 +90,10 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
                 this.message = message;
 
                 // set selected message, this will be tagged in list component
-                this.messageCenterService.selectedMessageSubject$.next(message);
+                // this.messageCenterService.selectedMessageSubject$.next(message);
 
-                this.changeDetectorRef.markForCheck();
+                //this.changeDetectorRef.markForCheck();
             });
-
-        this.mail = {
-            id  : '1',
-            type: 'sdf',
-            from: {
-                avatar : 'assets/images/avatars/alice.jpg',
-                contact: 'asdfa',
-            },
-            content  : 'hola mundo',
-            to       : 'sdf',
-            cc       : ['pepe', 'manolo', 'juan'],
-            ccCount  : 3,
-            unread   : true,
-            important: true,
-        };
 
         // Selected mail changed
         this._mailboxService.selectedMailChanged
@@ -138,29 +125,6 @@ export class MessageCenterDetailsComponent implements OnInit, OnDestroy
     getCurrentFolder(): any
     {
         return this._activatedRoute.snapshot.paramMap.get('folder');
-    }
-
-    /**
-     * Toggle important
-     */
-    toggleImportant(): void
-    {
-        // Update the mail object
-        this.mail.important = !this.mail.important;
-
-        // Update the mail on the server
-        this._mailboxService.updateMail(this.mail.id, { important: this.mail.important }).subscribe();
-
-        // If the important was removed...
-        if ( !this.mail.important )
-        {
-            // If the current activated route has a filter parameter and it equals to the 'important'...
-            if ( this._activatedRoute.snapshot.paramMap.get('filter') && this._activatedRoute.snapshot.paramMap.get('filter') === 'important' )
-            {
-                // Navigate to the parent
-                this._router.navigate(['./'], { relativeTo: this._activatedRoute.parent });
-            }
-        }
     }
 
     /**
