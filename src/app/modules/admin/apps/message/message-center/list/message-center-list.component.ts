@@ -1,107 +1,110 @@
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core';
+import { AsyncPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { Component, ElementRef, ViewChild, ViewEncapsulation, WritableSignal, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MailboxService } from '../mailbox.service';
-import { Mail, MailCategory } from '../mailbox.types';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
-import { GridData } from '@aurora';
+import { Action, BreadcrumbComponent, ColumnConfig, ColumnDataType, Crumb, GridData, GridFiltersStorageService, GridState, GridStateService, QueryStatementHandler, TitleComponent, ViewBaseComponent } from '@aurora';
+import { MessageCenterService } from '../message-center.service';
+import { TranslocoModule } from '@ngneat/transloco';
+
+export const messageCenterMainListId = 'message::messageCenter.list.mainList';
+export const messageCenterPaginationListAction = 'message::messageCenter.list.pagination';
+export const messageCenterExportListAction = 'message::messageCenter.list.export';
+export const messageCustomerCenterMessage = 'message::customerCenterMessage';
 
 @Component({
     selector     : 'au-message-center-list',
     templateUrl  : './message-center-list.component.html',
     encapsulation: ViewEncapsulation.None,
     standalone   : true,
-    imports      : [NgIf, MatButtonModule, MatIconModule, RouterLink, MatProgressBarModule, NgFor, NgClass, RouterOutlet, DatePipe],
+    imports      : [
+        AsyncPipe, BreadcrumbComponent, NgIf, MatButtonModule, MatIconModule, RouterLink, MatProgressBarModule,
+        NgFor, NgClass, RouterOutlet, DatePipe, TitleComponent, TranslocoModule,
+    ],
 })
-export class MessageClientListComponent implements OnInit, OnDestroy
+export class MessageCenterListComponent extends ViewBaseComponent
 {
-    messages: MessageInbox[];
+    // ---- customizations ----
+    limit = 2;
+    currentPage: WritableSignal<number> = signal(0);
+    messages: WritableSignal<MessageInbox[]> = signal([]);
+    countMessages: WritableSignal<number> = signal(0);
+    totalMessages: WritableSignal<number> = signal(0);
+    firstMessageOfPage = computed(() => (this.currentPage() * this.limit) + 1);
+    lastMessageOfPage = computed(() => (this.currentPage() * this.limit) + this.limit > this.totalMessages() ? this.totalMessages() : (this.currentPage() * this.limit) + this.limit);
+    previousOffset = computed(() => (this.currentPage() - 1) * this.limit);
+    nextOffset = computed(() => (this.currentPage() * this.limit) + this.limit);
+
+
+    selectedMessage: MessageInbox;
+
+
+
+    breadcrumb: Crumb[] = [
+        { translation: 'App', routerLink: ['/']},
+        { translation: 'message.MessageCenter' },
+    ];
+    gridData$: Observable<GridData<MessageInbox>>;
+    gridState: GridState = {};
+    columnsConfig$: Observable<ColumnConfig[]>;
+    originColumnsConfig: ColumnConfig[] = [
+        {
+            type       : ColumnDataType.STRING,
+            field      : 'id',
+            sort       : 'id',
+            translation: 'Id',
+        },
+        {
+            type       : ColumnDataType.STRING,
+            field      : 'subject',
+            sort       : 'subject',
+            translation: 'Subject',
+        },
+    ];
 
 
     // OLD
-
-
+    private messageCenterService = inject(MessageCenterService);
     @ViewChild('mailList') mailList: ElementRef;
-
-    category: MailCategory;
-    
-   /*  mails: Mail[] = [{
-        id  : '1',
-        type: 'sdf',
-        from: {
-            avatar : 'assets/images/avatars/alice.jpg',
-            contact: 'asdfa',
-        },
-        content: 'hola mundo',
-        to     : 'sdf',
-        cc     : ['pepe', 'manolo', 'juan'],
-        ccCount: 3,
-        unread : true,
-        important: true,
-    }]; */
     mailsLoading: boolean = false;
-    pagination: any;
-    selectedMail: Mail;
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-    private inboxService = inject(InboxService);
 
     /**
      * Constructor
      */
     constructor(
-        private _mailboxService: MailboxService,
+        private readonly _mailboxService: MailboxService,
+        private readonly gridStateService: GridStateService,
+        private readonly gridFiltersStorageService: GridFiltersStorageService,
+        private readonly inboxService: InboxService,
     )
     {
+        super();
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * On init
      */
-    ngOnInit(): void
+    init(): void
     {
-        // Category
-        this._mailboxService.category$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((category: MailCategory) =>
+        // Subscribe to message changes
+        this.inboxService.getScopePagination(messageCustomerCenterMessage)
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe(inboxCustomerPagination =>
             {
-                this.category = category;
+                this.messages.set(inboxCustomerPagination.rows);
+                this.countMessages.set(inboxCustomerPagination.count);
+                this.totalMessages.set(inboxCustomerPagination.total);
             });
 
-        // Mails
-        /* this.inboxService
-            .checkMessagesInbox({
-                query: {
-                    limit : 10,
-                    offset: 0,
-                    order : [['sort', 'desc']],
-                },
-            })
-            .subscribe((messageInboxPagination : GridData<MessageInbox>) =>
-            {
-                //this.messages.next(data.rows);
-            }); */
-
-        // Mails
-        /* this._mailboxService.mails$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((mails: Mail[]) =>
-            {
-                this.mails = mails;
-            }); */
 
         // Mails loading
         this._mailboxService.mailsLoading$
-            .pipe(takeUntil(this._unsubscribeAll))
+            .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe((mailsLoading: boolean) =>
             {
                 this.mailsLoading = mailsLoading;
@@ -115,30 +118,21 @@ export class MessageClientListComponent implements OnInit, OnDestroy
             });
 
         // Pagination
-        this._mailboxService.pagination$
-            .pipe(takeUntil(this._unsubscribeAll))
+        /* this._mailboxService.pagination$
+            .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe(pagination =>
             {
                 this.pagination = pagination;
-            });
+            }); */
 
-        // Selected mail
-        this._mailboxService.mail$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((mail: Mail) =>
+        // Selected message
+        this.messageCenterService.selectedMessage$
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe((selectedMessage: MessageInbox) =>
             {
-                this.selectedMail = mail;
+                console.log(selectedMessage);
+                this.selectedMessage = selectedMessage;
             });
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -150,30 +144,48 @@ export class MessageClientListComponent implements OnInit, OnDestroy
      *
      * @param mail
      */
-    onMailSelected(mail: Mail): void
+    onMessageSelected(message: MessageInbox): void
     {
-        // If the mail is unread...
-        if ( mail.unread )
+        // If the mail is not read...
+        if (!message.isRead)
         {
             // Update the mail object
-            mail.unread = false;
+            message.isRead = true;
 
             // Update the mail on the server
-            this._mailboxService.updateMail(mail.id, { unread: false }).subscribe();
+            // this._mailboxService.updateMail(mail.id, { unread: false }).subscribe();
         }
 
         // Execute the mailSelected observable
-        this._mailboxService.selectedMailChanged.next(mail);
+        // this.messageCenterService.selectedMessageChanged.next(message);
     }
 
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
-    trackByFn(index: number, item: any): any
+    async handleAction(action: Action): Promise<void>
     {
-        return item.id || index;
+        // add optional chaining (?.) to avoid first call where behaviour subject is undefined
+        switch (action?.id)
+        {
+            case 'message::messageCenter.list.view':
+                this.gridData$ = this.inboxService.getScopePagination(messageCustomerCenterMessage);
+                break;
+
+            case 'message::messageCenter.list.pagination':
+                this.currentPage.set(action.meta.query.offset / this.limit);
+
+                await lastValueFrom(
+                    this.inboxService.paginateCustomerCenterMessagesInbox({
+                        query: action.meta.query ?
+                            action.meta.query :
+                            QueryStatementHandler
+                                .init({ columnsConfig: this.originColumnsConfig })
+                                .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(messageCenterMainListId))
+                                .setSort(this.gridStateService.getSort(messageCenterMainListId))
+                                .setPage(this.gridStateService.getPage(messageCenterMainListId))
+                                .setSearch(this.gridStateService.getSearchState(messageCenterMainListId))
+                                .getQueryStatement(),
+                    }),
+                );
+                break;
+        }
     }
 }

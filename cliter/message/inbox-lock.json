@@ -11,7 +11,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/inbox-detail.component.html",
-            "integrity": "sha1:8a1b7c5a67c297e0c85d426d35cf5ecdba487f6c"
+            "integrity": "sha1:162d0d16f3f418102d6416108cac0b6f62dde401"
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/inbox-detail.component.ts",
@@ -19,11 +19,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/inbox-list.component.html",
-            "integrity": "sha1:becca2e9b2438f1d517cb4360233e235c5a59646"
+            "integrity": "sha1:50d80169d4ad4909e483f384b202a83f64c1441d"
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/inbox-list.component.ts",
-            "integrity": "sha1:0bda78d85831257e34259927072b5b0714d0c8f0"
+            "integrity": "sha1:e9455542f733d47f392cd4bbac93bccc4cee6903"
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/inbox.columns-config.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/inbox.service.ts",
-            "integrity": "sha1:5aafbd9e63d421017e2dfdcbbe1b01c9aab08a6d"
+            "integrity": "sha1:415e7287b86293042d707a1393f3d84d94c287e7"
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/index.ts",

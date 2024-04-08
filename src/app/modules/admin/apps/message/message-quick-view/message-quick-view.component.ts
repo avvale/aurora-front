@@ -5,12 +5,15 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Subject, lastValueFrom, takeUntil } from 'rxjs';
 import { MessageInbox } from '../message.types';
 import { InboxService } from '../inbox';
 import { MessageService } from '../message/message.service';
 import { GridData } from '@aurora';
+import { TranslocoModule } from '@ngneat/transloco';
+
+export const messageQuickViewMessages = 'message::QuickViewMessages';
 
 @Component({
     selector       : 'au-message-quick-view',
@@ -21,7 +24,7 @@ import { GridData } from '@aurora';
     standalone     : true,
     imports        : [
         MatButtonModule, NgIf, MatIconModule, MatTooltipModule,
-        NgFor, NgClass, NgTemplateOutlet, RouterLink, DatePipe,
+        NgFor, NgClass, NgTemplateOutlet, RouterLink, TranslocoModule, DatePipe,
     ],
 })
 export class MessageQuickViewComponent implements OnInit, OnDestroy
@@ -34,6 +37,7 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
 
     private inboxService = inject(InboxService);
     private messageService = inject(MessageService);
+    private router = inject(Router);
     private unsubscribeAll: Subject<void> = new Subject<void>();
     private overlayRef: OverlayRef;
 
@@ -62,11 +66,23 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
+    async ngOnInit(): Promise<void>
     {
+        // Get the messages
+        await lastValueFrom(
+            this.inboxService
+                .paginateCustomerQuickVewMessagesInbox({
+                    query: {
+                        limit : 10,
+                        offset: 0,
+                        order : [['sort', 'desc']],
+                    },
+                }),
+        );
+
         // Subscribe to message changes
         this.inboxService
-            .paginationCustomerQuickView$
+            .getScopePagination(messageQuickViewMessages)
             .pipe(takeUntil(this.unsubscribeAll))
             .subscribe((inboxCustomerPagination: GridData<MessageInbox>) =>
             {
@@ -79,17 +95,6 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
                 // Mark for check
                 this.changeDetectorRef.markForCheck();
             });
-
-        // Get the messages
-        this.inboxService
-            .paginateCustomerQuickVewMessagesInbox({
-                query: {
-                    limit : 10,
-                    offset: 0,
-                    order : [['sort', 'desc']],
-                },
-            })
-            .subscribe();
     }
 
     /**
@@ -144,11 +149,9 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     /**
      * Mark all messages as read
      */
-    markAllAsRead(): void
+    goToMessageCenter(): void
     {
-        console.log('Mark all as read');
-        // Mark all as read
-        // this.messagesService.markAllAsRead().subscribe();
+        this.router.navigate(['message', 'message-center']);
     }
 
     /**

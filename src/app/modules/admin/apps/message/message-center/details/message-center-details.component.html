@@ -1,6 +1,6 @@
 <div class="flex flex-col flex-auto overflow-y-auto lg:overflow-hidden bg-card dark:bg-default">
 
-    <ng-container *ngIf="mail; else selectMailToRead">
+    <ng-container *ngIf="message; else selectMessageToRead">
 
         <!-- Header -->
         <div class="z-10 relative flex flex-col flex-0 w-full border-b">
@@ -22,8 +22,10 @@
                     mat-icon-button
                     (click)="toggleImportant()">
                     <mat-icon
-                        [ngClass]="{'text-red-600 dark:text-red-500': mail.important}"
-                        [svgIcon]="'heroicons_outline:exclamation-circle'"></mat-icon>
+                        [ngClass]="{'text-red-600 dark:text-red-500': message.important}"
+                        [svgIcon]="'heroicons_outline:exclamation-circle'"
+                    >
+                    </mat-icon>
                 </button>
 
                 <!-- Other actions button & menu -->
@@ -37,14 +39,14 @@
                     <!-- Mark as read / unread -->
                     <button
                         mat-menu-item
-                        *ngIf="mail.unread"
+                        *ngIf="!message.isRead"
                         (click)="toggleUnread(false)">
                         <mat-icon [svgIcon]="'heroicons_outline:envelope-open'"></mat-icon>
                         <span>Mark as read</span>
                     </button>
                     <button
                         mat-menu-item
-                        *ngIf="!mail.unread"
+                        *ngIf="message.isRead"
                         (click)="toggleUnread(true)">
                         <mat-icon [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
                         <span>Mark as unread</span>
@@ -78,11 +80,11 @@
             <!-- Subject and Labels -->
             <div class="flex flex-wrap items-center py-5 px-6">
                 <!-- Subject -->
-                <div class="flex flex-auto my-1 mr-4 text-2xl">{{mail.subject}}</div>
+                <div class="flex flex-auto my-1 mr-4 text-2xl">{{ message.subject }}</div>
                 <!-- Labels -->
-                <ng-container *ngIf="mail.labels && mail.labels.length > 0">
+                <ng-container *ngIf="message.labels && message.labels.length > 0">
                     <div class="flex flex-wrap items-center justify-start -mx-1">
-                        <ng-container *ngFor="let label of (mail.labels | fuseFindByKey:'id':labels)">
+                        <ng-container *ngFor="let label of (message.labels | fuseFindByKey:'id':labels)">
                             <div
                                 class="m-1 py-0.5 px-2.5 rounded-full text-sm font-medium whitespace-nowrap"
                                 [ngClass]="labelColors[label.color].combined">
@@ -105,116 +107,27 @@
 
                 <div class="flex flex-col py-8 px-6">
 
-                    <!-- Header -->
-                    <div class="flex items-center w-full">
-
-                        <!-- Sender avatar -->
-                        <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden">
-                            <img
-                                class="w-full h-full"
-                                [src]="mail.from.avatar"
-                                alt="User avatar">
-                        </div>
-
-                        <!-- Info -->
-                        <div class="ml-4 min-w-0">
-
-                            <!-- From -->
-                            <div class="font-semibold truncate">{{mail.from.contact.split('<')[0].trim()}}</div>
-
-                            <!-- To -->
-                            <div class="flex items-center mt-0.5 leading-5">
-                                <div>to</div>
-                                <div class="ml-1 font-semibold">me</div>
-                                <ng-container *ngIf="(mail.ccCount + mail.bccCount) > 0">
-                                    <div>
-                                        <span class="ml-1">and</span>
-                                        <span class="ml-1 font-semibold">{{mail.ccCount + mail.bccCount}}</span>
-                                        <span
-                                            class="ml-1 font-semibold"
-                                            [ngPlural]="(mail.ccCount + mail.bccCount)">
-                                            <ng-template ngPluralCase="=1">other</ng-template>
-                                            <ng-template ngPluralCase="other">others</ng-template>
-                                        </span>
-                                    </div>
-                                </ng-container>
-
-                                <!-- Info details panel button -->
-                                <button
-                                    class="w-5 h-5 min-h-5 ml-1"
-                                    mat-icon-button
-                                    (click)="openInfoDetailsPanel()"
-                                    #infoDetailsPanelOrigin>
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:chevron-down'"></mat-icon>
-                                </button>
-
-                                <!-- Info details panel -->
-                                <ng-template #infoDetailsPanel>
-                                    <div class="flex flex-col py-4 px-6 w-full max-w-160 space-y-1.5 border text-md rounded shadow-md overflow-auto bg-card">
-                                        <!-- From -->
-                                        <div class="flex">
-                                            <div class="min-w-14 font-medium text-right">from:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{mail.from.contact}}</div>
-                                        </div>
-                                        <!-- To -->
-                                        <div class="flex">
-                                            <div class="min-w-14 font-medium text-right">to:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{mail.to}}</div>
-                                        </div>
-                                        <!-- Cc -->
-                                        <ng-container *ngIf="mail.cc">
-                                            <div class="flex">
-                                                <div class="min-w-14 font-medium text-right">cc:</div>
-                                                <div class="pl-2 whitespace-pre-wrap">{{mail.cc.join(',\n')}}</div>
-                                            </div>
-                                        </ng-container>
-                                        <!-- Bbc -->
-                                        <ng-container *ngIf="mail.bcc">
-                                            <div class="flex">
-                                                <div class="min-w-14 font-medium text-right">bcc:</div>
-                                                <div class="pl-2 whitespace-pre-wrap">{{mail.bcc.join(',\n')}}</div>
-                                            </div>
-                                        </ng-container>
-                                        <!-- Date -->
-                                        <div class="flex">
-                                            <div class="min-w-14 font-medium text-right">date:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{mail.date | date:'EEEE, MMMM d, y - hh:mm a'}}</div>
-                                        </div>
-                                        <!-- Subject -->
-                                        <div class="flex">
-                                            <div class="min-w-14 font-medium text-right">subject:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{mail.subject}}</div>
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </div>
-
-                        </div>
-
-                    </div>
-
                     <!-- Content -->
                     <div
-                        class="flex mt-8 whitespace-pre-line leading-relaxed"
-                        [innerHTML]="mail.content">
+                        class="flex flex-col whitespace-pre-line leading-relaxed"
+                        [innerHTML]="message.body"
+                    >
                     </div>
 
                     <!-- Attachments -->
-                    <ng-container *ngIf="mail.attachments && mail.attachments.length > 0">
+                    <ng-container *ngIf="message.attachments && message.attachments.length > 0">
                         <div class="flex flex-col w-full">
                             <!-- Title -->
                             <div class="flex items-center mt-12">
                                 <mat-icon
                                     class="icon-size-5"
                                     [svgIcon]="'heroicons_solid:paper-clip'"></mat-icon>
-                                <div class="ml-2 font-semibold">{{mail.attachments.length}} Attachments</div>
+                                <div class="ml-2 font-semibold">{{ message.attachments.length }} Attachments</div>
                             </div>
 
                             <!-- Files -->
                             <div class="flex flex-wrap -m-3 mt-3">
-                                <ng-container *ngFor="let attachment of mail.attachments">
+                                <ng-container *ngFor="let attachment of message.attachments">
                                     <div class="flex items-center m-3">
                                         <!-- Preview -->
                                         <img
@@ -363,14 +276,14 @@
 
     </ng-container>
 
-    <!-- Select mail to read template -->
-    <ng-template #selectMailToRead>
+    <!-- Select message to read template -->
+    <ng-template #selectMessageToRead>
 
         <div class="flex flex-col flex-auto items-center justify-center bg-gray-100 dark:bg-transparent">
             <mat-icon
                 class="icon-size-24"
                 [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
-            <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">Select a mail to read2</div>
+            <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">Select a message to read</div>
         </div>
 
     </ng-template>
