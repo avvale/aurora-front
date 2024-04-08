@@ -74,10 +74,7 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
     {
     }
 
-    /**
-     * Reply all
-     */
-    replyAll(): void
+    deleteMessage(): void
     {
     }
 
