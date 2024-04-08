@@ -19,13 +19,14 @@
     "IsReadAtLeastOnce": "IsReadAtLeastOnce",
     "Link": "Enlace",
     "Message": "Message",
+    "MessageCenter": "Centro de mensages",
     "MessageId": "MessageId",
     "MessageStatus": {
         "DRAFT": "Borrador",
         "PENDING": "Pendiente de envío",
         "SENT": "Enviado"
     },
-    "Messages": "Messages",
+    "Messages": "Mensages",
     "Meta": "Meta",
     "Reads": "Reads",
     "Recipients": "Destinatarios",

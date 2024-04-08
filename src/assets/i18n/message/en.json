@@ -19,6 +19,7 @@
     "IsReadAtLeastOnce": "IsReadAtLeastOnce",
     "Link": "Link",
     "Message": "Message",
+    "MessageCenter": "Message center",
     "MessageId": "MessageId",
     "MessageStatus": {
         "DRAFT": "Draft",
