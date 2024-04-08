@@ -7,8 +7,8 @@ import { messageEditResolver, messageNewResolver, messagePaginationResolver } fr
 import { InboxListComponent } from './inbox/inbox-list.component';
 import { InboxDetailComponent } from './inbox/inbox-detail.component';
 import { inboxEditResolver, inboxNewResolver, inboxPaginationResolver } from './inbox/inbox.resolvers';
-import { InboxComponent } from './message-center/inbox.component';
-import { MessageCenterDetailsComponent, MessageClientEmptyDetailsComponent, MessageClientListComponent } from './message-center';
+import { MessageCenterComponent, messageCenterPaginationResolver, messageCenterShowResolver } from './message-center';
+import { MessageCenterDetailsComponent, MessageClientEmptyDetailsComponent, MessageCenterListComponent } from './message-center';
 
 export default [
     {
@@ -22,39 +22,12 @@ export default [
             { path: 'inbox/new', component: InboxDetailComponent, resolve: { data: inboxNewResolver }, data: { permission: 'message.inbox.create' }},
             { path: 'inbox/edit/:id', component: InboxDetailComponent, resolve: { data: inboxEditResolver }, data: { permission: 'message.inbox.get' }},
 
-            {
-                path     : 'message-center',
-                component: InboxComponent,
-                // pathMatch: 'full',
-                //resolve  : { data: inboxPaginationResolver },
-                //data     : { permission: 'notification.inbox.get' },
-                children : [
-                    {
-                        path     : '',
-                        component: MessageClientListComponent,
-                        resolve  : {
-                            data: inboxPaginationResolver,
-                        },
-                        /* resolve  : {
-                            mails: mailsResolver,
-                        }, */
-                        children: [
-                            {
-                                path     : '',
-                                component: MessageClientEmptyDetailsComponent,
-                            },
-                            {
-                                path     : ':id',
-                                component: MessageCenterDetailsComponent,
-                                resolve  : {
-                                    // mail: mailResolver,
-                                },
-                            },
-
-                        ],
-                    },
-                ],
-            },
+            { path: 'message-center', component: MessageCenterComponent, children : [
+                { path: '', component: MessageCenterListComponent, resolve  : { data: messageCenterPaginationResolver }, children : [
+                    { path: '', component: MessageClientEmptyDetailsComponent },
+                    { path: ':id', component: MessageCenterDetailsComponent, resolve: { data: messageCenterShowResolver }},
+                ]},
+            ]},
         ],
         providers: [
             {
