@@ -3,13 +3,14 @@ import { Component, ViewEncapsulation, WritableSignal, computed, signal } from '
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
 import { Action, BreadcrumbComponent, ColumnConfig, ColumnDataType, Crumb, GridData, GridFiltersStorageService, GridState, GridStateService, QueryStatementHandler, TitleComponent, ViewBaseComponent } from '@aurora';
-import { MessageCenterService } from '../message-center.service';
 import { TranslocoModule } from '@ngneat/transloco';
+import { Observable, lastValueFrom, takeUntil } from 'rxjs';
+import { MessageCenterService } from '../message-center.service';
 
 export const messageCenterMainListId = 'message::messageCenter.list.mainList';
 export const messageCenterPaginationListAction = 'message::messageCenter.list.pagination';
@@ -23,7 +24,7 @@ export const messageCustomerCenterMessage = 'message::customerCenterMessage';
     standalone   : true,
     imports      : [
         AsyncPipe, BreadcrumbComponent, NgIf, MatButtonModule, MatIconModule, RouterLink, MatProgressBarModule,
-        NgFor, NgClass, RouterOutlet, DatePipe, TitleComponent, TranslocoModule,
+        MatTooltipModule, NgFor, NgClass, RouterOutlet, DatePipe, TitleComponent, TranslocoModule,
     ],
 })
 export class MessageCenterListComponent extends ViewBaseComponent

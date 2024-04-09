@@ -4,7 +4,7 @@ import { MessageMessage } from '@apps/message/message.types';
 import { Action, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 
-export const messageMainGridList = 'message::message.list.mainGridList';
+export const messageMainGridListId = 'message::message.list.mainGridList';
 
 @Component({
     selector       : 'message-message-list',
@@ -25,7 +25,7 @@ export class MessageListComponent extends ViewBaseComponent
         { translation: 'App', routerLink: ['/']},
         { translation: 'message.Messages' },
     ];
-    gridId: string = messageMainGridList;
+    gridId: string = messageMainGridListId;
     gridData$: Observable<GridData<MessageMessage>>;
     gridState: GridState = {};
     columnsConfig$: Observable<ColumnConfig[]>;

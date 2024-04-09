@@ -95,8 +95,12 @@
                         >
                             <span
                                 class="w-2 h-2 rounded-full"
-                                [ngClass]="{'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': message.read,
-                                            'bg-primary': !message.read}"></span>
+                                [ngClass]="{
+                                    'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': message.read,
+                                    'bg-primary': !message.read
+                                }"
+                            >
+                            </span>
                         </button>
                         <!-- Remove -->
                         <button

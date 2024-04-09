@@ -507,6 +507,64 @@
                                 <mat-error>{{ formErrors?.reads | async }}</mat-error>
                             </mat-form-field>
 
+                            <au-file-upload
+                                class="col-12"
+                                [isMultiple]="true"
+                                (files)="
+                                    actionService.action({
+                                        id          : 'message::message.detail.addAttachment',
+                                        isViewAction: false,
+                                        meta: {
+                                            files: $event
+                                        }
+                                    })
+                                "
+                            >
+                            </au-file-upload>
+
+                            <div
+                                class="col-12"
+                            >
+                                @for(attachment of managedObject?.attachments; track attachment.id)
+                                {
+                                    <div class="flex justify-between items-center p-4 mb-2 border rounded">
+                                        <p class="text-base flex items-center">
+                                            <mat-icon
+                                                class="icon-size-5 mr-2"
+                                                [svgIcon]="'heroicons_solid:document'"
+                                            >
+                                            </mat-icon>
+                                            {{ attachment.originFilename }}
+                                        </p>
+                                        <p class="text-base opacity-60">
+                                            {{ attachment.mimetype }}
+                                        </p>
+                                        <p class="text-base opacity-60">
+                                            {{ (attachment.size | formatFileSize).size }}{{ (attachment.size | formatFileSize).unit }}
+                                        </p>
+                                        <button
+                                            class="ml-3"
+                                            mat-icon-button
+                                            (click)="
+                                                actionService.action({
+                                                    id          : 'message::message.detail.removeAttachment',
+                                                    isViewAction: false,
+                                                    meta    : {
+                                                        receipt: attachment
+                                                    }
+                                                })
+                                            "
+                                        >
+                                            <mat-icon
+                                                class="icon-size-5"
+                                                svgIcon="mat_solid:delete"
+                                            >
+                                            </mat-icon>
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+
                         </div>
                     </mat-tab>
                 </mat-tab-group>

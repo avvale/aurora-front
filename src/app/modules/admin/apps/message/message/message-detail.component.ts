@@ -1,5 +1,5 @@
 import { NgForOf, KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation, WritableSignal, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation, WritableSignal, signal } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -7,9 +7,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { IamAccount, IamTenant } from '@apps/iam';
 import { MessageService } from '@apps/message/message';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
-import { Action, ColumnConfig, ColumnDataType, Crumb, defaultDetailImports, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, log, mapActions, QueryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
+import { Action, ColumnConfig, ColumnDataType, Crumb, defaultDetailImports, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, log, mapActions, QueryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
-import { Observable, ReplaySubject, lastValueFrom, takeUntil, map } from 'rxjs';
+import { Observable, ReplaySubject, lastValueFrom, takeUntil } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { AccountService, accountColumnsConfig } from '@apps/iam/account';
 import { QuillEditorComponent } from 'ngx-quill';
@@ -26,7 +26,7 @@ export const messageAccountsScopePagination = 'message::messageAccounts';
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
-        MatCheckboxModule, MatSelectModule, MtxDatetimepickerModule, NgForOf,
+        FileUploadComponent, FormatFileSizePipe, MatCheckboxModule, MatSelectModule, MtxDatetimepickerModule, NgForOf,
         GridSelectMultipleElementsModule, KeyValuePipe, NgxMatSelectSearchModule,
         MatTabsModule, QuillEditorComponent,
     ],
@@ -322,7 +322,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             isInternalLink: false,
             image: null,
             icon: ['', [Validators.maxLength(64)]],
-            attachments: null,
+            attachmentsInputFile: [[]],
             totalRecipients: null,
             reads: null,
         });
@@ -481,6 +481,9 @@ export class MessageDetailComponent extends ViewDetailComponent
                                     ...this.fg.value,
                                     totalRecipients: undefined,
                                     reads          : undefined,
+                                },
+                                headers: {
+                                    'Apollo-Require-Preflight': 'true',
                                 },
                             }),
                     );
@@ -687,6 +690,35 @@ export class MessageDetailComponent extends ViewDetailComponent
                 );
                 break;
                 /* #endregion actions to manage Accounts grid-select-multiple-elements dialog */
+
+            /* #region actions to manage attachments */
+            case 'message::message.detail.addAttachment':
+                if (action.meta.files.length === 0) return;
+
+                for (const file of action.meta.files)
+                {
+                    const fileEntry = file.file.fileEntry as FileSystemFileEntry;
+                    fileEntry.file((file: File) =>
+                    {
+                        this.fg
+                            .get('attachmentsInputFile')
+                            .setValue([
+                                ...this.fg.get('attachmentsInputFile').value,
+                                file,
+                            ]);
+                    });
+                }
+                break;
+
+            case 'message::message.detail.removeAttachment':
+               /*  await lastValueFrom(
+                    this.messageService
+                        .removeReceiptExpense<ScoutsExpense>({
+                            id: this.managedObject.id,
+                        }),
+                ); */
+                break;
+                /* #endregion actions to manage attachments */
         }
     }
 }

@@ -54,16 +54,25 @@
                             mat-menu-item
                             (click)="toggleUnread(false)">
                             <mat-icon [svgIcon]="'heroicons_outline:envelope-open'"></mat-icon>
-                            <span>Mark as read</span>
+                            <span>{{ t('message.MarkAsRead') }}</span>
                         </button>
                     }
 
                     <!-- Delete -->
                     <button
                         mat-menu-item
-                        (click)="deleteMessage()">
+                        (click)="
+                            handleAction({
+                                id: 'message::messageCenter.detail.delete',
+                                isViewAction: false,
+                                meta: {
+                                    message: message()
+                                }
+                            })
+                        "
+                    >
                         <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                        <span>Delete</span>
+                        <span>{{ t('Delete') }}</span>
                     </button>
                 </mat-menu>
             </div>
@@ -145,45 +154,11 @@
 
                 <!-- Footer -->
                 <div class="flex w-full p-6 border-t bg-gray-50 dark:bg-transparent">
-
-                    <!-- Buttons -->
-                    <ng-container *ngIf="!replyFormActive">
-                        <div class="flex flex-wrap w-full -m-2">
-                            <!-- Reply -->
-                            <button
-                                class="m-2"
-                                mat-stroked-button
-                                [color]="'primary'"
-                                (click)="reply()">
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:arrow-uturn-left'"
-                                >
-                                </mat-icon>
-                                <span class="ml-2">Reply</span>
-                            </button>
-                            <!-- Reply all -->
-                            <button
-                                class="m-2"
-                                mat-stroked-button
-                                [color]="'primary'"
-                                (click)="deleteMessage()">
-                                <mat-icon
-                                    class="icon-size-5"
-                                    [svgIcon]="'heroicons_outline:trash'"
-                                >
-                                </mat-icon>
-                                <span class="ml-2">Delete</span>
-                            </button>
-                        </div>
-                    </ng-container>
-
                 </div>
 
             </div>
 
         </div>
-
     }
     @else
     {

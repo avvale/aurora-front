@@ -19,6 +19,7 @@
     "IsRead": "IsRead",
     "IsReadAtLeastOnce": "IsReadAtLeastOnce",
     "Link": "Link",
+    "MarkAsRead": "Mark as read",
     "Message": "Message",
     "MessageCenter": "Message center",
     "MessageId": "MessageId",
@@ -41,5 +42,6 @@
     "TenantIds": "TenantIds",
     "TenantRecipientIds": "TenantRecipientIds",
     "TenantRecipients": "Tenant recipients",
-    "TotalRecipients": "TotalRecipients"
+    "TotalRecipients": "TotalRecipients",
+    "UnRead": "UnRead"
 }

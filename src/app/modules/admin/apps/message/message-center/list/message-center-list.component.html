@@ -138,6 +138,15 @@
                             >
                                 <!-- Info -->
                                 <div class="flex items-center w-full">
+                                    <span
+                                        class="w-2 h-2 rounded-full"
+                                        [matTooltip]="t('message.UnRead')"
+                                        [ngClass]="{
+                                            'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': message.read,
+                                            'bg-primary': !message.read
+                                        }"
+                                    >
+                                    </span>
                                     <!-- Date -->
                                     <div class="ml-auto text-md text-right whitespace-nowrap text-hint">
                                         {{ message.sentAt | date:'LLL dd' }}

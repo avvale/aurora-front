@@ -7,6 +7,7 @@ import { OAuthClient } from '@apps/o-auth/o-auth.types';
 import { ActionService, GridData, GridFiltersStorageService, GridStateService, IamService, QueryStatementHandler } from '@aurora';
 import { accountsDialogGridId, messageAccountsGridId } from './message-detail.component';
 import { Subject, first, map } from 'rxjs';
+import { messageMainGridListId } from './message-list.component';
 
 export const messagePaginationResolver: ResolveFn<GridData<MessageMessage>> = (
     route: ActivatedRouteSnapshot,
@@ -23,17 +24,16 @@ export const messagePaginationResolver: ResolveFn<GridData<MessageMessage>> = (
         isViewAction: true,
     });
 
-    const gridId = 'message::message.list.mainGridList';
-    gridStateService.setPaginationActionId(gridId, 'message::message.list.pagination');
-    gridStateService.setExportActionId(gridId, 'message::message.list.export');
+    gridStateService.setPaginationActionId(messageMainGridListId, 'message::message.list.pagination');
+    gridStateService.setExportActionId(messageMainGridListId, 'message::message.list.export');
 
     return messageService.pagination({
         query: QueryStatementHandler
             .init({ columnsConfig: messageColumnsConfig })
-            .setColumFilters(gridFiltersStorageService.getColumnFilterState(gridId))
-            .setSort(gridStateService.getSort(gridId))
-            .setPage(gridStateService.getPage(gridId))
-            .setSearch(gridStateService.getSearchState(gridId))
+            .setColumFilters(gridFiltersStorageService.getColumnFilterState(messageMainGridListId))
+            .setSort(gridStateService.getSort(messageMainGridListId))
+            .setPage(gridStateService.getPage(messageMainGridListId))
+            .setSearch(gridStateService.getSearchState(messageMainGridListId))
             .getQueryStatement(),
     });
 };
