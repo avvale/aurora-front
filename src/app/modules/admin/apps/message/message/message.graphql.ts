@@ -204,3 +204,18 @@ export const deleteMutation = gql`
         }
     }
 `;
+
+// Mutation additionalApis
+export const removeAttachmentMessageMutation = gql`
+    mutation MessageRemoveAttachmentMessage (
+        $message: MessageUpdateMessageByIdInput!
+        $attachmentId: ID!
+        $constraint: QueryStatement
+    ) {
+        messageRemoveAttachmentMessage (
+            message: $message
+            attachmentId: $attachmentId
+            constraint: $constraint
+        )
+    }
+`;

@@ -1,6 +1,7 @@
 {
     "AccountCode": "AccountCode",
     "AccountId": "AccountId",
+    "AccountRecipientIds": "AccountRecipientIds",
     "AccountRecipients": "Cuentas destinatarios",
     "Accounts": "Cuentas",
     "Attachments": "Attachments",
@@ -30,7 +31,8 @@
     },
     "Messages": "Mensajes",
     "Meta": "Meta",
-    "Reads": "Reads",
+    "PerRead": "Por leer",
+    "Reads": "Leídos",
     "Recipients": "Destinatarios",
     "ScopeRecipients": "Scope destinatarios",
     "SendAt": "Enviado el",
@@ -43,5 +45,6 @@
     "TenantRecipientIds": "TenantRecipientIds",
     "TenantRecipients": "Tenants destinatarios",
     "TotalRecipients": "TotalRecipients",
-    "UnRead": "Sin leer"
+    "UnRead": "Sin leer",
+    "Users": "Usuarios"
 }

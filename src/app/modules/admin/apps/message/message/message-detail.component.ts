@@ -46,7 +46,8 @@ export class MessageDetailComponent extends ViewDetailComponent
     messageMessageStatus = MessageMessageStatus;
     quillModules: any = {
         toolbar: [
-            ['bold', 'italic', 'underline'],
+            ['bold', 'italic', 'underline', 'strike'],
+            ['link'],
             [{ align: []}, { list: 'ordered' }, { list: 'bullet' }],
             ['clean'],
         ],
@@ -323,8 +324,6 @@ export class MessageDetailComponent extends ViewDetailComponent
             image: null,
             icon: ['', [Validators.maxLength(64)]],
             attachmentsInputFile: [[]],
-            totalRecipients: null,
-            reads: null,
         });
         /* eslint-enable key-spacing */
     }
@@ -515,6 +514,9 @@ export class MessageDetailComponent extends ViewDetailComponent
                                     ...this.fg.value,
                                     totalRecipients: undefined,
                                     reads          : undefined,
+                                },
+                                headers: {
+                                    'Apollo-Require-Preflight': 'true',
                                 },
                             }),
                     );
@@ -708,15 +710,38 @@ export class MessageDetailComponent extends ViewDetailComponent
                             ]);
                     });
                 }
+
+                this.fg.markAsDirty();
                 break;
 
             case 'message::message.detail.removeAttachment':
-               /*  await lastValueFrom(
+                await lastValueFrom(
                     this.messageService
-                        .removeReceiptExpense<ScoutsExpense>({
-                            id: this.managedObject.id,
+                        .removeAttachmentMessage<MessageMessage>({
+                            message: {
+                                id       : action.meta.message.id,
+                                tenantIds: action.meta.message.tenantIds,
+                            },
+                            attachmentId: action.meta.attachment.id,
                         }),
-                ); */
+                );
+
+                this.actionService.action({
+                    id          : 'message::message.detail.refresh',
+                    isViewAction: false,
+                    meta        : {
+                        message: action.meta.message,
+                    },
+                });
+                break;
+
+            case 'message::message.detail.refresh':
+                await lastValueFrom(
+                    this.messageService
+                        .findById({
+                            id: action.meta.message.id,
+                        }),
+                );
                 break;
                 /* #endregion actions to manage attachments */
         }

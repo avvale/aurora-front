@@ -18,46 +18,63 @@
 
         <!-- Actions -->
         <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-            <button
-                *ngIf="currentViewAction.id === 'message::message.detail.edit'"
-                mat-flat-button
-                type="submit"
-                class="ml-3"
-                form="messageMessageFormDetail"
-                color="accent"
-                [disabled]="fg.pristine || ('message::message.detail.update' | getSpinnerFlag | async)"
-            >
-                <mat-icon
-                    *ngIf="!('message::message.detail.update' | getSpinnerFlag | async)"
-                    svgIcon="mat_solid:edit"
-                    class="icon-size-5 mr-2"
+
+            @if (currentViewAction.id === 'message::message.detail.edit')
+            {
+                <button
+                    mat-flat-button
+                    type="submit"
+                    class="ml-3"
+                    form="messageMessageFormDetail"
+                    color="accent"
+                    [disabled]="fg.pristine || ('message::message.detail.update' | getSpinnerFlag | async)"
                 >
-                </mat-icon>
-                <mat-icon *ngIf="'message::message.detail.update' | getSpinnerFlag | async">
-                    <mat-spinner diameter="20"></mat-spinner>
-                </mat-icon>
-                {{ t('Update') }}
-            </button>
-            <button
-                *ngIf="currentViewAction.id === 'message::message.detail.new'"
-                mat-flat-button
-                type="submit"
-                form="messageMessageFormDetail"
-                class="ml-3"
-                color="accent"
-                [disabled]="fg.pristine || ('message::message.detail.create' | getSpinnerFlag | async)"
-            >
-                <mat-icon
-                    *ngIf="!('message::message.detail.create' | getSpinnerFlag | async)"
-                    svgIcon="mat_solid:save"
-                    class="icon-size-5 mr-2"
+                    @if ('message::message.detail.update' | getSpinnerFlag | async)
+                    {
+                        <mat-icon>
+                            <mat-spinner diameter="20"></mat-spinner>
+                        </mat-icon>
+                    }
+                    @else
+                    {
+                        <mat-icon
+                            svgIcon="mat_solid:edit"
+                            class="icon-size-5 mr-2"
+                        >
+                        </mat-icon>
+                    }
+                    {{ t('Update') }}
+                </button>
+            }
+
+            @if (currentViewAction.id === 'message::message.detail.new')
+            {
+                <button
+                    mat-flat-button
+                    type="submit"
+                    form="messageMessageFormDetail"
+                    class="ml-3"
+                    color="accent"
+                    [disabled]="fg.pristine || ('message::message.detail.create' | getSpinnerFlag | async)"
                 >
-                </mat-icon>
-                <mat-icon *ngIf="'message::message.detail.create' | getSpinnerFlag | async">
-                    <mat-spinner diameter="20"></mat-spinner>
-                </mat-icon>
-                {{ t('Create') }}
-            </button>
+                    @if ('message::message.detail.create' | getSpinnerFlag | async)
+                    {
+                        <mat-icon>
+                            <mat-spinner diameter="20"></mat-spinner>
+                        </mat-icon>
+
+                    }
+                    @else
+                    {
+                        <mat-icon
+                            svgIcon="mat_solid:save"
+                            class="icon-size-5 mr-2"
+                        >
+                        </mat-icon>
+                    }
+                    {{ t('Create') }}
+                </button>
+            }
         </div>
         <!-- / Actions -->
 
@@ -65,64 +82,38 @@
     <!-- / Header -->
 
     <!-- Main -->
-    <div class="flex-auto pt-6 px-6 sm:pt-10 sm:px-10 overflow-y-auto" cdkScrollable>
+    <div class="flex-auto pt-6 px-6 sm:pt-6 sm:px-6 overflow-y-auto" cdkScrollable>
 
         <div class="layout__container mb-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0 col-12">
-                <!-- Summary -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full min-w-0 col-12">
+                <!-- Recipients -->
                 <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ t('message.Recipients') }}</div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">21</div>
-                        <div class="text-lg font-medium text-blue-600 dark:text-blue-500">Due Tasks</div>
-                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
-                            <div class="text-md font-medium truncate">Completed:</div>
-                            <div class="ml-1.5 text-lg font-semibold">13</div>
-                        </div>
+                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-blue-500">{{ managedObject.totalRecipients }}</div>
+                        <div class="text-base font-medium text-blue-600 dark:text-blue-500">{{ t('message.Users') }}</div>
                     </div>
                 </div>
-                <!-- Overdue -->
+                <!-- Reads -->
                 <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
-                        <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ t('message.Read') }}</div>
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ t('message.Reads') }}</div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">17</div>
-                        <div class="text-lg font-medium text-red-600 dark:text-red-500">Tasks</div>
-                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
-                            <div class="text-md font-medium truncate">From yesterday:</div>
-                            <div class="ml-1.5 text-lg font-semibold">9</div>
-                        </div>
+                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-green-500">{{ managedObject.reads }}</div>
+                        <div class="text-base font-medium text-green-600 dark:text-green-500">{{ t('message.Messages') }}</div>
                     </div>
                 </div>
-                <!-- Issues -->
+                <!-- PerRead -->
                 <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ t('message.PerRead') }}</div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-amber-500">24</div>
-                        <div class="text-lg font-medium text-amber-600 dark:text-amber-500">Open</div>
-                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
-                            <div class="text-md font-medium truncate">Closed today:</div>
-                            <div class="ml-1.5 text-lg font-semibold">19</div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Features -->
-                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                    <div class="flex items-start justify-between">
-                        <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ t('message.DeletedUnread') }}</div>
-                    </div>
-                    <div class="flex flex-col items-center mt-2">
-                        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">38</div>
-                        <div class="text-lg font-medium text-green-600 dark:text-green-500">Proposals</div>
-                        <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
-                            <div class="text-md font-medium truncate">Implemented:</div>
-                            <div class="ml-1.5 text-lg font-semibold">16</div>
-                        </div>
+                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-amber-500">{{ managedObject.totalRecipients - managedObject.reads }}</div>
+                        <div class="text-base font-medium text-amber-600 dark:text-amber-500">{{ t('message.Messages') }}</div>
                     </div>
                 </div>
             </div>
@@ -449,63 +440,40 @@
                                 </quill-editor>
                                 <mat-error>{{ formErrors?.body | async }}</mat-error>
                             </div>
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-12"
-                            >
-                                <mat-label>{{ t('message.Link') }}</mat-label>
-                                <input
-                                    matInput
-                                    formControlName="link"
-                                    maxlength="2046"
+                            @if (false)
+                            {
+                                <mat-form-field
+                                    appearance="outline"
+                                    class="col-12"
                                 >
-                                <mat-error>{{ formErrors?.link | async }}</mat-error>
-                            </mat-form-field>
-                            <div class="col-4 pt-5">
-                                <mat-checkbox
-                                    formControlName="isInternalLink"
+                                    <mat-label>{{ t('message.Link') }}</mat-label>
+                                    <input
+                                        matInput
+                                        formControlName="link"
+                                        maxlength="2046"
+                                    >
+                                    <mat-error>{{ formErrors?.link | async }}</mat-error>
+                                </mat-form-field>
+                                <div class="col-4 pt-5">
+                                    <mat-checkbox
+                                        formControlName="isInternalLink"
+                                    >
+                                        {{ t('message.IsInternalLink') }}
+                                    </mat-checkbox>
+                                </div>
+                                <mat-form-field
+                                    appearance="outline"
+                                    class="col-8"
                                 >
-                                    {{ t('message.IsInternalLink') }}
-                                </mat-checkbox>
-                            </div>
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-8"
-                            >
-                                <mat-label>{{ t('message.Icon') }}</mat-label>
-                                <input
-                                    matInput
-                                    formControlName="icon"
-                                    maxlength="64"
-                                >
-                                <mat-error>{{ formErrors?.icon | async }}</mat-error>
-                            </mat-form-field>
-                            <mat-form-field
-                                *ngIf="currentViewAction.id === 'message::message.detail.edit'"
-                                appearance="outline"
-                                class="col-12"
-                            >
-                                <mat-label>{{ t('message.TotalRecipients') }}</mat-label>
-                                <input
-                                    matInput
-                                    formControlName="totalRecipients"
-                                    type="number"
-                                >
-                                <mat-error>{{ formErrors?.totalRecipients | async }}</mat-error>
-                            </mat-form-field>
-                            <mat-form-field
-                                *ngIf="currentViewAction.id === 'message::message.detail.edit'"
-                                appearance="outline"
-                                class="col-12"
-                            >
-                                <mat-label>{{ t('message.Reads') }}</mat-label>
-                                <input
-                                    matInput
-                                    formControlName="reads"
-                                    type="number"
-                                >
-                                <mat-error>{{ formErrors?.reads | async }}</mat-error>
-                            </mat-form-field>
+                                    <mat-label>{{ t('message.Icon') }}</mat-label>
+                                    <input
+                                        matInput
+                                        formControlName="icon"
+                                        maxlength="64"
+                                    >
+                                    <mat-error>{{ formErrors?.icon | async }}</mat-error>
+                                </mat-form-field>
+                            }
 
                             <au-file-upload
                                 class="col-12"
@@ -551,7 +519,7 @@
                                                     isViewAction: false,
                                                     meta    : {
                                                         attachment,
-                                                        message
+                                                        message: managedObject
                                                     }
                                                 })
                                             "

@@ -111,7 +111,9 @@
                             <div class="flex items-center mt-12">
                                 <mat-icon
                                     class="icon-size-5"
-                                    [svgIcon]="'heroicons_solid:paper-clip'"></mat-icon>
+                                    [svgIcon]="'heroicons_solid:paper-clip'"
+                                >
+                                </mat-icon>
                                 <div class="ml-2 font-semibold">{{ message().attachments.length }} Attachments</div>
                             </div>
 
@@ -120,17 +122,22 @@
                                 <ng-container *ngFor="let attachment of message().attachments">
                                     <div class="flex items-center m-3">
                                         <!-- Preview -->
-                                        <img
-                                            class="w-10 h-10 rounded-md overflow-hidden"
-                                            *ngIf="attachment.type.startsWith('image/')"
-                                            [src]="'assets/images/apps/mailbox/' + attachment.preview">
-                                        <div
-                                            class="flex items-center justify-center w-10 h-10 rounded-md overflow-hidden bg-primary-100"
-                                            *ngIf="attachment.type.startsWith('application/')">
-                                            <div class="flex items-center justify-center text-sm font-semibold text-primary-500-800">
-                                                {{attachment.type.split('/')[1].trim().toUpperCase()}}
+                                        @if(false)
+                                        {
+                                            <img
+                                                class="w-10 h-10 rounded-md overflow-hidden"
+                                                [src]="attachment.url"
+                                            >
+                                        }
+                                        @if(true)
+                                        {
+                                            <div class="flex items-center justify-center w-10 h-10 rounded-md overflow-hidden bg-primary-100">
+                                                <div class="flex items-center justify-center text-sm font-semibold text-primary-500-800">
+                                                    {{ attachment.mimetype.split('/')[1].trim().toUpperCase() }}
+                                                </div>
                                             </div>
-                                        </div>
+                                        }
+
                                         <!-- File info -->
                                         <div class="ml-3">
                                             <div

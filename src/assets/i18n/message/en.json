@@ -1,6 +1,7 @@
 {
     "AccountCode": "AccountCode",
     "AccountId": "AccountId",
+    "AccountRecipientIds": "AccountRecipientIds",
     "AccountRecipients": "Account recipientIds",
     "Accounts": "Accounts",
     "Attachments": "Attachments",
@@ -30,6 +31,7 @@
     },
     "Messages": "Messages",
     "Meta": "Meta",
+    "PerRead": "Per read",
     "Reads": "Reads",
     "Recipients": "Recipients",
     "ScopeRecipients": "Scope recipients",
@@ -43,5 +45,6 @@
     "TenantRecipientIds": "TenantRecipientIds",
     "TenantRecipients": "Tenant recipients",
     "TotalRecipients": "TotalRecipients",
-    "UnRead": "UnRead"
+    "UnRead": "UnRead",
+    "Users": "Users"
 }

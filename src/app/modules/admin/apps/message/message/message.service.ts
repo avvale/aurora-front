@@ -4,7 +4,7 @@ import { IamAccount, IamTag, IamTenant } from '@apps/iam';
 import { AccountService } from '@apps/iam/account';
 import { TagService } from '@apps/iam/tag';
 import { TenantService } from '@apps/iam/tenant';
-import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, getRelations, paginationQuery, updateByIdMutation, updateMutation } from '@apps/message/message';
+import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, getRelations, paginationQuery, removeAttachmentMessageMutation, updateByIdMutation, updateMutation } from '@apps/message/message';
 import { MessageCreateMessage, MessageMessage, MessageUpdateMessageById, MessageUpdateMessages } from '@apps/message/message.types';
 import { ClientService } from '@apps/o-auth/client';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
@@ -20,6 +20,11 @@ export class MessageService
     paginationSubject$: BehaviorSubject<GridData<MessageMessage> | null> = new BehaviorSubject(null);
     messageSubject$: BehaviorSubject<MessageMessage | null> = new BehaviorSubject(null);
     messagesSubject$: BehaviorSubject<MessageMessage[] | null> = new BehaviorSubject(null);
+
+    // scoped subjects
+    paginationScoped: { [key: string]: BehaviorSubject<GridData<MessageMessage> | null>; } = {};
+    messageScoped: { [key: string]: BehaviorSubject<MessageMessage | null>; } = {};
+    messagesScoped: { [key: string]: BehaviorSubject<MessageMessage[] | null>; } = {};
 
     private tagService = inject(TagService);
     private tenantService = inject(TenantService);
@@ -48,17 +53,73 @@ export class MessageService
         return this.messagesSubject$.asObservable();
     }
 
+    // allows to store different types of pagination under different scopes this allows us
+    // to have multiple observables with different streams of pagination data.
+    setScopePagination(scope: string, pagination: GridData<MessageMessage>): void
+    {
+        if (this.paginationScoped[scope])
+        {
+            this.paginationScoped[scope].next(pagination);
+            return;
+        }
+        // create new subject if not exist
+        this.paginationScoped[scope] = new BehaviorSubject(pagination);
+    }
+
+    // get pagination observable by scope
+    getScopePagination(scope: string): Observable<GridData<MessageMessage>>
+    {
+        if (this.paginationScoped[scope]) return this.paginationScoped[scope].asObservable();
+        return null;
+    }
+
+    setScopeMessage(scope: string, object: MessageMessage): void
+    {
+        if (this.messageScoped[scope])
+        {
+            this.messageScoped[scope].next(object);
+            return;
+        }
+        // create new subject if not exist
+        this.messageScoped[scope] = new BehaviorSubject(object);
+    }
+
+    getScopeMessage(scope: string): Observable<MessageMessage>
+    {
+        if (this.messageScoped[scope]) return this.messageScoped[scope].asObservable();
+        return null;
+    }
+
+    setScopeMessages(scope: string, objects: MessageMessage[]): void
+    {
+        if (this.messagesScoped[scope])
+        {
+            this.messagesScoped[scope].next(objects);
+            return;
+        }
+        // create new subject if not exist
+        this.messagesScoped[scope] = new BehaviorSubject(objects);
+    }
+
+    getScopeMessages(scope: string): Observable<MessageMessage[]>
+    {
+        if (this.messagesScoped[scope]) return this.messagesScoped[scope].asObservable();
+        return null;
+    }
+
     pagination(
         {
             graphqlStatement = paginationQuery,
             query = {},
             constraint = {},
             headers = {},
+            scope,
         }: {
             graphqlStatement?: DocumentNode;
             query?: QueryStatement;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
+            scope?: string;
         } = {},
     ): Observable<GridData<MessageMessage>>
     {
@@ -79,7 +140,7 @@ export class MessageService
             .pipe(
                 first(),
                 map(result => result.data.pagination),
-                tap(pagination => this.paginationSubject$.next(pagination)),
+                tap(pagination => scope ? this.setScopePagination(scope, pagination) : this.paginationSubject$.next(pagination)),
             );
     }
 
@@ -89,11 +150,13 @@ export class MessageService
             id = '',
             constraint = {},
             headers = {},
+            scope,
         }: {
             graphqlStatement?: DocumentNode;
             id?: string;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
+            scope?: string;
         } = {},
     ): Observable<{
         object: MessageMessage;
@@ -117,10 +180,7 @@ export class MessageService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data =>
-                {
-                    this.messageSubject$.next(data.object);
-                }),
+                tap(data => scope ? this.setScopeMessage(scope, data.object) : this.messageSubject$.next(data.object)),
             );
     }
 
@@ -130,11 +190,13 @@ export class MessageService
             query = {},
             constraint = {},
             headers = {},
+            scope,
         }: {
             graphqlStatement?: DocumentNode;
             query?: QueryStatement;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
+            scope?: string;
         } = {},
     ): Observable<{
         object: MessageMessage;
@@ -158,10 +220,7 @@ export class MessageService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data =>
-                {
-                    this.messageSubject$.next(data.object);
-                }),
+                tap(data => scope ? this.setScopeMessage(scope, data.object) : this.messageSubject$.next(data.object)),
             );
     }
 
@@ -171,11 +230,13 @@ export class MessageService
             query = {},
             constraint = {},
             headers = {},
+            scope,
         }: {
             graphqlStatement?: DocumentNode;
             query?: QueryStatement;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
+            scope?: string;
         } = {},
     ): Observable<{
         objects: MessageMessage[];
@@ -199,10 +260,7 @@ export class MessageService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data =>
-                {
-                    this.messagesSubject$.next(data.objects);
-                }),
+                tap(data => scope ? this.setScopeMessages(scope, data.objects) : this.messagesSubject$.next(data.objects)),
             );
     }
 
@@ -402,6 +460,35 @@ export class MessageService
                 variables: {
                     query,
                     constraint,
+                },
+                context: {
+                    headers,
+                },
+            });
+    }
+
+    // Mutation additionalApis
+    removeAttachmentMessage<T>(
+        {
+            graphqlStatement = removeAttachmentMessageMutation,
+            message,
+            attachmentId,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            message?: MessageUpdateMessageById;
+            attachmentId?: string;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    message,
+                    attachmentId,
                 },
                 context: {
                     headers,
