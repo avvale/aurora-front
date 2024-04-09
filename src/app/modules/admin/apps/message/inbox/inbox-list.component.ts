@@ -4,6 +4,8 @@ import { MessageInbox } from '@apps/message/message.types';
 import { Action, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 
+export const inboxMainGridList = 'message::inbox.list.mainGridList';
+
 @Component({
     selector       : 'message-inbox-list',
     templateUrl    : './inbox-list.component.html',
@@ -23,7 +25,7 @@ export class InboxListComponent extends ViewBaseComponent
         { translation: 'App', routerLink: ['/']},
         { translation: 'message.Inboxes' },
     ];
-    gridId: string = 'message::inbox.list.mainGridList';
+    gridId: string = inboxMainGridList;
     gridData$: Observable<GridData<MessageInbox>>;
     gridState: GridState = {};
     columnsConfig$: Observable<ColumnConfig[]>;

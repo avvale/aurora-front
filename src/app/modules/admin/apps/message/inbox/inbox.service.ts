@@ -5,6 +5,8 @@ import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQue
 import { MessageCreateInbox, MessageInbox, MessageUpdateInboxById, MessageUpdateInboxes } from '@apps/message/message.types';
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
+import { messageCustomerCenterMessage } from '../message-center/list/message-center-list.component';
+import { messageQuickViewMessages } from '../message-quick-view/message-quick-view.component';
 
 @Injectable({
     providedIn: 'root',
@@ -15,10 +17,10 @@ export class InboxService
     inboxSubject$: BehaviorSubject<MessageInbox | null> = new BehaviorSubject(null);
     inboxesSubject$: BehaviorSubject<MessageInbox[] | null> = new BehaviorSubject(null);
 
-    // ---- customizations ----
-    paginationCustomerCenterSubject$: BehaviorSubject<GridData<MessageInbox> | null> = new BehaviorSubject(null);
-    inboxCustomerCenterSubject$: BehaviorSubject<MessageInbox | null> = new BehaviorSubject(null);
-    paginationCustomerQuickViewSubject$: BehaviorSubject<GridData<MessageInbox> | null> = new BehaviorSubject(null);
+    // scoped subjects
+    paginationScoped: { [key: string]: BehaviorSubject<GridData<MessageInbox> | null>; } = {};
+    inboxScoped: { [key: string]: BehaviorSubject<MessageInbox | null>; } = {};
+    inboxesScoped: { [key: string]: BehaviorSubject<MessageInbox[] | null>; } = {};
 
     constructor(
         private readonly graphqlService: GraphQLService,
@@ -42,20 +44,58 @@ export class InboxService
         return this.inboxesSubject$.asObservable();
     }
 
-    // ---- customizations ----
-    get paginationCustomerCenter$(): Observable<GridData<MessageInbox>>
+    // allows to store different types of pagination under different scopes this allows us
+    // to have multiple observables with different streams of pagination data.
+    setScopePagination(scope: string, pagination: GridData<MessageInbox>): void
     {
-        return this.paginationCustomerCenterSubject$.asObservable();
+        if (this.paginationScoped[scope])
+        {
+            this.paginationScoped[scope].next(pagination);
+            return;
+        }
+        // create new subject if not exist
+        this.paginationScoped[scope] = new BehaviorSubject(pagination);
     }
 
-    get inboxCustomerCenter$(): Observable<MessageInbox>
+    // get pagination observable by scope
+    getScopePagination(scope: string): Observable<GridData<MessageInbox>>
     {
-        return this.inboxCustomerCenterSubject$.asObservable();
+        if (this.paginationScoped[scope]) return this.paginationScoped[scope].asObservable();
+        return null;
     }
 
-    get paginationCustomerQuickView$(): Observable<GridData<MessageInbox>>
+    setScopeInbox(scope: string, object: MessageInbox): void
     {
-        return this.paginationCustomerQuickViewSubject$.asObservable();
+        if (this.inboxScoped[scope])
+        {
+            this.inboxScoped[scope].next(object);
+            return;
+        }
+        // create new subject if not exist
+        this.inboxScoped[scope] = new BehaviorSubject(object);
+    }
+
+    getScopeInbox(scope: string): Observable<MessageInbox>
+    {
+        if (this.inboxScoped[scope]) return this.inboxScoped[scope].asObservable();
+        return null;
+    }
+
+    setScopeInboxes(scope: string, objects: MessageInbox[]): void
+    {
+        if (this.inboxesScoped[scope])
+        {
+            this.inboxesScoped[scope].next(objects);
+            return;
+        }
+        // create new subject if not exist
+        this.inboxesScoped[scope] = new BehaviorSubject(objects);
+    }
+
+    getScopeInboxes(scope: string): Observable<MessageInbox[]>
+    {
+        if (this.inboxesScoped[scope]) return this.inboxesScoped[scope].asObservable();
+        return null;
     }
 
     pagination(
@@ -64,11 +104,13 @@ export class InboxService
             query = {},
             constraint = {},
             headers = {},
+            scope,
         }: {
             graphqlStatement?: DocumentNode;
             query?: QueryStatement;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
+            scope?: string;
         } = {},
     ): Observable<GridData<MessageInbox>>
     {
@@ -89,7 +131,7 @@ export class InboxService
             .pipe(
                 first(),
                 map(result => result.data.pagination),
-                tap(pagination => this.paginationSubject$.next(pagination)),
+                tap(pagination => scope ? this.setScopePagination(scope, pagination) : this.paginationSubject$.next(pagination)),
             );
     }
 
@@ -99,11 +141,13 @@ export class InboxService
             id = '',
             constraint = {},
             headers = {},
+            scope,
         }: {
             graphqlStatement?: DocumentNode;
             id?: string;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
+            scope?: string;
         } = {},
     ): Observable<{
         object: MessageInbox;
@@ -127,10 +171,7 @@ export class InboxService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data =>
-                {
-                    this.inboxSubject$.next(data.object);
-                }),
+                tap(data => scope ? this.setScopeInbox(scope, data.object) : this.inboxSubject$.next(data.object)),
             );
     }
 
@@ -140,11 +181,13 @@ export class InboxService
             query = {},
             constraint = {},
             headers = {},
+            scope,
         }: {
             graphqlStatement?: DocumentNode;
             query?: QueryStatement;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
+            scope?: string;
         } = {},
     ): Observable<{
         object: MessageInbox;
@@ -168,10 +211,7 @@ export class InboxService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data =>
-                {
-                    this.inboxSubject$.next(data.object);
-                }),
+                tap(data => scope ? this.setScopeInbox(scope, data.object) : this.inboxSubject$.next(data.object)),
             );
     }
 
@@ -181,11 +221,13 @@ export class InboxService
             query = {},
             constraint = {},
             headers = {},
+            scope,
         }: {
             graphqlStatement?: DocumentNode;
             query?: QueryStatement;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
+            scope?: string;
         } = {},
     ): Observable<{
         objects: MessageInbox[];
@@ -209,10 +251,7 @@ export class InboxService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data =>
-                {
-                    this.inboxesSubject$.next(data.objects);
-                }),
+                tap(data => scope ? this.setScopeInboxes(scope, data.objects) : this.inboxesSubject$.next(data.objects)),
             );
     }
 
@@ -386,7 +425,7 @@ export class InboxService
             .pipe(
                 first(),
                 map(result => result.data.pagination),
-                tap(pagination => this.paginationCustomerCenterSubject$.next(pagination)),
+                tap(pagination => this.setScopePagination(messageCustomerCenterMessage, pagination)),
             );
     }
 
@@ -422,7 +461,7 @@ export class InboxService
             .pipe(
                 first(),
                 map(result => result.data.pagination),
-                tap(pagination => this.paginationCustomerQuickViewSubject$.next(pagination)),
+                tap(pagination => this.setScopePagination(messageQuickViewMessages, pagination)),
             );
     }
 
@@ -460,10 +499,7 @@ export class InboxService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data =>
-                {
-                    this.inboxCustomerCenterSubject$.next(data.object);
-                }),
+                tap(data => this.setScopeInbox(messageCustomerCenterMessage, data.object)),
             );
     }
 
@@ -492,11 +528,13 @@ export class InboxService
     deleteCustomerMessageInbox<T>(
         {
             graphqlStatement = deleteCustomerMessageInboxMutation,
-            object = null,
+            id,
+            constraint = {},
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            object?: MessageUpdateInboxById;
+            id?: string;
+            constraint?: QueryStatement;
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<FetchResult<T>>
@@ -506,7 +544,8 @@ export class InboxService
             .mutate({
                 mutation : graphqlStatement,
                 variables: {
-                    payload: object,
+                    id,
+                    constraint,
                 },
                 context: {
                     headers,
@@ -517,11 +556,13 @@ export class InboxService
     readCustomerMessageInbox<T>(
         {
             graphqlStatement = readCustomerMessageInboxMutation,
-            object = null,
+            id,
+            constraint = {},
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            object?: MessageUpdateInboxById;
+            id?: string;
+            constraint?: QueryStatement;
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<FetchResult<T>>
@@ -531,7 +572,8 @@ export class InboxService
             .mutate({
                 mutation : graphqlStatement,
                 variables: {
-                    payload: object,
+                    id,
+                    constraint,
                 },
                 context: {
                     headers,
@@ -542,11 +584,13 @@ export class InboxService
     unreadCustomerMessageInbox<T>(
         {
             graphqlStatement = unreadCustomerMessageInboxMutation,
-            object = null,
+            id,
+            constraint = {},
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            object?: MessageUpdateInboxById;
+            id?: string;
+            constraint?: QueryStatement;
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<FetchResult<T>>
@@ -556,7 +600,8 @@ export class InboxService
             .mutate({
                 mutation : graphqlStatement,
                 variables: {
-                    payload: object,
+                    id,
+                    constraint,
                 },
                 context: {
                     headers,

@@ -1,6 +1,7 @@
 import gql from 'graphql-tag';
 
 export const fields = `
+    id
     tenantIds
     messageId
     sort
@@ -197,11 +198,11 @@ export const checkMessagesInboxMutation = gql`
 
 export const deleteCustomerMessageInboxMutation = gql`
     mutation MessageDeleteCustomerMessageInbox (
-        $payload: MessageUpdateInboxByIdInput!
+        $id: ID!
         $constraint: QueryStatement
     ) {
         messageDeleteCustomerMessageInbox (
-            payload: $payload
+            id: $id
             constraint: $constraint
         )
     }
@@ -209,11 +210,11 @@ export const deleteCustomerMessageInboxMutation = gql`
 
 export const readCustomerMessageInboxMutation = gql`
     mutation MessageReadCustomerMessageInbox (
-        $payload: MessageUpdateInboxByIdInput!
+        $id: ID!
         $constraint: QueryStatement
     ) {
         messageReadCustomerMessageInbox (
-            payload: $payload
+            id: $id
             constraint: $constraint
         )
     }
@@ -221,11 +222,11 @@ export const readCustomerMessageInboxMutation = gql`
 
 export const unreadCustomerMessageInboxMutation = gql`
     mutation MessageUnreadCustomerMessageInbox (
-        $payload: MessageUpdateInboxByIdInput!
+        $id: ID!
         $constraint: QueryStatement
     ) {
         messageUnreadCustomerMessageInbox (
-            payload: $payload
+            id: $id
             constraint: $constraint
         )
     }

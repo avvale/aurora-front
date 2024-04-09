@@ -107,3 +107,7 @@ aggregateProperties:
   - name: deletedAt
     type: timestamp
     nullable: true
+additionalApis:
+  - path: message/message/remove-attachment
+    resolverType: mutation
+    httpMethod: post
