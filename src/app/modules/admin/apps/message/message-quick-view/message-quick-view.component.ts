@@ -1,12 +1,12 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { DatePipe, NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router, RouterLink } from '@angular/router';
-import { Subject, lastValueFrom, takeUntil } from 'rxjs';
+import { RouterLink } from '@angular/router';
+import { lastValueFrom, takeUntil } from 'rxjs';
 import { MessageInbox } from '../message.types';
 import { InboxService } from '../inbox';
 import { MessageService } from '../message/message.service';
@@ -29,6 +29,7 @@ export const messageQuickViewMessages = 'message::QuickViewMessages';
 })
 export class MessageQuickViewComponent extends ViewBaseComponent
 {
+    actionScope: string = 'message::quickViewMessages';
     @ViewChild('messagesOrigin') private messagesOrigin: MatButton;
     @ViewChild('messagesPanel') private messagesPanel: TemplateRef<any>;
 
@@ -158,17 +159,6 @@ export class MessageQuickViewComponent extends ViewBaseComponent
         console.log('deleteMessage');
         // Delete the message
         // this.messagesService.delete(message.id).subscribe();
-    }
-
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
-    trackByFn(index: number, item: any): any
-    {
-        return item.id || index;
     }
 
     // -----------------------------------------------------------------------------------------------------

@@ -318,7 +318,7 @@
                                             mat-icon-button
                                             class="mr-2"
                                             type="button"
-                                            (click)="handleOpenAccountsDialog(newActionId)"
+                                            (click)="handleOpenAccountsDialog()"
                                         >
                                             <mat-icon svgIcon="mat_solid:add"></mat-icon>
                                             <span class="cdk-visually-hidden">
@@ -433,7 +433,7 @@
                                 <quill-editor
                                     class="w-full"
                                     formControlName="body"
-                                    placeholder=""
+                                    placeholder="{{ t('message.StartHereToWriteYourMessage') }}"
                                     [bounds]="'self'"
                                     [modules]="quillModules"
                                 >

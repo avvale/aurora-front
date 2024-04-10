@@ -10,7 +10,7 @@ import { ClientService } from '@apps/o-auth/client';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
-import { messageAccountsScopePagination } from './message-detail.component';
+import { messageAccountsScopePagination, messageSelectedAccountsScopePagination } from './message-detail.component';
 
 @Injectable({
     providedIn: 'root',
@@ -270,6 +270,8 @@ export class MessageService
             constraintTags = {},
             queryTenants = {},
             constraintTenants = {},
+            queryPaginateSelectedAccounts = {},
+            constraintPaginateSelectedAccounts = {},
             queryPaginateAccounts = {},
             constraintPaginateAccounts = {},
             clientId = '',
@@ -280,6 +282,8 @@ export class MessageService
             constraintTags?: QueryStatement;
             queryTenants?: QueryStatement;
             constraintTenants?: QueryStatement;
+            queryPaginateSelectedAccounts?: QueryStatement;
+            constraintPaginateSelectedAccounts?: QueryStatement;
             queryPaginateAccounts?: QueryStatement;
             constraintPaginateAccounts?: QueryStatement;
             clientId?: string;
@@ -289,6 +293,7 @@ export class MessageService
     ): Observable<{
         iamGetTags: IamTag[];
         iamGetTenants: IamTenant[];
+        iamPaginateSelectedAccounts: GridData<IamAccount>;
         iamPaginateAccounts: GridData<IamAccount>;
         oAuthFindClientById: OAuthClient;
     }>
@@ -298,8 +303,9 @@ export class MessageService
             .watchQuery<{
                 iamGetTags: IamTag[];
                 iamGetTenants: IamTenant[];
-                oAuthFindClientById: OAuthClient;
+                iamPaginateSelectedAccounts: GridData<IamAccount>;
                 iamPaginateAccounts: GridData<IamAccount>;
+                oAuthFindClientById: OAuthClient;
             }>({
                 query    : getRelations,
                 variables: {
@@ -307,6 +313,8 @@ export class MessageService
                     constraintTags,
                     queryTenants,
                     constraintTenants,
+                    queryPaginateSelectedAccounts,
+                    constraintPaginateSelectedAccounts,
                     queryPaginateAccounts,
                     constraintPaginateAccounts,
                     clientId,
@@ -324,6 +332,7 @@ export class MessageService
                 {
                     this.tagService.tagsSubject$.next(data.iamGetTags);
                     this.tenantService.tenantsSubject$.next(data.iamGetTenants);
+                    this.accountService.setScopePagination(messageSelectedAccountsScopePagination, data.iamPaginateSelectedAccounts);
                     this.accountService.setScopePagination(messageAccountsScopePagination, data.iamPaginateAccounts);
                     this.clientService.clientSubject$.next(data.oAuthFindClientById);
                 }),

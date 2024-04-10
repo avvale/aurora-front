@@ -14,8 +14,9 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { AccountService, accountColumnsConfig } from '@apps/iam/account';
 import { QuillEditorComponent } from 'ngx-quill';
 
-export const accountsDialogGridId = 'message::message.detail.accountsDialogGridList';
+export const messageAccountsDialogGridId = 'message::message.detail.accountsDialogGridList';
 export const messageAccountsGridId = 'message::message.detail.messageAccountsGridList';
+export const messageSelectedAccountsScopePagination = 'message::messageSelectedAccounts';
 export const messageAccountsScopePagination = 'message::messageAccounts';
 
 @Component({
@@ -64,7 +65,7 @@ export class MessageDetailComponent extends ViewDetailComponent
     // start accounts dialog
     @ViewChild('messageAccountsGridSelectMultipleElements') messageAccountsGridSelectMultipleElementsComponent: GridSelectMultipleElementsComponent;
     accountsDialogSelectedRows: IamAccount[] = [];
-    accountsDialogGridId: string = accountsDialogGridId;
+    accountsDialogGridId: string = messageAccountsDialogGridId;
     accountsDialogGridData$: Observable<GridData<IamAccount>>;
     accountsDialogColumnsConfig$: Observable<ColumnConfig[]>;
     accountsDialogOriginColumnsConfig: ColumnConfig[] = [
@@ -365,7 +366,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                     .setSearch(this.gridStateService.getSearchState(this.accountsDialogGridId))
                     .getQueryStatement(),
             },
-            afterRunAction: () =>
+            afterRunAction: (action: Action) =>
             {
                 this.gridStateService.setPaginationActionId(this.accountsDialogGridId, 'message::message.detail.accountsPagination');
                 this.gridStateService.setExportActionId(this.accountsDialogGridId, 'message::message.detail.exportAccounts');
@@ -428,13 +429,13 @@ export class MessageDetailComponent extends ViewDetailComponent
                     search       : this.gridStateService.getSearchState(this.messageAccountsGridId),
                 };
 
-                this.messageAccountsGridData$ = this.accountService.getScopePagination(messageAccountsScopePagination);
+                this.messageAccountsGridData$ = this.accountService.getScopePagination(messageSelectedAccountsScopePagination);
 
                 // account dialog grid
                 this.accountsDialogColumnsConfig$ = this.gridColumnsConfigStorageService
                     .getColumnsConfig(this.accountsDialogGridId, this.accountsDialogOriginColumnsConfig)
                     .pipe(takeUntil(this.unsubscribeAll$));
-                this.accountsDialogGridData$ = this.accountService.pagination$;
+                this.accountsDialogGridData$ = this.accountService.getScopePagination(messageAccountsScopePagination);
                 /* #endregion edit action to manage MessagesAccounts grid-select-multiple-elements */
                 break;
 
@@ -461,13 +462,13 @@ export class MessageDetailComponent extends ViewDetailComponent
                     search       : this.gridStateService.getSearchState(this.messageAccountsGridId),
                 };
 
-                this.messageAccountsGridData$ = this.accountService.getScopePagination(messageAccountsScopePagination);
+                this.messageAccountsGridData$ = this.accountService.getScopePagination(messageSelectedAccountsScopePagination);
 
                 // account dialog grid
                 this.accountsDialogColumnsConfig$ = this.gridColumnsConfigStorageService
                     .getColumnsConfig(this.accountsDialogGridId, this.accountsDialogOriginColumnsConfig)
                     .pipe(takeUntil(this.unsubscribeAll$));
-                this.accountsDialogGridData$ = this.accountService.pagination$;
+                this.accountsDialogGridData$ = this.accountService.getScopePagination(messageAccountsScopePagination);
                 /* #endregion edit action to manage MessagesAccounts grid-select-multiple-elements */
                 break;
 
@@ -564,7 +565,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                                     },
                                 ],
                             },
-                            scope: messageAccountsScopePagination,
+                            scope: messageSelectedAccountsScopePagination,
                         }),
                 );
                 break;

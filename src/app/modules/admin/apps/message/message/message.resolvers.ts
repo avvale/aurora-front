@@ -5,7 +5,7 @@ import { messageColumnsConfig, MessageService } from '@apps/message/message';
 import { MessageMessage } from '@apps/message/message.types';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
 import { ActionService, GridData, GridFiltersStorageService, GridStateService, IamService, QueryStatementHandler } from '@aurora';
-import { accountsDialogGridId, messageAccountsGridId } from './message-detail.component';
+import { messageAccountsDialogGridId, messageAccountsGridId } from './message-detail.component';
 import { Subject, first, map } from 'rxjs';
 import { messageMainGridListId } from './message-list.component';
 
@@ -60,8 +60,8 @@ export const messageNewResolver: ResolveFn<{
     gridStateService.setPaginationActionId(messageAccountsGridId, 'message::message.detail.messageAccountsPagination');
     gridStateService.setExportActionId(messageAccountsGridId, 'message::message.detail.exportMessageAccounts');
 
-    gridStateService.setPaginationActionId(accountsDialogGridId, 'message::message.detail.accountsPagination');
-    gridStateService.setExportActionId(accountsDialogGridId, 'message::message.detail.exportAccounts');
+    gridStateService.setPaginationActionId(messageAccountsDialogGridId, 'message::message.detail.accountsPagination');
+    gridStateService.setExportActionId(messageAccountsDialogGridId, 'message::message.detail.exportAccounts');
 
     return messageService.getRelations({
         clientId         : iamService.me.clientId,
@@ -70,10 +70,17 @@ export const messageNewResolver: ResolveFn<{
                 id: iamService.me.dTenants,
             },
         },
-        constraintPaginateAccounts: {
+        constraintPaginateSelectedAccounts: {
             where: {
                 id: [],
             },
+            include: [
+                {
+                    association: 'user',
+                },
+            ],
+        },
+        constraintPaginateAccounts: {
             include: [
                 {
                     association: 'user',
@@ -126,10 +133,17 @@ export const messageEditResolver: ResolveFn<{
                         id: iamService.me.dTenants,
                     },
                 },
-                constraintPaginateAccounts: {
+                constraintPaginateSelectedAccounts: {
                     where: {
                         id: message.accountRecipientIds,
                     },
+                    include: [
+                        {
+                            association: 'user',
+                        },
+                    ],
+                },
+                constraintPaginateAccounts: {
                     include: [
                         {
                             association: 'user',

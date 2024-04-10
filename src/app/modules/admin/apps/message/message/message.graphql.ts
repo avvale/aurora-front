@@ -48,6 +48,14 @@ export const relationsFields = `
         id
         scopeOptions
     }
+    iamPaginateSelectedAccounts: iamPaginateAccounts (
+        query: $queryPaginateSelectedAccounts
+        constraint: $constraintPaginateSelectedAccounts
+    ) {
+        total
+        rows
+        count
+    }
     iamPaginateAccounts (
         query: $queryPaginateAccounts
         constraint: $constraintPaginateAccounts
@@ -96,6 +104,8 @@ export const getRelations = gql`
         $constraintTags: QueryStatement
         $queryTenants: QueryStatement
         $constraintTenants: QueryStatement
+        $queryPaginateSelectedAccounts: QueryStatement
+        $constraintPaginateSelectedAccounts: QueryStatement
         $queryPaginateAccounts: QueryStatement
         $constraintPaginateAccounts: QueryStatement
         $clientId: ID
