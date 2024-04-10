@@ -1,17 +1,17 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { DatePipe, NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, WritableSignal, inject, signal } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterLink } from '@angular/router';
-import { lastValueFrom, takeUntil } from 'rxjs';
+import { Router, RouterLink } from '@angular/router';
+import { Subject, lastValueFrom, takeUntil } from 'rxjs';
 import { MessageInbox } from '../message.types';
 import { InboxService } from '../inbox';
-import { MessageService } from '../message/message.service';
-import { GridData, ViewBaseComponent } from '@aurora';
+import { GridData } from '@aurora';
 import { TranslocoModule } from '@ngneat/transloco';
+import { MessageCenterService } from '../message-center/message-center.service';
 
 export const messageQuickViewMessages = 'message::QuickViewMessages';
 
@@ -27,26 +27,20 @@ export const messageQuickViewMessages = 'message::QuickViewMessages';
         NgFor, NgClass, NgTemplateOutlet, RouterLink, TranslocoModule, DatePipe,
     ],
 })
-export class MessageQuickViewComponent extends ViewBaseComponent
+export class MessageQuickViewComponent implements OnInit, OnDestroy
 {
-    actionScope: string = 'message::quickViewMessages';
     @ViewChild('messagesOrigin') private messagesOrigin: MatButton;
     @ViewChild('messagesPanel') private messagesPanel: TemplateRef<any>;
 
+    messages: WritableSignal<MessageInbox[]> = signal([]);
     inboxCustomerPagination: GridData<MessageInbox>;
     unreadCount: number = 0;
 
     private inboxService = inject(InboxService);
-    private messageService = inject(MessageService);
+    private messageCenterService = inject(MessageCenterService);
+    private router = inject(Router);
+    private unsubscribeAll$: Subject<void> = new Subject<void>();
     private overlayRef: OverlayRef;
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
-    get messages(): MessageInbox[]
-    {
-        return this.inboxCustomerPagination?.rows;
-    }
 
     /**
      * Constructor
@@ -56,18 +50,12 @@ export class MessageQuickViewComponent extends ViewBaseComponent
         private overlay: Overlay,
         private viewContainerRef: ViewContainerRef,
     )
-    {
-        super();
-    }
+    { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
-    async init(): Promise<void>
+    async ngOnInit(): Promise<void>
     {
         // Get the messages
         await lastValueFrom(
@@ -88,13 +76,29 @@ export class MessageQuickViewComponent extends ViewBaseComponent
             .subscribe((inboxCustomerPagination: GridData<MessageInbox>) =>
             {
                 // Load the messages
-                this.inboxCustomerPagination = inboxCustomerPagination;
+                this.messages.set(inboxCustomerPagination.rows);
 
                 // Calculate the unread count
                 this.calculateUnreadCount();
 
                 // Mark for check
                 this.changeDetectorRef.markForCheck();
+            });
+
+        // Subscribe to toggle message as read
+        this.messageCenterService
+            .toggleMessageAsRead$
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe((toggleMessage: MessageInbox) =>
+            {
+                const messages = this.messages();
+                this.messages.set(
+                    messages.map(message =>
+                    {
+                        if (message.id === toggleMessage.id) message.isRead = !message.isRead;
+                        return message;
+                    }),
+                );
             });
     }
 
@@ -103,6 +107,10 @@ export class MessageQuickViewComponent extends ViewBaseComponent
      */
     ngOnDestroy(): void
     {
+        // Unsubscribe from all subscriptions
+        this.unsubscribeAll$.next(null);
+        this.unsubscribeAll$.complete();
+
         // Dispose the overlay
         if (this.overlayRef)
         {
@@ -221,13 +229,6 @@ export class MessageQuickViewComponent extends ViewBaseComponent
      */
     private calculateUnreadCount(): void
     {
-        let count = 0;
-
-        if (this.inboxCustomerPagination?.rows?.length)
-        {
-            count = this.inboxCustomerPagination.rows.filter(message => !message.isRead).length;
-        }
-
-        this.unreadCount = count;
+        this.unreadCount = this.messages().filter(message => !message.isRead).length;
     }
 }
