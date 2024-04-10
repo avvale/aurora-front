@@ -98,10 +98,12 @@
                 <div class="flex flex-col py-8 px-6">
 
                     <!-- Content -->
-                    <div
-                        class="flex flex-col whitespace-pre-line leading-relaxed"
-                        [innerHTML]="message().body"
-                    >
+                    <div class="ql-container ql-snow shadow-none border-none">
+                        <div
+                            class="ql-editor p-0"
+                            [innerHTML]="message().body"
+                        >
+                        </div>
                     </div>
 
                     <!-- Attachments -->
