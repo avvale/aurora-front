@@ -210,11 +210,11 @@ export const deleteCustomerMessageInboxMutation = gql`
 
 export const readCustomerMessageInboxMutation = gql`
     mutation MessageReadCustomerMessageInbox (
-        $id: ID!
+        $inbox: MessageUpdateInboxByIdInput!
         $constraint: QueryStatement
     ) {
         messageReadCustomerMessageInbox (
-            id: $id
+            inbox: $inbox
             constraint: $constraint
         )
     }
@@ -222,11 +222,11 @@ export const readCustomerMessageInboxMutation = gql`
 
 export const unreadCustomerMessageInboxMutation = gql`
     mutation MessageUnreadCustomerMessageInbox (
-        $id: ID!
+        $inbox: MessageUpdateInboxByIdInput!
         $constraint: QueryStatement
     ) {
         messageUnreadCustomerMessageInbox (
-            id: $id
+            inbox: $inbox
             constraint: $constraint
         )
     }

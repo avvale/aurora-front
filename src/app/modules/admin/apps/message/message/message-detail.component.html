@@ -92,7 +92,7 @@
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ t('message.Recipients') }}</div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-blue-500">{{ managedObject.totalRecipients }}</div>
+                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-blue-500">{{ managedObject?.totalRecipients || 0 }}</div>
                         <div class="text-base font-medium text-blue-600 dark:text-blue-500">{{ t('message.Users') }}</div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ t('message.Reads') }}</div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-green-500">{{ managedObject.reads }}</div>
+                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-green-500">{{ managedObject?.reads || 0 }}</div>
                         <div class="text-base font-medium text-green-600 dark:text-green-500">{{ t('message.Messages') }}</div>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ t('message.PerRead') }}</div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-amber-500">{{ managedObject.totalRecipients - managedObject.reads }}</div>
+                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-amber-500">{{ managedObject?.totalRecipients - managedObject?.reads }}</div>
                         <div class="text-base font-medium text-amber-600 dark:text-amber-500">{{ t('message.Messages') }}</div>
                     </div>
                 </div>

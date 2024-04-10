@@ -10,7 +10,7 @@ import { Subject, lastValueFrom, takeUntil } from 'rxjs';
 import { MessageInbox } from '../message.types';
 import { InboxService } from '../inbox';
 import { MessageService } from '../message/message.service';
-import { GridData } from '@aurora';
+import { GridData, ViewBaseComponent } from '@aurora';
 import { TranslocoModule } from '@ngneat/transloco';
 
 export const messageQuickViewMessages = 'message::QuickViewMessages';
@@ -27,7 +27,7 @@ export const messageQuickViewMessages = 'message::QuickViewMessages';
         NgFor, NgClass, NgTemplateOutlet, RouterLink, TranslocoModule, DatePipe,
     ],
 })
-export class MessageQuickViewComponent implements OnInit, OnDestroy
+export class MessageQuickViewComponent extends ViewBaseComponent
 {
     @ViewChild('messagesOrigin') private messagesOrigin: MatButton;
     @ViewChild('messagesPanel') private messagesPanel: TemplateRef<any>;
@@ -37,8 +37,6 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
 
     private inboxService = inject(InboxService);
     private messageService = inject(MessageService);
-    private router = inject(Router);
-    private unsubscribeAll: Subject<void> = new Subject<void>();
     private overlayRef: OverlayRef;
 
     // -----------------------------------------------------------------------------------------------------
@@ -57,7 +55,9 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
         private overlay: Overlay,
         private viewContainerRef: ViewContainerRef,
     )
-    { }
+    {
+        super();
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -66,7 +66,7 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    async ngOnInit(): Promise<void>
+    async init(): Promise<void>
     {
         // Get the messages
         await lastValueFrom(
@@ -83,7 +83,7 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
         // Subscribe to message changes
         this.inboxService
             .getScopePagination(messageQuickViewMessages)
-            .pipe(takeUntil(this.unsubscribeAll))
+            .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe((inboxCustomerPagination: GridData<MessageInbox>) =>
             {
                 // Load the messages
@@ -102,10 +102,6 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
      */
     ngOnDestroy(): void
     {
-        // Unsubscribe from all subscriptions
-        this.unsubscribeAll.next(null);
-        this.unsubscribeAll.complete();
-
         // Dispose the overlay
         if (this.overlayRef)
         {
@@ -152,53 +148,6 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     goToMessageCenter(): void
     {
         this.router.navigate(['message', 'message-center']);
-    }
-
-    /**
-     * Toggle read status of the given message
-     */
-    async toggleRead(message: MessageInbox): Promise<void>
-    {
-        console.log('Mark message as read');
-        // Toggle the read status
-        message.isRead = !message.isRead;
-
-        if (message.isReadAtLeastOnce)
-        {
-            await lastValueFrom(
-                this.inboxService
-                    .update({
-                        object: {
-                            id               : message.id,
-                            isRead           : message.isRead,
-                            isReadAtLeastOnce: message.isRead,
-                        },
-                    }),
-            );
-
-            // increment the reads in message
-            lastValueFrom(
-                this.messageService
-                    .update({
-                        object: {
-                            id   : message.id,
-                            reads: 1,
-                        },
-                    }),
-            );
-
-            return;
-        }
-
-        await lastValueFrom(
-            this.inboxService
-                .update({
-                    object: {
-                        id    : message.id,
-                        isRead: message.isRead,
-                    },
-                }),
-        );
     }
 
     /**

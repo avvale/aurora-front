@@ -12,7 +12,7 @@ import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
 import { FuseScrollResetDirective } from '@fuse/directives/scroll-reset';
 import { FuseFindByKeyPipe } from '@fuse/pipes/find-by-key/find-by-key.pipe';
-import { takeUntil } from 'rxjs';
+import { lastValueFrom, takeUntil } from 'rxjs';
 import { MessageCenterService } from '../message-center.service';
 import { messageCustomerCenterMessage } from '../list/message-center-list.component';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -146,7 +146,15 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
                 break;
 
             case 'message::messageCenter.detail.markAsRead':
-
+                await lastValueFrom(
+                    this.inboxService
+                        .readCustomerMessageInbox<MessageInbox>({
+                            inbox: {
+                                id       : action.meta.message.id,
+                                tenantIds: action.meta.message.tenantIds,
+                            },
+                        }),
+                );
                 break;
 
             case 'message::messageCenter.detail.downloadAttachment':

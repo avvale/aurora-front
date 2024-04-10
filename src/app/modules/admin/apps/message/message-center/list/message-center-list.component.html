@@ -142,8 +142,8 @@
                                         class="w-2 h-2 rounded-full"
                                         [matTooltip]="t('message.UnRead')"
                                         [ngClass]="{
-                                            'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': message.read,
-                                            'bg-primary': !message.read
+                                            'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': message.isRead,
+                                            'bg-primary': !message.isRead
                                         }"
                                     >
                                     </span>
@@ -164,7 +164,7 @@
                                         >
                                         </mat-icon>
                                     }
-                                    <span class="leading-4 truncate">{{ message.subject }}</span>
+                                    <span class="leading-4 truncate font-semibold">{{ message.subject }}</span>
                                     <!-- Indicators -->
                                     <div
                                         class="flex ml-auto pl-2"

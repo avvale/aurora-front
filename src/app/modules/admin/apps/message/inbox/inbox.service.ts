@@ -556,12 +556,12 @@ export class InboxService
     readCustomerMessageInbox<T>(
         {
             graphqlStatement = readCustomerMessageInboxMutation,
-            id,
+            inbox = null,
             constraint = {},
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            id?: string;
+            inbox?: MessageUpdateInboxById;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
         } = {},
@@ -572,7 +572,7 @@ export class InboxService
             .mutate({
                 mutation : graphqlStatement,
                 variables: {
-                    id,
+                    inbox,
                     constraint,
                 },
                 context: {
@@ -584,12 +584,12 @@ export class InboxService
     unreadCustomerMessageInbox<T>(
         {
             graphqlStatement = unreadCustomerMessageInboxMutation,
-            id,
+            inbox = null,
             constraint = {},
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            id?: string;
+            inbox?: MessageUpdateInboxById;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
         } = {},
@@ -600,7 +600,7 @@ export class InboxService
             .mutate({
                 mutation : graphqlStatement,
                 variables: {
-                    id,
+                    inbox,
                     constraint,
                 },
                 context: {

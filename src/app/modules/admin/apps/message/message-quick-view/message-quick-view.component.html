@@ -90,14 +90,13 @@
                         <button
                             class="w-6 h-6 min-h-6"
                             mat-icon-button
-                            (click)="toggleRead(message)"
-                            [matTooltip]="message.read ? 'Mark as unread' : 'Mark as read'"
+                            [matTooltip]="message.isRead ? t('message.UnRead') : t('message.Read')"
                         >
                             <span
                                 class="w-2 h-2 rounded-full"
                                 [ngClass]="{
-                                    'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': message.read,
-                                    'bg-primary': !message.read
+                                    'bg-gray-400 dark:bg-gray-500 sm:opacity-0 sm:group-hover:opacity-100': message.isRead,
+                                    'bg-primary': !message.isRead
                                 }"
                             >
                             </span>

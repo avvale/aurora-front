@@ -90,15 +90,15 @@
         <!-- Threads -->
         <div
             class="flex flex-col flex-auto shrink-0 lg:shrink p-3 lg:overflow-y-auto bg-gray-100 dark:bg-transparent"
-            fuseScrollReset>
-
+            fuseScrollReset
+        >
             <!-- Thread -->
             <div class="flex flex-col flex-0 w-full shadow rounded-2xl overflow-hidden bg-card dark:bg-black dark:bg-opacity-10">
 
                 <div class="flex flex-col py-8 px-6">
 
                     <!-- Content -->
-                    <div class="ql-container ql-snow shadow-none border-none">
+                    <div class="ql-container ql-snow shadow-none border-none min-h-12 text-base">
                         <div
                             class="ql-editor p-0"
                             [innerHTML]="message().body"
