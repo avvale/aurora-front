@@ -12,7 +12,7 @@ import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
 import { FuseScrollResetDirective } from '@fuse/directives/scroll-reset';
 import { FuseFindByKeyPipe } from '@fuse/pipes/find-by-key/find-by-key.pipe';
-import { lastValueFrom, takeUntil } from 'rxjs';
+import { first, lastValueFrom, takeUntil } from 'rxjs';
 import { MessageCenterService } from '../message-center.service';
 import { messageCustomerCenterMessage } from '../list/message-center-list.component';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -37,11 +37,14 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
     messageCenterService = inject(MessageCenterService);
     downloadService = inject(DownloadService);
 
-    /**
-     * On init
-     */
+    // this method will be called after the ngOnInit of
+    // the parent class you can use instead of ngOnInit
     init(): void
     {
+        // we don't initialize the subscriptions in the handleAction because
+        // the view is not destroyed when we change the message, so
+        // subscriptions are accumulated and executed all at once.
+
         this.inboxService
             .getScopeInbox(messageCustomerCenterMessage)
             .pipe(takeUntil(this.unsubscribeAll$))
@@ -52,9 +55,15 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
                 // set selected message, this will be tagged in list component
                 this.messageCenterService.selectedMessageSubject$.next(message);
 
+                // clear previous timeout
+                if (this.messageCenterService.currentTimeoutId)
+                {
+                    clearTimeout(this.messageCenterService.currentTimeoutId);
+                }
+
                 if (!message.isRead)
                 {
-                    setTimeout(() =>
+                    this.messageCenterService.currentTimeoutId = setTimeout(() =>
                         this.actionService.action({
                             id          : 'message::messageCenter.detail.markAsRead',
                             isViewAction: false,
@@ -67,35 +76,11 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
             });
     }
 
-    /**
-     * Toggle unread
-     *
-     * @param unread
-     */
-    toggleUnread(unread: boolean): void
-    {
-        // Update the mail object
-        //this.mail.unread = unread;
-
-        // Update the mail on the server
-        // this._mailboxService.updateMail(this.mail.id, { unread: this.mail.unread }).subscribe();
-    }
-
-    /**
-     * Reply
-     */
-    reply(): void
-    {
-    }
-
     async handleAction(action: Action): Promise<void>
     {
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
-            case 'message::messageCenter.detail.show':
-                break;
-
             case 'message::messageCenter.detail.delete':
                 const deleteDialogRef = this.confirmationService.open({
                     title  : `${this.translocoService.translate('Delete')} ${this.translocoService.translate('message.Message')}`,
@@ -160,6 +145,11 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
                     .toggleMessageAsReadSubject$
                     .next(action.meta.message);
 
+                // update current message
+                this.message.set({
+                    ...this.message(),
+                    isRead: true,
+                });
                 break;
 
             case 'message::messageCenter.detail.markAsUnRead':
@@ -177,6 +167,11 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
                     .toggleMessageAsReadSubject$
                     .next(action.meta.message);
 
+                // update current message
+                this.message.set({
+                    ...this.message(),
+                    isRead: false,
+                });
                 break;
 
             case 'message::messageCenter.detail.downloadAttachment':

@@ -43,13 +43,7 @@ export const messageCenterShowResolver: ResolveFn<{
     state: RouterStateSnapshot,
 ) =>
 {
-    const actionService = inject(ActionService);
     const inboxService = inject(InboxService);
-
-    actionService.action({
-        id          : 'message::messageCenter.detail.show',
-        isViewAction: true,
-    });
 
     return inboxService
         .findCustomerMessageInbox({

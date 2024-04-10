@@ -7,7 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
-import { Action, BreadcrumbComponent, ColumnConfig, ColumnDataType, Crumb, GridData, GridFiltersStorageService, GridState, GridStateService, QueryStatementHandler, TitleComponent, ViewBaseComponent } from '@aurora';
+import { Action, BreadcrumbComponent, ColumnConfig, ColumnDataType, Crumb, GridFiltersStorageService, GridState, GridStateService, QueryStatementHandler, TitleComponent, ViewBaseComponent } from '@aurora';
 import { TranslocoModule } from '@ngneat/transloco';
 import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 import { MessageCenterService } from '../message-center.service';
@@ -46,7 +46,6 @@ export class MessageCenterListComponent extends ViewBaseComponent
         { translation: 'App', routerLink: ['/']},
         { translation: 'message.MessageCenter' },
     ];
-    gridData$: Observable<GridData<MessageInbox>>;
     gridState: GridState = {};
     columnsConfig$: Observable<ColumnConfig[]>;
     originColumnsConfig: ColumnConfig[] = [
@@ -74,13 +73,17 @@ export class MessageCenterListComponent extends ViewBaseComponent
         super();
     }
 
-    /**
-     * On init
-     */
+    // this method will be called after the ngOnInit of
+    // the parent class you can use instead of ngOnInit
     init(): void
     {
+        // we don't initialize the subscriptions in the handleAction because
+        // the view is not destroyed when we change the message, so
+        // subscriptions are accumulated and executed all at once.
+
         // Subscribe to message changes
-        this.inboxService.getScopePagination(messageCustomerCenterMessage)
+        this.inboxService
+            .getScopePagination(messageCustomerCenterMessage)
             .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe(inboxCustomerPagination =>
             {
@@ -90,7 +93,8 @@ export class MessageCenterListComponent extends ViewBaseComponent
             });
 
         // Subscribe to selected message
-        this.messageCenterService.selectedMessage$
+        this.messageCenterService
+            .selectedMessage$
             .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe((selectedMessage: MessageInbox) =>
             {
@@ -103,7 +107,14 @@ export class MessageCenterListComponent extends ViewBaseComponent
             .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe((toggleMessage: MessageInbox) =>
             {
-                console.log(toggleMessage);
+                const messages = this.messages();
+                this.messages.set(
+                    messages.map(message =>
+                    {
+                        if (message.id === toggleMessage.id) message.isRead = !message.isRead;
+                        return message;
+                    }),
+                );
             });
     }
 
@@ -112,10 +123,6 @@ export class MessageCenterListComponent extends ViewBaseComponent
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
-            case 'message::messageCenter.list.view':
-                this.gridData$ = this.inboxService.getScopePagination(messageCustomerCenterMessage);
-                break;
-
             case 'message::messageCenter.list.pagination':
                 this.currentPage.set(action.meta.query.offset / this.limit);
 

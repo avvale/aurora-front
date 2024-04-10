@@ -34,7 +34,8 @@
                     class="ml-2"
                     mat-icon-button
                     [ngClass]="{ 'ml-2': message().isImportant, 'ml-auto': !message().isImportant }"
-                    [matMenuTriggerFor]="mailMenu">
+                    [matMenuTriggerFor]="mailMenu"
+                >
                     <mat-icon [svgIcon]="'heroicons_outline:ellipsis-vertical'"></mat-icon>
                 </button>
                 <mat-menu #mailMenu="matMenu">
@@ -207,7 +208,7 @@
                 [svgIcon]="'heroicons_outline:envelope'"
             >
             </mat-icon>
-            <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">Select a message to read</div>
+            <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">{{ t('message.SelectAMessageToRead') }}</div>
         </div>
     }
 </div>

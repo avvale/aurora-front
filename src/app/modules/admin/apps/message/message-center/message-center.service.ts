@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { MessageInbox } from '../message.types';
 
 @Injectable({
@@ -9,7 +9,8 @@ import { MessageInbox } from '../message.types';
 export class MessageCenterService
 {
     selectedMessageSubject$: BehaviorSubject<MessageInbox> = new BehaviorSubject(null);
-    toggleMessageAsReadSubject$: BehaviorSubject<MessageInbox> = new BehaviorSubject(null);
+    toggleMessageAsReadSubject$: Subject<MessageInbox> = new Subject();
+    currentTimeoutId: ReturnType<typeof setTimeout>;
 
     get selectedMessage$(): Observable<MessageInbox>
     {
