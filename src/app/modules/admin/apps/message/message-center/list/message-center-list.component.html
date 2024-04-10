@@ -18,7 +18,7 @@
     </div>
     <!-- / Header -->
 
-    <div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+    <div class="relative flex flex-auto w-full h-full bg-card dark:bg-transparent">
 
         <!-- mails list -->
         @if (countMessages() > 0)
@@ -118,7 +118,7 @@
                 <!-- Mail list -->
                 <div
                     class="overflow-y-auto"
-                    #mailList
+                    #messageList
                 >
                     <!-- Item loop -->
                     @for (message of messages(); track message.id; let i = $index)

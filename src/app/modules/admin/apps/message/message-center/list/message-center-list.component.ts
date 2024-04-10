@@ -1,5 +1,5 @@
 import { AsyncPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, ViewEncapsulation, WritableSignal, computed, signal } from '@angular/core';
+import { Component, ElementRef, ViewChild, ViewEncapsulation, WritableSignal, computed, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -29,7 +29,8 @@ export const messageCustomerCenterMessage = 'message::customerCenterMessage';
 })
 export class MessageCenterListComponent extends ViewBaseComponent
 {
-    // ---- customizations ----
+    @ViewChild('messageList') messageList: ElementRef;
+
     limit = 10;
     mailsLoading = false;
     currentPage: WritableSignal<number> = signal(0);
