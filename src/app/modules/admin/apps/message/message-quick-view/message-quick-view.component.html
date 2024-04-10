@@ -94,6 +94,7 @@
                         <button
                             class="w-6 h-6 min-h-6"
                             mat-icon-button
+                            [routerLink]="['message', 'message-center', message.id]"
                             [matTooltip]="message.isRead ? t('message.Read') : t('message.UnRead')"
                         >
                             <span
@@ -106,18 +107,21 @@
                             </span>
                         </button>
                         <!-- Remove -->
-                        <button
-                            class="w-6 h-6 min-h-6 sm:opacity-0 sm:group-hover:opacity-100"
-                            mat-icon-button
-                            (click)="deleteMessage(message)"
-                            [matTooltip]="'Remove'"
-                        >
-                            <mat-icon
-                                class="icon-size-4"
-                                [svgIcon]="'heroicons_solid:x-mark'"
+                        @if (message.isRead)
+                        {
+                            <button
+                                class="w-6 h-6 min-h-6 sm:opacity-0 sm:group-hover:opacity-100"
+                                mat-icon-button
+                                (click)="deleteMessage(message)"
+                                [matTooltip]="t('Remove')"
                             >
-                            </mat-icon>
-                        </button>
+                                <mat-icon
+                                    class="icon-size-4"
+                                    [svgIcon]="'heroicons_solid:x-mark'"
+                                >
+                                </mat-icon>
+                            </button>
+                        }
                     </div>
                 </div>
 

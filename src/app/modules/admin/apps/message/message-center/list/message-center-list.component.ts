@@ -116,6 +116,18 @@ export class MessageCenterListComponent extends ViewBaseComponent
                     }),
                 );
             });
+
+        // Subscribe to message as deleted
+        this.messageCenterService
+            .deletedMessage$
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe((deletedMessage: MessageInbox) =>
+            {
+                const messages = this.messages();
+                this.messages.set(
+                    messages.filter(message => message.id !== deletedMessage.id),
+                );
+            });
     }
 
     async handleAction(action: Action): Promise<void>

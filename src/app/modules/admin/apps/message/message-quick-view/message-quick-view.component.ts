@@ -100,6 +100,19 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
                     }),
                 );
             });
+
+        // Subscribe to message as deleted
+        this.messageCenterService
+            .deletedMessage$
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe((deletedMessage: MessageInbox) =>
+            {
+                const messages = this.messages();
+                this.messages.set(
+                    messages.filter(message => message.id !== deletedMessage.id),
+                );
+            });
+
     }
 
     /**
@@ -164,9 +177,7 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
      */
     deleteMessage(message: MessageInbox): void
     {
-        console.log('deleteMessage');
-        // Delete the message
-        // this.messagesService.delete(message.id).subscribe();
+        this.messageCenterService.deleteMessage(message);
     }
 
     // -----------------------------------------------------------------------------------------------------

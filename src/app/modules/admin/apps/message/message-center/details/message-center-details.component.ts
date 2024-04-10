@@ -12,12 +12,12 @@ import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
 import { FuseScrollResetDirective } from '@fuse/directives/scroll-reset';
 import { FuseFindByKeyPipe } from '@fuse/pipes/find-by-key/find-by-key.pipe';
-import { first, lastValueFrom, takeUntil } from 'rxjs';
+import { lastValueFrom, takeUntil } from 'rxjs';
 import { MessageCenterService } from '../message-center.service';
 import { messageCustomerCenterMessage } from '../list/message-center-list.component';
 import { TranslocoModule } from '@ngneat/transloco';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Action, DownloadService, ViewBaseComponent, log } from '@aurora';
+import { Action, DownloadService, ViewBaseComponent } from '@aurora';
 
 @Component({
     selector     : 'message-center-details',
@@ -74,6 +74,15 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
                     , 4000);
                 }
             });
+
+        // Subscribe to message as deleted
+        this.messageCenterService
+            .deletedMessage$
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe((deletedMessage: MessageInbox) =>
+            {
+                this.message().id === deletedMessage.id && this.router.navigate(['message', 'message-center']);
+            });
     }
 
     async handleAction(action: Action): Promise<void>
@@ -82,52 +91,7 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
         switch (action?.id)
         {
             case 'message::messageCenter.detail.delete':
-                const deleteDialogRef = this.confirmationService.open({
-                    title  : `${this.translocoService.translate('Delete')} ${this.translocoService.translate('message.Message')}`,
-                    message: this.translocoService.translate('DeletionWarning', { entity: this.translocoService.translate('message.Message') }),
-                    icon   : {
-                        show : true,
-                        name : 'heroicons_outline:exclamation-triangle',
-                        color: 'warn',
-                    },
-                    actions: {
-                        confirm: {
-                            show : true,
-                            label: this.translocoService.translate('Remove'),
-                            color: 'warn',
-                        },
-                        cancel: {
-                            show : true,
-                            label: this.translocoService.translate('Cancel'),
-                        },
-                    },
-                    dismissible: true,
-                });
-
-                deleteDialogRef
-                    .afterClosed()
-                    .subscribe(async result =>
-                    {
-                        if (result === 'confirmed')
-                        {
-                            try
-                            {
-                                // TODO, create a deleteById method in InboxService only for user scope
-                               /*  await lastValueFrom(
-                                    this.inboxService
-                                        .deleteById<MessageInbox>({
-                                            id: action.meta.message.id,
-                                        }),
-                                ); */
-
-                                this.router.navigate(['message', 'message-center']);
-                            }
-                            catch(error)
-                            {
-                                log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
-                            }
-                        }
-                    });
+                this.messageCenterService.deleteMessage(this.message());
                 break;
 
             case 'message::messageCenter.detail.markAsRead':
