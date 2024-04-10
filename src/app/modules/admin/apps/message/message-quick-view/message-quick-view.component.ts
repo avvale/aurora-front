@@ -1,7 +1,7 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { DatePipe, NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, WritableSignal, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, WritableSignal, computed, inject, signal } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -33,6 +33,7 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     @ViewChild('messagesPanel') private messagesPanel: TemplateRef<any>;
 
     messages: WritableSignal<MessageInbox[]> = signal([]);
+    calculateUnreadCount = computed(() => this.messages().filter(message => !message.isRead).length);
     inboxCustomerPagination: GridData<MessageInbox>;
     unreadCount: number = 0;
 
@@ -231,15 +232,5 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
         {
             this.overlayRef.detach();
         });
-    }
-
-    /**
-     * Calculate the unread count
-     *
-     * @private
-     */
-    private calculateUnreadCount(): void
-    {
-        this.unreadCount = this.messages().filter(message => !message.isRead).length;
     }
 }
