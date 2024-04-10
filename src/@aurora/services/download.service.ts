@@ -51,10 +51,13 @@ export class DownloadService
             {
                 log('[DEBUG] - Download attachment: ', data);
 
-                saveAs(
-                    base64ToBlob(data['coreGetBase64FromFile']),
-                    originalFilename || filename,
-                );
+                if (data['coreGetBase64FromFile'])
+                {
+                    saveAs(
+                        base64ToBlob(data['coreGetBase64FromFile']),
+                        originalFilename || filename,
+                    );
+                }
             });
     }
 }
