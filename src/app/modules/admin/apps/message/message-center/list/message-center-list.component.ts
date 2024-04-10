@@ -89,12 +89,21 @@ export class MessageCenterListComponent extends ViewBaseComponent
                 this.totalMessages.set(inboxCustomerPagination.total);
             });
 
-        // Selected message
+        // Subscribe to selected message
         this.messageCenterService.selectedMessage$
             .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe((selectedMessage: MessageInbox) =>
             {
                 this.selectedMessage.set(selectedMessage);
+            });
+
+        // Subscribe to toggle message as read
+        this.messageCenterService
+            .toggleMessageAsRead$
+            .pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe((toggleMessage: MessageInbox) =>
+            {
+                console.log(toggleMessage);
             });
     }
 

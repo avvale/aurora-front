@@ -43,16 +43,34 @@
                     {
                         <button
                             mat-menu-item
-                            (click)="toggleUnread(true)">
+                            (click)="
+                                actionService.action({
+                                    id          : 'message::messageCenter.detail.markAsUnRead',
+                                    isViewAction: false,
+                                    meta        : {
+                                        message: message(),
+                                    },
+                                })
+                            "
+                        >
                             <mat-icon [svgIcon]="'heroicons_outline:envelope'"></mat-icon>
-                            <span>Mark as unread</span>
+                            <span>{{ t('message.MarkAsUnRead')}}</span>
                         </button>
                     }
                     @else
                     {
                         <button
                             mat-menu-item
-                            (click)="toggleUnread(false)">
+                            (click)="
+                                actionService.action({
+                                    id          : 'message::messageCenter.detail.markAsRead',
+                                    isViewAction: false,
+                                    meta        : {
+                                        message: message(),
+                                    },
+                                })
+                            "
+                        >
                             <mat-icon [svgIcon]="'heroicons_outline:envelope-open'"></mat-icon>
                             <span>{{ t('message.MarkAsRead') }}</span>
                         </button>

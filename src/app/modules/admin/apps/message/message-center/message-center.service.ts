@@ -9,29 +9,16 @@ import { MessageInbox } from '../message.types';
 export class MessageCenterService
 {
     selectedMessageSubject$: BehaviorSubject<MessageInbox> = new BehaviorSubject(null);
+    toggleMessageAsReadSubject$: BehaviorSubject<MessageInbox> = new BehaviorSubject(null);
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Getter for selectedMessage
-     */
     get selectedMessage$(): Observable<MessageInbox>
     {
         return this.selectedMessageSubject$.asObservable();
     }
 
-    // OLD
-    private _mailsLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-
-    /**
-     * Getter for mails loading
-     */
-    get mailsLoading$(): Observable<boolean>
+    get toggleMessageAsRead$(): Observable<MessageInbox>
     {
-        return this._mailsLoading.asObservable();
+        return this.toggleMessageAsReadSubject$.asObservable();
     }
 
     resetSelectedMessage(): void

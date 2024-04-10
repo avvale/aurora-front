@@ -155,6 +155,28 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
                             },
                         }),
                 );
+
+                this.messageCenterService
+                    .toggleMessageAsReadSubject$
+                    .next(action.meta.message);
+
+                break;
+
+            case 'message::messageCenter.detail.markAsUnRead':
+                await lastValueFrom(
+                    this.inboxService
+                        .unreadCustomerMessageInbox<MessageInbox>({
+                            inbox: {
+                                id       : action.meta.message.id,
+                                tenantIds: action.meta.message.tenantIds,
+                            },
+                        }),
+                );
+
+                this.messageCenterService
+                    .toggleMessageAsReadSubject$
+                    .next(action.meta.message);
+
                 break;
 
             case 'message::messageCenter.detail.downloadAttachment':

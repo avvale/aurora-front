@@ -50,13 +50,16 @@
         <!-- Content -->
         <div class="relative flex flex-col flex-auto sm:max-h-120 divide-y overflow-y-auto bg-card">
             <!-- Messages -->
-            <ng-container *ngFor="let message of messages; trackBy: trackByFn">
+
+            @for (message of messages; track message.id)
+            {
                 <div
                     class="flex group hover:bg-gray-50 dark:hover:bg-black dark:hover:bg-opacity-5"
-                    [ngClass]="{'unread': !message.isRead}">
-
+                    [ngClass]="{'unread': !message.isRead}"
+                >
                     <!-- Message with a link -->
-                    <ng-container *ngIf="message.link">
+                    @if (message.link)
+                    {
                         @if (message.isInternalLink)
                         {
                             <!-- Router links -->
@@ -75,14 +78,15 @@
                                 <ng-container *ngTemplateOutlet="messageContent"></ng-container>
                             </a>
                         }
-                    </ng-container>
+                    }
 
                     <!-- Message without a link -->
-                    <ng-container *ngIf="!message.link">
+                    @if (!message.link)
+                    {
                         <div class="flex flex-auto py-5 pl-6">
                             <ng-container *ngTemplateOutlet="messageContent"></ng-container>
                         </div>
-                    </ng-container>
+                    }
 
                     <!-- Actions -->
                     <div class="relative flex flex-col my-5 mr-6 ml-2">
@@ -90,7 +94,7 @@
                         <button
                             class="w-6 h-6 min-h-6"
                             mat-icon-button
-                            [matTooltip]="message.isRead ? t('message.UnRead') : t('message.Read')"
+                            [matTooltip]="message.isRead ? t('message.Read') : t('message.UnRead')"
                         >
                             <span
                                 class="w-2 h-2 rounded-full"
@@ -171,7 +175,7 @@
                         </div>
                     </div>
                 </ng-template>
-            </ng-container>
+            }
 
             <!-- No messages -->
             @if (!messages || !messages.length)
