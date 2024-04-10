@@ -12,12 +12,12 @@ import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
 import { FuseScrollResetDirective } from '@fuse/directives/scroll-reset';
 import { FuseFindByKeyPipe } from '@fuse/pipes/find-by-key/find-by-key.pipe';
-import { lastValueFrom, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { MessageCenterService } from '../message-center.service';
 import { messageCustomerCenterMessage } from '../list/message-center-list.component';
 import { TranslocoModule } from '@ngneat/transloco';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Action, ViewBaseComponent, log } from '@aurora';
+import { Action, DownloadService, ViewBaseComponent, log } from '@aurora';
 
 @Component({
     selector     : 'message-center-details',
@@ -35,6 +35,7 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
     message: WritableSignal<MessageInbox> = signal(null);
     inboxService = inject(InboxService);
     messageCenterService = inject(MessageCenterService);
+    downloadService = inject(DownloadService);
 
     /**
      * On init
@@ -145,7 +146,16 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
                 break;
 
             case 'message::messageCenter.detail.markAsRead':
-                
+
+                break;
+
+            case 'message::messageCenter.detail.downloadAttachment':
+                this.downloadService
+                    .download({
+                        relativePathSegments: action.meta.attachment.relativePathSegments,
+                        filename            : action.meta.attachment.filename,
+                        originalFilename    : action.meta.attachment.originFilename,
+                    });
                 break;
         }
     }

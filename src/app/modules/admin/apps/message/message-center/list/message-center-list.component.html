@@ -57,7 +57,7 @@
                             mat-icon-button
                             [disabled]="previousOffset() < 0"
                             (click)="
-                                handleAction({
+                                actionService.action({
                                     id: 'message::messageCenter.list.pagination',
                                     isViewAction: false,
                                     meta: {
@@ -83,7 +83,7 @@
                             mat-icon-button
                             [disabled]="nextOffset() >= totalMessages()"
                             (click)="
-                                handleAction({
+                                actionService.action({
                                     id: 'message::messageCenter.list.pagination',
                                     isViewAction: false,
                                     meta: {

@@ -62,7 +62,7 @@
                     <button
                         mat-menu-item
                         (click)="
-                            handleAction({
+                            actionService.action({
                                 id: 'message::messageCenter.detail.delete',
                                 isViewAction: false,
                                 meta: {
@@ -131,7 +131,18 @@
                                         }
                                         @if(true)
                                         {
-                                            <div class="flex items-center justify-center w-10 h-10 rounded-md overflow-hidden bg-primary-100">
+                                            <div
+                                                class="flex items-center justify-center w-10 h-10 rounded-md overflow-hidden bg-primary-100 cursor-pointer"
+                                                (click)="
+                                                    actionService.action({
+                                                        id: 'message::messageCenter.detail.downloadAttachment',
+                                                        isViewAction: false,
+                                                        meta: {
+                                                            attachment
+                                                        }
+                                                    })
+                                                "
+                                            >
                                                 <div class="flex items-center justify-center text-sm font-semibold text-primary-500-800">
                                                     {{ attachment.mimetype.split('/')[1].trim().toUpperCase() }}
                                                 </div>

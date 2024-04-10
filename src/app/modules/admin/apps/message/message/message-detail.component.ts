@@ -7,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { IamAccount, IamTenant } from '@apps/iam';
 import { MessageService } from '@apps/message/message';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
-import { Action, ColumnConfig, ColumnDataType, Crumb, defaultDetailImports, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, log, mapActions, QueryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
+import { Action, ColumnConfig, ColumnDataType, Crumb, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, log, mapActions, QueryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { Observable, ReplaySubject, lastValueFrom, takeUntil } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -157,6 +157,7 @@ export class MessageDetailComponent extends ViewDetailComponent
         private readonly messageService: MessageService,
         private readonly selectSearchService: SelectSearchService,
         private readonly accountService: AccountService,
+        private readonly downloadService: DownloadService,
     )
     {
         super();
@@ -733,6 +734,15 @@ export class MessageDetailComponent extends ViewDetailComponent
                         message: action.meta.message,
                     },
                 });
+                break;
+
+            case 'message::message.detail.downloadAttachment':
+                this.downloadService
+                    .download({
+                        relativePathSegments: action.meta.attachment.relativePathSegments,
+                        filename            : action.meta.attachment.filename,
+                        originalFilename    : action.meta.attachment.originFilename,
+                    });
                 break;
 
             case 'message::message.detail.refresh':
