@@ -111,3 +111,6 @@ additionalApis:
   - path: message/message/remove-attachment
     resolverType: mutation
     httpMethod: post
+  - path: message/message/count-total-recipients
+    resolverType: query
+    httpMethod: post

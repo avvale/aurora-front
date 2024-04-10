@@ -23,7 +23,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message-list.component.ts",
-            "integrity": "sha1:340fc1f8fb7a72a3739b6c61c125efb33131766c"
+            "integrity": "sha1:d6b39cfc4d2610984b6e487b3a0a9acc111e183a"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.columns-config.ts",
@@ -31,7 +31,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.graphql.ts",
-            "integrity": "sha1:16d290f8937e79268a0dc6a570f4c4e57a01927f"
+            "integrity": "sha1:20b36834b68f3d7c47a4d0beabc13172754a6716"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.resolvers.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.service.ts",
-            "integrity": "sha1:cd1378a8afbbce1b2268672d333bbd1fc75d7eae"
+            "integrity": "sha1:c723ad827e481c6253717627a0a7a382a1d8f8ea"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/index.ts",

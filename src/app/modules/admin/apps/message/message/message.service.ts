@@ -4,7 +4,7 @@ import { IamAccount, IamTag, IamTenant } from '@apps/iam';
 import { AccountService } from '@apps/iam/account';
 import { TagService } from '@apps/iam/tag';
 import { TenantService } from '@apps/iam/tenant';
-import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, getRelations, paginationQuery, removeAttachmentMessageMutation, updateByIdMutation, updateMutation } from '@apps/message/message';
+import { countTotalRecipientsMessageQuery, createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, getRelations, paginationQuery, removeAttachmentMessageMutation, updateByIdMutation, updateMutation } from '@apps/message/message';
 import { MessageCreateMessage, MessageMessage, MessageUpdateMessageById, MessageUpdateMessages } from '@apps/message/message.types';
 import { ClientService } from '@apps/o-auth/client';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
@@ -474,6 +474,53 @@ export class MessageService
                     headers,
                 },
             });
+    }
+
+    // Queries additionalApis
+    countTotalRecipientsMessage(
+        {
+            graphqlStatement = countTotalRecipientsMessageQuery,
+            tenantRecipientIds,
+            scopeRecipients,
+            tagRecipients,
+            accountRecipientIds,
+            constraint = {},
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            tenantRecipientIds?: string[];
+            scopeRecipients?: string[];
+            tagRecipients?: string[];
+            accountRecipientIds?: string[];
+            constraint?: QueryStatement;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<{ messageCountTotalRecipientsMessage: number; }>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{ messageCountTotalRecipientsMessage: number; }>({
+                query    : graphqlStatement,
+                variables: {
+                    tenantRecipientIds,
+                    scopeRecipients,
+                    tagRecipients,
+                    accountRecipientIds,
+                    constraint,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data),
+                tap(data =>
+                {
+                    console.log('countTotalRecipientsMessage', data.messageCountTotalRecipientsMessage);
+                }),
+            );
     }
 
     // Mutation additionalApis

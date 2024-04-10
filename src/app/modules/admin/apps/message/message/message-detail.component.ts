@@ -9,7 +9,7 @@ import { MessageService } from '@apps/message/message';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
 import { Action, ColumnConfig, ColumnDataType, Crumb, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, log, mapActions, QueryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
-import { Observable, ReplaySubject, lastValueFrom, takeUntil } from 'rxjs';
+import { Observable, ReplaySubject, combineLatest, lastValueFrom, skip, startWith, takeUntil } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { AccountService, accountColumnsConfig } from '@apps/iam/account';
 import { QuillEditorComponent } from 'ngx-quill';
@@ -44,6 +44,7 @@ export class MessageDetailComponent extends ViewDetailComponent
     tagRecipientFilterCtrl: FormControl = new FormControl<string>('');
     filteredTagRecipients$: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
     showTenantsBelongsInput: WritableSignal<boolean> = signal(true);
+    totalRecipients: WritableSignal<number> = signal(0);
     messageMessageStatus = MessageMessageStatus;
     quillModules: any = {
         toolbar: [
@@ -173,6 +174,34 @@ export class MessageDetailComponent extends ViewDetailComponent
         this.initTenantRecipientsFilter(this.activatedRoute.snapshot.data.data.iamGetTenants);
         this.initScopeRecipientsFilter(this.activatedRoute.snapshot.data.data.oAuthFindClientById.scopeOptions);
         this.initTagRecipientsFilter(this.activatedRoute.snapshot.data.data.iamGetTags);
+
+
+        this.fg.get('tenantRecipientIds').valueChanges.subscribe(console.log);
+
+        combineLatest([
+            this.fg.get('tenantRecipientIds').valueChanges.pipe(startWith([])),
+            this.fg.get('scopeRecipients').valueChanges.pipe(startWith([])),
+            this.fg.get('tagRecipients').valueChanges.pipe(startWith([])),
+            this.fg.get('accountRecipientIds').valueChanges.pipe(startWith([])),
+        ])
+            .pipe(
+                takeUntil(this.unsubscribeAll$),
+                skip(1),
+            )
+            .subscribe(([tenantRecipientIds, scopeRecipients, tagRecipients, accountRecipientIds]) =>
+            {
+                this.actionService
+                    .action({
+                        id          : 'message::message.detail.countTotalRecipients',
+                        isViewAction: false,
+                        meta        : {
+                            tenantRecipientIds,
+                            scopeRecipients,
+                            tagRecipients,
+                            accountRecipientIds,
+                        },
+                    });
+            });
     }
 
     initTenantBelongsFilter(tenants: IamTenant[]): void
@@ -447,6 +476,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                     {
                         this.managedObject = item;
                         this.fg.patchValue(item);
+                        this.totalRecipients.set(item.totalRecipients);
                     });
 
                 /* #region edit action to manage MessagesAccounts grid-select-multiple-elements */
@@ -755,6 +785,19 @@ export class MessageDetailComponent extends ViewDetailComponent
                 );
                 break;
                 /* #endregion actions to manage attachments */
+
+            case 'message::message.detail.countTotalRecipients':
+                const response = await lastValueFrom(
+                    this.messageService
+                        .countTotalRecipientsMessage({
+                            tenantRecipientIds : action.meta.tenantRecipientIds.length === 0 ? undefined : action.meta.tenantRecipientIds,
+                            scopeRecipients    : action.meta.scopeRecipients.length === 0 ? undefined : action.meta.scopeRecipients,
+                            tagRecipients      : action.meta.tagRecipients.length === 0 ? undefined : action.meta.tagRecipients,
+                            accountRecipientIds: action.meta.accountRecipientIds.length === 0 ? undefined : action.meta.accountRecipientIds,
+                        }),
+                );
+                this.totalRecipients.set(response.messageCountTotalRecipientsMessage);
+                break;
         }
     }
 }

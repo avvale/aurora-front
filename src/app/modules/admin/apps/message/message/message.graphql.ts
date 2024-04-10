@@ -215,6 +215,25 @@ export const deleteMutation = gql`
     }
 `;
 
+// Queries additionalApis
+export const countTotalRecipientsMessageQuery = gql`
+    query MessageCountTotalRecipientsMessage (
+        $tenantRecipientIds: [ID]
+        $scopeRecipients: [GraphQLString]
+        $tagRecipients: [GraphQLString]
+        $accountRecipientIds: [ID]
+        $constraint: QueryStatement
+    ) {
+        messageCountTotalRecipientsMessage (
+            tenantRecipientIds: $tenantRecipientIds
+            scopeRecipients: $scopeRecipients
+            tagRecipients: $tagRecipients
+            accountRecipientIds: $accountRecipientIds
+            constraint: $constraint
+        )
+    }
+`;
+
 // Mutation additionalApis
 export const removeAttachmentMessageMutation = gql`
     mutation MessageRemoveAttachmentMessage (
