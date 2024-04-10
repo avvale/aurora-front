@@ -478,6 +478,8 @@
                             <au-file-upload
                                 class="col-12"
                                 [isMultiple]="true"
+                                [dropLabel]="t('DropFilesHere')"
+                                [browseLabel]="t('BrowseLabel')"
                                 (files)="
                                     actionService.action({
                                         id          : 'message::message.detail.addAttachment',
