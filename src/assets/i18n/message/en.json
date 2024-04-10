@@ -22,6 +22,7 @@
     "IsReadAtLeastOnce": "IsReadAtLeastOnce",
     "Link": "Link",
     "MarkAsRead": "Mark as read",
+    "MarkAsUnRead": "Mark as unread",
     "Message": "Message",
     "MessageCenter": "Message center",
     "MessageId": "MessageId",
