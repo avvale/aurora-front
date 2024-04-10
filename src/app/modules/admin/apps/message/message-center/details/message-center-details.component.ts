@@ -85,15 +85,19 @@ export class MessageCenterDetailsComponent extends ViewBaseComponent
             });
     }
 
+    /**
+     * Delete the given message
+     */
+    deleteMessage(message: MessageInbox): void
+    {
+        this.messageCenterService.deleteMessage(message);
+    }
+
     async handleAction(action: Action): Promise<void>
     {
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
-            case 'message::messageCenter.detail.delete':
-                this.messageCenterService.deleteMessage(this.message());
-                break;
-
             case 'message::messageCenter.detail.markAsRead':
                 await lastValueFrom(
                     this.inboxService

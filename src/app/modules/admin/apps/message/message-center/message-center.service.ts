@@ -1,10 +1,11 @@
 
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject, lastValueFrom } from 'rxjs';
 import { MessageInbox } from '../message.types';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { TranslocoService } from '@ngneat/transloco';
 import { log } from '@aurora';
+import { InboxService } from '../inbox';
 
 @Injectable({
     providedIn: 'root',
@@ -17,6 +18,7 @@ export class MessageCenterService
     currentTimeoutId: ReturnType<typeof setTimeout>;
     confirmationService = inject(FuseConfirmationService);
     translocoService = inject(TranslocoService);
+    inboxService = inject(InboxService);
 
     get selectedMessage$(): Observable<MessageInbox>
     {
@@ -71,16 +73,14 @@ export class MessageCenterService
                     try
                     {
                         // TODO, create a deleteById method in InboxService only for user scope
-                        /*  await lastValueFrom(
+                        await lastValueFrom(
                             this.inboxService
                                 .deleteById<MessageInbox>({
-                                    id: action.meta.message.id,
+                                    id: message.id,
                                 }),
-                        ); */
+                        );
 
                         this.deletedMessageSubject$.next(message);
-
-                       // this.router.navigate(['message', 'message-center']);
                     }
                     catch(error)
                     {

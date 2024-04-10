@@ -128,6 +128,7 @@ export class MessageCenterListComponent extends ViewBaseComponent
                 this.messages.set(
                     messages.filter(message => message.id !== deletedMessage.id),
                 );
+                this.totalMessages.set(this.totalMessages() - 1);
             });
     }
 

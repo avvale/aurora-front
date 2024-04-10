@@ -80,15 +80,7 @@
                     <!-- Delete -->
                     <button
                         mat-menu-item
-                        (click)="
-                            actionService.action({
-                                id: 'message::messageCenter.detail.delete',
-                                isViewAction: false,
-                                meta: {
-                                    message: message()
-                                }
-                            })
-                        "
+                        (click)="deleteMessage(message())"
                     >
                         <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                         <span>{{ t('Delete') }}</span>
