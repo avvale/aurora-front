@@ -46,7 +46,7 @@ export class MessageDetailComponent extends ViewDetailComponent
     filteredTagRecipients$: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
     showTenantsBelongsInput: WritableSignal<boolean> = signal(true);
     totalRecipients: WritableSignal<number> = signal(0);
-    status: Signal<MessageMessageStatus> = computed(() => this.managedObject() ? this.managedObject().status : this.fg.get('status').value);
+    status: Signal<string> = computed(() => this.managedObject() ? this.managedObject().status : MessageMessageStatus.DRAFT);
     messageMessageStatus = MessageMessageStatus;
     quillModules: any = {
         toolbar: [
@@ -340,7 +340,6 @@ export class MessageDetailComponent extends ViewDetailComponent
         this.fg = this.fb.group({
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             tenantIds: [[]],
-            status: MessageMessageStatus.DRAFT,
             accountRecipientIds: [[]],
             tenantRecipientIds: [[]],
             scopeRecipients: [[]],
