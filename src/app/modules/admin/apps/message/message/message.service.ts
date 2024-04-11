@@ -10,7 +10,7 @@ import { ClientService } from '@apps/o-auth/client';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
-import { messageAccountsScopePagination, messageSelectedAccountsScopePagination } from './message-detail.component';
+import { messageAccountsScopeDialogPagination, messageSelectedAccountsScopePagination } from './message-detail.component';
 
 @Injectable({
     providedIn: 'root',
@@ -333,7 +333,7 @@ export class MessageService
                     this.tagService.tagsSubject$.next(data.iamGetTags);
                     this.tenantService.tenantsSubject$.next(data.iamGetTenants);
                     this.accountService.setScopePagination(messageSelectedAccountsScopePagination, data.iamPaginateSelectedAccounts);
-                    this.accountService.setScopePagination(messageAccountsScopePagination, data.iamPaginateAccounts);
+                    this.accountService.setScopePagination(messageAccountsScopeDialogPagination, data.iamPaginateAccounts);
                     this.clientService.clientSubject$.next(data.oAuthFindClientById);
                 }),
             );

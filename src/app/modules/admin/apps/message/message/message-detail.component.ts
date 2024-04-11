@@ -18,7 +18,7 @@ import { GetColorStatusMessagePipe } from '../shared';
 export const messageAccountsDialogGridId = 'message::message.detail.accountsDialogGridList';
 export const messageAccountsGridId = 'message::message.detail.messageAccountsGridList';
 export const messageSelectedAccountsScopePagination = 'message::messageSelectedAccounts';
-export const messageAccountsScopePagination = 'message::messageAccounts';
+export const messageAccountsScopeDialogPagination = 'message::messageDialogAccounts';
 
 @Component({
     selector       : 'message-message-detail',
@@ -462,7 +462,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                 this.accountsDialogColumnsConfig$ = this.gridColumnsConfigStorageService
                     .getColumnsConfig(this.accountsDialogGridId, this.accountsDialogOriginColumnsConfig)
                     .pipe(takeUntil(this.unsubscribeAll$));
-                this.accountsDialogGridData$ = this.accountService.getScopePagination(messageAccountsScopePagination);
+                this.accountsDialogGridData$ = this.accountService.getScopePagination(messageAccountsScopeDialogPagination);
                 /* #endregion edit action to manage MessagesAccounts grid-select-multiple-elements */
                 break;
 
@@ -496,7 +496,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                 this.accountsDialogColumnsConfig$ = this.gridColumnsConfigStorageService
                     .getColumnsConfig(this.accountsDialogGridId, this.accountsDialogOriginColumnsConfig)
                     .pipe(takeUntil(this.unsubscribeAll$));
-                this.accountsDialogGridData$ = this.accountService.getScopePagination(messageAccountsScopePagination);
+                this.accountsDialogGridData$ = this.accountService.getScopePagination(messageAccountsScopeDialogPagination);
                 /* #endregion edit action to manage MessagesAccounts grid-select-multiple-elements */
                 break;
 
@@ -721,6 +721,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                                     .setPage(this.gridStateService.getPage(this.accountsDialogGridId))
                                     .setSearch(this.gridStateService.getSearchState(this.accountsDialogGridId))
                                     .getQueryStatement(),
+                            scope: messageAccountsScopeDialogPagination,
                         }),
                 );
                 break;
