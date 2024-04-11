@@ -9,6 +9,7 @@ const { publishIam } = require('./gulp/iam');
 const { publishOAuth } = require('./gulp/o-auth');
 const { publishQueueManager } = require('./gulp/queue-manager');
 const { publishSearchEngine } = require('./gulp/search-engine');
+const { publishMessage } = require('./gulp/message');
 
 function defaultTask(cb)
 {
@@ -27,3 +28,4 @@ exports.publishIam = publishIam;
 exports.publishOAuth = publishOAuth;
 exports.publishQueueManager = publishQueueManager;
 exports.publishSearchEngine = publishSearchEngine;
+exports.publishMessage = publishMessage;
