@@ -46,7 +46,7 @@ export class MessageDetailComponent extends ViewDetailComponent
     filteredTagRecipients$: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
     showTenantsBelongsInput: WritableSignal<boolean> = signal(true);
     totalRecipients: WritableSignal<number> = signal(0);
-    status: Signal<MessageMessageStatus> = computed(() => this.fg.get('status').value);
+    status: Signal<MessageMessageStatus> = computed(() => this.managedObject() ? this.managedObject().status : this.fg.get('status').value);
     messageMessageStatus = MessageMessageStatus;
     quillModules: any = {
         toolbar: [
@@ -61,7 +61,7 @@ export class MessageDetailComponent extends ViewDetailComponent
     // it should only be used to obtain uninitialized
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
-    managedObject: MessageMessage;
+    managedObject: WritableSignal<MessageMessage> = signal(null);
 
     // relationships
     /* #region variables to manage grid-select-multiple-elements messageAccountsGridSelectMultipleElementsComponent */
@@ -176,9 +176,6 @@ export class MessageDetailComponent extends ViewDetailComponent
         this.initTenantRecipientsFilter(this.activatedRoute.snapshot.data.data.iamGetTenants);
         this.initScopeRecipientsFilter(this.activatedRoute.snapshot.data.data.oAuthFindClientById.scopeOptions);
         this.initTagRecipientsFilter(this.activatedRoute.snapshot.data.data.iamGetTags);
-
-
-        this.fg.get('tenantRecipientIds').valueChanges.subscribe(console.log);
 
         combineLatest([
             this.fg.get('tenantRecipientIds').valueChanges.pipe(startWith([])),
@@ -476,8 +473,8 @@ export class MessageDetailComponent extends ViewDetailComponent
                     .pipe(takeUntil(this.unsubscribeAll$))
                     .subscribe(item =>
                     {
-                        this.managedObject = item;
                         this.fg.patchValue(item);
+                        this.managedObject.set(item);
                         this.totalRecipients.set(item.totalRecipients);
                     });
 
@@ -530,7 +527,8 @@ export class MessageDetailComponent extends ViewDetailComponent
                         },
                     );
 
-                    this.router.navigate(['message/message']);
+                    this.unsubscribeAll$.next();
+                    this.router.navigate(['message/message/edit', this.fg.value.id]);
                 }
                 catch(error)
                 {
@@ -564,7 +562,9 @@ export class MessageDetailComponent extends ViewDetailComponent
                         },
                     );
 
-                    this.router.navigate(['message/message']);
+                    this.unsubscribeAll$.next();
+                    this.fg.markAsPristine();
+                    this.router.navigate(['message/message/edit', this.fg.value.id], { onSameUrlNavigation: 'reload' });
                 }
                 catch(error)
                 {
@@ -802,11 +802,29 @@ export class MessageDetailComponent extends ViewDetailComponent
                 break;
 
             case 'message::message.detail.sendMessage':
-                console.log('sendMessage');
+                await lastValueFrom(
+                    this.messageService
+                        .sendMessageMessage({
+                            message: {
+                                id       : action.meta.message.id,
+                                tenantIds: action.meta.message.tenantIds,
+                            },
+                        }),
+                );
+                this.managedObject.set({ ...this.managedObject(), status: MessageMessageStatus.PENDING });
                 break;
 
             case 'message::message.detail.draftMessage':
-                console.log('draftMessage');
+                await lastValueFrom(
+                    this.messageService
+                        .draftMessageMessage({
+                            message: {
+                                id       : action.meta.message.id,
+                                tenantIds: action.meta.message.tenantIds,
+                            },
+                        }),
+                );
+                this.managedObject.set({ ...this.managedObject(), status: MessageMessageStatus.DRAFT });
                 break;
         }
     }

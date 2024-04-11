@@ -31,7 +31,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.graphql.ts",
-            "integrity": "sha1:20b36834b68f3d7c47a4d0beabc13172754a6716"
+            "integrity": "sha1:119860305c5f912e9c3162ea3ce6c8843c1ba82e"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.resolvers.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/message/message.service.ts",
-            "integrity": "sha1:c723ad827e481c6253717627a0a7a382a1d8f8ea"
+            "integrity": "sha1:895ef7d5b858d9e14f5debd86dbbc63169da5277"
         },
         {
             "path": "src/app/modules/admin/apps/message/message/index.ts",

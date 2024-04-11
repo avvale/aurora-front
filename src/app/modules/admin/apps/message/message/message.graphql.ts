@@ -248,3 +248,27 @@ export const removeAttachmentMessageMutation = gql`
         )
     }
 `;
+
+export const sendMessageMessageMutation = gql`
+    mutation MessageSendMessageMessage (
+        $message: MessageUpdateMessageByIdInput!
+        $constraint: QueryStatement
+    ) {
+        messageSendMessageMessage (
+            message: $message
+            constraint: $constraint
+        )
+    }
+`;
+
+export const draftMessageMessageMutation = gql`
+    mutation MessageDraftMessageMessage (
+        $message: MessageUpdateMessageByIdInput!
+        $constraint: QueryStatement
+    ) {
+        messageDraftMessageMessage (
+            message: $message
+            constraint: $constraint
+        )
+    }
+`;

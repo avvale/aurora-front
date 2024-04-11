@@ -4,7 +4,7 @@ import { IamAccount, IamTag, IamTenant } from '@apps/iam';
 import { AccountService } from '@apps/iam/account';
 import { TagService } from '@apps/iam/tag';
 import { TenantService } from '@apps/iam/tenant';
-import { countTotalRecipientsMessageQuery, createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, getRelations, paginationQuery, removeAttachmentMessageMutation, updateByIdMutation, updateMutation } from '@apps/message/message';
+import { countTotalRecipientsMessageQuery, createMutation, deleteByIdMutation, deleteMutation, draftMessageMessageMutation, fields, findByIdQuery, findQuery, getQuery, getRelations, paginationQuery, removeAttachmentMessageMutation, sendMessageMessageMutation, updateByIdMutation, updateMutation } from '@apps/message/message';
 import { MessageCreateMessage, MessageMessage, MessageUpdateMessageById, MessageUpdateMessages } from '@apps/message/message.types';
 import { ClientService } from '@apps/o-auth/client';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
@@ -516,10 +516,6 @@ export class MessageService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data =>
-                {
-                    console.log('countTotalRecipientsMessage', data.messageCountTotalRecipientsMessage);
-                }),
             );
     }
 
@@ -545,6 +541,56 @@ export class MessageService
                 variables: {
                     message,
                     attachmentId,
+                },
+                context: {
+                    headers,
+                },
+            });
+    }
+
+    sendMessageMessage<T>(
+        {
+            graphqlStatement = sendMessageMessageMutation,
+            message,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            message?: MessageUpdateMessageById;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    message,
+                },
+                context: {
+                    headers,
+                },
+            });
+    }
+
+    draftMessageMessage<T>(
+        {
+            graphqlStatement = draftMessageMessageMutation,
+            message,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            message?: MessageUpdateMessageById;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    message,
                 },
                 context: {
                     headers,

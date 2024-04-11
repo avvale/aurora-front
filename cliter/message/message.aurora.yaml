@@ -114,3 +114,9 @@ additionalApis:
   - path: message/message/count-total-recipients
     resolverType: query
     httpMethod: post
+  - path: message/message/send-message
+    resolverType: mutation
+    httpMethod: post
+  - path: message/message/draft-message
+    resolverType: mutation
+    httpMethod: post

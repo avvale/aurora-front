@@ -26,7 +26,7 @@
         <!-- Actions -->
         <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
 
-            @if (currentViewAction.id === 'message::message.detail.edit')
+            @if (currentViewAction?.id === 'message::message.detail.edit')
             {
                 <!-- <button
                     mat-flat-button
@@ -77,43 +77,55 @@
                         {{ t('Update') }}
                     </ng-template>
                     <ng-template auSplitMenuButtonsTemplate>
-                        <button
-                            mat-menu-item
-                            (click)="
-                                actionService.action({
-                                    id          : 'message::message.detail.sendMessage',
-                                    isViewAction: false
-                                })
-                            "
-                        >
-                            <mat-icon
-                                class="icon-size-5"
-                                svgIcon="mat_outline:send"
+                        @if (status() === messageMessageStatus.DRAFT)
+                        {
+                            <button
+                                mat-menu-item
+                                (click)="
+                                    actionService.action({
+                                        id          : 'message::message.detail.sendMessage',
+                                        isViewAction: false,
+                                        meta        : {
+                                            message: managedObject()
+                                        }
+                                    })
+                                "
                             >
-                            </mat-icon>
-                            {{ t('Send') }}
-                        </button>
-                        <button
-                            mat-menu-item
-                            (click)="
-                                actionService.action({
-                                    id          : 'message::message.detail.draftMessage',
-                                    isViewAction: false
-                                })
-                            "
-                        >
-                            <mat-icon
-                                class="icon-size-5"
-                                svgIcon="mat_outline:drafts"
+                                <mat-icon
+                                    class="icon-size-5"
+                                    svgIcon="mat_outline:send"
+                                >
+                                </mat-icon>
+                                {{ t('Send') }}
+                            </button>
+                        }
+                        @else
+                        {
+                            <button
+                                mat-menu-item
+                                (click)="
+                                    actionService.action({
+                                        id          : 'message::message.detail.draftMessage',
+                                        isViewAction: false,
+                                        meta        : {
+                                            message: managedObject()
+                                        }
+                                    })
+                                "
                             >
-                            </mat-icon>
-                            {{ t('Draft') }}
-                        </button>
+                                <mat-icon
+                                    class="icon-size-5"
+                                    svgIcon="mat_outline:drafts"
+                                >
+                                </mat-icon>
+                                {{ t('Draft') }}
+                            </button>
+                        }
                     </ng-template>
                 </au-split-button>
             }
 
-            @if (currentViewAction.id === 'message::message.detail.new')
+            @if (currentViewAction?.id === 'message::message.detail.new')
             {
                 <button
                     mat-flat-button
@@ -168,7 +180,7 @@
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ t('message.Reads') }}</div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-green-500">{{ managedObject?.reads || 0 }}</div>
+                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-green-500">{{ managedObject()?.reads || 0 }}</div>
                         <div class="text-base font-medium text-green-600 dark:text-green-500">{{ t('message.Messages') }}</div>
                     </div>
                 </div>
@@ -178,7 +190,7 @@
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">{{ t('message.PerRead') }}</div>
                     </div>
                     <div class="flex flex-col items-center mt-2">
-                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-amber-500">{{ totalRecipients() - managedObject?.reads }}</div>
+                        <div class="text-4xl sm:text-5xl font-bold tracking-tight leading-none text-amber-500">{{ totalRecipients() - managedObject()?.reads }}</div>
                         <div class="text-base font-medium text-amber-600 dark:text-amber-500">{{ t('message.Messages') }}</div>
                     </div>
                 </div>
@@ -544,10 +556,21 @@
                             <div
                                 class="col-12"
                             >
-                                @for(attachment of managedObject?.attachments; track attachment.id)
+                                @for(attachment of managedObject()?.attachments; track attachment.id)
                                 {
                                     <div class="flex justify-between items-center p-4 mb-2 border rounded">
-                                        <p class="text-base flex items-center">
+                                        <p
+                                            class="text-base flex items-center cursor-pointer"
+                                            (click)="
+                                                actionService.action({
+                                                    id: 'message::message.detail.downloadAttachment',
+                                                    isViewAction: false,
+                                                    meta: {
+                                                        attachment
+                                                    }
+                                                })
+                                            "
+                                        >
                                             <mat-icon
                                                 class="icon-size-5 mr-2"
                                                 [svgIcon]="'heroicons_solid:document'"
@@ -570,7 +593,7 @@
                                                     isViewAction: false,
                                                     meta    : {
                                                         attachment,
-                                                        message: managedObject
+                                                        message: managedObject()
                                                     }
                                                 })
                                             "
