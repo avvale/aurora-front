@@ -44,6 +44,11 @@
     "Sort": "Sort",
     "StartHereToWriteYourMessage": "Start here to write your message...",
     "Status": "Status",
+    "Statuses": {
+        "DRAFT": "Draft",
+        "PENDING": "Pending",
+        "SENT": "Sent"
+    },
     "Subject": "Subject",
     "TagRecipients": "Tag recipients",
     "TenantIds": "TenantIds",

@@ -99,6 +99,22 @@
                     </au-grid-column-translation>
                 }
             </au-grid-translations>
+
+            <ng-template
+                auGridCellValueTemplate
+                field="status"
+                let-status
+                let-columnConfig="columnConfig"
+            >
+                <div class="inline-block">
+                    <au-chip
+                        [color]="status | getColorStatusMessage"
+                        size="small"
+                    >
+                        {{ t('message.Statuses.' + status) }}
+                    </au-chip>
+                </div>
+            </ng-template>
         </au-grid>
         <!-- / Grid -->
 

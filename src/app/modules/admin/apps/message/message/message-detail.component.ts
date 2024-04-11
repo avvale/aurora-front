@@ -1,5 +1,5 @@
 import { NgForOf, KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation, WritableSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, ViewChild, ViewEncapsulation, WritableSignal, computed, signal } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -7,12 +7,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { IamAccount, IamTenant } from '@apps/iam';
 import { MessageService } from '@apps/message/message';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
-import { Action, ColumnConfig, ColumnDataType, Crumb, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, log, mapActions, QueryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
+import { Action, ChipComponent, ColumnConfig, ColumnDataType, Crumb, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, log, mapActions, QueryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SnackBarInvalidFormComponent, SplitButtonModule, Utils, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { Observable, ReplaySubject, combineLatest, lastValueFrom, skip, startWith, takeUntil } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { AccountService, accountColumnsConfig } from '@apps/iam/account';
 import { QuillEditorComponent } from 'ngx-quill';
+import { GetColorStatusMessagePipe } from '../shared';
 
 export const messageAccountsDialogGridId = 'message::message.detail.accountsDialogGridList';
 export const messageAccountsGridId = 'message::message.detail.messageAccountsGridList';
@@ -27,9 +28,9 @@ export const messageAccountsScopePagination = 'message::messageAccounts';
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
-        FileUploadComponent, FormatFileSizePipe, MatCheckboxModule, MatSelectModule, MtxDatetimepickerModule, NgForOf,
-        GridSelectMultipleElementsModule, KeyValuePipe, NgxMatSelectSearchModule,
-        MatTabsModule, QuillEditorComponent,
+        ChipComponent, FileUploadComponent, FormatFileSizePipe, GetColorStatusMessagePipe, MatCheckboxModule,
+        MatSelectModule, MtxDatetimepickerModule, NgForOf, GridSelectMultipleElementsModule, KeyValuePipe,
+        NgxMatSelectSearchModule, MatTabsModule, QuillEditorComponent, SplitButtonModule,
     ],
 })
 export class MessageDetailComponent extends ViewDetailComponent
@@ -45,6 +46,7 @@ export class MessageDetailComponent extends ViewDetailComponent
     filteredTagRecipients$: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
     showTenantsBelongsInput: WritableSignal<boolean> = signal(true);
     totalRecipients: WritableSignal<number> = signal(0);
+    status: Signal<MessageMessageStatus> = computed(() => this.fg.get('status').value);
     messageMessageStatus = MessageMessageStatus;
     quillModules: any = {
         toolbar: [
@@ -341,7 +343,7 @@ export class MessageDetailComponent extends ViewDetailComponent
         this.fg = this.fb.group({
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             tenantIds: [[]],
-            status: [null, [Validators.required]],
+            status: MessageMessageStatus.DRAFT,
             accountRecipientIds: [[]],
             tenantRecipientIds: [[]],
             scopeRecipients: [[]],
@@ -797,6 +799,14 @@ export class MessageDetailComponent extends ViewDetailComponent
                         }),
                 );
                 this.totalRecipients.set(response.messageCountTotalRecipientsMessage);
+                break;
+
+            case 'message::message.detail.sendMessage':
+                console.log('sendMessage');
+                break;
+
+            case 'message::message.detail.draftMessage':
+                console.log('draftMessage');
                 break;
         }
     }

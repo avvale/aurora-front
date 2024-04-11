@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { messageColumnsConfig, MessageService } from '@apps/message/message';
 import { MessageMessage } from '@apps/message/message.types';
-import { Action, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
+import { Action, ChipComponent, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridCellValueTemplateDirective, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
+import { GetColorStatusMessagePipe } from '../shared';
 
 export const messageMainGridListId = 'message::message.list.mainGridList';
 
@@ -14,6 +15,7 @@ export const messageMainGridListId = 'message::message.list.mainGridList';
     standalone     : true,
     imports        : [
         ...defaultListImports,
+        ChipComponent, GetColorStatusMessagePipe, GridCellValueTemplateDirective,
     ],
 })
 export class MessageListComponent extends ViewBaseComponent

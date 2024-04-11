@@ -43,13 +43,18 @@
     "SentAt": "Enviado el",
     "Sort": "Sort",
     "StartHereToWriteYourMessage": "Empieza aqui a escribir tu mensaje...",
-    "Status": "Status",
+    "Status": "Estado",
+    "Statuses": {
+        "DRAFT": "Borrador",
+        "PENDING": "Pendiente de envío",
+        "SENT": "Enviado"
+    },
     "Subject": "Asunto",
     "TagRecipients": "Tags destinatarios",
     "TenantIds": "TenantIds",
     "TenantRecipientIds": "TenantRecipientIds",
     "TenantRecipients": "Tenants destinatarios",
-    "TotalRecipients": "TotalRecipients",
+    "TotalRecipients": "Destinatarios",
     "UnRead": "Sin leer",
     "Users": "Usuarios"
 }

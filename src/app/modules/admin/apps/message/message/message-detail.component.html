@@ -13,6 +13,13 @@
                     notification_multiple
                 </mat-icon>
                 {{ t('message.Message') }}
+                <au-chip
+                    [color]="status() | getColorStatusMessage"
+                    size="small"
+                    class="ml-4"
+                >
+                    {{ t('message.Statuses.' + status()) }}
+                </au-chip>
             </au-title>
         </div>
 
@@ -21,7 +28,7 @@
 
             @if (currentViewAction.id === 'message::message.detail.edit')
             {
-                <button
+                <!-- <button
                     mat-flat-button
                     type="submit"
                     class="ml-3"
@@ -44,7 +51,66 @@
                         </mat-icon>
                     }
                     {{ t('Update') }}
-                </button>
+                </button> -->
+
+                <au-split-button
+                    color="accent"
+                    mainButtonType="submit"
+                    mainButtonForm="messageMessageFormDetail"
+                    [disabled]="fg.pristine || ('message::message.detail.update' | getSpinnerFlag | async)"
+                >
+                    <ng-template auSplitMainButtonContentTemplate>
+                        @if ('message::message.detail.update' | getSpinnerFlag | async)
+                        {
+                            <mat-icon>
+                                <mat-spinner diameter="20"></mat-spinner>
+                            </mat-icon>
+                        }
+                        @else
+                        {
+                            <mat-icon
+                                svgIcon="mat_solid:edit"
+                                class="icon-size-5 mr-2"
+                            >
+                            </mat-icon>
+                        }
+                        {{ t('Update') }}
+                    </ng-template>
+                    <ng-template auSplitMenuButtonsTemplate>
+                        <button
+                            mat-menu-item
+                            (click)="
+                                actionService.action({
+                                    id          : 'message::message.detail.sendMessage',
+                                    isViewAction: false
+                                })
+                            "
+                        >
+                            <mat-icon
+                                class="icon-size-5"
+                                svgIcon="mat_outline:send"
+                            >
+                            </mat-icon>
+                            {{ t('Send') }}
+                        </button>
+                        <button
+                            mat-menu-item
+                            (click)="
+                                actionService.action({
+                                    id          : 'message::message.detail.draftMessage',
+                                    isViewAction: false
+                                })
+                            "
+                        >
+                            <mat-icon
+                                class="icon-size-5"
+                                svgIcon="mat_outline:drafts"
+                            >
+                            </mat-icon>
+                            {{ t('Draft') }}
+                        </button>
+                    </ng-template>
+                </au-split-button>
             }
 
             @if (currentViewAction.id === 'message::message.detail.new')
@@ -363,23 +429,6 @@
                     <mat-tab [label]="t('message.Message')">
                         <div class="layout__container">
 
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-4"
-                            >
-                                <mat-label>{{ t('Status') }}</mat-label>
-                                <mat-select
-                                    formControlName="status"
-                                >
-                                    <mat-option
-                                        *ngFor="let status  of messageMessageStatus | keyvalue"
-                                        [value]="status.key"
-                                    >
-                                        {{ t('message.MessageStatus.' + status.value) }}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error>{{ formErrors?.status | async }}</mat-error>
-                            </mat-form-field>
                             <mat-form-field
                                 appearance="outline"
                                 class="au-datepicker col-4"

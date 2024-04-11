@@ -69,28 +69,28 @@ export const messageColumnsConfig: ColumnConfig[] = [
         isUnaccent : true,
         hidden     : true,
     },
-    {
+    /* {
         type       : ColumnDataType.STRING,
         field      : 'link',
         sort       : 'link',
         translation: 'message.Link',
         isUnaccent : true,
         hidden     : true,
-    },
-    {
+    }, */
+    /* {
         type       : ColumnDataType.BOOLEAN,
         field      : 'isInternalLink',
         sort       : 'isInternalLink',
         translation: 'message.IsInternalLink',
-    },
-    {
+    }, */
+    /* {
         type       : ColumnDataType.STRING,
         field      : 'icon',
         sort       : 'icon',
         translation: 'message.Icon',
         isUnaccent : true,
         hidden     : true,
-    },
+    }, */
     {
         type       : ColumnDataType.NUMBER,
         field      : 'totalRecipients',
