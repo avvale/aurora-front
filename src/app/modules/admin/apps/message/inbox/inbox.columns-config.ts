@@ -6,12 +6,14 @@ export const inboxColumnsConfig: ColumnConfig[] = [
         field      : 'tenantIds',
         sort       : 'tenantIds',
         translation: 'message.TenantIds',
+        hidden     : true,
     },
     {
         type       : ColumnDataType.NUMBER,
         field      : 'sort',
         sort       : 'sort',
         translation: 'message.Sort',
+        hidden     : true,
     },
     {
         type       : ColumnDataType.STRING,
@@ -45,8 +47,9 @@ export const inboxColumnsConfig: ColumnConfig[] = [
         sort       : 'body',
         translation: 'message.Body',
         isUnaccent : true,
+        hidden     : true,
     },
-    {
+    /* {
         type       : ColumnDataType.STRING,
         field      : 'link',
         sort       : 'link',
@@ -65,7 +68,7 @@ export const inboxColumnsConfig: ColumnConfig[] = [
         sort       : 'icon',
         translation: 'message.Icon',
         isUnaccent : true,
-    },
+    }, */
     {
         type       : ColumnDataType.BOOLEAN,
         field      : 'isRead',

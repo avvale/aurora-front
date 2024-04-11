@@ -72,10 +72,9 @@ export class MessageCenterService
                 {
                     try
                     {
-                        // TODO, create a deleteById method in InboxService only for user scope
                         await lastValueFrom(
                             this.inboxService
-                                .deleteById<MessageInbox>({
+                                .deleteCustomerMessageInbox<MessageInbox>({
                                     id: message.id,
                                 }),
                         );
