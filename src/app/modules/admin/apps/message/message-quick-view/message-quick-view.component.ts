@@ -1,7 +1,7 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { DatePipe, NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, WritableSignal, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation, WritableSignal, computed, inject, signal } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -47,7 +47,6 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
      * Constructor
      */
     constructor(
-        private changeDetectorRef: ChangeDetectorRef,
         private overlay: Overlay,
         private viewContainerRef: ViewContainerRef,
     )
@@ -81,9 +80,6 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
 
                 // Calculate the unread count
                 this.calculateUnreadCount();
-
-                // Mark for check
-                this.changeDetectorRef.markForCheck();
             });
 
         // Subscribe to toggle message as read
@@ -113,7 +109,6 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
                     messages.filter(message => message.id !== deletedMessage.id),
                 );
             });
-
     }
 
     /**

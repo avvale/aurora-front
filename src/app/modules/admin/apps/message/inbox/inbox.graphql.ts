@@ -205,6 +205,9 @@ export const deleteCustomerMessageInboxMutation = gql`
             id: $id
             constraint: $constraint
         )
+        {
+            ${fields}
+        }
     }
 `;
 
