@@ -5,8 +5,8 @@ import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQue
 import { MessageCreateInbox, MessageInbox, MessageUpdateInboxById, MessageUpdateInboxes } from '@apps/message/message.types';
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
-import { messageCustomerCenterMessage } from '../message-center/list/message-center-list.component';
-import { messageQuickViewMessages } from '../message-quick-view/message-quick-view.component';
+import { messageCustomerCenterMessageScope } from '../message-center/list/message-center-list.component';
+import { messageQuickViewMessagesScope } from '../message-quick-view/message-quick-view.component';
 
 @Injectable({
     providedIn: 'root',
@@ -407,6 +407,7 @@ export class InboxService
         } = {},
     ): Observable<GridData<MessageInbox>>
     {
+        console.log('Action paginateCustomerCenterMessagesInbox');
         return this.graphqlService
             .client()
             .watchQuery<{
@@ -425,7 +426,7 @@ export class InboxService
             .pipe(
                 first(),
                 map(result => result.data.pagination),
-                tap(pagination => this.setScopePagination(messageCustomerCenterMessage, pagination)),
+                tap(pagination => this.setScopePagination(messageCustomerCenterMessageScope, pagination)),
             );
     }
 
@@ -461,7 +462,7 @@ export class InboxService
             .pipe(
                 first(),
                 map(result => result.data.pagination),
-                tap(pagination => this.setScopePagination(messageQuickViewMessages, pagination)),
+                tap(pagination => this.setScopePagination(messageQuickViewMessagesScope, pagination)),
             );
     }
 
@@ -499,7 +500,7 @@ export class InboxService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data => this.setScopeInbox(messageCustomerCenterMessage, data.object)),
+                tap(data => this.setScopeInbox(messageCustomerCenterMessageScope, data.object)),
             );
     }
 

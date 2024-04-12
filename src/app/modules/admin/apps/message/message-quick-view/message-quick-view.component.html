@@ -3,10 +3,10 @@
     mat-icon-button
     (click)="openPanel()"
     #messagesOrigin>
-    <ng-container *ngIf="calculateUnreadCount() > 0">
+    <ng-container *ngIf="unreadMessages() > 0">
         <span class="absolute top-0 right-0 left-0 flex items-center justify-center h-3">
             <span class="flex items-center justify-center shrink-0 min-w-4 h-4 px-1 ml-4 mt-2.5 rounded-full bg-indigo-600 text-indigo-50 text-xs font-medium">
-                {{ calculateUnreadCount() }}
+                {{ unreadMessages() }}
             </span>
         </span>
     </ng-container>
@@ -35,7 +35,7 @@
             <div class="ml-auto">
                 <button
                     mat-icon-button
-                    [disabled]="calculateUnreadCount() === 0"
+                    [disabled]="unreadMessages() === 0"
                     [matTooltip]="t('message.GoToMessageCenter')"
                     (click)="goToMessageCenter()">
                     <mat-icon
