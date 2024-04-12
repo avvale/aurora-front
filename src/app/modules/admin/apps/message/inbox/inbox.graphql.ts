@@ -189,6 +189,18 @@ export const findCustomerMessageInboxQuery = gql`
     }
 `;
 
+export const countUnreadCustomerMessageInboxQuery = gql`
+    query MessageCountUnreadCustomerMessageInbox (
+        $query: QueryStatement
+        $constraint: QueryStatement
+    ) {
+        messageCountUnreadCustomerMessageInbox (
+            query: $query
+            constraint: $constraint
+        )
+    }
+`;
+
 // Mutation additionalApis
 export const checkMessagesInboxMutation = gql`
     mutation MessageCheckMessagesInbox {

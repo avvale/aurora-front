@@ -32,7 +32,7 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     @ViewChild('messagesPanel') private messagesPanel: TemplateRef<any>;
 
     messages: WritableSignal<MessageInbox[]> = signal([]);
-    unreadMessages: WritableSignal<number>;
+    unreadMessagesNumber: WritableSignal<number>;
     inboxCustomerPagination: GridData<MessageInbox>;
     unreadCount: number = 0;
 
@@ -56,10 +56,11 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     // -----------------------------------------------------------------------------------------------------
     async ngOnInit(): Promise<void>
     {
-        this.unreadMessages = this.messageService.unreadMessages;
+        this.unreadMessagesNumber = this.messageService.unreadMessagesNumber;
 
         // Get the messages
         await this.getMessages();
+        await this.messageService.countUnreadMessages();
 
         // Subscribe to message changes
         this.inboxService
@@ -75,8 +76,9 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
         this.messageService
             .toggleMessageAsRead$
             .pipe(takeUntil(this.unsubscribeAll$))
-            .subscribe((toggleMessage: MessageInbox) =>
+            .subscribe(async (toggleMessage: MessageInbox) =>
             {
+                // mark message as read/unread if it is in the list
                 const messages = this.messages();
                 this.messages.set(
                     messages.map(message =>
@@ -85,6 +87,9 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
                         return message;
                     }),
                 );
+
+                // update unread total messages count
+                await this.messageService.countUnreadMessages();
             });
 
         // Subscribe to message as deleted
@@ -93,7 +98,17 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe(async (deletedMessage: MessageInbox) =>
             {
-                await this.getMessages();
+                // only update the messages if the deleted message is in the list
+                if (this.messages().some(message => message.id === deletedMessage.id))
+                {
+                    this.getMessages();
+                }
+
+                // count unread messages if deleted message is unread
+                if (!deletedMessage.isRead)
+                {
+                    this.messageService.countUnreadMessages();
+                }
             });
     }
 
@@ -175,6 +190,7 @@ export class MessageQuickViewComponent implements OnInit, OnDestroy
     deleteMessage(message: MessageInbox): void
     {
         this.messageService.deleteMessage(message);
+        this.messageService.countUnreadMessages();
     }
 
     // -----------------------------------------------------------------------------------------------------

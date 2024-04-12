@@ -19,7 +19,7 @@ export class MessageService
     confirmationService = inject(FuseConfirmationService);
     translocoService = inject(TranslocoService);
     inboxService = inject(InboxService);
-    unreadMessages: WritableSignal<number> = signal(0);
+    unreadMessagesNumber: WritableSignal<number> = signal(0);
 
     get selectedMessage$(): Observable<MessageInbox>
     {
@@ -92,11 +92,11 @@ export class MessageService
 
     async countUnreadMessages(): Promise<void>
     {
-       /*  await lastValueFrom(
-            this.inboxService
-                .deleteCustomerMessageInbox<MessageInbox>({
-                    id: message.id,
-                }),
-        );*/
+        this.unreadMessagesNumber.set(
+            await lastValueFrom(
+                this.inboxService
+                    .countUnreadCustomerMessageInbox(),
+            ),
+        );
     }
 }

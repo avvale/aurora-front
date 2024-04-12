@@ -1,4 +1,4 @@
-import { checkMessagesInboxMutation, deleteCustomerMessageInboxMutation, findCustomerMessageInboxQuery, paginateCustomerMessagesInboxQuery, readCustomerMessageInboxMutation, unreadCustomerMessageInboxMutation } from './inbox.graphql';
+import { checkMessagesInboxMutation, countUnreadCustomerMessageInboxQuery, deleteCustomerMessageInboxMutation, findCustomerMessageInboxQuery, paginateCustomerMessagesInboxQuery, readCustomerMessageInboxMutation, unreadCustomerMessageInboxMutation } from './inbox.graphql';
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, paginationQuery, updateByIdMutation, updateMutation } from '@apps/message/inbox';
@@ -407,7 +407,6 @@ export class InboxService
         } = {},
     ): Observable<GridData<MessageInbox>>
     {
-        console.log('Action paginateCustomerCenterMessagesInbox');
         return this.graphqlService
             .client()
             .watchQuery<{
@@ -501,6 +500,41 @@ export class InboxService
                 first(),
                 map(result => result.data),
                 tap(data => this.setScopeInbox(messageCustomerCenterMessageScope, data.object)),
+            );
+    }
+
+    countUnreadCustomerMessageInbox(
+        {
+            graphqlStatement = countUnreadCustomerMessageInboxQuery,
+            query = {},
+            constraint = {},
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            query?: QueryStatement;
+            constraint?: QueryStatement;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<number>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                messageCountUnreadCustomerMessageInbox: number;
+            }>({
+                query    : graphqlStatement,
+                variables: {
+                    query,
+                    constraint,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data.messageCountUnreadCustomerMessageInbox),
             );
     }
 
