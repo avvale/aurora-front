@@ -23,7 +23,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/inbox-list.component.ts",
-            "integrity": "sha1:e9455542f733d47f392cd4bbac93bccc4cee6903"
+            "integrity": "sha1:6b2768b3cc2a81764648c79741ef2fc40b78bedc"
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/inbox.columns-config.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/inbox.service.ts",
-            "integrity": "sha1:415e7287b86293042d707a1393f3d84d94c287e7"
+            "integrity": "sha1:8b5e6c72326e3c4cfe1dfb2b900525a18355c833"
         },
         {
             "path": "src/app/modules/admin/apps/message/inbox/index.ts",
