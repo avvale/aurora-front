@@ -10,7 +10,7 @@ import { AccountService } from '@apps/iam/account';
 import { IamAccount } from '@apps/iam/iam.types';
 import { Action, CoreGetLangsService, CoreLang, Crumb, defaultDetailImports, log, mapActions, OAuthClientGrantType, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { BehaviorSubject, lastValueFrom, Observable, ReplaySubject, takeUntil } from 'rxjs';
-import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
+// import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { OAuthClient, OAuthScope } from '@apps/o-auth/o-auth.types';
@@ -29,7 +29,8 @@ import { TagService } from '../tag';
     imports        : [
         ...defaultDetailImports,
         MatCheckboxModule, MatSelectModule, NgForOf,
-        KeyValuePipe, MatPasswordStrengthModule, MatToolbarModule, NgxMatSelectSearchModule,
+        KeyValuePipe, MatToolbarModule, NgxMatSelectSearchModule,
+        // MatPasswordStrengthModule,
     ],
 })
 export class AccountDetailComponent extends ViewDetailComponent
