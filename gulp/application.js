@@ -1,12 +1,13 @@
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-var-requires */
-const fs = require('node:fs');
-const cp = require('node:child_process');
-const fse = require('fs-extra');
 const { src, dest, series } = require('gulp');
-const jeditor = require('gulp-json-editor');
 const codeWriter = require('./helpers/code-writer');
+const cp = require('node:child_process');
+const fs = require('node:fs');
+const fse = require('fs-extra');
+const jeditor = require('gulp-json-editor');
+const path = require('node:path');
 const ts = require('typescript');
 
 function cleanSourceDirectory(cb)
@@ -71,7 +72,7 @@ function editPackageJson()
         .pipe(
             jeditor(function(json)
             {
-                delete json.dependencies['@angular-material-extensions/password-strength'];
+                // delete json.dependencies['@angular-material-extensions/password-strength'];
                 delete json.dependencies['@azure/msal-angular'];
                 delete json.dependencies['@azure/msal-browser'];
 
@@ -143,6 +144,54 @@ async function cleanAdminNavigation()
 
     sourceFile.saveSync();
 }
+
+async function cleanAppResolvers()
+{
+    const project = codeWriter.createProject(['publish', 'tsconfig.json']);
+    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'app.resolvers.ts']);
+
+    codeWriter.removeImport(sourceFile, '@apps/message/inbox');
+
+    // delete const inboxService = inject(InboxService);
+    const variableThatContainsAnonymousFunction = sourceFile.getVariableDeclarationOrThrow('initialDataResolver');
+    const anonymousFunction = variableThatContainsAnonymousFunction.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrowFunction);
+    const variableToDelete = anonymousFunction.getVariableDeclarationOrThrow('inboxService');
+    variableToDelete.remove();
+
+    // delete inboxService.checkMessagesInbox(), from forkJoin
+    const forkJoinCall = anonymousFunction.getDescendantStatements().find(statement => statement.getText().startsWith('return forkJoin(['));
+    const argumentsForkJoinArray = forkJoinCall.getChildrenOfKind(ts.SyntaxKind.CallExpression)[0].getArguments()[0];
+    for (const argument of argumentsForkJoinArray.getElements())
+    {
+        if (argument.getText().includes('inboxService.checkMessagesInbox()'))
+        {
+            argumentsForkJoinArray.removeElement(argument);
+        }
+    }
+
+    sourceFile.saveSync();
+}
+
+async function cleanClassyComponent()
+{
+    const project = codeWriter.createProject(['publish', 'tsconfig.json']);
+    const sourceFile = codeWriter.createSourceFile(project, ['publish', 'src', 'app', 'layout', 'layouts', 'vertical', 'classy', 'classy.component.ts']);
+
+    codeWriter.removeImport(sourceFile, '@apps/message');
+    codeWriter.removeDecoratorProperty(sourceFile, 'ClassyLayoutComponent', 'Component', 'imports', 'MessageQuickViewComponent');
+
+    sourceFile.saveSync();
+}
+
+async function cleanClassyTemplate()
+{
+    let html = fs.readFileSync(path.join('publish', 'src', 'app', 'layout', 'layouts', 'vertical', 'classy', 'classy.component.html'), 'utf8');
+    const tag = 'au-message-quick-view';
+    const regex = new RegExp(`<${tag}[^>]*>(.*?)</${tag}>`, 'gs');
+    html = html.replace(regex, '');
+    fs.writeFileSync(path.join('publish', 'src', 'app', 'layout', 'layouts', 'vertical', 'classy', 'classy.component.html'), html);
+}
+
 
 async function cleanAuroraProvider()
 {
@@ -277,6 +326,9 @@ exports.publishApplication = series(
     editPackageJson,
     cleanAppRoutes,
     cleanAdminNavigation,
+    cleanAppResolvers,
+    cleanClassyComponent,
+    cleanClassyTemplate,
     cleanAuroraProvider,
     cleanEnvironments,
     copyToCLI,

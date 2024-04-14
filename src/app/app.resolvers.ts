@@ -3,10 +3,8 @@ import { NavigationService } from 'app/core/navigation/navigation.service';
 import { NotificationsService } from 'app/layout/common/notifications/notifications.service';
 import { QuickChatService } from 'app/layout/common/quick-chat/quick-chat.service';
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
-import { forkJoin } from 'rxjs';
-
-// ---- customizations ----
 import { InboxService } from '@apps/message/inbox';
+import { forkJoin } from 'rxjs';
 
 export const initialDataResolver = () =>
 {
@@ -14,8 +12,6 @@ export const initialDataResolver = () =>
     const notificationsService = inject(NotificationsService);
     const quickChatService = inject(QuickChatService);
     const shortcutsService = inject(ShortcutsService);
-
-    // ---- customizations ----
     const inboxService = inject(InboxService);
 
     // Fork join multiple API endpoint calls to wait all of them to finish
@@ -24,8 +20,6 @@ export const initialDataResolver = () =>
         notificationsService.getAll(),
         quickChatService.getChats(),
         shortcutsService.getAll(),
-
-        // ---- customizations ----
         inboxService.checkMessagesInbox(),
     ]);
 };
