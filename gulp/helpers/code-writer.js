@@ -166,9 +166,9 @@ exports.removeCallExpressionArgument = (sourceFile, functionName, argumentName) 
     }
 };
 
-exports.removeDecoratorProperty = (sourceFile, moduleName, decoratorNameName, propertyName, valueName) =>
+exports.removeDecoratorProperty = (sourceFile, className, decoratorNameName, propertyName, valueName) =>
 {
-    const moduleClass = sourceFile.getClass(moduleName);
+    const moduleClass = sourceFile.getClass(className);
     const moduleDecorator = moduleClass.getDecorator(decoratorNameName);
     const moduleDecoratorArguments = moduleDecorator.getArguments()[0];
     const importsArgument = moduleDecoratorArguments.getProperty(propertyName);
