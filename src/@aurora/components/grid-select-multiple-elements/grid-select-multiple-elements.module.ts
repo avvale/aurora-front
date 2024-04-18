@@ -6,9 +6,11 @@ import { GridSelectMultipleElementsComponent } from './grid-select-multiple-elem
 import { GridCustomButtonsHeaderTemplateDirective } from './directives/grid-custom-buttons-header-template.directive';
 import { GridSelectMultipleCellValueTemplateDirective } from './directives/grid-select-multiple-cell-value-template.directive';
 import { GridTranslationsComponent } from '../grid/grid-translations/grid-translations.component';
+import { GridColumnTranslationComponent } from '../grid/grid-translations/grid-column-translation.component';
 
 @NgModule({
     imports: [
+        GridColumnTranslationComponent,
         GridCustomButtonsHeaderTemplateDirective,
         GridSelectMultipleCellValueDialogTemplateDirective,
         GridSelectMultipleCellValueTemplateDirective,
@@ -18,6 +20,7 @@ import { GridTranslationsComponent } from '../grid/grid-translations/grid-transl
         GridTranslationsComponent,
     ],
     exports: [
+        GridColumnTranslationComponent,
         GridCustomButtonsHeaderTemplateDirective,
         GridSelectMultipleCellValueDialogTemplateDirective,
         GridSelectMultipleCellValueTemplateDirective,
