@@ -82,7 +82,7 @@ export interface FilterDialogResponse
    columnFilters: GridColumnFilter[];
 }
 
-export type FilterOperator = Operator.eq | Operator.ne | Operator.startsWith | Operator.endsWith | Operator.substring | Operator.gt | Operator.gte | Operator.lt | Operator.lte | Operator.contains | Operator.contained;
+export type FilterOperator = Operator.eq | Operator.ne | Operator.startsWith | Operator.endsWith | Operator.substring | Operator.gt | Operator.gte | Operator.lt | Operator.lte | Operator.contains | Operator.contained | Operator.iLike | Operator.notILike;
 
 export interface FilterCriteriaOperator
 {

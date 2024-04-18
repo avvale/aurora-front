@@ -1,4 +1,4 @@
-import { ColumnConfig, ColumnDataType, getContactOperator, GridColumnFilter, GridPageState, GridSearchState, GridSortState, isValidOrderStatement, log } from '@aurora';
+import { ColumnConfig, ColumnDataType, getContactOperator, getPostgresOperatorModifier, getPostgresValueModifier, GridColumnFilter, GridPageState, GridSearchState, GridSortState, isValidOrderStatement, log } from '@aurora';
 import { Operator, QueryStatement } from './sql-statement';
 import groupBy from 'lodash-es/groupBy';
 
@@ -44,14 +44,15 @@ export class QueryStatementHandler
                 const filter: GridColumnFilter = groupedFilters[key][0];
                 this.queryStatement
                     .where[key] = {
-                        [filter.operator]: filter.value,
+                        [getPostgresOperatorModifier(filter)]: getPostgresValueModifier(filter),
                     };
             }
             else if (groupedFilters[key].length > 1)
             {
-                this.queryStatement.where[key] = {
-                    [getContactOperator(groupedFilters[key][0].type)]: groupedFilters[key].map(filter => ({ [filter.operator]: filter.value })),
-                };
+                this.queryStatement
+                    .where[key] = {
+                        [getContactOperator(groupedFilters[key][0].type)]: groupedFilters[key].map(filter => ({ [getPostgresOperatorModifier(filter)]: getPostgresValueModifier(filter) })),
+                    };
             }
         }
 
