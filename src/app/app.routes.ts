@@ -83,6 +83,7 @@ export const appRoutes: Route[] = [
             { path: 'search-engine', loadChildren: () => import('app/modules/admin/apps/search-engine/search-engine.routes') },
             { path: 'kitchen-sink', loadChildren: () => import('app/modules/admin/kitchen-sink/kitchen-sink.routes') },
             { path: 'message', loadChildren: () => import('app/modules/admin/apps/message/message.routes') },
+            { path: 'settings', loadChildren: () => import('@apps/settings/settings.routes') },
         ],
     },
 

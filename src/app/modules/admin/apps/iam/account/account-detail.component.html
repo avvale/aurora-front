@@ -292,25 +292,25 @@
                                 appearance="outline"
                                 class="col-6"
                             >
-                                <mat-label>{{ t('iam.Name') }}</mat-label>
+                                <mat-label>{{ t('Name') }}</mat-label>
                                 <input
                                     matInput
                                     formControlName="name"
                                     maxlength="255"
                                 >
-                                <mat-error>{{ formErrors?.name | async }}</mat-error>
+                                <mat-error>{{ formErrors['user.name'] | async }}</mat-error>
                             </mat-form-field>
                             <mat-form-field
                                 appearance="outline"
                                 class="col-6"
                             >
-                                <mat-label>{{ t('iam.Surname') }}</mat-label>
+                                <mat-label>{{ t('Surname') }}</mat-label>
                                 <input
                                     matInput
                                     formControlName="surname"
                                     maxlength="255"
                                 >
-                                <mat-error>{{ formErrors?.surname | async }}</mat-error>
+                                <mat-error>{{ formErrors['user.surname'] | async }}</mat-error>
                             </mat-form-field>
                         </ng-container>
                         <!-- out of formGroupName user -->
