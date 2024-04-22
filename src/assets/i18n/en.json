@@ -1,5 +1,6 @@
 {
     "Accept": "Accept",
+    "Account": "Account",
     "Actions": "Actions",
     "Active": "Active",
     "Add": "Add",
@@ -114,6 +115,7 @@
     "Search": "Search",
     "Second": "Second",
     "Seconds": "Seconds",
+    "Security": "Security",
     "Select": "Select",
     "Selects": "Selects",
     "Send": "Send",

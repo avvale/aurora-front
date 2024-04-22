@@ -9,6 +9,7 @@ import { SettingsAccountComponent } from './account/account.component';
 import { SettingsNotificationsComponent } from './notifications/notifications.component';
 import { SettingsSecurityComponent } from './security/security.component';
 import { SettingsTeamComponent } from './team/team.component';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({
     selector       : 'settings',
@@ -19,7 +20,7 @@ import { SettingsTeamComponent } from './team/team.component';
     imports        : [
         MatSidenavModule, MatButtonModule, MatIconModule, NgClass, NgSwitch,
         NgSwitchCase, SettingsAccountComponent, SettingsSecurityComponent,
-        SettingsNotificationsComponent, SettingsTeamComponent,
+        SettingsNotificationsComponent, SettingsTeamComponent, TranslocoModule,
     ],
 })
 export class SettingsComponent implements OnInit, OnDestroy
@@ -56,20 +57,20 @@ export class SettingsComponent implements OnInit, OnDestroy
                 id         : 'account',
                 icon       : 'heroicons_outline:user-circle',
                 title      : 'Account',
-                description: 'Manage your public profile and private information',
+                description: 'settings.AccountDescription',
             },
             {
                 id         : 'security',
                 icon       : 'heroicons_outline:lock-closed',
                 title      : 'Security',
-                description: 'Manage your password and 2-step verification preferences',
+                description: 'settings.SecurityDescription',
             },
-            {
+            /* {
                 id         : 'notifications',
                 icon       : 'heroicons_outline:bell',
                 title      : 'Notifications',
                 description: 'Manage when you\'ll be notified on which channels',
-            },
+            }, */
         ];
 
         // Subscribe to media changes
