@@ -36,22 +36,24 @@ export class QueryStatementHandler
 
         const groupedFilters = groupBy(columnFilters, 'field');
 
-        for (const key of Object.keys(groupedFilters))
+        for (const [key, groupedFilter] of Object.entries(groupedFilters))
         {
-            // if group only has one item, don't concat query with operator and/or
-            if (groupedFilters[key].length === 1)
+            // if group only has one item, don't concat query with operator and/or,
+            // this would only happen if we are making multiple filters in the same column
+            if (groupedFilter.length === 1)
             {
-                const filter: GridColumnFilter = groupedFilters[key][0];
+                const filter: GridColumnFilter = groupedFilter[0];
                 this.queryStatement
-                    .where[key] = {
+                    .where[filter.field] = {
                         [getPostgresOperatorModifier(filter)]: getPostgresValueModifier(filter),
                     };
             }
-            else if (groupedFilters[key].length > 1)
+            else if (groupedFilter.length > 1)
             {
+                const firstFilter: GridColumnFilter = groupedFilter[0];
                 this.queryStatement
-                    .where[key] = {
-                        [getContactOperator(groupedFilters[key][0].type)]: groupedFilters[key].map(filter => ({ [getPostgresOperatorModifier(filter)]: getPostgresValueModifier(filter) })),
+                    .where[firstFilter.field] = {
+                        [getContactOperator(groupedFilter[0].type)]: groupedFilter.map(filter => ({ [getPostgresOperatorModifier(filter)]: getPostgresValueModifier(filter) })),
                     };
             }
         }
