@@ -1,25 +1,23 @@
-import { IamAccountType, IamRole, IamTag, IamTenant } from '../iam.types';
-import { TenantService } from '../tenant/tenant.service';
 import { KeyValuePipe, NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, WritableSignal, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AccountService } from '@apps/iam/account';
 import { IamAccount } from '@apps/iam/iam.types';
-import { Action, CoreGetLangsService, CoreLang, createPassword, Crumb, defaultDetailImports, log, mapActions, OAuthClientGrantType, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
-import { BehaviorSubject, lastValueFrom, Observable, ReplaySubject, takeUntil } from 'rxjs';
-// import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
-import { MatOptionSelectionChange } from '@angular/material/core';
-import { RxwebValidators } from '@rxweb/reactive-form-validators';
-import { OAuthClient, OAuthScope } from '@apps/o-auth/o-auth.types';
 import { ClientService } from '@apps/o-auth/client';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { OAuthClient, OAuthScope } from '@apps/o-auth/o-auth.types';
+import { Action, CoreGetLangsService, CoreLang, Crumb, MatPasswordStrengthModule, OAuthClientGrantType, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent, createPassword, defaultDetailImports, log, mapActions } from '@aurora';
+import { RxwebValidators } from '@rxweb/reactive-form-validators';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { BehaviorSubject, Observable, ReplaySubject, lastValueFrom, takeUntil } from 'rxjs';
+import { IamAccountType, IamRole, IamTag, IamTenant } from '../iam.types';
 import { RoleService } from '../role';
 import { TagService } from '../tag';
-import { MatPasswordStrengthModule } from '@aurora/components/password-strength';
+import { TenantService } from '../tenant/tenant.service';
 
 @Component({
     selector       : 'iam-account-detail',
@@ -218,7 +216,9 @@ export class AccountDetailComponent extends ViewDetailComponent
         });
 
         this.fg.get('user.password').setValue(password);
+        this.fg.get('user.password').markAsDirty();
         this.fg.get('user.repeatPassword').setValue(password);
+        this.fg.get('user.repeatPassword').markAsDirty();
     }
 
     handleChangeClient(
@@ -301,7 +301,6 @@ export class AccountDetailComponent extends ViewDetailComponent
                 this.fg.get('user.repeatPassword').updateValueAndValidity();
                 break;
         }
-
     }
 
     async handleAction(action: Action): Promise<void>

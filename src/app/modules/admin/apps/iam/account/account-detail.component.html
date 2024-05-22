@@ -349,9 +349,8 @@
                             <mat-form-field
                                 appearance="outline"
                                 class="col-start-1 col-6"
-                                [color]="passwordStrengthComponent.color"
                             >
-                                <mat-label>{{ t('iam.Password') }}</mat-label>
+                                <mat-label>{{ t('Password') }}</mat-label>
                                 <mat-pass-toggle-visibility
                                     #showPassword
                                     matSuffix
@@ -405,6 +404,7 @@
                                 <mat-label>{{ t('RepeatPassword') }}</mat-label>
                                 <input
                                     matInput
+                                    #repeatPasswordInput
                                     formControlName="repeatPassword"
                                     type="password"
                                     [required]="currentViewAction.id === 'iam::account.detail.new'"
@@ -415,7 +415,7 @@
                                     align="end"
                                     aria-live="polite"
                                 >
-                                    {{ user.get('repeatPassword')?.value?.length }}
+                                    {{ repeatPasswordInput.value?.length }} / {{ passwordStrengthComponent.max }}
                                 </mat-hint>
                                 <mat-error>{{ formErrors['user.repeatPassword'] | async }}</mat-error>
                             </mat-form-field>
