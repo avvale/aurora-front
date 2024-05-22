@@ -8,7 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AccountService } from '@apps/iam/account';
 import { IamAccount } from '@apps/iam/iam.types';
-import { Action, CoreGetLangsService, CoreLang, Crumb, defaultDetailImports, log, mapActions, OAuthClientGrantType, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
+import { Action, CoreGetLangsService, CoreLang, createPassword, Crumb, defaultDetailImports, log, mapActions, OAuthClientGrantType, SelectSearchService, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
 import { BehaviorSubject, lastValueFrom, Observable, ReplaySubject, takeUntil } from 'rxjs';
 // import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { MatOptionSelectionChange } from '@angular/material/core';
@@ -19,6 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { RoleService } from '../role';
 import { TagService } from '../tag';
+import { MatPasswordStrengthModule } from '@aurora/components/password-strength';
 
 @Component({
     selector       : 'iam-account-detail',
@@ -30,7 +31,7 @@ import { TagService } from '../tag';
         ...defaultDetailImports,
         MatCheckboxModule, MatSelectModule, NgForOf,
         KeyValuePipe, MatToolbarModule, NgxMatSelectSearchModule,
-        // MatPasswordStrengthModule,
+        MatPasswordStrengthModule,
     ],
 })
 export class AccountDetailComponent extends ViewDetailComponent
@@ -41,7 +42,6 @@ export class AccountDetailComponent extends ViewDetailComponent
     tags$: Observable<IamTag[]>;
     clients$: Observable<OAuthClient[]>;
     originClients: OAuthClient[];
-    isShowPassword: boolean = false;
     scopeOptions$: BehaviorSubject<OAuthScope[]> = new BehaviorSubject<OAuthScope[]>([]);
     langs$: Observable<CoreLang[]>;
     tenantFilterCtrl: FormControl = new FormControl<string>('');
@@ -207,9 +207,14 @@ export class AccountDetailComponent extends ViewDetailComponent
 
     handleCreatePassword(): void
     {
-        const password = Utils.createPassword({
-            length : 10,
-            numbers: true,
+        const password = createPassword({
+            length   : 10,
+            numbers  : true,
+            symbols  : true,
+            lowercase: true,
+            uppercase: true,
+            exclude  : '"\'~`^()-_=+[{]}\\|;:,<.>/',
+            strict   : true,
         });
 
         this.fg.get('user.password').setValue(password);
@@ -258,12 +263,28 @@ export class AccountDetailComponent extends ViewDetailComponent
                     this.fg.get('user.name').setValidators([Validators.required, Validators.maxLength(255)]);
                     this.fg.get('user.surname').setValidators([Validators.required, Validators.maxLength(255)]);
                     this.fg.get('user.username').setValidators([Validators.required, Validators.email, Validators.maxLength(120)]);
-                    this.fg.get('user.password').setValidators([Validators.required, Validators.maxLength(50)]);
+                    this.fg.get('user.password').setValidators([
+                        Validators.required,
+                        Validators.minLength(8),
+                        Validators.maxLength(30),
+                        RxwebValidators.password({
+                            validation: { digit: true, specialCharacter: true, lowerCase: true, upperCase: true },
+                            message   : { digit: 'PasswordDigit', specialCharacter: 'PasswordSpecialCharacter', lowerCase: 'PasswordLowerCase', upperCase: 'PasswordUpperCase' },
+                        }),
+                    ]);
                     this.fg.get('user.repeatPassword').setValidators([Validators.required, Validators.maxLength(50), RxwebValidators.compare({ fieldName: 'password' })]);
                     this.fg.get('user.repeatPassword').updateValueAndValidity();
                 }
                 else if (this.currentViewAction.id === 'iam::account.detail.edit')
                 {
+                    this.fg.get('user.password').setValidators([
+                        Validators.minLength(8),
+                        Validators.maxLength(30),
+                        RxwebValidators.password({
+                            validation: { digit: true, specialCharacter: true, lowerCase: true, upperCase: true },
+                            message   : { digit: 'PasswordDigit', specialCharacter: 'PasswordSpecialCharacter', lowerCase: 'PasswordLowerCase', upperCase: 'PasswordUpperCase' },
+                        }),
+                    ]);
                     this.fg.get('user.repeatPassword').setValidators([Validators.maxLength(50), RxwebValidators.compare({ fieldName: 'password' })]);
                     this.fg.get('user.repeatPassword').updateValueAndValidity();
                 }
