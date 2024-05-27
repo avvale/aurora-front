@@ -40,6 +40,7 @@ function copyApplication()
             '!src/app/modules/admin/apps/queue-manager/**',
             '!src/app/modules/admin/apps/search-engine/**',
             '!src/app/modules/admin/apps/message/**',
+            '!src/app/modules/admin/apps/settings/**',
             '!src/app/modules/admin/kitchen-sink/**',
             '!src/app/modules/azure-ad/**',
             '!src/assets/i18n/auditing/**',
@@ -109,6 +110,7 @@ async function cleanAppRoutes()
         'search-engine',
         'message',
         'kitchen-sink',
+        'settings',
     ]);
 
     sourceFile.saveSync();
