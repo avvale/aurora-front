@@ -50,6 +50,7 @@ function copyApplication()
             '!src/assets/i18n/queue-manager/**',
             '!src/assets/i18n/search-engine/**',
             '!src/assets/i18n/message/**',
+            '!src/assets/i18n/settings/**',
             '!src/assets/i18n/kitchen-sink/**',
             '!src/index.ts',
             '!gulpfile.js',
@@ -194,6 +195,13 @@ async function cleanClassyTemplate()
     fs.writeFileSync(path.join('publish', 'src', 'app', 'layout', 'layouts', 'vertical', 'classy', 'classy.component.html'), html);
 }
 
+async function cleanUserComponent()
+{
+    let html = fs.readFileSync(path.join('publish', 'src', 'app', 'layout', 'common', 'user', 'user.component.html'), 'utf8');
+    const regex = /<button\s+mat-menu-item\s+\[routerLink\]="\['settings', 'account'\]"\s*>\s*<mat-icon svgIcon="heroicons_outline:cog-8-tooth"><\/mat-icon>\s*<span>{{ t\('Settings'\) }}<\/span>\s*<\/button>/gi;
+    html = html.replace(regex, '');
+    fs.writeFileSync(path.join('publish', 'src', 'app', 'layout', 'common', 'user', 'user.component.html'), html);
+}
 
 async function cleanAuroraProvider()
 {
@@ -331,6 +339,7 @@ exports.publishApplication = series(
     cleanAppResolvers,
     cleanClassyComponent,
     cleanClassyTemplate,
+    cleanUserComponent,
     cleanAuroraProvider,
     cleanEnvironments,
     copyToCLI,

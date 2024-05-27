@@ -10,7 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
 // ---- customizations ----
 import { Account, AuthenticationService, IamService, User } from '@aurora';
 import { TranslocoModule } from '@ngneat/transloco';
-import { RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector       : 'user',
@@ -22,7 +22,7 @@ import { RouterModule } from '@angular/router';
     imports        : [
         // ---- customizations ----
         TranslocoModule,
-        MatButtonModule, MatMenuModule, NgIf, MatIconModule, NgClass, MatDividerModule, RouterModule,
+        MatButtonModule, MatMenuModule, NgIf, MatIconModule, NgClass, MatDividerModule, RouterLink,
     ],
 })
 export class UserComponent implements OnInit, OnDestroy
