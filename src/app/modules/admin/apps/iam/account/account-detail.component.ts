@@ -87,6 +87,7 @@ export class AccountDetailComponent extends ViewDetailComponent
     // the parent class you can use instead of ngOnInit
     init(): void
     {
+        /**/
         this.tenants$ = this.tenantService.tenants$;
         this.roles$ = this.roleService.roles$;
         this.tags$ = this.tagService.tags$;

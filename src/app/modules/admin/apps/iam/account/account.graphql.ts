@@ -221,3 +221,14 @@ export const deleteMutation = gql`
         }
     }
 `;
+
+// Mutation additionalApis
+export const meAccountUpdateMutation = gql`
+    mutation IamMeAccountUpdate (
+        $payload: IamUpdateMeAccountInput!
+    ) {
+        iamMeAccountUpdate (
+            payload: $payload
+        )
+    }
+`;

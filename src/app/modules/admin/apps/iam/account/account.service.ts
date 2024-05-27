@@ -10,7 +10,7 @@ import { IamRole, IamTag, IamTenant } from '../iam.types';
 import { RoleService } from '../role';
 import { TagService } from '../tag';
 import { TenantService } from '../tenant/tenant.service';
-import { findByIdWithRelationsQuery, getRelations } from './account.graphql';
+import { findByIdWithRelationsQuery, getRelations, meAccountUpdateMutation } from './account.graphql';
 
 @Injectable({
     providedIn: 'root',
@@ -188,9 +188,9 @@ export class AccountService
             graphqlStatement = findByIdWithRelationsQuery,
             id = '',
             constraint = {},
+            headers = {},
             queryGetClients = {},
             constraintGetClients = {},
-            headers = {},
             scope,
         }: {
             graphqlStatement?: DocumentNode;
@@ -509,6 +509,32 @@ export class AccountService
                 variables: {
                     query,
                     constraint,
+                },
+                context: {
+                    headers,
+                },
+            });
+    }
+
+    // Mutation additionalApis
+    meAccountUpdate<T>(
+        {
+            graphqlStatement = meAccountUpdateMutation,
+            object = null,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            object?: IamUpdateAccountById;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    payload: object,
                 },
                 context: {
                     headers,
