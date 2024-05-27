@@ -1,8 +1,11 @@
 <div class="w-full max-w-3xl" *transloco="let t">
 
     <!-- Form -->
-    <form [formGroup]="fg">
-
+    <form
+        novalidate
+        [formGroup]="fg"
+        (ngSubmit)="onSubmit($event)"
+    >
         <!-- Section -->
         <div class="w-full">
             <div class="text-xl">{{ t('Profile') }}</div>
@@ -67,7 +70,7 @@
                         class="text-secondary"
                         matPrefix
                     >
-                        fusetheme.com/
+                        {{ environment.oAuth.applicationCode }}/
                     </div>
                     <input
                         formControlName="username"
@@ -141,14 +144,18 @@
         <div class="flex items-center justify-end">
             <button
                 mat-stroked-button
-                type="button">
-                Cancel
+                type="button"
+            >
+                {{ t('Cancel') }}
             </button>
             <button
                 class="ml-4"
                 mat-flat-button
-                type="button"
-                [color]="'primary'">Save
+                type="submit"
+                color="primary"
+                [disabled]="fg.pristine || ('settings::account.detail.update' | getSpinnerFlag | async)"
+            >
+                {{ t('Update') }}
             </button>
         </div>
     </form>

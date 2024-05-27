@@ -1,15 +1,16 @@
 import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { TranslocoModule } from '@ngneat/transloco';
 import { Subject, takeUntil } from 'rxjs';
 import { SettingsAccountComponent } from './account/account.component';
 import { SettingsNotificationsComponent } from './notifications/notifications.component';
 import { SettingsSecurityComponent } from './security/security.component';
 import { SettingsTeamComponent } from './team/team.component';
-import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({
     selector       : 'settings',
@@ -19,7 +20,7 @@ import { TranslocoModule } from '@ngneat/transloco';
     standalone     : true,
     imports        : [
         MatSidenavModule, MatButtonModule, MatIconModule, NgClass, NgSwitch,
-        NgSwitchCase, SettingsAccountComponent, SettingsSecurityComponent,
+        NgSwitchCase, RouterLink, RouterOutlet, SettingsAccountComponent, SettingsSecurityComponent,
         SettingsNotificationsComponent, SettingsTeamComponent, TranslocoModule,
     ],
 })
@@ -57,13 +58,17 @@ export class SettingsComponent implements OnInit, OnDestroy
                 id         : 'account',
                 icon       : 'heroicons_outline:user-circle',
                 title      : 'Account',
+                translation: 'settings.Account',
                 description: 'settings.AccountDescription',
+                routerLink : ['account'],
             },
             {
                 id         : 'security',
                 icon       : 'heroicons_outline:lock-closed',
                 title      : 'Security',
+                translation: 'settings.Security',
                 description: 'settings.SecurityDescription',
+                routerLink : ['security'],
             },
             /* {
                 id         : 'notifications',
@@ -76,7 +81,7 @@ export class SettingsComponent implements OnInit, OnDestroy
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) =>
+            .subscribe(({ matchingAliases }) =>
             {
                 // Set the drawerMode and drawerOpened
                 if ( matchingAliases.includes('lg') )

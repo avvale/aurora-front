@@ -33,6 +33,7 @@
                                 'hover:bg-gray-100 dark:hover:bg-hover': !selectedPanel || selectedPanel !== panel.id,
                                 'bg-primary-50 dark:bg-hover': selectedPanel && selectedPanel === panel.id
                             }"
+                        [routerLink]="panel.routerLink"
                         (click)="goToPanel(panel.id)"
                     >
                         <mat-icon
@@ -79,30 +80,32 @@
 
                     <!-- Panel title -->
                     <div class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
-                        {{ getPanelInfo(selectedPanel).title }}
+                        {{ t(getPanelInfo(selectedPanel).title) }}
                     </div>
                 </div>
 
                 <!-- Load settings panel -->
                 <div class="mt-8">
-                    <ng-container [ngSwitch]="selectedPanel">
-                        <!-- Account -->
-                        <ng-container *ngSwitchCase="'account'">
+                    <router-outlet></router-outlet>
+                    <!-- @switch (selectedPanel)
+                    {
+                        @case ('account')
+                        {
                             <settings-account></settings-account>
-                        </ng-container>
-                        <!-- Security -->
-                        <ng-container *ngSwitchCase="'security'">
+                        }
+                        @case ('security')
+                        {
                             <settings-security></settings-security>
-                        </ng-container>
-                        <!-- Notifications -->
-                        <ng-container *ngSwitchCase="'notifications'">
+                        }
+                        @case ('notifications')
+                        {
                             <settings-notifications></settings-notifications>
-                        </ng-container>
-                        <!-- Team -->
-                        <ng-container *ngSwitchCase="'team'">
+                        }
+                        @case ('team')
+                        {
                             <settings-team></settings-team>
-                        </ng-container>
-                    </ng-container>
+                        }
+                    } -->
                 </div>
 
             </div>
