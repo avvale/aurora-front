@@ -551,10 +551,12 @@ export class AccountService
         {
             graphqlStatement = checkUniqueUsernameAccountQuery,
             username = null,
+            avoidUsernames = [],
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
             username?: string;
+            avoidUsernames?: string[];
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<boolean>
@@ -567,6 +569,7 @@ export class AccountService
                 query    : graphqlStatement,
                 variables: {
                     username,
+                    avoidUsernames,
                 },
                 context: {
                     headers,

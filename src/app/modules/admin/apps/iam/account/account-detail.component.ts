@@ -16,7 +16,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { BehaviorSubject, Observable, ReplaySubject, lastValueFrom, takeUntil } from 'rxjs';
 import { IamAccountType, IamRole, IamTag, IamTenant } from '../iam.types';
 import { RoleService } from '../role';
-import { UniqueUsernameValidator } from '../shared';
+import { uniqueUsernameValidator } from '../shared';
 import { TagService } from '../tag';
 import { TenantService } from '../tenant/tenant.service';
 
@@ -46,7 +46,7 @@ export class AccountDetailComponent extends ViewDetailComponent
     tenantFilterCtrl: FormControl = new FormControl<string>('');
     filteredTenants$: ReplaySubject<IamTenant[]> = new ReplaySubject<IamTenant[]>(1);
     showTenantsInput: WritableSignal<boolean> = signal(true);
-    showUsernameSpinner: WritableSignal<boolean> = signal(false);
+    usernameStatus: WritableSignal<string> = signal('VALID');
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -82,7 +82,6 @@ export class AccountDetailComponent extends ViewDetailComponent
         private readonly clientService: ClientService,
         private readonly coreGetLangsService: CoreGetLangsService,
         private readonly selectSearchService: SelectSearchService,
-        private readonly uniqueUsernameValidator: UniqueUsernameValidator,
     )
     {
         super();
@@ -105,10 +104,9 @@ export class AccountDetailComponent extends ViewDetailComponent
         // set all clients to be filtered according account type, and action
         this.originClients = this.clientService.clientsSubject$.value;
 
-        this.username.setAsyncValidators(this.uniqueUsernameValidator.validate.bind(this.uniqueUsernameValidator));
         this.username
             .statusChanges
-            .subscribe(status => this.showUsernameSpinner.set(status === 'PENDING'));
+            .subscribe(status => this.usernameStatus.set(status));
     }
 
     initTenantsFilter(tenants: IamTenant[]): void
@@ -198,10 +196,8 @@ export class AccountDetailComponent extends ViewDetailComponent
             email: ['', [Validators.maxLength(128), Validators.email]],
             username: ['', {
                 validators: [Validators.required, Validators.maxLength(128)],
-                // asyncValidators: [this.uniqueUsernameValidator.validate.bind(this.uniqueUsernameValidator)],
                 updateOn: 'blur',
             }],
-            // username: ['', [Validators.required, Validators.maxLength(128)], [this.uniqueUsernameValidator.validate]],
             isActive: false,
             clientId: null,
             tags: [],
@@ -327,6 +323,9 @@ export class AccountDetailComponent extends ViewDetailComponent
             /* #region common actions */
             case 'iam::account.detail.new':
                 this.fg.get('id').setValue(uuid());
+                this.username.setAsyncValidators(
+                    uniqueUsernameValidator(this.accountService),
+                );
                 break;
 
             case 'iam::account.detail.edit':
@@ -345,6 +344,10 @@ export class AccountDetailComponent extends ViewDetailComponent
                         // set many to many associations
                         this.fg.get('roleIds').setValue(item.roles.map(role => role.id));
                         this.fg.get('tenantIds').setValue(item.tenants.map(tenant => tenant.id));
+
+                        this.username.setAsyncValidators(
+                            uniqueUsernameValidator(this.accountService, [item.username]),
+                        );
 
                         this.setPasswordValidators(item.type);
                     });

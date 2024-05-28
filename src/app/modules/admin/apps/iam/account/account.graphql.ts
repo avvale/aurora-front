@@ -238,9 +238,11 @@ export const checkPasswordMeAccountQuery = gql`
 export const checkUniqueUsernameAccountQuery = gql`
     query IamCheckUniqueUsernameAccount (
         $username: GraphQLString!
+        $avoidUsernames: [GraphQLString]
     ) {
         iamCheckUniqueUsernameAccount (
             username: $username
+            avoidUsernames: $avoidUsernames
         )
     }
 `;

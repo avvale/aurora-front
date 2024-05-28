@@ -73,9 +73,33 @@
                         {{ environment.oAuth.applicationCode }}/
                     </div>
                     <input
-                        formControlName="username"
                         matInput
+                        formControlName="username"
+                        maxlength="128"
+                        (input)="$event.target.value = $event.target.value.toLowerCase()"
                     >
+                    @if (usernameStatus() === 'PENDING')
+                    {
+                        <mat-icon matSuffix>
+                            <mat-spinner diameter="20"></mat-spinner>
+                        </mat-icon>
+                    }
+                    @else if (usernameStatus() === 'VALID')
+                    {
+                        <mat-icon matSuffix>
+                            check
+                        </mat-icon>
+                    }
+                    @else
+                    {
+                        <mat-icon
+                            matSuffix
+                            fontSet="material-symbols-outlined"
+                        >
+                            exclamation
+                        </mat-icon>
+                    }
+                    <mat-error>{{ formErrors['username'] | async }}</mat-error>
                 </mat-form-field>
             </div>
         </div>

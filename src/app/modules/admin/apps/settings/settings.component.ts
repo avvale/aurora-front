@@ -138,7 +138,7 @@ export class SettingsComponent implements OnInit, OnDestroy
         // Close the drawer on 'over' mode
         if ( this.drawerMode === 'over' )
         {
-            this.drawer.close();
+            this.drawer?.close();
         }
     }
 
