@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { AccountService } from '@apps/iam/account';
-import { Account, Action, CoreGetLangsService, CoreLang, GetSpinnerFlagPipe, IamService, SnackBarInvalidFormComponent, ViewDetailComponent, log, mapActions } from '@aurora';
+import { Account, Action, CoreGetLangsService, CoreLang, GetSpinnerFlagPipe, IamService, SnackBarInvalidFormComponent, ViewDetailComponent, log } from '@aurora';
 import { TranslocoModule } from '@ngneat/transloco';
 import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 import { environment } from 'environments/environment';
@@ -114,7 +114,7 @@ export class SettingsAccountComponent extends ViewDetailComponent
 
                     await lastValueFrom(
                         this.accountService
-                            .meAccountUpdate({
+                            .updateMeAccount({
                                 object: this.fg.value,
                             }),
                     );

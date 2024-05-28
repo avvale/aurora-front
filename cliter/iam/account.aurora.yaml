@@ -162,7 +162,13 @@ aggregateProperties:
     type: timestamp
     nullable: true
 additionalApis:
-  - path: iam/account/update/me
+  - path: iam/account/update-me
+    resolverType: mutation
+    httpMethod: post
+  - path: iam/account/check-password-me
+    resolverType: mutation
+    httpMethod: post
+  - path: iam/account/check-unique-username
     resolverType: mutation
     httpMethod: post
 excludedFiles:

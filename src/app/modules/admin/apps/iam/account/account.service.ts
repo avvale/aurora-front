@@ -10,7 +10,7 @@ import { IamRole, IamTag, IamTenant } from '../iam.types';
 import { RoleService } from '../role';
 import { TagService } from '../tag';
 import { TenantService } from '../tenant/tenant.service';
-import { findByIdWithRelationsQuery, getRelations, meAccountUpdateMutation } from './account.graphql';
+import { checkPasswordMeAccountMutation, checkUniqueUsernameAccountMutation, findByIdWithRelationsQuery, getRelations, updateMeAccountMutation } from './account.graphql';
 
 @Injectable({
     providedIn: 'root',
@@ -517,9 +517,9 @@ export class AccountService
     }
 
     // Mutation additionalApis
-    meAccountUpdate<T>(
+    updateMeAccount<T>(
         {
-            graphqlStatement = meAccountUpdateMutation,
+            graphqlStatement = updateMeAccountMutation,
             object = null,
             headers = {},
         }: {
@@ -535,6 +535,56 @@ export class AccountService
                 mutation : graphqlStatement,
                 variables: {
                     payload: object,
+                },
+                context: {
+                    headers,
+                },
+            });
+    }
+
+    checkPasswordMeAccount<T>(
+        {
+            graphqlStatement = checkPasswordMeAccountMutation,
+            password = null,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            password?: string;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    password,
+                },
+                context: {
+                    headers,
+                },
+            });
+    }
+
+    checkUniqueUsernameAccount<T>(
+        {
+            graphqlStatement = checkUniqueUsernameAccountMutation,
+            username = null,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            username?: string;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    username,
                 },
                 context: {
                     headers,
