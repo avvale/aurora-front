@@ -1,14 +1,24 @@
-import { Injectable } from '@angular/core';
-import { AsyncValidator } from '@angular/forms';
+import { Injectable, inject } from '@angular/core';
+import { AbstractControl, AsyncValidator, ValidationErrors } from '@angular/forms';
+import { AccountService } from '@apps/iam/account';
+import { Observable, catchError, map, of, tap } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
-export class UniqueRoleValidator implements AsyncValidator
+@Injectable({
+    providedIn: 'root',
+})
+export class UniqueUsernameValidator implements AsyncValidator
 {
-    constructor(private actorsService: ActorsService) { }
-    validate(control: AbstractControl): Observable<ValidationErrors | null> {
-        return this.actorsService.isRoleTaken(control.value).pipe(
-            map((isTaken) => (isTaken ? { uniqueRole: true } : null)),
-            catchError(() => of(null)),
-        );
+    accountService = inject(AccountService);
+
+    validate(control: AbstractControl): Observable<ValidationErrors | null>
+    {
+        return this.accountService
+            .checkUniqueUsernameAccount({
+                username: control.value,
+            })
+            .pipe(
+                map(isTaken => (isTaken ? null : { uniqueUsername: true })),
+                catchError(() => of(null)),
+            );
     }
 }

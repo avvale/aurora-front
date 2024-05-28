@@ -10,7 +10,7 @@ import { IamRole, IamTag, IamTenant } from '../iam.types';
 import { RoleService } from '../role';
 import { TagService } from '../tag';
 import { TenantService } from '../tenant/tenant.service';
-import { checkPasswordMeAccountMutation, checkUniqueUsernameAccountMutation, findByIdWithRelationsQuery, getRelations, updateMeAccountMutation } from './account.graphql';
+import { checkPasswordMeAccountQuery, checkUniqueUsernameAccountQuery, findByIdWithRelationsQuery, getRelations, updateMeAccountMutation } from './account.graphql';
 
 @Injectable({
     providedIn: 'root',
@@ -516,6 +516,69 @@ export class AccountService
             });
     }
 
+    // Queries additionalApis
+    checkPasswordMeAccount(
+        {
+            graphqlStatement = checkPasswordMeAccountQuery,
+            password = null,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            password?: string;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<boolean>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<boolean>({
+                query    : graphqlStatement,
+                variables: {
+                    password,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data),
+            );
+    }
+
+    checkUniqueUsernameAccount(
+        {
+            graphqlStatement = checkUniqueUsernameAccountQuery,
+            username = null,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            username?: string;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<boolean>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                iamCheckUniqueUsernameAccount: boolean;
+            }>({
+                query    : graphqlStatement,
+                variables: {
+                    username,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data.iamCheckUniqueUsernameAccount),
+            );
+    }
+
     // Mutation additionalApis
     updateMeAccount<T>(
         {
@@ -535,56 +598,6 @@ export class AccountService
                 mutation : graphqlStatement,
                 variables: {
                     payload: object,
-                },
-                context: {
-                    headers,
-                },
-            });
-    }
-
-    checkPasswordMeAccount<T>(
-        {
-            graphqlStatement = checkPasswordMeAccountMutation,
-            password = null,
-            headers = {},
-        }: {
-            graphqlStatement?: DocumentNode;
-            password?: string;
-            headers?: GraphQLHeaders;
-        } = {},
-    ): Observable<FetchResult<T>>
-    {
-        return this.graphqlService
-            .client()
-            .mutate({
-                mutation : graphqlStatement,
-                variables: {
-                    password,
-                },
-                context: {
-                    headers,
-                },
-            });
-    }
-
-    checkUniqueUsernameAccount<T>(
-        {
-            graphqlStatement = checkUniqueUsernameAccountMutation,
-            username = null,
-            headers = {},
-        }: {
-            graphqlStatement?: DocumentNode;
-            username?: string;
-            headers?: GraphQLHeaders;
-        } = {},
-    ): Observable<FetchResult<T>>
-    {
-        return this.graphqlService
-            .client()
-            .mutate({
-                mutation : graphqlStatement,
-                variables: {
-                    username,
                 },
                 context: {
                     headers,

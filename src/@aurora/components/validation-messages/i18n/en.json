@@ -13,5 +13,6 @@
     "PasswordSpecialCharacter": "The field must contain at least one special character.",
     "PasswordUpperCase"       : "The field must contain at least one uppercase letter.",
     "Pattern"                 : "The field {{ fieldname }} doesn\"t match the indicated pattern.",
-    "Required"                : "This field is required."
+    "Required"                : "This field is required.",
+    "UniqueUsername"          : "This username is already in use."
 }

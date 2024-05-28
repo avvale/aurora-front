@@ -169,9 +169,15 @@
                             <input
                                 matInput
                                 formControlName="username"
-                                maxlength="120"
+                                maxlength="128"
                             >
-                            <mat-error>{{ formErrors['user.username'] | async }}</mat-error>
+                            @if (showUsernameSpinner())
+                            {
+                                <mat-icon matSuffix>
+                                    <mat-spinner diameter="20"></mat-spinner>
+                                </mat-icon>
+                            }
+                            <mat-error>{{ formErrors['username'] | async }}</mat-error>
                         </mat-form-field>
                     }
 
@@ -322,9 +328,15 @@
                             <input
                                 matInput
                                 formControlName="username"
-                                maxlength="120"
+                                maxlength="128"
                             >
-                            <mat-error>{{ formErrors['user.username'] | async }}</mat-error>
+                            @if (showUsernameSpinner())
+                            {
+                                <mat-icon matSuffix>
+                                    <mat-spinner diameter="20"></mat-spinner>
+                                </mat-icon>
+                            }
+                            <mat-error>{{ formErrors['username'] | async }}</mat-error>
                         </mat-form-field>
                         <!-- / out of formGroupName user -->
                         <ng-container formGroupName="user">

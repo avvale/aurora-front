@@ -222,6 +222,29 @@ export const deleteMutation = gql`
     }
 `;
 
+// Queries additionalApis
+export const checkPasswordMeAccountQuery = gql`
+    query IamCheckPasswordMeAccount (
+        $password: GraphQLString!
+    ) {
+        iamCheckPasswordMeAccount (
+            password: $password
+        ) {
+            ${fields}
+        }
+    }
+`;
+
+export const checkUniqueUsernameAccountQuery = gql`
+    query IamCheckUniqueUsernameAccount (
+        $username: GraphQLString!
+    ) {
+        iamCheckUniqueUsernameAccount (
+            username: $username
+        )
+    }
+`;
+
 // Mutation additionalApis
 export const updateMeAccountMutation = gql`
     mutation IamUpdateMeAccount (
@@ -229,26 +252,6 @@ export const updateMeAccountMutation = gql`
     ) {
         iamUpdateMeAccount (
             payload: $payload
-        )
-    }
-`;
-
-export const checkPasswordMeAccountMutation = gql`
-    mutation IamCheckPasswordMeAccount (
-        $password: GraphQLString!
-    ) {
-        iamCheckPasswordMeAccount (
-            password: $password
-        )
-    }
-`;
-
-export const checkUniqueUsernameAccountMutation = gql`
-    mutation IamCheckUniqueUsernameAccount (
-        $username: GraphQLString!
-    ) {
-        iamCheckUniqueUsernameAccount (
-            username: $username
         )
     }
 `;
