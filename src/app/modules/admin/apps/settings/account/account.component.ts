@@ -130,7 +130,6 @@ export class SettingsAccountComponent extends ViewDetailComponent
             case 'settings::account.detail.update':
                 try
                 {
-
                     await lastValueFrom(
                         this.accountService
                             .updateMeAccount({
