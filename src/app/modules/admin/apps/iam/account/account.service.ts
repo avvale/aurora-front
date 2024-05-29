@@ -531,7 +531,9 @@ export class AccountService
     {
         return this.graphqlService
             .client()
-            .watchQuery<boolean>({
+            .watchQuery<{
+                iamCheckPasswordMeAccount: boolean;
+            }>({
                 query    : graphqlStatement,
                 variables: {
                     password,
@@ -543,7 +545,7 @@ export class AccountService
             .valueChanges
             .pipe(
                 first(),
-                map(result => result.data),
+                map(result => result.data.iamCheckPasswordMeAccount),
             );
     }
 

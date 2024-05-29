@@ -229,9 +229,7 @@ export const checkPasswordMeAccountQuery = gql`
     ) {
         iamCheckPasswordMeAccount (
             password: $password
-        ) {
-            ${fields}
-        }
+        )
     }
 `;
 

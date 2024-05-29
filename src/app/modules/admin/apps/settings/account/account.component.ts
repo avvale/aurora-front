@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { AccountService } from '@apps/iam/account';
-import { uniqueUsernameValidator } from '@apps/iam/shared';
+import { uniqueEmailValidator, uniqueUsernameValidator } from '@apps/iam/shared';
 import { Account, Action, CoreGetLangsService, CoreLang, GetSpinnerFlagPipe, IamService, SnackBarInvalidFormComponent, ViewDetailComponent, log } from '@aurora';
 import { TranslocoModule } from '@ngneat/transloco';
 import { environment } from 'environments/environment';
@@ -34,6 +34,7 @@ export class SettingsAccountComponent extends ViewDetailComponent
     langs$: Observable<CoreLang[]>;
     environment = environment;
     usernameStatus: WritableSignal<string> = signal('VALID');
+    emailStatus: WritableSignal<string> = signal('VALID');
 
     iamService = inject(IamService);
     coreGetLangsService = inject(CoreGetLangsService);
@@ -42,6 +43,11 @@ export class SettingsAccountComponent extends ViewDetailComponent
     get user(): FormGroup
     {
         return this.fg.get('user') as FormGroup;
+    }
+
+    get email(): FormControl
+    {
+        return this.fg.get('email') as FormControl;
     }
 
     get username(): FormControl
@@ -72,6 +78,11 @@ export class SettingsAccountComponent extends ViewDetailComponent
     init(): void
     {
         this.langs$ = this.coreGetLangsService.langs$;
+
+        // subscribe to async validators status
+        this.email
+            .statusChanges
+            .subscribe(status => this.emailStatus.set(status));
 
         this.username
             .statusChanges
@@ -120,6 +131,11 @@ export class SettingsAccountComponent extends ViewDetailComponent
                     .subscribe((account: Account) =>
                     {
                         this.account = account;
+
+                        // load async validators
+                        this.email.setAsyncValidators(
+                            uniqueEmailValidator(this.accountService, [account.email]),
+                        );
                         this.username.setAsyncValidators(
                             uniqueUsernameValidator(this.accountService, [account.username]),
                         );
@@ -145,8 +161,6 @@ export class SettingsAccountComponent extends ViewDetailComponent
                             duration        : 3000,
                         },
                     );
-
-                    // this.router.navigate(['iam/tag']);
                 }
                 catch(error)
                 {
