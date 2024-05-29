@@ -247,6 +247,18 @@ export const checkUniqueUsernameAccountQuery = gql`
     }
 `;
 
+export const checkUniqueEmailAccountQuery = gql`
+    query IamCheckUniqueEmailAccount (
+        $email: GraphQLString!
+        $avoidEmails: [GraphQLString]
+    ) {
+        iamCheckUniqueEmailAccount (
+            email: $email
+            avoidEmails: $avoidEmails
+        )
+    }
+`;
+
 // Mutation additionalApis
 export const updateMeAccountMutation = gql`
     mutation IamUpdateMeAccount (

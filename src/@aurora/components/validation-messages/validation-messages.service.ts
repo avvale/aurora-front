@@ -94,6 +94,9 @@ export class ValidationMessagesService
             case 'uniqueUsername':
                 return this.translocoService.selectTranslate('validations.UniqueUsername');
 
+            case 'uniqueEmail':
+                return this.translocoService.selectTranslate('validations.UniqueEmail');
+
             default:
                 console.log('error', error);
                 return this.translocoService.selectTranslate('validations.Default');

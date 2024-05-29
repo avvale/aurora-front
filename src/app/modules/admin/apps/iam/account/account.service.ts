@@ -10,7 +10,7 @@ import { IamRole, IamTag, IamTenant } from '../iam.types';
 import { RoleService } from '../role';
 import { TagService } from '../tag';
 import { TenantService } from '../tenant/tenant.service';
-import { checkPasswordMeAccountQuery, checkUniqueUsernameAccountQuery, findByIdWithRelationsQuery, getRelations, updateMeAccountMutation } from './account.graphql';
+import { checkPasswordMeAccountQuery, checkUniqueEmailAccountQuery, checkUniqueUsernameAccountQuery, findByIdWithRelationsQuery, getRelations, updateMeAccountMutation } from './account.graphql';
 
 @Injectable({
     providedIn: 'root',
@@ -579,6 +579,41 @@ export class AccountService
             .pipe(
                 first(),
                 map(result => result.data.iamCheckUniqueUsernameAccount),
+            );
+    }
+
+    checkUniqueEmailAccount(
+        {
+            graphqlStatement = checkUniqueEmailAccountQuery,
+            email = null,
+            avoidEmails = [],
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            email?: string;
+            avoidEmails?: string[];
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<boolean>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                iamCheckUniqueEmailAccount: boolean;
+            }>({
+                query    : graphqlStatement,
+                variables: {
+                    email,
+                    avoidEmails,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data.iamCheckUniqueEmailAccount),
             );
     }
 

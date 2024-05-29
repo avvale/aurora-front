@@ -16,7 +16,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { BehaviorSubject, Observable, ReplaySubject, lastValueFrom, takeUntil } from 'rxjs';
 import { IamAccountType, IamRole, IamTag, IamTenant } from '../iam.types';
 import { RoleService } from '../role';
-import { uniqueUsernameValidator } from '../shared';
+import { uniqueEmailValidator, uniqueUsernameValidator } from '../shared';
 import { TagService } from '../tag';
 import { TenantService } from '../tenant/tenant.service';
 
@@ -47,6 +47,7 @@ export class AccountDetailComponent extends ViewDetailComponent
     filteredTenants$: ReplaySubject<IamTenant[]> = new ReplaySubject<IamTenant[]>(1);
     showTenantsInput: WritableSignal<boolean> = signal(true);
     usernameStatus: WritableSignal<string> = signal('VALID');
+    emailStatus: WritableSignal<string> = signal('VALID');
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -67,6 +68,11 @@ export class AccountDetailComponent extends ViewDetailComponent
     get user(): FormGroup
     {
         return this.fg.get('user') as FormGroup;
+    }
+
+    get email(): FormControl
+    {
+        return this.fg.get('email') as FormControl;
     }
 
     get username(): FormControl
@@ -103,6 +109,11 @@ export class AccountDetailComponent extends ViewDetailComponent
 
         // set all clients to be filtered according account type, and action
         this.originClients = this.clientService.clientsSubject$.value;
+
+        // subscribe to async validators status
+        this.email
+            .statusChanges
+            .subscribe(status => this.emailStatus.set(status));
 
         this.username
             .statusChanges
@@ -193,7 +204,10 @@ export class AccountDetailComponent extends ViewDetailComponent
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
             type: [null, [Validators.required]],
             code: ['', [Validators.maxLength(64)]],
-            email: ['', [Validators.maxLength(128), Validators.email]],
+            email: ['', {
+                validators: [Validators.email, Validators.maxLength(128)],
+                updateOn: 'blur',
+            }],
             username: ['', {
                 validators: [Validators.required, Validators.maxLength(128)],
                 updateOn: 'blur',
@@ -323,6 +337,11 @@ export class AccountDetailComponent extends ViewDetailComponent
             /* #region common actions */
             case 'iam::account.detail.new':
                 this.fg.get('id').setValue(uuid());
+
+                // load async validators
+                this.email.setAsyncValidators(
+                    uniqueEmailValidator(this.accountService),
+                );
                 this.username.setAsyncValidators(
                     uniqueUsernameValidator(this.accountService),
                 );
@@ -345,6 +364,10 @@ export class AccountDetailComponent extends ViewDetailComponent
                         this.fg.get('roleIds').setValue(item.roles.map(role => role.id));
                         this.fg.get('tenantIds').setValue(item.tenants.map(tenant => tenant.id));
 
+                        // load async validators
+                        this.email.setAsyncValidators(
+                            uniqueEmailValidator(this.accountService, [item.email]),
+                        );
                         this.username.setAsyncValidators(
                             uniqueUsernameValidator(this.accountService, [item.username]),
                         );

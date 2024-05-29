@@ -155,7 +155,29 @@
                             matInput
                             formControlName="email"
                             maxlength="128"
+                            (input)="$event.target.value = $event.target.value.toLowerCase()"
                         >
+                        @if (emailStatus() === 'PENDING')
+                        {
+                            <mat-icon matSuffix>
+                                <mat-spinner diameter="20"></mat-spinner>
+                            </mat-icon>
+                        }
+                        @else if (emailStatus() === 'VALID')
+                        {
+                            <mat-icon matSuffix>
+                                check
+                            </mat-icon>
+                        }
+                        @else
+                        {
+                            <mat-icon
+                                matSuffix
+                                fontSet="material-symbols-outlined"
+                            >
+                                exclamation
+                            </mat-icon>
+                        }
                         <mat-error>{{ formErrors?.email | async }}</mat-error>
                     </mat-form-field>
 
