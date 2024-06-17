@@ -129,316 +129,390 @@
                     [matColumnDef]="columnConfig.field"
                     [sticky]="columnConfig.sticky"
                 >
-                    <!-- ngSwitch for grid cell -->
-                    <ng-container
-                        [ngSwitch]="columnConfig.type"
-                        *ngIf="!columnConfig.hidden"
-                    >
-                        <!-- STRING -->
-                        <ng-container *ngSwitchCase="columnConfigType.STRING">
-                            <th
-                                mat-header-cell
-                                *matHeaderCellDef
-                                [disabled]="!columnConfig.sort"
-                                [ngClass]="columnConfig.headerClass"
-                                [mat-sort-header]="columnConfig.sort"
-                            >
-                                {{ columnConfig.field | gridTranslate:'column':id | async }}
-                            </th>
-                            <td
-                                mat-cell
-                                *matCellDef="let row"
-                                [ngClass]="columnConfig.bodyClass"
-                            >
-                                <!-- set value by template -->
-                                <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
-                                    <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                    <!-- set value by template for all fields -->
-                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                </div>
-                                <!-- set value by columns config transform -->
-                                <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
-                                    {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform }}
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- BOOLEAN -->
-                        <ng-container *ngSwitchCase="columnConfigType.BOOLEAN">
-                            <th
-                                mat-header-cell
-                                *matHeaderCellDef
-                                [disabled]="!columnConfig.sort"
-                                [ngClass]="columnConfig.headerClass"
-                                [mat-sort-header]="columnConfig.sort"
-                            >
-                                {{ columnConfig.field | gridTranslate:'column':id | async }}
-                            </th>
-                            <td
-                                mat-cell
-                                *matCellDef="let row"
-                                [ngClass]="columnConfig.bodyClass"
-                            >
-                                <!-- set value by template -->
-                                <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
-                                    <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                    <!-- set value by template for all fields -->
-                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                </div>
-                                <!-- set value by columns config transform -->
-                                <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
-                                    <mat-icon *ngIf="row | getCellValue:columnConfig.field">done</mat-icon>
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- NUMBER -->
-                        <ng-container *ngSwitchCase="columnConfigType.NUMBER">
-                            <th
-                                mat-header-cell
-                                *matHeaderCellDef
-                                [disabled]="!columnConfig.sort"
-                                [ngClass]="columnConfig.headerClass"
-                                [mat-sort-header]="columnConfig.sort"
-                            >
-                                {{ columnConfig.field | gridTranslate:'column':id | async }}
-                            </th>
-                            <td
-                                mat-cell
-                                *matCellDef="let row"
-                                [ngClass]="columnConfig.bodyClass"
-                            >
-                                <!-- set value by template -->
-                                <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
-                                    <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                    <!-- set value by template for all fields -->
-                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                </div>
-                                <!-- set value by columns config transform -->
-                                <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
-                                    {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform }}
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- DATE -->
-                        <ng-container *ngSwitchCase="columnConfigType.DATE">
-                            <th
-                                mat-header-cell
-                                *matHeaderCellDef
-                                [disabled]="!columnConfig.sort"
-                                [ngClass]="columnConfig.headerClass"
-                                [mat-sort-header]="columnConfig.sort"
-                            >
-                                {{ columnConfig.field | gridTranslate:'column':id | async }}
-                            </th>
-                            <td
-                                mat-cell
-                                *matCellDef="let row"
-                                [ngClass]="columnConfig.bodyClass"
-                            >
-                                <!-- set value by template -->
-                                <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
-                                    <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                    <!-- set value by template for all fields -->
-                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                </div>
-                                <!-- set value by columns config transform -->
-                                <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
-                                    {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform }}
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- ENUM -->
-                        <ng-container *ngSwitchCase="columnConfigType.ENUM">
-                            <th
-                                mat-header-cell
-                                *matHeaderCellDef
-                                [disabled]="!columnConfig.sort"
-                                [ngClass]="columnConfig.headerClass"
-                                [mat-sort-header]="columnConfig.sort"
-                            >
-                                {{ columnConfig.field | gridTranslate:'column':id | async }}
-                            </th>
-                            <td
-                                mat-cell
-                                *matCellDef="let row"
-                                [ngClass]="columnConfig.bodyClass"
-                            >
-                                <!-- set value by template -->
-                                <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
-                                    <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                    <!-- set value by template for all fields -->
-                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                </div>
-                                <!-- set value by columns config transform -->
-                                <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
-                                    {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform }}
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- ARRAY -->
-                        <ng-container *ngSwitchCase="columnConfigType.ARRAY">
-                            <th
-                                mat-header-cell
-                                *matHeaderCellDef
-                                [disabled]="!columnConfig.sort"
-                                [ngClass]="columnConfig.headerClass"
-                                [mat-sort-header]="columnConfig.sort"
-                            >
-                                {{ columnConfig.field | gridTranslate:'column':id | async }}
-                            </th>
-                            <td
-                                mat-cell
-                                *matCellDef="let row"
-                                [ngClass]="columnConfig.bodyClass"
-                            >
-                                <!-- set value by template -->
-                                <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
-                                    <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                    <!-- set value by template for all fields -->
-                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
-                                        <ng-container
-                                            *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
-                                        >
-                                        </ng-container>
-                                    </div>
-                                </div>
-                                <!-- set value by columns config transform -->
-                                <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
-                                    {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform | join }}
-                                </div>
-                            </td>
-                        </ng-container>
-
-                        <!-- TRANSLATIONS_MENU -->
-                        <ng-container *ngSwitchCase="columnConfigType.TRANSLATIONS_MENU">
-                            <th
-                                mat-header-cell
-                                *matHeaderCellDef
-                                [disabled]="!columnConfig.sort"
-                                [ngClass]="columnConfig.headerClass"
-                                [mat-sort-header]="columnConfig.sort"
-                            >
-                                {{ columnConfig.field | gridTranslate:'column':id | async }}
-                            </th>
-                            <td
-                                mat-cell
-                                *matCellDef="let row"
-                                [ngClass]="columnConfig.bodyClass"
-                            >
-                                <div class="flex justify-center">
-                                    <button
-                                        mat-icon-button
-                                        [matMenuTriggerFor]="menu"
-                                        [color]="columnConfig.translationIconColor | getTranslationIconColor:row"
-                                    >
-                                        <mat-icon svgIcon="mat_solid:translate"></mat-icon>
-                                    </button>
-                                    <mat-menu #menu="matMenu">
-                                        <ng-container *ngFor="let action of columnConfig.actions | getActions:row">
-                                            <button
-                                                mat-menu-item
-                                                type="button"
-                                                (click)="handleClickAction(action, row, $event)"
+                    @if (!columnConfig.hidden)
+                    {
+                        @switch (columnConfig.type)
+                        {
+                            <!-- STRING -->
+                            @case (columnConfigType.STRING)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [disabled]="!columnConfig.sort"
+                                    [ngClass]="columnConfig.headerClass"
+                                    [mat-sort-header]="columnConfig.sort"
+                                >
+                                    {{ columnConfig.field | gridTranslate:'column':id | async }}
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass"
+                                >
+                                    <!-- set value by template -->
+                                    <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
+                                        <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
                                             >
-                                                <au-flag-icon
-                                                    [flagCode]="action.meta.lang.image"
-                                                    fontSize="16px"
-                                                >
-                                                    {{ (action.translation ? action.translation : action.id) | gridTranslate:'action':id | async }}
-                                                </au-flag-icon>
-                                            </button>
-                                        </ng-container>
-                                    </mat-menu>
-                                </div>
-                            </td>
-                        </ng-container>
+                                            </ng-container>
+                                        </div>
+                                        <!-- set value by template for all fields -->
+                                        <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <!-- set value by columns config transform -->
+                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
+                                        {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform }}
+                                    </div>
+                                </td>
+                            }
 
-                        <!-- ACTIONS -->
-                        <ng-container *ngSwitchCase="columnConfigType.ACTIONS">
-                            <th
-                                mat-header-cell
-                                *matHeaderCellDef
-                                [ngClass]="columnConfig.headerClass ? columnConfig.headerClass : 'w-20 text-center'"
-                            >
-                                {{ columnConfig.field | gridTranslate:'column':id | async }}
-                            </th>
-                            <td
-                                mat-cell
-                                *matCellDef="let row"
-                                [ngClass]="columnConfig.bodyClass ? columnConfig.bodyClass : 'w-20 text-center'"
-                            >
-                                <!-- print action menu if has more than one action -->
-                                <ng-container *ngIf="(columnConfig.actions | getActions:row).length > 1">
-                                    <button
-                                        mat-icon-button
-                                        type="button"
-                                        [matMenuTriggerFor]="menu"
-                                    >
-                                        <mat-icon>more_vert</mat-icon>
-                                    </button>
-                                    <mat-menu #menu="matMenu">
+                            <!-- BOOLEAN -->
+                            @case (columnConfigType.BOOLEAN)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [disabled]="!columnConfig.sort"
+                                    [ngClass]="columnConfig.headerClass"
+                                    [mat-sort-header]="columnConfig.sort"
+                                >
+                                    {{ columnConfig.field | gridTranslate:'column':id | async }}
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass"
+                                >
+                                    <!-- set value by template -->
+                                    <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
+                                        <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                        <!-- set value by template for all fields -->
+                                        <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <!-- set value by columns config transform -->
+                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
+                                        <mat-icon *ngIf="row | getCellValue:columnConfig.field">done</mat-icon>
+                                    </div>
+                                </td>
+                            }
+
+                            <!-- NUMBER -->
+                            @case (columnConfigType.NUMBER)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [disabled]="!columnConfig.sort"
+                                    [ngClass]="columnConfig.headerClass"
+                                    [mat-sort-header]="columnConfig.sort"
+                                >
+                                    {{ columnConfig.field | gridTranslate:'column':id | async }}
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass"
+                                >
+                                    <!-- set value by template -->
+                                    <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
+                                        <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                        <!-- set value by template for all fields -->
+                                        <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <!-- set value by columns config transform -->
+                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
+                                        {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform }}
+                                    </div>
+                                </td>
+                            }
+
+                            <!-- DATE -->
+                            @case (columnConfigType.DATE)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [disabled]="!columnConfig.sort"
+                                    [ngClass]="columnConfig.headerClass"
+                                    [mat-sort-header]="columnConfig.sort"
+                                >
+                                    {{ columnConfig.field | gridTranslate:'column':id | async }}
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass"
+                                >
+                                    <!-- set value by template -->
+                                    <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
+                                        <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                        <!-- set value by template for all fields -->
+                                        <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <!-- set value by columns config transform -->
+                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
+                                        {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform }}
+                                    </div>
+                                </td>
+                            }
+
+                            <!-- ENUM -->
+                            @case (columnConfigType.ENUM)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [disabled]="!columnConfig.sort"
+                                    [ngClass]="columnConfig.headerClass"
+                                    [mat-sort-header]="columnConfig.sort"
+                                >
+                                    {{ columnConfig.field | gridTranslate:'column':id | async }}
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass"
+                                >
+                                    <!-- set value by template -->
+                                    <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
+                                        <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                        <!-- set value by template for all fields -->
+                                        <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <!-- set value by columns config transform -->
+                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
+                                        {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform }}
+                                    </div>
+                                </td>
+                            }
+
+                            <!-- ARRAY -->
+                            @case (columnConfigType.ARRAY)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [disabled]="!columnConfig.sort"
+                                    [ngClass]="columnConfig.headerClass"
+                                    [mat-sort-header]="columnConfig.sort"
+                                >
+                                    {{ columnConfig.field | gridTranslate:'column':id | async }}
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass"
+                                >
+                                    <!-- set value by template -->
+                                    <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
+                                        <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                        <!-- set value by template for all fields -->
+                                        <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <!-- set value by columns config transform -->
+                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
+                                        {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform | join }}
+                                    </div>
+                                </td>
+                            }
+
+                            <!-- JSONB -->
+                            @case (columnConfigType.JSONB)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [disabled]="!columnConfig.sort"
+                                    [ngClass]="columnConfig.headerClass"
+                                    [mat-sort-header]="columnConfig.sort"
+                                >
+                                    {{ columnConfig.field | gridTranslate:'column':id | async }}
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass"
+                                >
+                                    <!-- set value by template -->
+                                    <div *ngFor="let cellValueTemplate of gridCellValuesTemplate">
+                                        <div *ngIf="(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === columnConfig.field">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                        <!-- set value by template for all fields -->
+                                        <div *ngIf="!(gridCellValuesTemplate | hasCellValueWithFieldTemplate: columnConfig) && cellValueTemplate.field === undefined">
+                                            <ng-container
+                                                *ngTemplateOutlet="cellValueTemplate.templateRef; context: { $implicit: row | getCellValue:columnConfig.field, columnConfig, row }"
+                                            >
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <!-- set value by columns config transform -->
+                                    <div *ngIf="!(gridCellValuesTemplate | hasCellValueTemplate:columnConfig)">
+                                        {{ row | getCellValue:columnConfig.field | transformDataCell:columnConfig.transform }}
+                                    </div>
+                                </td>
+                            }
+
+                            <!-- TRANSLATIONS_MENU -->
+                            @case (columnConfigType.TRANSLATIONS_MENU)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [disabled]="!columnConfig.sort"
+                                    [ngClass]="columnConfig.headerClass"
+                                    [mat-sort-header]="columnConfig.sort"
+                                >
+                                    {{ columnConfig.field | gridTranslate:'column':id | async }}
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass"
+                                >
+                                    <div class="flex justify-center">
+                                        <button
+                                            mat-icon-button
+                                            [matMenuTriggerFor]="menu"
+                                            [color]="columnConfig.translationIconColor | getTranslationIconColor:row"
+                                        >
+                                            <mat-icon svgIcon="mat_solid:translate"></mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu">
+                                            <ng-container *ngFor="let action of columnConfig.actions | getActions:row">
+                                                <button
+                                                    mat-menu-item
+                                                    type="button"
+                                                    (click)="handleClickAction(action, row, $event)"
+                                                >
+                                                    <au-flag-icon
+                                                        [flagCode]="action.meta.lang.image"
+                                                        fontSize="16px"
+                                                    >
+                                                        {{ (action.translation ? action.translation : action.id) | gridTranslate:'action':id | async }}
+                                                    </au-flag-icon>
+                                                </button>
+                                            </ng-container>
+                                        </mat-menu>
+                                    </div>
+                                </td>
+                            }
+
+                            <!-- ACTIONS -->
+                            @case (columnConfigType.ACTIONS)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [ngClass]="columnConfig.headerClass ? columnConfig.headerClass : 'w-20 text-center'"
+                                >
+                                    {{ columnConfig.field | gridTranslate:'column':id | async }}
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass ? columnConfig.bodyClass : 'w-20 text-center'"
+                                >
+                                    <!-- print action menu if has more than one action -->
+                                    <ng-container *ngIf="(columnConfig.actions | getActions:row).length > 1">
+                                        <button
+                                            mat-icon-button
+                                            type="button"
+                                            [matMenuTriggerFor]="menu"
+                                        >
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu">
+                                            <ng-container *ngFor="let action of columnConfig.actions | getActions:row">
+                                                <button
+                                                    mat-menu-item
+                                                    type="button"
+                                                    [disabled]="action.spinner | getGridSpinnerFlag | async"
+                                                    (click)="handleClickAction(action, row, $event)"
+                                                >
+                                                    <mat-icon
+                                                        *ngIf="!(action.spinner | getGridSpinnerFlag | async)"
+                                                        [svgIcon]="action.svgIcon"
+                                                        [matBadgeHidden]="action.badge?.hidden"
+                                                        [matBadgeColor]="action.badge?.color"
+                                                        [matBadge]="action.badge?.label"
+                                                        aria-hidden="false"
+                                                    >
+                                                        {{ action.icon }}
+                                                    </mat-icon>
+                                                    <mat-icon *ngIf="action.spinner | getGridSpinnerFlag | async">
+                                                        <mat-spinner diameter="20"></mat-spinner>
+                                                    </mat-icon>
+                                                    <span>{{ (action.translation ? action.translation : action.id) | gridTranslate:'action':id | async }}</span>
+                                                </button>
+                                            </ng-container>
+                                        </mat-menu>
+                                    </ng-container>
+                                    <!-- if only have one action, print action without menu -->
+                                    <ng-container *ngIf="(columnConfig.actions | getActions:row).length === 1">
                                         <ng-container *ngFor="let action of columnConfig.actions | getActions:row">
                                             <button
-                                                mat-menu-item
+                                                mat-icon-button
                                                 type="button"
                                                 [disabled]="action.spinner | getGridSpinnerFlag | async"
                                                 (click)="handleClickAction(action, row, $event)"
@@ -456,94 +530,68 @@
                                                 <mat-icon *ngIf="action.spinner | getGridSpinnerFlag | async">
                                                     <mat-spinner diameter="20"></mat-spinner>
                                                 </mat-icon>
-                                                <span>{{ (action.translation ? action.translation : action.id) | gridTranslate:'action':id | async }}</span>
                                             </button>
                                         </ng-container>
-                                    </mat-menu>
-                                </ng-container>
-                                <!-- if only have one action, print action without menu -->
-                                <ng-container *ngIf="(columnConfig.actions | getActions:row).length === 1">
-                                    <ng-container *ngFor="let action of columnConfig.actions | getActions:row">
-                                        <button
-                                            mat-icon-button
-                                            type="button"
-                                            [disabled]="action.spinner | getGridSpinnerFlag | async"
-                                            (click)="handleClickAction(action, row, $event)"
-                                        >
-                                            <mat-icon
-                                                *ngIf="!(action.spinner | getGridSpinnerFlag | async)"
-                                                [svgIcon]="action.svgIcon"
-                                                [matBadgeHidden]="action.badge?.hidden"
-                                                [matBadgeColor]="action.badge?.color"
-                                                [matBadge]="action.badge?.label"
-                                                aria-hidden="false"
-                                            >
-                                                {{ action.icon }}
-                                            </mat-icon>
-                                            <mat-icon *ngIf="action.spinner | getGridSpinnerFlag | async">
-                                                <mat-spinner diameter="20"></mat-spinner>
-                                            </mat-icon>
-                                        </button>
                                     </ng-container>
-                                </ng-container>
-                            </td>
-                        </ng-container>
+                                </td>
+                            }
 
-                        <!-- CHECKBOX -->
-                        <ng-container *ngSwitchCase="columnConfigType.CHECKBOX">
-                            <th
-                                mat-header-cell
-                                *matHeaderCellDef
-                                [ngClass]="columnConfig.headerClass ? columnConfig.headerClass : 'w-20 text-center'"
-                            >
-                                <mat-checkbox
-                                    (change)="$event ? masterToggle() : null"
-                                    [checked]="selectedCheckboxRowModel.hasValue() && isAllSelected()"
-                                    [indeterminate]="isSomeSelected() && !isAllSelected()"
-                                    [aria-label]="checkboxLabel()"
+                            <!-- CHECKBOX -->
+                            @case (columnConfigType.CHECKBOX)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [ngClass]="columnConfig.headerClass ? columnConfig.headerClass : 'w-20 text-center'"
                                 >
-                                </mat-checkbox>
-                            </th>
-                            <td
-                                mat-cell
-                                *matCellDef="let row"
-                                [ngClass]="columnConfig.bodyClass ? columnConfig.bodyClass : 'w-20 text-center'"
-                            >
-                                <mat-checkbox
-                                    (click)="$event.stopPropagation()"
-                                    (change)="$event ? selectedCheckboxRowModel.toggle(row) : null"
-                                    [checked]="selectedCheckboxRowModel.isSelected(row)"
-                                    [aria-label]="checkboxLabel(row)"
+                                    <mat-checkbox
+                                        (change)="$event ? masterToggle() : null"
+                                        [checked]="selectedCheckboxRowModel.hasValue() && isAllSelected()"
+                                        [indeterminate]="isSomeSelected() && !isAllSelected()"
+                                        [aria-label]="checkboxLabel()"
+                                    >
+                                    </mat-checkbox>
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass ? columnConfig.bodyClass : 'w-20 text-center'"
                                 >
-                                </mat-checkbox>
-                            </td>
-                        </ng-container>
+                                    <mat-checkbox
+                                        (click)="$event.stopPropagation()"
+                                        (change)="$event ? selectedCheckboxRowModel.toggle(row) : null"
+                                        [checked]="selectedCheckboxRowModel.isSelected(row)"
+                                        [aria-label]="checkboxLabel(row)"
+                                    >
+                                    </mat-checkbox>
+                                </td>
+                            }
 
-                        <!-- DRAG AND DROP -->
-                        <ng-container *ngSwitchCase="columnConfigType.DRAG_AND_DROP">
-                            <th
-                                mat-header-cell
-                                *matHeaderCellDef
-                                [ngClass]="columnConfig.headerClass ? columnConfig.headerClass : 'w-20 text-center'"
-                            >
-                                {{ columnConfig.field | gridTranslate:'column':id | async }}
-                            </th>
-                            <td
-                                mat-cell
-                                *matCellDef="let row"
-                                [ngClass]="columnConfig.bodyClass ? columnConfig.bodyClass : 'w-20 text-center'"
-                            >
-                                <mat-icon
-                                    cdkDragHandle
-                                    class="cursor-move"
+                            <!-- DRAG AND DROP -->
+                            @case (columnConfigType.DRAG_AND_DROP)
+                            {
+                                <th
+                                    mat-header-cell
+                                    *matHeaderCellDef
+                                    [ngClass]="columnConfig.headerClass ? columnConfig.headerClass : 'w-20 text-center'"
                                 >
-                                    reorder
-                                </mat-icon>
-                            </td>
-                        </ng-container>
-                    </ng-container>
-                    <!-- / ngSwitch for grid cell -->
-
+                                    {{ columnConfig.field | gridTranslate:'column':id | async }}
+                                </th>
+                                <td
+                                    mat-cell
+                                    *matCellDef="let row"
+                                    [ngClass]="columnConfig.bodyClass ? columnConfig.bodyClass : 'w-20 text-center'"
+                                >
+                                    <mat-icon
+                                        cdkDragHandle
+                                        class="cursor-move"
+                                    >
+                                        reorder
+                                    </mat-icon>
+                                </td>
+                            }
+                        }
+                    }
                 </ng-container>
 
             </ng-container>

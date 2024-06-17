@@ -1,5 +1,5 @@
 import { AsyncPipe, LowerCasePipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, OnInit, QueryList, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit, QueryList } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +15,6 @@ import { GridFiltersDialogValueTemplateDirective, Operator, Utils, getAsyncMatSe
 import { GetPipe } from '@aurora/pipes/get.pipe';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Observable, map, startWith } from 'rxjs';
-import { MatSelectAddSelectedDirective, ScrollEndDirective } from '../../../directives';
 import { GetAsyncMatSelectSearchColumnConfig } from '../../async-mat-select-search';
 import { DatepickerSqlFormatDirective } from '../../datepicker-sql-format';
 import { GridTranslatePipe } from '../grid-translations/grid-translate.pipe';
@@ -28,6 +27,10 @@ import { GetGridFilterValue } from './pipes/get-grid-filter-value.pipe';
 import { GetGridFiltersValue } from './pipes/get-grid-filter-values.pipe';
 import { HasRenderOutboxPipe } from './pipes/has-render-outbox.pipe';
 
+// todo, review imports, if import from @aurora throw error
+import { MatSelectAddSelectedDirective } from '../../../directives/mat-select-add-selected.directive';
+import { ScrollEndDirective } from '../../../directives/scroll-end.directive';
+
 @Component({
     selector       : 'au-grid-filters-dialog',
     templateUrl    : 'grid-filters-dialog.component.html',
@@ -39,8 +42,8 @@ import { HasRenderOutboxPipe } from './pipes/has-render-outbox.pipe';
         GetConcatOperatorPipe, GetGridFiltersValue, GetGridFilterValue, GetPipe,
         GridTranslatePipe, HasRenderOutboxPipe, LowerCasePipe, MatAutocompleteModule, MatButtonModule,MatCheckboxModule,
         MatDatepickerModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule,
-        MatInputModule, MatSelectAddSelectedDirective, MatSelectModule, NgTemplateOutlet,
-        NgxMatSelectSearchModule, ReactiveFormsModule, ScrollEndDirective,
+        MatInputModule, MatSelectModule, NgTemplateOutlet,
+        NgxMatSelectSearchModule, ReactiveFormsModule, MatSelectAddSelectedDirective, ScrollEndDirective,
     ],
 })
 export class GridFiltersDialogComponent implements OnInit

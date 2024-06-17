@@ -146,7 +146,14 @@ export class QueryStatementHandler
                 (columnConfig.hidden === undefined || columnConfig.hidden === false)
             )
             {
-                switch (columnConfig.type)
+                // check if the column is searchable and if searchableFieldType
+                // is defined to manage data like searchableFieldType
+                const columnConfigType =
+                    columnConfig.searchableField && columnConfig.searchableFieldType ?
+                        columnConfig.searchableFieldType :
+                        columnConfig.type;
+
+                switch (columnConfigType)
                 {
                     case ColumnDataType.STRING:
                         searchStatement.push({

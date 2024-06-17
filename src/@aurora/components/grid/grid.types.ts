@@ -10,6 +10,7 @@ export interface ColumnConfig
     searchComponent?: SearchComponentType;
     field?: string;
     searchableField?: string;
+    searchableFieldType?: ColumnDataType;
     translation?: string;
     hidden?: boolean;
     sort?: string | string[];
@@ -53,6 +54,7 @@ export enum ColumnDataType
     DATE = 'DATE',
     DRAG_AND_DROP= 'DRAG_AND_DROP',
     ENUM = 'ENUM',
+    JSONB = 'JSONB',
     NUMBER = 'NUMBER',
     STRING = 'STRING',
     TRANSLATIONS_MENU = 'TRANSLATIONS_MENU',
