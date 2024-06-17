@@ -50,8 +50,7 @@ export const findByIdQuery = gql`
             roleId: $roleId
             constraint: $constraint
         ) {
-            permissionId
-            roleId
+            id
             #FIELDS
         }
         ${relationsFields}
