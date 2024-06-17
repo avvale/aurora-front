@@ -100,6 +100,9 @@ export class ValidationMessagesService
             case 'passwordMe':
                 return this.translocoService.selectTranslate('validations.PasswordMe');
 
+            case 'phoneNumberFormat':
+                return this.translocoService.selectTranslate('validations.PhoneNumberFormat');
+
             default:
                 console.log('error', error);
                 return this.translocoService.selectTranslate('validations.Default');

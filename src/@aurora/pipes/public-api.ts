@@ -1,6 +1,7 @@
 export * from '@aurora/pipes/date-format.pipe';
 export * from '@aurora/pipes/filter-key-value-and-sort.pipe';
 export * from '@aurora/pipes/format-file-size.pipe';
+export * from '@aurora/pipes/get-meta-message-errors.pipe';
 export * from '@aurora/pipes/get-values-objects-array.pipe';
 export * from '@aurora/pipes/get.pipe';
 export * from '@aurora/pipes/has-validator.pipe';

@@ -14,6 +14,7 @@
     "PasswordSpecialCharacter": "The field must contain at least one special character.",
     "PasswordUpperCase"       : "The field must contain at least one uppercase letter.",
     "Pattern"                 : "The field {{ fieldname }} doesn\"t match the indicated pattern.",
+    "PhoneNumberFormat"       : "The field must be a valid phone number.",
     "Required"                : "This field is required.",
     "UniqueEmail"             : "Email already exists.",
     "UniqueUsername"          : "This username is already in use."

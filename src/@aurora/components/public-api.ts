@@ -23,6 +23,7 @@ export * from './image-input';
 export * from './mat-form-field-appearance';
 export * from './navigation';
 export * from './password-strength';
+export * from './phone-number-format';
 export * from './select-search';
 export * from './slug';
 export * from './snack-bar-invalid-form';
