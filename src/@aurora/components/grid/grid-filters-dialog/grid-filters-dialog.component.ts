@@ -11,10 +11,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { GridFiltersDialogValueTemplateDirective, MatSelectRemoveFor, Operator, Utils, getAsyncMatSelectSearchColumnConfigFunction } from '@aurora';
+import { GridFiltersDialogValueTemplateDirective, Operator, Utils, getAsyncMatSelectSearchColumnConfigFunction } from '@aurora';
 import { GetPipe } from '@aurora/pipes/get.pipe';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { Observable, map, startWith } from 'rxjs';
+import { MatSelectAddSelectedDirective, MatSelectRemoveFor, ScrollEndDirective } from '../../../directives';
 import { GetAsyncMatSelectSearchColumnConfig } from '../../async-mat-select-search';
 import { DatepickerSqlFormatDirective } from '../../datepicker-sql-format';
 import { GridTranslatePipe } from '../grid-translations/grid-translate.pipe';
@@ -26,10 +27,6 @@ import { GetConcatOperatorPipe } from './pipes/get-concat-operator.pipe';
 import { GetGridFilterValue } from './pipes/get-grid-filter-value.pipe';
 import { GetGridFiltersValue } from './pipes/get-grid-filter-values.pipe';
 import { HasRenderOutboxPipe } from './pipes/has-render-outbox.pipe';
-
-// todo, review imports, if import from @aurora throw error
-import { MatSelectAddSelectedDirective } from '../../../directives/mat-select-add-selected.directive';
-import { ScrollEndDirective } from '../../../directives/scroll-end.directive';
 
 @Component({
     selector       : 'au-grid-filters-dialog',
