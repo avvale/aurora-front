@@ -1,10 +1,12 @@
 import { Inject, Optional } from '@angular/core';
-import { Platform } from '@angular/cdk/platform';
-import { MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
-import * as dayjs from 'dayjs';
-import * as customParseFormat from 'dayjs/plugin/customParseFormat';
-import * as localizedFormat from 'dayjs/plugin/localizedFormat';
-import * as locale from 'dayjs/locale/es';
+import {
+    MAT_DATE_FORMATS,
+    MatDateFormats,
+    NativeDateAdapter,
+} from '@angular/material/core';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 /*
 TODO, crear carga dinámica de idiomas para las Fechas
@@ -18,13 +20,13 @@ const locales = {
     locales[language]().then(() => dayjs.locale(language))
   } */
 
-export class DatePickerDayjsAdapter extends NativeDateAdapter
-{
+export class DatePickerDayjsAdapter extends NativeDateAdapter {
     constructor(
         matDateLocale: string,
-        @Optional() @Inject(MAT_DATE_FORMATS) private dateFormats: MatDateFormats,
-    )
-    {
+        @Optional()
+        @Inject(MAT_DATE_FORMATS)
+        private dateFormats: MatDateFormats
+    ) {
         super(matDateLocale);
 
         dayjs.locale('es');
@@ -32,35 +34,29 @@ export class DatePickerDayjsAdapter extends NativeDateAdapter
         dayjs.extend(localizedFormat);
     }
 
-    parse(value: any): Date | null
-    {
+    parse(value: any): Date | null {
         if (!value) return null;
         return dayjs(value, this.dateFormats.parse.dateInput).toDate();
     }
 
     // change format value on display, display format come from MAT_DATE_FORMATS
-    format(date: Date, displayFormat: string): string
-    {
+    format(date: Date, displayFormat: string): string {
         return dayjs(date).format(displayFormat);
     }
 
-    getDayOfWeek(date: Date): number
-    {
+    getDayOfWeek(date: Date): number {
         return dayjs(date).day();
     }
 
-    getFirstDayOfWeek(): number
-    {
+    getFirstDayOfWeek(): number {
         return 1;
     }
 
-    getMonth(date: Date): number
-    {
+    getMonth(date: Date): number {
         return dayjs(date).month();
     }
 
-    getYear(date: Date): number
-    {
+    getYear(date: Date): number {
         return dayjs(date).year();
     }
 }

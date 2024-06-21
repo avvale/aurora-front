@@ -1,6 +1,12 @@
-import { NgIf } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+    FormsModule,
+    NgForm,
+    ReactiveFormsModule,
+    UntypedFormBuilder,
+    UntypedFormGroup,
+    Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,29 +18,41 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 
 // ---- customizations ----
-import { AuthenticationService, IamService, SessionService, log } from '@aurora';
+import {
+    AuthenticationService,
+    IamService,
+    SessionService,
+    log,
+} from '@aurora';
 import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
 
 @Component({
-    selector     : 'auth-sign-in',
-    templateUrl  : './sign-in.component.html',
+    selector: 'auth-sign-in',
+    templateUrl: './sign-in.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations,
-    standalone   : true,
-    imports      : [
+    animations: fuseAnimations,
+    standalone: true,
+    imports: [
+        RouterLink,
+        FuseAlertComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCheckboxModule,
+        MatProgressSpinnerModule,
+
         // ---- customizations ----
         TranslocoModule,
-        RouterLink, FuseAlertComponent, NgIf, FormsModule, ReactiveFormsModule,
-        MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule,
-        MatCheckboxModule, MatProgressSpinnerModule,
     ],
 })
-export class AuthSignInComponent implements OnInit
-{
+export class AuthSignInComponent implements OnInit {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
 
-    alert: { type: FuseAlertType; message: string; } = {
-        type   : 'success',
+    alert: { type: FuseAlertType; message: string } = {
+        type: 'success',
         message: '',
     };
     signInForm: UntypedFormGroup;
@@ -49,13 +67,11 @@ export class AuthSignInComponent implements OnInit
         private _router: Router,
 
         // ---- customizations ----
-        private readonly sessionService: SessionService,
-        private readonly authenticationService: AuthenticationService,
-        private readonly iamService: IamService,
-        private readonly translocoService: TranslocoService,
-    )
-    {
-    }
+        private sessionService: SessionService,
+        private authenticationService: AuthenticationService,
+        private iamService: IamService,
+        private translocoService: TranslocoService
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -64,12 +80,11 @@ export class AuthSignInComponent implements OnInit
     /**
      * On init
      */
-    async ngOnInit(): Promise<void>
-    {
+    async ngOnInit(): Promise<void> {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            email     : ['', [Validators.required, Validators.email]],
-            password  : ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', Validators.required],
             rememberMe: [''],
         });
 
@@ -88,11 +103,9 @@ export class AuthSignInComponent implements OnInit
     /**
      * Sign in
      */
-    signIn(): void
-    {
+    signIn(): void {
         // Return if the form is invalid
-        if ( this.signInForm.invalid )
-        {
+        if (this.signInForm.invalid) {
             return;
         }
 
@@ -103,50 +116,53 @@ export class AuthSignInComponent implements OnInit
         this.showAlert = false;
 
         // Sign in
-        this.authenticationService.signIn(this.signInForm.value)
-            .subscribe(
-                () =>
-                {
-                    // Set the redirect url.
-                    // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                    // to the correct page after a successful sign in. This way, that url can be set via
-                    // routing file and we don't have to touch here.
-                    const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
+        this.authenticationService.signIn(this.signInForm.value).subscribe(
+            () => {
+                // Set the redirect url.
+                // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
+                // to the correct page after a successful sign in. This way, that url can be set via
+                // routing file and we don't have to touch here.
+                const redirectURL =
+                    this._activatedRoute.snapshot.queryParamMap.get(
+                        'redirectURL'
+                    ) || '/signed-in-redirect';
 
-                    // ---- customizations ----
-                    // after sing in, get user, calling get, after that, user will be available in iamService.me
-                    this.iamService.get()
-                        .subscribe(data =>
-                        {
-                            // set user preferred lang
-                            const langs = this.sessionService.get('langs');
-                            const userPreferredLang = langs.find(lang => lang.id === data.me.user.langId);
-                            if (userPreferredLang) this.translocoService.setActiveLang(userPreferredLang.iso6392);
+                // ---- customizations ----
+                // after sing in, get user, calling get, after that, user will be available in iamService.me
+                this.iamService.get().subscribe((data) => {
+                    // set user preferred lang
+                    const langs = this.sessionService.get('langs');
+                    const userPreferredLang = langs.find(
+                        (lang) => lang.id === data.me.user.langId
+                    );
+                    if (userPreferredLang)
+                        this.translocoService.setActiveLang(
+                            userPreferredLang.iso6392
+                        );
 
-                            // Navigate to the redirect url
-                            this._router.navigateByUrl(redirectURL);
-                        });
+                    // Navigate to the redirect url
+                    this._router.navigateByUrl(redirectURL);
+                });
+            },
+            (response) => {
+                log(`[DEBUG] Error to login application: ${response}`);
 
-                },
-                response =>
-                {
-                    log(`[DEBUG] Error to login application: ${response}`);
+                // Re-enable the form
+                this.signInForm.enable();
 
-                    // Re-enable the form
-                    this.signInForm.enable();
+                // Reset the form
+                this.signInNgForm.resetForm();
 
-                    // Reset the form
-                    this.signInNgForm.resetForm();
+                // Set the alert
+                this.alert = {
+                    type: 'error',
+                    message:
+                        this.translocoService.translate('validations.Login'),
+                };
 
-                    // Set the alert
-                    this.alert = {
-                        type   : 'error',
-                        message: this.translocoService.translate('validations.Login'),
-                    };
-
-                    // Show the alert
-                    this.showAlert = true;
-                },
-            );
+                // Show the alert
+                this.showAlert = true;
+            }
+        );
     }
 }

@@ -1,28 +1,29 @@
-import { I18nPluralPipe, NgIf } from '@angular/common';
+import { I18nPluralPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { finalize, Subject, takeUntil, takeWhile, tap, timer } from 'rxjs';
+import { Subject, finalize, takeUntil, takeWhile, tap, timer } from 'rxjs';
 
 // ---- customizations ----
 import { AuthenticationService, IamService, SessionService } from '@aurora';
 import { TranslocoModule, TranslocoService } from '@ngneat/transloco';
 
 @Component({
-    selector     : 'auth-sign-out',
-    templateUrl  : './sign-out.component.html',
+    selector: 'auth-sign-out',
+    templateUrl: './sign-out.component.html',
     encapsulation: ViewEncapsulation.None,
-    standalone   : true,
-    imports      : [
+    standalone: true,
+    imports: [
+        RouterLink,
+        I18nPluralPipe,
+
         // ---- customizations ----
         TranslocoModule,
-        NgIf, RouterLink, I18nPluralPipe
     ],
 })
-export class AuthSignOutComponent implements OnInit, OnDestroy
-{
+export class AuthSignOutComponent implements OnInit, OnDestroy {
     countdown: number = 5;
     countdownMapping: any = {
-        '=1' : '# ' + this.translocoService.translate('Second').toLowerCase(),
+        '=1': '# ' + this.translocoService.translate('Second').toLowerCase(),
         other: '# ' + this.translocoService.translate('Seconds').toLowerCase(),
     };
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -34,13 +35,11 @@ export class AuthSignOutComponent implements OnInit, OnDestroy
         private _router: Router,
 
         // ---- customizations ----
-        private readonly translocoService: TranslocoService,
-        private readonly iamService: IamService,
-        private readonly authenticationService: AuthenticationService,
-        private readonly sessionService: SessionService,
-    )
-    {
-    }
+        private translocoService: TranslocoService,
+        private iamService: IamService,
+        private authenticationService: AuthenticationService,
+        private sessionService: SessionService
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -49,8 +48,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // ---- customizations ----
         this.iamService.clear();
         this.sessionService.clear();
@@ -59,13 +57,12 @@ export class AuthSignOutComponent implements OnInit, OnDestroy
         // Redirect after the countdown
         timer(1000, 1000)
             .pipe(
-                finalize(() =>
-                {
+                finalize(() => {
                     this._router.navigate(['sign-in']);
                 }),
                 takeWhile(() => this.countdown > 0),
                 takeUntil(this._unsubscribeAll),
-                tap(() => this.countdown--),
+                tap(() => this.countdown--)
             )
             .subscribe();
     }
@@ -73,8 +70,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

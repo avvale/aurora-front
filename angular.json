@@ -15,23 +15,20 @@
             "prefix": "app",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
                         "outputPath": "dist/fuse",
+                        "outputHashing": "media",
                         "index": "src/index.html",
-                        "main": "src/main.ts",
-                        "polyfills": [
-                            "zone.js"
-                        ],
+                        "browser": "src/main.ts",
+                        "polyfills": ["zone.js"],
                         "tsConfig": "tsconfig.app.json",
                         "inlineStyleLanguage": "scss",
                         "allowedCommonJsDependencies": [
                             "apexcharts",
-                            "highlight.js",
                             "crypto-js/enc-utf8",
                             "crypto-js/hmac-sha256",
                             "crypto-js/enc-base64",
-                            "flat",
                             "file-saver",
                             "dayjs",
                             "dayjs/locale/es",
@@ -47,9 +44,10 @@
                             "quill-delta"
                         ],
                         "assets": [
-                            "src/favicon-16x16.png",
-                            "src/favicon-32x32.png",
-                            "src/assets",
+                            {
+                                "glob": "**/*",
+                                "input": "public"
+                            },
                             {
                                 "glob": "_redirects",
                                 "input": "src",
@@ -57,18 +55,16 @@
                             }
                         ],
                         "stylePreprocessorOptions": {
-                            "includePaths": [
-                                "src/@fuse/styles"
-                            ]
+                            "includePaths": ["src/@fuse/styles"]
                         },
                         "styles": [
                             "src/@fuse/styles/tailwind.scss",
                             "src/@fuse/styles/themes.scss",
                             "src/styles/vendors.scss",
                             "src/@fuse/styles/main.scss",
+                            "src/styles/styles.scss",
                             "src/styles/tailwind.scss",
                             "src/@aurora/styles/main.scss",
-                            "src/styles/styles.scss",
                             "node_modules/flag-icons/css/flag-icons.min.css",
                             "node_modules/cropperjs/dist/cropper.min.css"
                         ],
@@ -97,12 +93,8 @@
                             "outputHashing": "all"
                         },
                         "development": {
-                            "buildOptimizer": false,
                             "optimization": false,
-                            "vendorChunk": true,
                             "extractLicenses": false,
-                            "sourceMap": true,
-                            "namedChunks": true,
                             "fileReplacements": [
                                 {
                                     "replace": "src/environments/environment.ts",
@@ -111,18 +103,15 @@
                             ]
                         },
                         "localhost": {
-                            "buildOptimizer": false,
                             "optimization": false,
-                            "vendorChunk": true,
                             "extractLicenses": false,
-                            "sourceMap": true,
-                            "namedChunks": true,
                             "fileReplacements": [
                                 {
                                     "replace": "src/environments/environment.ts",
                                     "with": "src/environments/environment.local.ts"
                                 }
-                            ]
+                            ],
+                            "sourceMap": true
                         }
                     },
                     "defaultConfiguration": "production"
@@ -143,28 +132,21 @@
                     "defaultConfiguration": "development"
                 },
                 "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                        "buildTarget": "fuse:build"
-                    }
+                    "builder": "@angular-devkit/build-angular:extract-i18n"
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
-                        "polyfills": [
-                            "zone.js",
-                            "zone.js/testing"
-                        ],
+                        "polyfills": ["zone.js", "zone.js/testing"],
                         "tsConfig": "tsconfig.spec.json",
                         "inlineStyleLanguage": "scss",
                         "assets": [
-                            "src/favicon-16x16.png",
-                            "src/favicon-32x32.png",
-                            "src/assets"
+                            {
+                                "glob": "**/*",
+                                "input": "public"
+                            }
                         ],
-                        "styles": [
-                            "src/styles/styles.scss"
-                        ],
+                        "styles": ["src/styles/styles.scss"],
                         "scripts": []
                     }
                 }
@@ -172,6 +154,6 @@
         }
     },
     "cli": {
-      "analytics": false
+        "analytics": false
     }
 }

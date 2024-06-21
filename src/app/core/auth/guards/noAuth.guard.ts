@@ -5,23 +5,25 @@ import { of, switchMap } from 'rxjs';
 // ---- customizations ----
 import { AuthenticationService } from '@aurora';
 
-export const NoAuthGuard: CanActivateFn | CanActivateChildFn = (route, state) =>
-{
+export const NoAuthGuard: CanActivateFn | CanActivateChildFn = (
+    route,
+    state
+) => {
     const router: Router = inject(Router);
-    const authenticationService: AuthenticationService = inject(AuthenticationService);
+    const authenticationService: AuthenticationService = inject(
+        AuthenticationService
+    );
 
     // Check the authentication status
     return authenticationService.check().pipe(
-        switchMap((authenticated) =>
-        {
+        switchMap((authenticated) => {
             // If the user is authenticated...
-            if ( authenticated )
-            {
+            if (authenticated) {
                 return of(router.parseUrl(''));
             }
 
-            // allow the access
+            // Allow the access
             return of(true);
-        }),
+        })
     );
 };

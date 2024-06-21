@@ -1,14 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { Navigation } from 'app/core/navigation/navigation.types';
-import { Observable, ReplaySubject, of } from 'rxjs';
+import { Observable, of, ReplaySubject } from 'rxjs';
 
 // ---- customizations ----
 import { NavigationService as AuroraNavigationService } from '@aurora';
 
-@Injectable({providedIn: 'root'})
-export class NavigationService
-{
-    private _navigation: ReplaySubject<Navigation> = new ReplaySubject<Navigation>(1);
+@Injectable({ providedIn: 'root' })
+export class NavigationService {
+    private _navigation: ReplaySubject<Navigation> =
+        new ReplaySubject<Navigation>(1);
 
     // ---- customizations ----
     private auroraNavigationService = inject(AuroraNavigationService);
@@ -20,8 +20,7 @@ export class NavigationService
     /**
      * Getter for navigation
      */
-    get navigation$(): Observable<Navigation>
-    {
+    get navigation$(): Observable<Navigation> {
         return this._navigation.asObservable();
     }
 
@@ -32,8 +31,7 @@ export class NavigationService
     /**
      * Get all navigation data
      */
-    get(): Observable<Navigation>
-    {
+    get(): Observable<Navigation> {
         // ---- customizations ----
         const navigation = this.auroraNavigationService.getNavigation();
         this._navigation.next(navigation);
