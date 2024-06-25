@@ -24,6 +24,7 @@ function copyApplication() {
         '**/.gitkeep',
         '.editorconfig',
         '.gitignore',
+        '.npmrc',
         '.nvmrc',
         '.prettierrc',
         '!cliter/**',
