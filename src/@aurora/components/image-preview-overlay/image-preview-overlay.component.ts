@@ -1,10 +1,11 @@
 import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
 import { Component, EventEmitter, HostListener, Inject } from '@angular/core';
-import { base64ToBlob } from '@aurora';
-import { saveAs } from 'file-saver';
-import { FilePreviewOverlayRef } from './file-preview-overlay-ref';
-import { FILE_PREVIEW_DIALOG_DATA } from './file-preview-overlay.tokens';
-import { Image } from './file-preview-overlay.types';
+import { MatIconModule } from '@angular/material/icon';
+import { DownloadService } from '@aurora';
+import { ImagePreviewOverlayRef } from './image-preview-overlay-ref';
+import { ImagePreviewOverlayToolbarComponent } from './image-preview-overlay-toolbar';
+import { IMAGE_PREVIEW_DIALOG_DATA } from './image-preview-overlay.tokens';
+import { ImagePreviewDialog } from './image-preview-overlay.types';
 
 // Keycode for ESCAPE
 const ESCAPE = 'Escape';
@@ -12,9 +13,10 @@ const ESCAPE = 'Escape';
 const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
 
 @Component({
-    selector: 'au-file-preview-overlay',
-    template: `
-        <au-file-preview-overlay-toolbar>
+    selector  : 'au-file-preview-overlay',
+    standalone: true,
+    template  : `
+        <au-image-preview-overlay-toolbar>
             <div class="flex content-center">
                 <mat-icon>description</mat-icon>
                 {{ image.filename }}
@@ -25,7 +27,7 @@ const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
             >
                 <mat-icon>file_download</mat-icon>
             </button>
-        </au-file-preview-overlay-toolbar>
+        </au-image-preview-overlay-toolbar>
         <div
             class="overlay-content"
             [@slideContent]="animationState"
@@ -42,7 +44,7 @@ const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
                 [@fade]="loading ? 'fadeOut' : 'fadeIn'"
                 (load)="onLoad($event)"
                 [style.opacity]="loading ? 0 : 1"
-                [src]="image.prefix + image.binary"
+                [src]="image.url"
             >
         </div>
     `,
@@ -81,6 +83,10 @@ const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
             transition('* => *', animate(ANIMATION_TIMINGS)),
         ]),
     ],
+    imports: [
+        ImagePreviewOverlayToolbarComponent,
+        MatIconModule,
+    ],
 })
 export class FilePreviewOverlayComponent
 {
@@ -89,8 +95,9 @@ export class FilePreviewOverlayComponent
     animationStateChanged = new EventEmitter<AnimationEvent>();
 
     constructor(
-        public dialogRef: FilePreviewOverlayRef,
-        @Inject(FILE_PREVIEW_DIALOG_DATA) public image: Image,
+        private downloadService: DownloadService,
+        public dialogRef: ImagePreviewOverlayRef,
+        @Inject(IMAGE_PREVIEW_DIALOG_DATA) public image: ImagePreviewDialog,
     )
     { }
 
@@ -126,9 +133,11 @@ export class FilePreviewOverlayComponent
 
     download(): void
     {
-        saveAs(
-            base64ToBlob(this.image.binary,  this.image.mime),
-            this.image.filename,
-        );
+        this.downloadService
+            .download({
+                relativePathSegments: this.image.relativePathSegments,
+                filename            : this.image.filename,
+                originalFilename    : this.image.filename,
+            });
     }
 }

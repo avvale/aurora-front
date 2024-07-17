@@ -2,15 +2,15 @@ import { ComponentRef, Injectable, Injector } from '@angular/core';
 import { Location } from '@angular/common';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { FilePreviewOverlayComponent } from './file-preview-overlay.component';
-import { FilePreviewDialogConfig } from './file-preview-overlay.types';
-import { FilePreviewOverlayRef } from './file-preview-overlay-ref';
-import { DEFAULT_CONFIG, FILE_PREVIEW_DIALOG_DATA } from './file-preview-overlay.tokens';
+import { FilePreviewOverlayComponent } from './image-preview-overlay.component';
+import { ImagePreviewDialogConfig } from './image-preview-overlay.types';
+import { ImagePreviewOverlayRef } from './image-preview-overlay-ref';
+import { DEFAULT_CONFIG, IMAGE_PREVIEW_DIALOG_DATA } from './image-preview-overlay.tokens';
 
 @Injectable({
     providedIn: 'root',
 })
-export class FilePreviewOverlayService
+export class ImagePreviewOverlayService
 {
     constructor(
         private readonly overlay: Overlay,
@@ -18,7 +18,7 @@ export class FilePreviewOverlayService
         private readonly injector: Injector,
     ) { }
 
-    open(config: FilePreviewDialogConfig = {}): FilePreviewOverlayRef
+    open(config: ImagePreviewDialogConfig = {}): ImagePreviewOverlayRef
     {
         // Override default configuration
         const dialogConfig = { ...DEFAULT_CONFIG, ...config };
@@ -27,7 +27,7 @@ export class FilePreviewOverlayService
         const overlayRef = this.createOverlay(dialogConfig);
 
         // add close functionality to the overlay
-        const dialogRef = new FilePreviewOverlayRef(overlayRef);
+        const dialogRef = new ImagePreviewOverlayRef(overlayRef);
 
         const overlayComponent = this.attachDialogContainer(
             overlayRef,
@@ -48,8 +48,8 @@ export class FilePreviewOverlayService
 
     private attachDialogContainer(
         overlayRef: OverlayRef,
-        config: FilePreviewDialogConfig,
-        dialogRef: FilePreviewOverlayRef,
+        config: ImagePreviewDialogConfig,
+        dialogRef: ImagePreviewOverlayRef,
     ): FilePreviewOverlayComponent
     {
         const injector = this.createInjector(config, dialogRef);
@@ -61,22 +61,22 @@ export class FilePreviewOverlayService
     }
 
     private createInjector(
-        config: FilePreviewDialogConfig,
-        dialogRef: FilePreviewOverlayRef,
+        config: ImagePreviewDialogConfig,
+        dialogRef: ImagePreviewOverlayRef,
     ): Injector
     {
         // Instantiate new FilePreviewOverlayInjector
         return Injector.create({
             providers: [
-                { provide: FilePreviewOverlayRef, useValue: dialogRef },
-                { provide: FILE_PREVIEW_DIALOG_DATA, useValue: config.image },
+                { provide: ImagePreviewOverlayRef, useValue: dialogRef },
+                { provide: IMAGE_PREVIEW_DIALOG_DATA, useValue: config.image },
             ],
             parent: this.injector,
             name  : 'FilePreviewOverlayInjector',
         });
     }
 
-    private getOverlayConfig(config: FilePreviewDialogConfig): OverlayConfig
+    private getOverlayConfig(config: ImagePreviewDialogConfig): OverlayConfig
     {
         const positionStrategy = this.overlay
             .position()
@@ -95,7 +95,7 @@ export class FilePreviewOverlayService
         return overlayConfig;
     }
 
-    private createOverlay(config: FilePreviewDialogConfig): OverlayRef
+    private createOverlay(config: ImagePreviewDialogConfig): OverlayRef
     {
         // Returns an OverlayConfig
         const overlayConfig = this.getOverlayConfig(config);

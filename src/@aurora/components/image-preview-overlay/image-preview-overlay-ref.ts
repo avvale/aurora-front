@@ -1,8 +1,8 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 import { filter, Observable, Subject, take } from 'rxjs';
-import { FilePreviewOverlayComponent } from './file-preview-overlay.component';
+import { FilePreviewOverlayComponent } from './image-preview-overlay.component';
 
-export class FilePreviewOverlayRef
+export class ImagePreviewOverlayRef
 {
     componentInstance: FilePreviewOverlayComponent;
     private _beforeClose = new Subject<void>();

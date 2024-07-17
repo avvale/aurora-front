@@ -1,11 +1,11 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { FilePreviewOverlayRef } from '../file-preview-overlay-ref';
+import { ImagePreviewOverlayRef } from '../image-preview-overlay-ref';
 
 @Component({
-    selector   : 'au-file-preview-overlay-toolbar',
-    templateUrl: './file-preview-overlay-toolbar.component.html',
-    styleUrls  : ['./file-preview-overlay-toolbar.component.scss'],
+    selector   : 'au-image-preview-overlay-toolbar',
+    templateUrl: './image-preview-overlay-toolbar.component.html',
+    styleUrls  : ['./image-preview-overlay-toolbar.component.scss'],
     animations : [
         trigger('slideDown', [
             state('void', style({ transform: 'translateY(-100%)' })),
@@ -14,15 +14,16 @@ import { FilePreviewOverlayRef } from '../file-preview-overlay-ref';
             transition('* => *', animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)')),
         ]),
     ],
+    standalone: true,
 })
-export class FilePreviewOverlayToolbarComponent implements OnInit
+export class ImagePreviewOverlayToolbarComponent implements OnInit
 {
 
     // Apply animation to the host element
     @HostBinding('@slideDown') slideDown = 'enter';
 
     // Inject remote control
-    constructor(private dialogRef: FilePreviewOverlayRef) { }
+    constructor(private dialogRef: ImagePreviewOverlayRef) { }
 
     ngOnInit(): void
     {
