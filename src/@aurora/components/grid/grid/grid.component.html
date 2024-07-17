@@ -493,6 +493,7 @@
                                                     <mat-icon
                                                         *ngIf="!(action.spinner | getGridSpinnerFlag | async)"
                                                         [svgIcon]="action.svgIcon"
+                                                        [fontSet]="action.iconFontSet"
                                                         [matBadgeHidden]="action.badge?.hidden"
                                                         [matBadgeColor]="action.badge?.color"
                                                         [matBadge]="action.badge?.label"
@@ -520,6 +521,7 @@
                                                 <mat-icon
                                                     *ngIf="!(action.spinner | getGridSpinnerFlag | async)"
                                                     [svgIcon]="action.svgIcon"
+                                                    [fontSet]="action.iconFontSet"
                                                     [matBadgeHidden]="action.badge?.hidden"
                                                     [matBadgeColor]="action.badge?.color"
                                                     [matBadge]="action.badge?.label"
