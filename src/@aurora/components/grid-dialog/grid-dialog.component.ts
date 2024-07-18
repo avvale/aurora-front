@@ -1,6 +1,6 @@
 import { SelectionChange } from '@angular/cdk/collections';
-import { AsyncPipe, NgForOf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Output, QueryList, ViewChild } from '@angular/core';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Output, QueryList, TemplateRef, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,7 @@ import { ColumnConfig, GridCustomHeaderTemplateDirective, GridData, GridModule, 
 import { GridCellValueTemplateDirective } from '../grid/directives/grid-cell-value-template.directive';
 import { GridComponent } from '../grid/grid/grid.component';
 import { SelectionModel } from '../grid/selection-model/selection-model';
+import { GridDialogTranslationsDirective } from './directives/grid-dialog-translations.directive';
 
 @Component({
     selector       : 'au-grid-dialog',
@@ -18,7 +19,9 @@ import { SelectionModel } from '../grid/selection-model/selection-model';
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone     : true,
     imports        : [
-        AsyncPipe, GridCellValueTemplateDirective, GridModule, MatButtonModule, MatDialogModule, MatIconModule, NgForOf, NgTemplateOutlet,
+        AsyncPipe, GridCellValueTemplateDirective, GridModule,
+        MatButtonModule, MatDialogModule, MatIconModule,
+        NgTemplateOutlet,
     ],
 })
 export class GridDialogComponent
@@ -58,6 +61,7 @@ export class GridDialogComponent
             gridState: GridState;
             gridCellValuesTemplate: QueryList<GridCellValueTemplateDirective>;
             gridCustomHeadersTemplate: QueryList<GridCustomHeaderTemplateDirective>;
+            gridTranslations: GridDialogTranslationsDirective;
             gridData$: Observable<GridData>; // only can pass by data girdData Observable
             gridId: string;
             originColumnsConfig: ColumnConfig[];
@@ -67,6 +71,7 @@ export class GridDialogComponent
         },
     )
     {
+        console.log('GridDialogComponent', data.gridTranslations);
         // check if columns config is a observable
         if (data.columnsConfig instanceof Observable)
         {

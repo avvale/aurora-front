@@ -32,8 +32,12 @@
             (searchClose)="searchClose.emit()"
             (search)="search.emit($event)"
         >
+            <ng-container *ngTemplateOutlet="data.gridTranslations?.templateRef">
+            </ng-container>
+
             <!-- container to pass GridCustomHeaderTemplateDirective -->
-            <ng-container *ngFor="let gridCustomHeaderTemplate of data.gridCustomHeadersTemplate">
+            @for (gridCustomHeaderTemplate of data.gridCustomHeadersTemplate; track gridCustomHeaderTemplate.position)
+            {
                 <ng-template
                     auGridCustomHeaderTemplate
                     [position]="gridCustomHeaderTemplate.position"
@@ -41,7 +45,7 @@
                     <ng-container *ngTemplateOutlet="gridCustomHeaderTemplate.templateRef">
                     </ng-container>
                 </ng-template>
-            </ng-container>
+            }
 
             <ng-template
                 auGridCustomHeaderTemplate
@@ -62,7 +66,8 @@
             </ng-template>
 
             <!-- container to pass GridCellValueTemplateDirective -->
-            <ng-container *ngFor="let gridCellValueTemplate of data.gridCellValuesTemplate">
+            @for (gridCellValueTemplate of data.gridCellValuesTemplate; track gridCellValueTemplate.field)
+            {
                 <ng-template
                     auGridCellValueTemplate
                     let-value
@@ -73,7 +78,7 @@
                     <ng-container *ngTemplateOutlet="gridCellValueTemplate.templateRef; context: { $implicit: value, columnConfig, row }">
                     </ng-container>
                 </ng-template>
-            </ng-container>
+            }
 
         </au-grid>
         <!-- / grid -->
