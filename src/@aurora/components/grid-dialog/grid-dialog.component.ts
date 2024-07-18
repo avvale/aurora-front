@@ -1,6 +1,6 @@
 import { SelectionChange } from '@angular/cdk/collections';
 import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Output, QueryList, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Output, QueryList, signal, TemplateRef, ViewChild, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,6 +30,7 @@ export class GridDialogComponent
     selectedCheckboxRowModel = new SelectionModel<any>(true, [], true, (a: any, b: any) => a.id === b.id);
     columnsConfig$: Observable<ColumnConfig[]>;
     selectedRows = [];
+    hasCustomHeadersRightPosition: WritableSignal<boolean> = signal(false);
 
     // manage gridData
     gridDataSubject$: BehaviorSubject<GridData> = new BehaviorSubject(null);
@@ -71,7 +72,6 @@ export class GridDialogComponent
         },
     )
     {
-        console.log('GridDialogComponent', data.gridTranslations);
         // check if columns config is a observable
         if (data.columnsConfig instanceof Observable)
         {
@@ -98,5 +98,10 @@ export class GridDialogComponent
             this.dialogClose.emit();
             this.unsubscribeAll$.next();
         });
+
+        // know if has custom headers right position
+        this.hasCustomHeadersRightPosition.set(
+            data.gridCustomHeadersTemplate?.map(template => template.position).includes('right'),
+        );
     }
 }
