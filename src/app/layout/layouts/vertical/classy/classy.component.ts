@@ -22,8 +22,8 @@ import { UserComponent } from 'app/layout/common/user/user.component';
 import { Subject, takeUntil } from 'rxjs';
 
 // ---- customizations ----
-import { MessageQuickViewComponent } from '@apps/message';
-import { Account, EnvironmentsInformationComponent, IamService } from '@aurora';
+import { Account, EnvironmentsInformationComponent, IamService, ImpersonalizeWarningComponent } from '@aurora';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({
     selector: 'classy-layout',
@@ -47,7 +47,8 @@ import { Account, EnvironmentsInformationComponent, IamService } from '@aurora';
 
         // ---- customizations ----
         EnvironmentsInformationComponent,
-        MessageQuickViewComponent,
+        ImpersonalizeWarningComponent,
+        TranslocoModule,
     ],
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
