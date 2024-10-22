@@ -19,8 +19,8 @@
         <button
             mat-flat-button
             class="rounded-l-none p-0 min-w-12"
-            [ngClass]="{ 'disabled-main-button': disabled }"
-            [color]="color"
+            [ngClass]="{ 'disabled-main-button': disabled() }"
+            [color]="color()"
             [matMenuTriggerFor]="menu"
         >
             <mat-icon

@@ -1,6 +1,7 @@
 export * from './async-mat-select-search';
 export * from './attachments';
 export * from './breadcrumb';
+export * from './chat-timeline';
 export * from './chip';
 export * from './date-adapters';
 export * from './datepicker';
