@@ -6,6 +6,7 @@ import { ImagePreviewOverlayRef } from './image-preview-overlay-ref';
 import { ImagePreviewOverlayToolbarComponent } from './image-preview-overlay-toolbar';
 import { IMAGE_PREVIEW_DIALOG_DATA } from './image-preview-overlay.tokens';
 import { ImagePreviewDialog } from './image-preview-overlay.types';
+import { NgIf } from '@angular/common';
 
 // Keycode for ESCAPE
 const ESCAPE = 'Escape';
@@ -84,6 +85,7 @@ const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
         ]),
     ],
     imports: [
+        NgIf,
         ImagePreviewOverlayToolbarComponent,
         MatIconModule,
     ],
@@ -137,7 +139,7 @@ export class FilePreviewOverlayComponent
             .download({
                 relativePathSegments: this.image.relativePathSegments,
                 filename            : this.image.filename,
-                originalFilename    : this.image.filename,
+                originFilename      : this.image.filename,
             });
     }
 }

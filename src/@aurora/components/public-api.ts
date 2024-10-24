@@ -21,6 +21,7 @@ export * from './grid-elements-manager';
 export * from './grid-select-element';
 export * from './grid-select-multiple-elements';
 export * from './image-input';
+export * from './image-preview-overlay';
 export * from './impersonalize-warning';
 export * from './kpi-card';
 export * from './mat-form-field-appearance';

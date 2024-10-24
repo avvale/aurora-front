@@ -56,7 +56,7 @@ export class ChatTimelineComponent
 
     // outputs
     sendMessage: OutputEmitterRef<string> = output();
-    messageDeleted: OutputEmitterRef<ChatMessage> = output();
+    deleteMessage: OutputEmitterRef<ChatMessage> = output();
     scroll: OutputEmitterRef<Event> = output();
 
     constructor()
@@ -98,7 +98,7 @@ export class ChatTimelineComponent
 
     handlerDeleteMessage(message: ChatMessage): void
     {
-        this.messageDeleted.emit(message);
+        this.deleteMessage.emit(message);
     }
 
     handlerScroll($event: Event): void

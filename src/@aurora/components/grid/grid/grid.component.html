@@ -92,7 +92,7 @@
             >
                 <mat-icon
                     [matBadge]="'!'"
-                    [matBadgeHidden]="gridState.columnsConfig | isOriginColumnConfig:originColumnsConfig"
+                    [matBadgeHidden]="gridState.columnsConfig | isOriginColumnConfig:originColumnsConfig()"
                     aria-hidden="false"
                 >
                     table_chart
