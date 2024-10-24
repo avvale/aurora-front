@@ -16,6 +16,7 @@ export const account: Account = {
         rememberToken: '',
         meta: {},
     },
+    scopes: [],
     isActive: true,
     clientId: '',
     dApplicationCodes: [],
