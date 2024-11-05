@@ -342,18 +342,19 @@ async function cleanAuroraProvider() {
         'AuthGuard',
     ); */
 
-    // remove AuthorizationService
+    // remove Azure AuthorizationService
     codeWriter.removeImport(
         sourceFile,
         './modules/azure-ad/authorization-azure-ad-adapter.service'
     );
     codeWriter.deleteProviderArray(returnArray, 'AuthorizationService');
 
-    // change AuthenticationService
+    // remove Azure AuthenticationService
     codeWriter.removeImport(
         sourceFile,
         './modules/azure-ad/authentication-azure-ad-adapter.service'
     );
+
     codeWriter.changeProviderArray(
         returnArray,
         'AuthenticationService',
