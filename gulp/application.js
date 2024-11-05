@@ -303,7 +303,7 @@ async function cleanAuroraProvider() {
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
         'src',
-        '@aurora',
+        'app',
         'aurora.provider.ts',
     ]);
 
