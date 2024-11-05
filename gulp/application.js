@@ -17,7 +17,8 @@ function cleanSourceDirectory(cb) {
 /**
  * Copy application files to publish folder
  */
-function copyApplication() {
+function copyApplication()
+{
     // by default don't copy hidden files
     return src([
         '**/*',
@@ -31,6 +32,7 @@ function copyApplication() {
         '!dist/**',
         '!gulp/**',
         '!node_modules/**',
+        '!node_modules/**/.gitkeep',
         '!src/app/modules/admin/apps/auditing/**',
         '!src/app/modules/admin/apps/common/**',
         '!src/app/modules/admin/apps/iam/**',
@@ -60,7 +62,8 @@ function copyApplication() {
 /**
  * Clean dependencies that will not used in application
  */
-function editPackageJson() {
+function editPackageJson()
+{
     return src(['package.json'])
         .pipe(
             jeditor(function (json) {
@@ -79,7 +82,8 @@ function editPackageJson() {
         .pipe(dest('publish'));
 }
 
-async function cleanAppRoutes() {
+async function cleanAppRoutes()
+{
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
@@ -117,7 +121,8 @@ async function cleanAppRoutes() {
     sourceFile.saveSync();
 }
 
-async function cleanAdminNavigation() {
+async function cleanAdminNavigation()
+{
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
@@ -454,12 +459,14 @@ async function cleanEnvironments() {
     environmentDevFile.saveSync();
 }
 
-function copyToCLI() {
+function copyToCLI()
+{
     // remove old cli application files
     fs.rmSync('../aurora-cli/src/templates/front/application', {
         recursive: true,
         force: true,
     });
+
     // copy new cli application files
     return fse.copy(
         'publish',
