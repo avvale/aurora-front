@@ -19,7 +19,7 @@ function copyOAuth()
     return Promise.all([
         fse.copy('cliter/o-auth', 'publish/cliter/o-auth', { overwrite: true }),
         fse.copy('src/app/modules/admin/apps/o-auth', 'publish/src/app/modules/admin/apps/o-auth', { overwrite: true }),
-        fse.copy('src/assets/i18n/o-auth', 'publish/src/assets/i18n/o-auth', { overwrite: true }),
+        fse.copy('public/i18n/o-auth', 'publish/public/i18n/o-auth', { overwrite: true }),
     ]);
 }
 

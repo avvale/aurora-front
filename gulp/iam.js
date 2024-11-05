@@ -19,7 +19,7 @@ function copyIam()
     return Promise.all([
         fse.copy('cliter/iam', 'publish/cliter/iam', { overwrite: true }),
         fse.copy('src/app/modules/admin/apps/iam', 'publish/src/app/modules/admin/apps/iam', { overwrite: true }),
-        fse.copy('src/assets/i18n/iam', 'publish/src/assets/i18n/iam', { overwrite: true }),
+        fse.copy('public/i18n/iam', 'publish/public/i18n/iam', { overwrite: true }),
     ]);
 }
 
