@@ -103,13 +103,10 @@
                                         </button>
                                     }
 
-                                    <!-- Username -->
+                                    <!-- add username -->
                                     @if (
-                                        (message | isNotMine) &&
-                                        (
-                                            first ||
-                                            (chatMessages()[i - 1] | isMine) !== (message | isMine)
-                                        )
+                                        first ||
+                                        chatMessages()[i - 1].accountId !== message.accountId
                                     ) {
                                         <div
                                             class="mb-1 text-sm font-medium leading-none"
