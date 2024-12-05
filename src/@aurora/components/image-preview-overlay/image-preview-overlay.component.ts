@@ -63,7 +63,8 @@ const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
 
         img {
             width: 100%;
-            max-width: 500px;
+            max-width: 95vw;
+            max-height: 90vh;
             height: auto;
         }
 

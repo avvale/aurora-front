@@ -4,6 +4,7 @@ export * from '@aurora/pipes/format-file-size.pipe';
 export * from '@aurora/pipes/get-meta-message-errors.pipe';
 export * from '@aurora/pipes/get-values-objects-array.pipe';
 export * from '@aurora/pipes/get.pipe';
+export * from '@aurora/pipes/has-some-scopes.pipe';
 export * from '@aurora/pipes/has-validator.pipe';
 export * from '@aurora/pipes/is-object-empty.pipe';
 export * from '@aurora/pipes/join.pipe';
