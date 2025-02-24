@@ -8,6 +8,7 @@ export * from './datepicker';
 export * from './datepicker-sql-format';
 export * from './datetimepicker-sql-format';
 export * from './dialog';
+export * from './dot';
 export * from './environments-information';
 export * from './file-input';
 export * from './file-preview-overlay';

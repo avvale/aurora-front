@@ -5,13 +5,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Account, ChatMessage, LastPipe, SpinnerType } from '@aurora';
+import { Account, ChatMessage, LastPipe, MarkdownService, SpinnerType } from '@aurora';
+import { MarkdownToHtmlPipe } from '@aurora/pipes/markdown-to-html.pipe';
 import { last } from 'lodash-es';
 import { IsMinePipe } from './pipes/is-mine.pipe';
 import { IsNotMinePipe } from './pipes/is-not-mine.pipe';
 // avoid error ERROR TypeError: Cannot read properties of undefined (reading 'ɵcmp'), with specific import
 import { DateFormatPipe } from '@aurora/pipes/date-format.pipe';
-
 
 @Component({
     selector: 'au-chat-timeline',
@@ -29,6 +29,7 @@ import { DateFormatPipe } from '@aurora/pipes/date-format.pipe';
         IsMinePipe,
         IsNotMinePipe,
         LastPipe,
+        MarkdownToHtmlPipe,
         MatButtonModule,
         MatFormFieldModule,
         MatIconModule,
@@ -58,7 +59,9 @@ export class ChatTimelineComponent
     deleteMessage: OutputEmitterRef<ChatMessage> = output();
     scroll: OutputEmitterRef<Event> = output();
 
-    constructor()
+    constructor(
+        private markdownService: MarkdownService,
+    )
     {
         effect(() => {
             const messages = this.chatMessages();
@@ -80,7 +83,11 @@ export class ChatTimelineComponent
         const message: string = last(messages).message;
         if (this.typedMessage().length < message.length)
         {
-            this.typedMessage.set(message.substring(0, this.typedMessage().length + 1));
+            this.typedMessage.set(
+                this.markdownService.markdownToHtml(
+                    message.substring(0, this.typedMessage().length + 1)
+                ) as string
+            );
             setTimeout(() => this.typewriterMessage(messages), this.speedTyped());
         }
         else

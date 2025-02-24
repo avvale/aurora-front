@@ -131,7 +131,7 @@
                                     {
                                         <div
                                             class="min-w-4 leading-5"
-                                            [innerHTML]="message.message"
+                                            [innerHTML]="message.message | markdownToHtml"
                                         >
                                         </div>
                                     }
@@ -151,7 +151,7 @@
                                         'ml-0': message | isNotMine,
                                     }"
                                 >
-                                    {{ message.createdAt | dateFormat:'HH:mm'}}
+                                    {{ message.createdAt | dateFormat:'HH:mm' }}
                                 </div>
                             }
 
