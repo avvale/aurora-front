@@ -13,7 +13,8 @@
                         let i = $index;
                         let first = $first;
                         let last = $last;
-                    ) {
+                    )
+                    {
                         <!-- Start of the day -->
                         @if (
                             first ||
@@ -36,6 +37,12 @@
                                 'mt-3': i > 0 && (chatMessages()[i - 1] | isMine) !== (message | isMine),
                             }"
                         >
+                            <!-- projection content after message -->
+                            @for (chatTimelineContentsTemplate of chatTimelineContentsTemplate | filterChatTimelineContentTemplatePosition:'before'; track chatTimelineContentsTemplate.position)
+                            {
+                                <ng-container *ngTemplateOutlet="chatTimelineContentsTemplate.templateRef; context: { $implicit: message, messages: chatMessages() }"></ng-container>
+                            }
+
                             <div
                                 class="flex w-full items-end"
                                 [ngClass]="{
@@ -138,6 +145,12 @@
                                 </div>
                             </div>
 
+                            <!-- projection content after message -->
+                            @for (chatTimelineContentsTemplate of chatTimelineContentsTemplate | filterChatTimelineContentTemplatePosition:'after'; track chatTimelineContentsTemplate.position)
+                            {
+                                <ng-container *ngTemplateOutlet="chatTimelineContentsTemplate.templateRef; context: { $implicit: message, messages: chatMessages() }"></ng-container>
+                            }
+
                             <!-- Time -->
                             @if (
                                 last ||
@@ -194,7 +207,8 @@
                         matInput
                         cdkTextareaAutosize
                         #messageInput
-                    ></textarea>
+                    >
+                    </textarea>
                 </mat-form-field>
                 <div class="my-px ml-4 flex h-11 items-center">
                     <button
