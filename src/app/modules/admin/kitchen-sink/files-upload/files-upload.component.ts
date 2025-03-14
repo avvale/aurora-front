@@ -1,9 +1,9 @@
 
-import { NgForOf, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Action, Crumb, DecimalDirective, FileInputComponent, FileUploadComponent, FileUploaderService, Utils, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log } from '@aurora';
+import { Action, Crumb, FileInputComponent, FileUploadComponent, FileUploaderService, Utils, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log } from '@aurora';
 import { lastValueFrom } from 'rxjs';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -15,7 +15,7 @@ import { MatDividerModule } from '@angular/material/divider';
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
-        DecimalDirective, FileUploadComponent, MatDividerModule, MatToolbarModule, NgIf, NgForOf,
+        FileUploadComponent, MatDividerModule, MatToolbarModule, NgIf,
         FileInputComponent,
     ],
 })

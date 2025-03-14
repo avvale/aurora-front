@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { TRANSLOCO_SCOPE } from '@ngneat/transloco';
+import { TRANSLOCO_SCOPE } from '@jsverse/transloco';
 import { AttachmentsComponent } from './attachments/attachments.component';
 import { attachmentsViewResolver } from './attachments/attachments.resolvers';
 import { DecimalsComponent } from './decimals/decimals.component';

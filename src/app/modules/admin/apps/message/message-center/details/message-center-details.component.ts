@@ -1,4 +1,4 @@
-import { DatePipe, DecimalPipe, NgClass, NgFor, NgIf, NgPlural, NgPluralCase } from '@angular/common';
+import { DecimalPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, ViewEncapsulation, WritableSignal, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -14,7 +14,7 @@ import { InboxService } from '@apps/message/inbox';
 import { Action, DownloadService, ViewBaseComponent } from '@aurora';
 import { FuseScrollResetDirective } from '@fuse/directives/scroll-reset';
 import { FuseFindByKeyPipe } from '@fuse/pipes/find-by-key/find-by-key.pipe';
-import { TranslocoModule } from '@ngneat/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { lastValueFrom, takeUntil } from 'rxjs';
 import { messageCustomerCenterMessageScope } from '../list/message-center-list.component';
 
@@ -25,8 +25,8 @@ import { messageCustomerCenterMessageScope } from '../list/message-center-list.c
     standalone   : true,
     imports      : [
         NgIf, MatButtonModule, RouterLink, MatIconModule, MatMenuModule, NgFor, MatRippleModule,
-        MatCheckboxModule, MatTooltipModule, NgClass, FuseScrollResetDirective, NgPlural, NgPluralCase,
-        MatFormFieldModule, MatInputModule, FuseFindByKeyPipe, DecimalPipe, DatePipe, TranslocoModule,
+        MatCheckboxModule, MatTooltipModule, NgClass, FuseScrollResetDirective,
+        MatFormFieldModule, MatInputModule, DecimalPipe, TranslocoModule,
     ],
 })
 export class MessageCenterDetailsComponent extends ViewBaseComponent

@@ -1,7 +1,6 @@
 
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { Action, Crumb, DecimalDirective, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
+import { Action, Crumb, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
 
 @Component({
     selector       : 'kitchen-sink-decimals',
@@ -11,7 +10,6 @@ import { Action, Crumb, DecimalDirective, ViewDetailComponent, defaultDetailImpo
     standalone     : true,
     imports        : [
         ...defaultDetailImports,
-        DecimalDirective,
     ],
 })
 export class IconsComponent extends ViewDetailComponent

@@ -1,4 +1,4 @@
-import { NgForOf, KeyValuePipe } from '@angular/common';
+import { NgForOf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Signal, ViewChild, ViewEncapsulation, WritableSignal, computed, signal } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -29,7 +29,7 @@ export const messageAccountsScopeDialogPagination = 'message::messageDialogAccou
     imports        : [
         ...defaultDetailImports,
         ChipComponent, FileUploadComponent, FormatFileSizePipe, GetColorStatusMessagePipe, MatCheckboxModule,
-        MatSelectModule, MtxDatetimepickerModule, NgForOf, GridSelectMultipleElementsModule, KeyValuePipe,
+        MatSelectModule, MtxDatetimepickerModule, NgForOf, GridSelectMultipleElementsModule,
         NgxMatSelectSearchModule, MatTabsModule, QuillEditorComponent, SplitButtonModule,
     ],
 })

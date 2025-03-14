@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgIf } from '@angular/common';
 import { Component, ElementRef, ViewChild, ViewEncapsulation, WritableSignal, computed, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,7 +8,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { InboxService } from '@apps/message/inbox';
 import { MessageInbox, MessageService } from '@apps/message';
 import { Action, BreadcrumbComponent, ColumnConfig, ColumnDataType, Crumb, GridFiltersStorageService, GridState, GridStateService, QueryStatementHandler, TitleComponent, ViewBaseComponent } from '@aurora';
-import { TranslocoModule } from '@ngneat/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { Observable, lastValueFrom, takeUntil } from 'rxjs';
 
 
@@ -23,8 +23,8 @@ export const messageCustomerCenterMessageScope = 'message::customerCenterMessage
     encapsulation: ViewEncapsulation.None,
     standalone   : true,
     imports      : [
-        AsyncPipe, BreadcrumbComponent, NgIf, MatButtonModule, MatIconModule, RouterLink, MatProgressBarModule,
-        MatTooltipModule, NgFor, NgClass, RouterOutlet, DatePipe, TitleComponent, TranslocoModule,
+        BreadcrumbComponent, NgIf, MatButtonModule, MatIconModule, RouterLink, MatProgressBarModule,
+        MatTooltipModule, NgClass, RouterOutlet, DatePipe, TitleComponent, TranslocoModule,
     ],
 })
 export class MessageCenterListComponent extends ViewBaseComponent
