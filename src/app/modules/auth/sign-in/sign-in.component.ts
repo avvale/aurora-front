@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 
@@ -35,7 +35,6 @@ import { AuthorizationService } from '@aurora/modules/authorization/authorizatio
     animations: fuseAnimations,
     standalone: true,
     imports: [
-        RouterLink,
         FuseAlertComponent,
         FormsModule,
         ReactiveFormsModule,
