@@ -126,7 +126,12 @@ export class AuthSignInComponent implements OnInit
             .pipe(
                 catchError(error =>
                 {
-                    if (error.message === 'Unauthorized') return of({ code: 401, message: 'Unauthorized' });
+                    if (
+                        error.message === 'Unauthorized' ||
+                        error.message === 'IamUser not found'
+                    )
+                        return of({ code: 401, message: 'Unauthorized' });
+
                     return throwError(() => error);
                 })
             )

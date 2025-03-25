@@ -85,7 +85,7 @@ export const apolloFactory = (
             {
                 log(`[DEBUG] GraphQL Error: ${extractGraphqlMessageErrors(graphQLErrors)}`);
 
-                const unauthorizedError = graphQLErrors.find(
+                const unauthorizedIamUserError = graphQLErrors.find(
                     ({
                         message,
                         extensions,
@@ -95,7 +95,17 @@ export const apolloFactory = (
                     }) => extensions.originalError?.statusCode === 401
                 );
 
-                if (unauthorizedError)
+                const notFoundIamUserError = graphQLErrors.find(
+                    ({
+                        message,
+                        extensions,
+                    }: {
+                        message: string;
+                        extensions: any;
+                    }) => extensions.originalError?.statusCode === 404 && extensions.originalError?.message === 'IamUser not found'
+                );
+
+                if (unauthorizedIamUserError || notFoundIamUserError)
                 {
                     authenticationService.signOut();
                     return;
