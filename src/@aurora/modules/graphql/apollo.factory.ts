@@ -78,13 +78,12 @@ export const apolloFactory = (
     });
 
     // manage errors
-    const error = onError(
-        ({ graphQLErrors, networkError, response, operation, forward }) => {
+    const error = onError(({ graphQLErrors, networkError, response, operation, forward }) =>
+        {
             // graphql error
-            if (graphQLErrors) {
-                log(
-                    `[DEBUG] GraphQL Error: ${extractGraphqlMessageErrors(graphQLErrors)}`
-                );
+            if (graphQLErrors)
+            {
+                log(`[DEBUG] GraphQL Error: ${extractGraphqlMessageErrors(graphQLErrors)}`);
 
                 const unauthorizedError = graphQLErrors.find(
                     ({
@@ -93,20 +92,18 @@ export const apolloFactory = (
                     }: {
                         message: string;
                         extensions: any;
-                    }) => extensions.response?.statusCode === 401
+                    }) => extensions.originalError?.statusCode === 401
                 );
 
-                if (unauthorizedError) {
+                if (unauthorizedError)
+                {
                     authenticationService.signOut();
-                    location.reload();
                     return;
                 }
 
-                const errorCodes =
-                    extractGraphqlStatusErrorCodes(graphQLErrors);
-                const errorMessage = translocoService.translate(
-                    'error.' + errorCodes
-                );
+                const errorCodes = extractGraphqlStatusErrorCodes(graphQLErrors);
+                const errorMessage = translocoService.translate('error.' + errorCodes);
+
                 confirmationService.open({
                     title: `Error [${errorCodes}]`,
                     message:
@@ -132,7 +129,8 @@ export const apolloFactory = (
             }
 
             // network error
-            if (networkError) {
+            if (networkError)
+            {
                 log('[DEBUG] - network GraphQL error', networkError);
 
                 switch (networkError['status']) {
