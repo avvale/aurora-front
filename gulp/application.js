@@ -70,7 +70,6 @@ function editPackageJson()
                 // delete json.dependencies['@angular-material-extensions/password-strength'];
                 delete json.dependencies['@azure/msal-angular'];
                 delete json.dependencies['@azure/msal-browser'];
-
                 delete json.devDependencies['fs-extra'];
                 delete json.devDependencies['gulp'];
                 delete json.devDependencies['gulp-json-editor'];
@@ -137,25 +136,13 @@ async function cleanAdminNavigation()
     codeWriter.removeImport(sourceFile, './apps/common/common.navigation');
     codeWriter.removeImport(sourceFile, './apps/iam/iam.navigation');
     codeWriter.removeImport(sourceFile, './apps/o-auth/o-auth.navigation');
-    codeWriter.removeImport(
-        sourceFile,
-        './apps/queue-manager/queue-manager.navigation'
-    );
-    codeWriter.removeImport(
-        sourceFile,
-        './apps/search-engine/search-engine.navigation'
-    );
+    codeWriter.removeImport(sourceFile, './apps/queue-manager/queue-manager.navigation');
+    codeWriter.removeImport(sourceFile, './apps/search-engine/search-engine.navigation');
     codeWriter.removeImport(sourceFile, './apps/message/message.navigation');
-    codeWriter.removeImport(
-        sourceFile,
-        './kitchen-sink/kitchen-sink.navigation'
-    );
+    codeWriter.removeImport(sourceFile, './kitchen-sink/kitchen-sink.navigation');
 
-    const adminNavigation =
-        sourceFile.getVariableDeclarationOrThrow('adminNavigation');
-    const adminNavigationArray = adminNavigation.getInitializerIfKindOrThrow(
-        ts.SyntaxKind.ArrayLiteralExpression
-    );
+    const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
+    const adminNavigationArray = adminNavigation.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
 
     codeWriter.removeArrayItemsAccordValue(adminNavigationArray, [
         'auditingNavigation',
@@ -171,7 +158,8 @@ async function cleanAdminNavigation()
     sourceFile.saveSync();
 }
 
-async function cleanAppResolvers() {
+async function cleanAppResolvers()
+{
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
@@ -183,27 +171,24 @@ async function cleanAppResolvers() {
     codeWriter.removeImport(sourceFile, '@apps/message/inbox');
 
     // delete const inboxService = inject(InboxService);
-    const variableThatContainsAnonymousFunction =
-        sourceFile.getVariableDeclarationOrThrow('initialDataResolver');
-    const anonymousFunction =
-        variableThatContainsAnonymousFunction.getInitializerIfKindOrThrow(
-            ts.SyntaxKind.ArrowFunction
-        );
-    const variableToDelete =
-        anonymousFunction.getVariableDeclarationOrThrow('inboxService');
+    const variableThatContainsAnonymousFunction = sourceFile.getVariableDeclarationOrThrow('initialDataResolver');
+    const anonymousFunction = variableThatContainsAnonymousFunction.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrowFunction);
+    const variableToDelete = anonymousFunction.getVariableDeclarationOrThrow('inboxService');
     variableToDelete.remove();
 
-    // delete inboxService.checkMessagesInbox(), from forkJoin
-    const forkJoinCall = anonymousFunction
-        .getDescendantStatements()
-        .find((statement) =>
-            statement.getText().startsWith('return forkJoin([')
-        );
-    const argumentsForkJoinArray = forkJoinCall
-        .getChildrenOfKind(ts.SyntaxKind.CallExpression)[0]
-        .getArguments()[0];
-    for (const argument of argumentsForkJoinArray.getElements()) {
-        if (argument.getText().includes('inboxService.checkMessagesInbox()')) {
+    // find return statement
+    const returnStatement = variableThatContainsAnonymousFunction.getDescendantsOfKind(ts.SyntaxKind.ReturnStatement)[0];
+
+    // get .pipe(...) statement
+    const pipeCall = returnStatement.getDescendantsOfKind(ts.SyntaxKind.CallExpression).find(call => call.getExpression().getText().includes('pipe'));
+
+    const forkJoinCall = pipeCall.getDescendantsOfKind(ts.SyntaxKind.CallExpression).find(call => call.getExpression().getText().includes('forkJoin'));
+
+    const argumentsForkJoinArray = forkJoinCall.getArguments()[0];
+    for (const argument of argumentsForkJoinArray.getElements())
+    {
+        if (argument.getText().includes('inboxService.checkMessagesInbox()'))
+        {
             argumentsForkJoinArray.removeElement(argument);
         }
     }
@@ -211,7 +196,8 @@ async function cleanAppResolvers() {
     sourceFile.saveSync();
 }
 
-async function cleanClassyComponent() {
+async function cleanClassyComponent()
+{
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
@@ -236,7 +222,8 @@ async function cleanClassyComponent() {
     sourceFile.saveSync();
 }
 
-async function cleanClassyTemplate() {
+async function cleanClassyTemplate()
+{
     let html = fs.readFileSync(
         path.join(
             'publish',
@@ -268,7 +255,8 @@ async function cleanClassyTemplate() {
     );
 }
 
-async function cleanUserComponent() {
+async function cleanUserComponent()
+{
     let html = fs.readFileSync(
         path.join(
             'publish',
@@ -298,7 +286,8 @@ async function cleanUserComponent() {
     );
 }
 
-async function cleanAuroraProvider() {
+async function cleanAuroraProvider()
+{
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
@@ -308,17 +297,10 @@ async function cleanAuroraProvider() {
     ]);
 
     // get provideAurora return array
-    const provideAurora =
-        sourceFile.getVariableDeclarationOrThrow('provideAurora');
-    const provideAuroraFunction = provideAurora.getInitializerIfKindOrThrow(
-        ts.SyntaxKind.ArrowFunction
-    );
-    const returnFunction = provideAuroraFunction.getDescendantsOfKind(
-        ts.SyntaxKind.ReturnStatement
-    )[0];
-    const returnArray = returnFunction.getDescendantsOfKind(
-        ts.SyntaxKind.ArrayLiteralExpression
-    )[0];
+    const provideAurora = sourceFile.getVariableDeclarationOrThrow('provideAurora');
+    const provideAuroraFunction = provideAurora.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrowFunction);
+    const returnFunction = provideAuroraFunction.getDescendantsOfKind(ts.SyntaxKind.ReturnStatement)[0];
+    const returnArray = returnFunction.getDescendantsOfKind(ts.SyntaxKind.ArrayLiteralExpression)[0];
 
     // change source of UserMetaStorageService
     codeWriter.removeImport(sourceFile, 'app/modules/admin/apps/iam');
