@@ -5,6 +5,7 @@ export * from './custom-icons';
 export * from './graphql';
 export * from './iam';
 export * from './lang';
+export * from './local-storage';
 export * from './orm';
 export * from './routing';
 export * from './session';

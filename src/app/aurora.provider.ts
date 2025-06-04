@@ -1,11 +1,10 @@
 import { EnvironmentProviders, inject, provideAppInitializer, Provider } from '@angular/core';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-import { AuroraGridManagerService, AuthenticationAuroraAdapterService, AuthenticationDisabledAdapterGuard, AuthenticationMockAdapterService, AuthenticationService, AuthorizationService, AuthorizationDisabledService, COMPACT_NAVIGATION, compactNavigation, DatePickerDayjsAdapter, DatePickerDayjsFormats, DateTimePickerDayjsAdapter, DatetimePickerDayjsFormats, DEFAULT_NAVIGATION, defaultNavigation, EnvironmentsInformationService, EnvironmentsInformationMockAdapterService, FUTURISTIC_NAVIGATION, futuristicNavigation, GridManagerService, HORIZONTAL_NAVIGATION, horizontalNavigation, IamAuroraAdapterService, IamMockAdapterService, IamService, PaginatorIntlService, provideApollo, provideApolloErrorTranslations, provideCustomIcons, provideValidationMessages, SessionLocalStorageService, SessionService, UserMetaStorageService, UserMetaStorageLocalStorageAdapterService, InitializerService } from '@aurora';
+import { AuroraGridManagerService, AuthenticationAuroraAdapterService, AuthenticationService, COMPACT_NAVIGATION, compactNavigation, DatePickerDayjsAdapter, DatePickerDayjsFormats, DateTimePickerDayjsAdapter, DatetimePickerDayjsFormats, DEFAULT_NAVIGATION, defaultNavigation, FUTURISTIC_NAVIGATION, futuristicNavigation, GridManagerService, HORIZONTAL_NAVIGATION, horizontalNavigation, IamAuroraAdapterService, IamService, InitializerService, PaginatorIntlService, provideApollo, provideApolloErrorTranslations, provideCustomIcons, provideLocalStorage, provideValidationMessages, SessionLocalStorageService, SessionService, UserMetaStorageService } from '@aurora';
+import '@aurora/aurora.prototypes';
 import { DatetimeAdapter, MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
 import { UserMetaStorageIamAdapterService } from 'app/modules/admin/apps/iam';
-import { AuthGuard } from 'app/core/auth/guards/auth.guard';
-import '@aurora/aurora.prototypes';
 
 export const provideAurora = (): Array<Provider | EnvironmentProviders> =>
 {
@@ -14,6 +13,7 @@ export const provideAurora = (): Array<Provider | EnvironmentProviders> =>
         provideValidationMessages(),
         provideApolloErrorTranslations(),
         provideCustomIcons(),
+        provideLocalStorage(),
         provideAppInitializer(() => inject(InitializerService).bootstrapInitializer()),
         {
             provide : MatPaginatorIntl,
