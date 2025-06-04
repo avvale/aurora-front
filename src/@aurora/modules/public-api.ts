@@ -1,5 +1,6 @@
 export * from './authentication';
 export * from './authorization';
+export * from './azure-storage-account';
 export * from './custom-icons';
 export * from './graphql';
 export * from './iam';
