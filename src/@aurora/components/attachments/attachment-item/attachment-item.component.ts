@@ -7,6 +7,7 @@ import { AttachmentTranslatePipe } from '../attachment-translations/attachment-t
 import { AttachmentsDownloadService } from '../attachments-download.service';
 import { SizeFormatPipe } from '../pipes/size-format.pipe';
 import { Attachment, AttachmentFamily, CropType } from './../attachments.types';
+import { DownloadService } from '@aurora/services';
 
 @Component({
     selector       : 'au-attachment-item',
@@ -55,7 +56,7 @@ export class AttachmentItemComponent implements OnInit//, //ControlValueAccessor
 
     constructor(
         private readonly renderer: Renderer2,
-        private readonly attachmentsDownloadService: AttachmentsDownloadService,
+        private readonly downloadService: DownloadService,
         @Optional() private controlContainer: ControlContainer,
     )
     { /**/ }
@@ -119,7 +120,7 @@ export class AttachmentItemComponent implements OnInit//, //ControlValueAccessor
 
     handlerDownload(): void
     {
-        this.attachmentsDownloadService
+        this.downloadService
             .download(this.formGroup.value);
     }
 }
