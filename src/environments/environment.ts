@@ -22,7 +22,7 @@ export const environment = {
         theme : 'theme-default',
         layout: 'classy',
     },
-    azureAd: {
+    msEntraId: {
         tenant     : '',
         authority  : '',
         clientId   : '',

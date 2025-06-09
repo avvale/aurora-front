@@ -4,7 +4,6 @@ import { ControlContainer, FormGroup, FormsModule, ReactiveFormsModule } from '@
 import { ImageInputComponent } from '@aurora/components/image-input';
 import { first, merge } from 'rxjs';
 import { AttachmentTranslatePipe } from '../attachment-translations/attachment-translate.pipe';
-import { AttachmentsDownloadService } from '../attachments-download.service';
 import { SizeFormatPipe } from '../pipes/size-format.pipe';
 import { Attachment, AttachmentFamily, CropType } from './../attachments.types';
 import { DownloadService } from '@aurora/services';

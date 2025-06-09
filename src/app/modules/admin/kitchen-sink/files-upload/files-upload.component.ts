@@ -3,7 +3,7 @@ import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Action, Crumb, FileInputComponent, FileUploadComponent, FileUploaderService, Utils, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log } from '@aurora';
+import { Action, Crumb, FileInputComponent, FileUploadComponent, FileUploaderService, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log, uuid } from '@aurora';
 import { lastValueFrom } from 'rxjs';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -29,10 +29,10 @@ export class FilesUploadComponent extends ViewDetailComponent
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
     managedObject: any;
-    stagingExample1: { id: string; file: File; }[] = [];
-    stagingExample2: { id: string; file: File; } [] = [];
-    stagingExample3: { id: string; file: File; } [] = [];
-    stagingExample4: { id: string; file: File; } [] = [];
+    stagingExample1: { id: string; file: File; relativePathSegments: string[]; }[] = [];
+    stagingExample2: { id: string; file: File; relativePathSegments: string[]; } [] = [];
+    stagingExample3: { id: string; file: File; relativePathSegments: string[]; } [] = [];
+    stagingExample4: { id: string; file: File; relativePathSegments: string[]; } [] = [];
     enableSubmitButton: boolean = false;
 
     // breadcrumb component definition
@@ -100,8 +100,9 @@ export class FilesUploadComponent extends ViewDetailComponent
                     fileEntry.file((file: File) =>
                     {
                         this.stagingExample1.push({
-                            id: Utils.uuid(),
+                            id: uuid(),
                             file,
+                            relativePathSegments: ['test'],
                         });
                     });
                 }
@@ -119,8 +120,9 @@ export class FilesUploadComponent extends ViewDetailComponent
                     fileEntry.file((file: File) =>
                     {
                         this.stagingExample2.push({
-                            id: Utils.uuid(),
+                            id: uuid(),
                             file,
+                            relativePathSegments: ['test'],
                         });
                     });
                 }
@@ -135,8 +137,9 @@ export class FilesUploadComponent extends ViewDetailComponent
                 for (const file of action.meta.files)
                 {
                     this.stagingExample3.push({
-                        id: Utils.uuid(),
+                        id: uuid(),
                         file,
+                        relativePathSegments: ['test'],
                     });
                 }
 
@@ -150,8 +153,9 @@ export class FilesUploadComponent extends ViewDetailComponent
                 for (const file of action.meta.files)
                 {
                     this.stagingExample4.push({
-                        id: Utils.uuid(),
+                        id: uuid(),
                         file,
+                        relativePathSegments: ['test'],
                     });
                 }
 

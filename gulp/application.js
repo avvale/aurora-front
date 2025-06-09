@@ -56,7 +56,7 @@ function copyApplication()
         '!gulpfile.js',
         '!package.json',
         '!package-lock.json',
-    ]).pipe(dest('publish/'));
+    ], { encoding: false }).pipe(dest('publish/'));
 }
 
 /**
