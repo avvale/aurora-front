@@ -3,9 +3,11 @@ import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Action, Crumb, FileInputComponent, FileUploadComponent, FileUploaderService, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log, uuid } from '@aurora';
+import { Action, Crumb, FileUploadComponent, FileUploaderService, ViewDetailComponent, commonUploadAttachments, defaultDetailImports, log, uuid } from '@aurora';
 import { lastValueFrom } from 'rxjs';
 import { MatDividerModule } from '@angular/material/divider';
+import { MaterialFileInputModule } from 'ngx-custom-material-file-input';
+
 
 @Component({
     selector       : 'kitchen-sink-file-upload',
@@ -16,7 +18,7 @@ import { MatDividerModule } from '@angular/material/divider';
     imports        : [
         ...defaultDetailImports,
         FileUploadComponent, MatDividerModule, MatToolbarModule, NgIf,
-        FileInputComponent,
+        MaterialFileInputModule,
     ],
 })
 export class FilesUploadComponent extends ViewDetailComponent
@@ -149,8 +151,9 @@ export class FilesUploadComponent extends ViewDetailComponent
             case 'kitchenSink::fileUpload.detail.stagingExample4':
                 if (action.meta.files.length === 0) return;
 
+                const inputElement = action.meta.files.target as HTMLInputElement;
                 this.stagingExample4 = [];
-                for (const file of action.meta.files)
+                for (const file of Array.from(inputElement.files))
                 {
                     this.stagingExample4.push({
                         id: uuid(),

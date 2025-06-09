@@ -94,7 +94,7 @@
                         <ngx-mat-file-input
                             formControlName="example3"
                             multiple
-                            (files)="
+                            (change)="
                                 actionService.action({
                                     id          : 'kitchenSink::fileUpload.detail.stagingExample3',
                                     isViewAction: false,
@@ -120,7 +120,7 @@
                         <mat-label>Single input select</mat-label>
                         <ngx-mat-file-input
                             formControlName="example4"
-                            (files)="
+                            (change)="
                                 actionService.action({
                                     id          : 'kitchenSink::fileUpload.detail.stagingExample4',
                                     isViewAction: false,
