@@ -87,6 +87,7 @@ export const appRoutes: Route[] = [
             { path: 'o-auth', loadChildren: () => import('app/modules/admin/apps/o-auth/o-auth.routes') },
             { path: 'iam', loadChildren: () => import('app/modules/admin/apps/iam/iam.routes') },
             { path: 'search-engine', loadChildren: () => import('app/modules/admin/apps/search-engine/search-engine.routes') },
+            { path: 'tools', loadChildren: () => import('app/modules/admin/apps/tools/tools.routes') },
             { path: 'kitchen-sink', loadChildren: () => import('app/modules/admin/kitchen-sink/kitchen-sink.routes') },
             { path: 'message', loadChildren: () => import('app/modules/admin/apps/message/message.routes') },
             { path: 'settings', loadChildren: () => import('@apps/settings/settings.routes') },

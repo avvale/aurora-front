@@ -1,0 +1,9 @@
+{
+    "Description": "Description",
+    "IsActive": "Activo",
+    "Key": "Clave",
+    "KeyValue": "Clave-Valor",
+    "KeyValues": "Clave-Valor",
+    "Type": "Tipo",
+    "Value": "Valor"
+}
