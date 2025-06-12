@@ -20,6 +20,7 @@ import { finalize } from 'rxjs';
 
 // ---- customizations ----
 import { AuthenticationService } from '@aurora';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'auth-reset-password',
@@ -36,6 +37,9 @@ import { AuthenticationService } from '@aurora';
         MatIconModule,
         MatProgressSpinnerModule,
         RouterLink,
+
+        // ---- customizations ----
+        TranslocoModule,
     ],
 })
 export class AuthResetPasswordComponent implements OnInit {

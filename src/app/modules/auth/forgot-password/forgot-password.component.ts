@@ -18,6 +18,7 @@ import { finalize } from 'rxjs';
 
 // ---- customizations ----
 import { AuthenticationService } from '@aurora';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'auth-forgot-password',
@@ -33,6 +34,7 @@ import { AuthenticationService } from '@aurora';
         MatButtonModule,
         MatProgressSpinnerModule,
         RouterLink,
+        TranslocoModule,
     ],
 })
 export class AuthForgotPasswordComponent implements OnInit {

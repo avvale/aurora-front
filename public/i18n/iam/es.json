@@ -2,11 +2,11 @@
     "Account": "Account",
     "AccountId": "AccountId",
     "AccountIds": "AccountIds",
+    "Accounts": "Accounts",
     "AccountType": {
         "SERVICE": "Servicio",
         "USER": "Usuario"
     },
-    "Accounts": "Accounts",
     "AddChildTenants": "Añadir tenants hijos",
     "Avatar": "Avatar",
     "BoundedContext": "BoundedContext",
@@ -18,17 +18,22 @@
     "CopiedInClipboard": "copiados en el portapapeles",
     "CopyPermissions": "Copiar permisos",
     "DApplicationCodes": "DApplicationCodes",
+    "Data": "Data",
     "DPermissions": "DPermissions",
     "DScopes": "DScopes",
     "DTenants": "DTenants",
-    "Data": "Data",
     "Email": "Email",
+    "error": {
+        "101": "El nombre de usuario ya existe.",
+        "102": "El correo electrónico ya existe.",
+        "103": "El código ya existe."
+    },
     "FindTenant": "Encuentra un tenant...",
-    "Inherited": "Heredados",
-    "ImportPermissionSyntaxError": "Error de sintaxis en la importación de permisos",
+    "ImportedFromClipboard": "importados desde el portapapeles",
     "ImportPermissions": "Importar permisos",
     "ImportPermissionsWarning": "Va a eliminar los permisos actuales he importar nuevos permisos en el role {{role}} ¿Está seguro que desea importar los permisos?",
-    "ImportedFromClipboard": "importados desde el portapapeles",
+    "ImportPermissionSyntaxError": "Error de sintaxis en la importación de permisos",
+    "Inherited": "Heredados",
     "IsActive": "IsActive",
     "IsMaster": "IsMaster",
     "IsTwoFactorAuthenticationEnabled": "IsTwoFactorAuthenticationEnabled",
@@ -60,10 +65,5 @@
     "Type": "Type",
     "User": "User",
     "Username": "Nombre de usuario",
-    "Users": "Users",
-    "error": {
-        "101": "El nombre de usuario ya existe.",
-        "102": "El correo electrónico ya existe.",
-        "103": "El código ya existe."
-    }
+    "Users": "Users"
 }

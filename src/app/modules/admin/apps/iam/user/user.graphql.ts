@@ -93,6 +93,16 @@ export const createMutation = gql`
     }
 `;
 
+export const insertMutation = gql`
+    mutation IamCreateUsers (
+        $payload: [IamCreateUserInput]!
+    ) {
+        iamCreateUsers (
+            payload: $payload
+        )
+    }
+`;
+
 export const updateByIdMutation = gql`
     mutation IamUpdateUserById (
         $payload: IamUpdateUserByIdInput!
@@ -148,5 +158,30 @@ export const deleteMutation = gql`
         ) {
             ${fields}
         }
+    }
+`;
+
+// Mutation additionalApis
+export const forgotPasswordUserMutation = gql`
+    mutation IamForgotPasswordUser (
+        $payload: IamUpdateUserByIdInput!
+        $constraint: QueryStatement
+    ) {
+        iamForgotPasswordUser (
+            payload: $payload
+            constraint: $constraint
+        )
+    }
+`;
+
+export const resetPasswordUserMutation = gql`
+    mutation IamResetPasswordUser (
+        $payload: IamUpdateUserByIdInput!
+        $constraint: QueryStatement
+    ) {
+        iamResetPasswordUser (
+            payload: $payload
+            constraint: $constraint
+        )
     }
 `;
