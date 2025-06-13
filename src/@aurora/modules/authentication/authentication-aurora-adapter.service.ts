@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
-import { Credentials, GraphQLService, OAuthClientGrantType, oAuthCreateCredentials, oAuthCreateImpersonalizeCredentials, Utils } from '@aurora';
+import { Credentials, GraphQLService, iamForgotPasswordUserMutation, iamResetPasswordUserMutation, OAuthClientGrantType, oAuthCreateCredentials, oAuthCreateImpersonalizeCredentials, Utils } from '@aurora';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { first, Observable, of, switchMap, throwError } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
@@ -109,9 +109,26 @@ export class AuthenticationAuroraAdapterService extends AuthenticationService
      *
      * @param email
      */
-    forgotPassword(email: string): Observable<any>
+    forgotPassword(email: string): Observable<boolean>
     {
-        return this.httpClient.post('api/auth/forgot-password', email);
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : iamForgotPasswordUserMutation,
+                variables: {
+                    payload: {
+                        email,
+                    },
+                },
+            })
+            .pipe(
+                switchMap((response: any) =>
+                {
+                    console.log('Forgot password response:', response);
+
+                    return of(true);
+                }),
+            );
     }
 
     /**
@@ -119,9 +136,30 @@ export class AuthenticationAuroraAdapterService extends AuthenticationService
      *
      * @param password
      */
-    resetPassword(password: string): Observable<any>
+    resetPassword(
+        password: string,
+        token: string,
+    ): Observable<boolean>
     {
-        return this.httpClient.post('api/auth/reset-password', password);
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : iamResetPasswordUserMutation,
+                variables: {
+                    payload: {
+                        password,
+                        token,
+                    },
+                },
+            })
+            .pipe(
+                switchMap((response: any) =>
+                {
+                    console.log('Forgot password response:', response);
+
+                    return of(true);
+                }),
+            );
     }
 
     /**

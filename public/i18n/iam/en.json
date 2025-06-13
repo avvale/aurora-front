@@ -23,6 +23,7 @@
     "DScopes": "DScopes",
     "DTenants": "DTenants",
     "Email": "Email",
+    "EmailRequired": "Email or user is required",
     "error": {
         "101": "The username already exists.",
         "102": "The email already exists.",
@@ -54,6 +55,7 @@
     "Roles": "Roles",
     "Root": "Root",
     "Scopes": "Scopes",
+    "SendEmailForgotPasswordSuccessful": "Password reset sent! You'll receive an email if you are registered on our system",
     "Sort": "Sort",
     "Surname": "Surname",
     "Tag": "Tag",

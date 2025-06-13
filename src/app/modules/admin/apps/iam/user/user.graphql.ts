@@ -160,28 +160,3 @@ export const deleteMutation = gql`
         }
     }
 `;
-
-// Mutation additionalApis
-export const forgotPasswordUserMutation = gql`
-    mutation IamForgotPasswordUser (
-        $payload: IamUpdateUserByIdInput!
-        $constraint: QueryStatement
-    ) {
-        iamForgotPasswordUser (
-            payload: $payload
-            constraint: $constraint
-        )
-    }
-`;
-
-export const resetPasswordUserMutation = gql`
-    mutation IamResetPasswordUser (
-        $payload: IamUpdateUserByIdInput!
-        $constraint: QueryStatement
-    ) {
-        iamResetPasswordUser (
-            payload: $payload
-            constraint: $constraint
-        )
-    }
-`;

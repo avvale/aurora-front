@@ -23,6 +23,7 @@
     "DScopes": "DScopes",
     "DTenants": "DTenants",
     "Email": "Email",
+    "EmailRequired": "Email o usuario es obligatorio",
     "error": {
         "101": "El nombre de usuario ya existe.",
         "102": "El correo electrónico ya existe.",
@@ -54,6 +55,7 @@
     "Roles": "Roles",
     "Root": "Root",
     "Scopes": "Scopes",
+    "SendEmailForgotPasswordSuccessful": "¡Restablecimiento de contraseña enviado! Recibirás un correo electrónico si estás registrado en nuestro sistema",
     "Sort": "Sort",
     "Surname": "Surname",
     "Tag": "Tag",

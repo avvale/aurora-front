@@ -64,10 +64,11 @@ export class AuthForgotPasswordComponent implements OnInit {
     /**
      * On init
      */
-    ngOnInit(): void {
+    ngOnInit(): void
+    {
         // Create the form
         this.forgotPasswordForm = this._formBuilder.group({
-            email: ['', [Validators.required, Validators.email]],
+            email: ['', [Validators.required]],
         });
     }
 
@@ -78,7 +79,8 @@ export class AuthForgotPasswordComponent implements OnInit {
     /**
      * Send the reset link
      */
-    sendResetLink(): void {
+    sendResetLink(): void
+    {
         // Return if the form is invalid
         if (this.forgotPasswordForm.invalid) {
             return;

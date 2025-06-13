@@ -118,7 +118,7 @@ export class AuthenticationMockAdapterService extends AuthenticationService
      *
      * @param password
      */
-    resetPassword(password: string): Observable<any>
+    resetPassword(password: string, token: string): Observable<any>
     {
         return this.httpClient.post('api/auth/reset-password', password);
     }
