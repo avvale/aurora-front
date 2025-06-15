@@ -1,4 +1,3 @@
-import { forgotPasswordUserMutation, resetPasswordUserMutation } from './user.graphql';
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { IamCreateUser, IamUpdateUserById, IamUpdateUsers, IamUser } from '@apps/iam';
@@ -414,57 +413,6 @@ export class UserService
                 variables: {
                     query,
                     constraint,
-                },
-                context: {
-                    headers,
-                },
-            });
-    }
-
-    // Mutation additionalApis
-    forgotPasswordUser<T>(
-        {
-            graphqlStatement = forgotPasswordUserMutation,
-            object = null,
-            headers = {},
-        }: {
-            graphqlStatement?: DocumentNode;
-            object?: IamUpdateUserById;
-            headers?: GraphQLHeaders;
-        } = {},
-    ): Observable<FetchResult<T>>
-    {
-        return this.graphqlService
-            .client()
-            .mutate({
-                mutation : graphqlStatement,
-                variables: {
-                    payload: object,
-                },
-                context: {
-                    headers,
-                },
-            });
-    }
-
-    resetPasswordUser<T>(
-        {
-            graphqlStatement = resetPasswordUserMutation,
-            object = null,
-            headers = {},
-        }: {
-            graphqlStatement?: DocumentNode;
-            object?: IamUpdateUserById;
-            headers?: GraphQLHeaders;
-        } = {},
-    ): Observable<FetchResult<T>>
-    {
-        return this.graphqlService
-            .client()
-            .mutate({
-                mutation : graphqlStatement,
-                variables: {
-                    payload: object,
                 },
                 context: {
                     headers,
