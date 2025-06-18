@@ -189,8 +189,6 @@ export class AuthResetPasswordComponent extends ViewDetailComponent implements O
                         return of(false);
                     }
 
-                    console.log(error.message);
-
                     return throwError(() => error);
                 }),
             )

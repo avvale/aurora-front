@@ -19,7 +19,7 @@ function copyCommon()
     return Promise.all([
         fse.copy('cliter/common', 'publish/cliter/common', { overwrite: true }),
         fse.copy('src/app/modules/admin/apps/common', 'publish/src/app/modules/admin/apps/common', { overwrite: true }),
-        fse.copy('src/assets/i18n/common', 'publish/src/assets/i18n/common', { overwrite: true }),
+        fse.copy('public/i18n/common', 'publish/public/i18n/common', { overwrite: true }),
     ]);
 }
 

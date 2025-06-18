@@ -19,7 +19,7 @@ function copySearchEngine()
     return Promise.all([
         fse.copy('cliter/search-engine', 'publish/cliter/search-engine', { overwrite: true }),
         fse.copy('src/app/modules/admin/apps/search-engine', 'publish/src/app/modules/admin/apps/search-engine', { overwrite: true }),
-        fse.copy('src/assets/i18n/search-engine', 'publish/src/assets/i18n/search-engine', { overwrite: true }),
+        fse.copy('public/i18n/search-engine', 'publish/public/i18n/search-engine', { overwrite: true }),
     ]);
 }
 

@@ -19,7 +19,7 @@ function copyQueueManager()
     return Promise.all([
         fse.copy('cliter/queue-manager', 'publish/cliter/queue-manager', { overwrite: true }),
         fse.copy('src/app/modules/admin/apps/queue-manager', 'publish/src/app/modules/admin/apps/queue-manager', { overwrite: true }),
-        fse.copy('src/assets/i18n/queue-manager', 'publish/src/assets/i18n/queue-manager', { overwrite: true }),
+        fse.copy('public/i18n/queue-manager', 'publish/public/i18n/queue-manager', { overwrite: true }),
     ]);
 }
 

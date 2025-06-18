@@ -82,11 +82,6 @@ export class FilesUploadComponent extends ViewDetailComponent
         });
     }
 
-    test(): void
-    {
-        console.log(this.fg.get('example3')?.value);
-    }
-
     async handleAction(action: Action): Promise<void>
     {
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined

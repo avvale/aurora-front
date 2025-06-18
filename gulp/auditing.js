@@ -19,7 +19,7 @@ function copyAuditing()
     return Promise.all([
         fse.copy('cliter/auditing', 'publish/cliter/auditing', { overwrite: true }),
         fse.copy('src/app/modules/admin/apps/auditing', 'publish/src/app/modules/admin/apps/auditing', { overwrite: true }),
-        fse.copy('src/assets/i18n/auditing', 'publish/src/assets/i18n/auditing', { overwrite: true }),
+        fse.copy('public/i18n/auditing', 'publish/public/i18n/auditing', { overwrite: true }),
     ]);
 }
 

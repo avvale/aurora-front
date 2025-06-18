@@ -128,8 +128,6 @@ export class AuthenticationAuroraAdapterService extends AuthenticationService
             .pipe(
                 switchMap((response: any) =>
                 {
-                    console.log('Forgot password response:', response);
-
                     return of(true);
                 }),
             );
@@ -159,8 +157,6 @@ export class AuthenticationAuroraAdapterService extends AuthenticationService
             .pipe(
                 switchMap((response: any) =>
                 {
-                    console.log('Forgot password response:', response);
-
                     return of(true);
                 }),
             );

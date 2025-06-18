@@ -18,7 +18,7 @@ function copySettings()
 {
     return Promise.all([
         fse.copy('src/app/modules/admin/apps/settings', 'publish/src/app/modules/admin/apps/settings', { overwrite: true }),
-        fse.copy('src/assets/i18n/settings', 'publish/src/assets/i18n/settings', { overwrite: true }),
+        fse.copy('public/i18n/settings', 'publish/public/i18n/settings', { overwrite: true }),
     ]);
 }
 
