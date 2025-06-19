@@ -8,7 +8,6 @@ import { lastValueFrom } from 'rxjs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MaterialFileInputModule } from 'ngx-custom-material-file-input';
 
-
 @Component({
     selector       : 'kitchen-sink-file-upload',
     templateUrl    : './files-upload.component.html',

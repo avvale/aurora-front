@@ -41,6 +41,7 @@ function copyApplication()
         '!src/app/modules/admin/apps/search-engine/**',
         '!src/app/modules/admin/apps/message/**',
         '!src/app/modules/admin/apps/settings/**',
+        '!src/app/modules/admin/apps/tools/**',
         '!src/app/modules/admin/kitchen-sink/**',
         '!src/app/modules/azure-ad/**',
         '!public/i18n/auditing/**',
@@ -51,6 +52,7 @@ function copyApplication()
         '!public/i18n/search-engine/**',
         '!public/i18n/message/**',
         '!public/i18n/settings/**',
+        '!public/i18n/tools/**',
         '!public/i18n/kitchen-sink/**',
         '!src/index.ts',
         '!gulpfile.js',
@@ -114,6 +116,7 @@ async function cleanAppRoutes()
             'message',
             'kitchen-sink',
             'settings',
+            'tools',
         ]
     );
 
@@ -132,13 +135,14 @@ async function cleanAdminNavigation()
         'admin.navigation.ts',
     ]);
 
-    codeWriter.removeImport(sourceFile, './apps/auditing/auditing.navigation');
-    codeWriter.removeImport(sourceFile, './apps/common/common.navigation');
-    codeWriter.removeImport(sourceFile, './apps/iam/iam.navigation');
-    codeWriter.removeImport(sourceFile, './apps/o-auth/o-auth.navigation');
-    codeWriter.removeImport(sourceFile, './apps/queue-manager/queue-manager.navigation');
-    codeWriter.removeImport(sourceFile, './apps/search-engine/search-engine.navigation');
-    codeWriter.removeImport(sourceFile, './apps/message/message.navigation');
+    codeWriter.removeImport(sourceFile, '@apps/auditing/auditing.navigation');
+    codeWriter.removeImport(sourceFile, '@apps/common/common.navigation');
+    codeWriter.removeImport(sourceFile, '@apps/iam/iam.navigation');
+    codeWriter.removeImport(sourceFile, '@apps/o-auth/o-auth.navigation');
+    codeWriter.removeImport(sourceFile, '@apps/queue-manager/queue-manager.navigation');
+    codeWriter.removeImport(sourceFile, '@apps/search-engine/search-engine.navigation');
+    codeWriter.removeImport(sourceFile, '@apps/message/message.navigation');
+    codeWriter.removeImport(sourceFile, '@apps/tools/tools.navigation');
     codeWriter.removeImport(sourceFile, './kitchen-sink/kitchen-sink.navigation');
 
     const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
@@ -153,6 +157,7 @@ async function cleanAdminNavigation()
         'searchEngineNavigation',
         'kitchenSinkNavigation',
         'messageNavigation',
+        'toolsNavigation',
     ]);
 
     sourceFile.saveSync();
