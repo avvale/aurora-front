@@ -22,7 +22,7 @@ export const messageQuickViewMessagesScope = 'message::QuickViewMessages';
     exportAs       : 'messageQuickView',
     standalone     : true,
     imports        : [
-        MatButtonModule, NgIf, MatIconModule, MatTooltipModule,
+        MatButtonModule, MatIconModule, MatTooltipModule,
         NgClass, NgTemplateOutlet, RouterLink, TranslocoModule, DatePipe,
     ],
     providers: [
