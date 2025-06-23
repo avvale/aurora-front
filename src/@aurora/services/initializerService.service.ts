@@ -17,12 +17,8 @@ export class InitializerService
         private readonly translocoService: TranslocoService,
     ) {}
 
+    // method to initialize the application, before to check permission routes
     async bootstrapInitializer(): Promise<boolean>
-    {
-        return true;
-    }
-
-    async resolverInitializer(): Promise<void>
     {
         this.checkEnvironmentSchema(environment);
 
@@ -53,6 +49,12 @@ export class InitializerService
         }
 
         log('[DEBUG] InitializerService Initialized');
+        return true;
+    }
+
+    async resolverInitializer(): Promise<void>
+    {
+        return;
     }
 
     private checkEnvironmentSchema(env: Environment): void
