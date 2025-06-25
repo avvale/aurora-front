@@ -5,6 +5,7 @@ export const fields = `
     type
     version
     isActive
+    isInstalled
     isUpdated
     upScript
     downScript
@@ -176,6 +177,16 @@ export const downScriptProcedureMutation = gql`
         $procedureId: ID!
     ) {
         toolsDownScriptProcedure (
+            procedureId: $procedureId
+        )
+    }
+`;
+
+export const checkScriptProcedureMutation = gql`
+    mutation ToolsCheckScriptProcedure (
+        $procedureId: ID!
+    ) {
+        toolsCheckScriptProcedure (
             procedureId: $procedureId
         )
     }

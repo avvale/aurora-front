@@ -28,6 +28,12 @@ export const procedureColumnsConfig: ColumnConfig[] = [
         translation: 'tools.IsActive',
     },
     {
+        type: ColumnDataType.BOOLEAN,
+        field: 'isInstalled',
+        sort: 'isInstalled',
+        translation: 'tools.IsInstalled',
+    },
+    {
         type: ColumnDataType.NUMBER,
         field: 'sort',
         sort: 'sort',

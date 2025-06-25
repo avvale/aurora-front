@@ -112,8 +112,6 @@ export class ProcedureDetailComponent extends ViewDetailComponent
             upScript: '',
             downScript: '',
             sort: null,
-            executedAt: null,
-            checkedAt: null,
         });
         /* eslint-enable key-spacing */
     }

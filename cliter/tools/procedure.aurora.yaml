@@ -24,6 +24,7 @@ aggregateProperties:
     type: enum
     enumOptions:
       - FUNCTION
+      - PROCEDURE
       - TRIGGER
     nullable: false
   - name: version
@@ -32,6 +33,10 @@ aggregateProperties:
     nullable: false
     index: unique
   - name: isActive
+    type: boolean
+    nullable: false
+    defaultValue: false
+  - name: isInstalled
     type: boolean
     nullable: false
     defaultValue: false
@@ -69,6 +74,9 @@ additionalApis:
     resolverType: mutation
     httpMethod: post
   - path: tools/procedure/down-script
+    resolverType: mutation
+    httpMethod: post
+  - path: tools/procedure/check-script
     resolverType: mutation
     httpMethod: post
 excludedOperations:

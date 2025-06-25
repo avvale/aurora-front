@@ -11,11 +11,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/procedure-detail.component.html",
-            "integrity": "sha1:8beb84bcf61d982213d100367cc2e0847974de54"
+            "integrity": "sha1:1d4fb0a7f5b10530c770ac73b679b74c272cd96d"
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/procedure-detail.component.ts",
-            "integrity": "sha1:cdd118c06071347597b8cdd3cac725a8fef94332"
+            "integrity": "sha1:414a9750f950403efe3e4b68fd1cb06ead452c39"
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/procedure-list.component.html",
@@ -27,11 +27,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/procedure.columns-config.ts",
-            "integrity": "sha1:364d8292bd7ad9c00fbce5b326e0123f105758ea"
+            "integrity": "sha1:68c08c7b120fdfde7aaf0dc7230716cc7053ee10"
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/procedure.graphql.ts",
-            "integrity": "sha1:7c0eff8058aff270b056fea860ee7181606bfcbe"
+            "integrity": "sha1:bb2199f8368268cbe9dc2b83dc4b3e1ce146385a"
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/procedure.resolvers.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/procedure.service.ts",
-            "integrity": "sha1:2f00f3c5c2b226ef5621d1c6a3dc44a1680f0a38"
+            "integrity": "sha1:675347c75d6b552599d3ec31ae6c7fcff675b399"
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/index.ts",
