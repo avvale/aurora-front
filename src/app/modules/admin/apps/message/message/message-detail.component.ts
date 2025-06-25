@@ -21,12 +21,12 @@ export const messageSelectedAccountsScopePagination = 'message::messageSelectedA
 export const messageAccountsScopeDialogPagination = 'message::messageDialogAccounts';
 
 @Component({
-    selector       : 'message-message-detail',
-    templateUrl    : './message-detail.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'message-message-detail',
+    templateUrl: './message-detail.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [
+    standalone: true,
+    imports: [
         ...defaultDetailImports,
         ChipComponent, FileUploadComponent, FormatFileSizePipe, GetColorStatusMessagePipe, MatCheckboxModule,
         MatSelectModule, MtxDatetimepickerModule, NgForOf, GridSelectMultipleElementsModule,

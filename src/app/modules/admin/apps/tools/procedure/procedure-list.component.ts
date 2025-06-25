@@ -47,6 +47,11 @@ export class ProcedureListComponent extends ViewBaseComponent
                         translation: 'delete',
                         icon       : 'delete',
                     },
+                    {
+                        id         : 'tools::procedure.list.check',
+                        translation: 'check',
+                        icon       : 'sync',
+                    },
                 ];
             },
         },
@@ -188,6 +193,27 @@ export class ProcedureListComponent extends ViewBaseComponent
                 );
                 break;
                 /* #endregion common actions */
+
+            case 'tools::procedure.list.check':
+                try
+                {
+                    await lastValueFrom(
+                        this.procedureService
+                            .checkScriptProcedure<ToolsProcedure>({
+                                procedureId: action.meta.row.id,
+                            }),
+                    );
+
+                    this.actionService.action({
+                        id          : 'tools::procedure.list.pagination',
+                        isViewAction: false,
+                    });
+                }
+                catch(error)
+                {
+                    log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
+                }
+                break;
         }
     }
 }

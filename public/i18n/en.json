@@ -14,6 +14,7 @@
     "BrowseLabel": "or click here to browse files",
     "Cancel": "Cancel",
     "CancelWarning": "You are going to cancel record {{ entity }} {{ id }}",
+    "Check": "Check",
     "ClearFilters": "Clear filters",
     "ClickAndDragInfo": "Click on a column and drag it to change its position",
     "Close": "Close",

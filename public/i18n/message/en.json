@@ -26,12 +26,12 @@
     "Message": "Message",
     "MessageCenter": "Message center",
     "MessageId": "MessageId",
-    "Messages": "Messages",
     "MessageStatus": {
         "DRAFT": "Draft",
         "PENDING": "To be sent",
         "SENT": "Sent"
     },
+    "Messages": "Messages",
     "Meta": "Meta",
     "NoMessages": "No hay mensajes",
     "NoMessagesDescription": "When you have messages, they will appear here.",

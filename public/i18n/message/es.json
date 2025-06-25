@@ -26,12 +26,12 @@
     "Message": "Mensaje",
     "MessageCenter": "Centro de mensajes",
     "MessageId": "MessageId",
-    "Messages": "Mensajes",
     "MessageStatus": {
         "DRAFT": "Borrador",
         "PENDING": "Pendiente de envío",
         "SENT": "Enviado"
     },
+    "Messages": "Mensajes",
     "Meta": "Meta",
     "NoMessages": "No hay mensajes",
     "NoMessagesDescription": "Cuando tengas mensajes, aparecerán aquí.",

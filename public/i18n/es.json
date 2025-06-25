@@ -14,6 +14,7 @@
     "BrowseLabel": "o haga clic aquí para seleccionar archivos",
     "Cancel": "Cancelar",
     "CancelWarning": "Va a cancelar el registro {{ entity }} {{ id }}",
+    "Check": "Comprobar",
     "ClearFilters": "Limpiar filtros",
     "ClickAndDragInfo": "Arrastra una columna para cambiar su posición",
     "Close": "Cerrar",

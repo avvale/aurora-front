@@ -53,6 +53,9 @@
         >
             <au-grid-translations
                 [for]="gridId"
+                [actionsMenu]="{
+                    check: t('Check'),
+                }"
             >
                 @for (columnConfig of originColumnsConfig; track columnConfig.field)
                 {
