@@ -68,7 +68,7 @@ export default tseslint.config(
                 functions: 'always-multiline',
             }],
             curly: 'off',
-            'grouped-accessor-pairs': ['error', 'setBeforeGet'],
+            'grouped-accessor-pairs': ['error', 'setBeforeSet'],
             'import/order': 'off',
             'import/prefer-default-export': 'off',
             indent: ['error', 4, { SwitchCase: 1 }],
@@ -80,11 +80,6 @@ export default tseslint.config(
                 multiLine: {
                     beforeColon: false,
                     afterColon: true,
-                },
-                align: {
-                    beforeColon: false,
-                    afterColon: true,
-                    on: 'colon',
                 },
             }],
             'max-len': [

@@ -11,6 +11,7 @@ const { publishOAuth } = require('./gulp/o-auth');
 const { publishQueueManager } = require('./gulp/queue-manager');
 const { publishSearchEngine } = require('./gulp/search-engine');
 const { publishSettings } = require('./gulp/settings');
+const { publishTools } = require('./gulp/tools');
 
 function defaultTask(cb)
 {
@@ -31,3 +32,4 @@ exports.publishOAuth = publishOAuth;
 exports.publishQueueManager = publishQueueManager;
 exports.publishSearchEngine = publishSearchEngine;
 exports.publishSettings = publishSettings;
+exports.publishTools = publishTools;
