@@ -29,7 +29,10 @@
         "101": "El nombre de usuario ya existe.",
         "102": "El correo electrónico ya existe.",
         "103": "El código ya existe.",
-        "104": "Token inválido."
+        "104": "Token inválido.",
+        "105": "Su cuenta no tiene los permisos necesarios para crear una cuenta con los roles especificados.",
+        "106": "Su cuenta no tiene los permisos necesarios para actualizar la cuenta con los roles especificados.",
+        "107": "No se permite operar este elemento en el tenant {{tenant}}, por favor, póngase en contacto con el administrador."
     },
     "FindTenant": "Encuentra un tenant...",
     "ImportedFromClipboard": "importados desde el portapapeles",
