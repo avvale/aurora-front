@@ -31,7 +31,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/procedure.graphql.ts",
-            "integrity": "sha1:bb2199f8368268cbe9dc2b83dc4b3e1ce146385a"
+            "integrity": "sha1:af84aab019919513a814b45c7125706d073c8dc3"
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/procedure.resolvers.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/procedure.service.ts",
-            "integrity": "sha1:675347c75d6b552599d3ec31ae6c7fcff675b399"
+            "integrity": "sha1:13e96edcf1204b297e4d3573c3c05df2db5daff7"
         },
         {
             "path": "src/app/modules/admin/apps/tools/procedure/index.ts",

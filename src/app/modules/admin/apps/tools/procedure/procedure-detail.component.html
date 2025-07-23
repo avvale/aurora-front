@@ -13,6 +13,16 @@
                     flowsheet
                 </mat-icon>
                 {{ t('tools.Procedure') }}
+                @if (managedObject().isUpdated)
+                {
+                    <au-chip
+                        color="primary"
+                        size="small"
+                        class="ml-4"
+                    >
+                        {{ t('tools.IsUpdated') }}
+                    </au-chip>
+                }
             </au-title>
         </div>
 

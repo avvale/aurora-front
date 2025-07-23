@@ -191,3 +191,9 @@ export const checkScriptProcedureMutation = gql`
         )
     }
 `;
+
+export const runScriptsProcedureMutation = gql`
+    mutation ToolsRunScriptsProcedure {
+        toolsRunScriptsProcedure
+    }
+`;

@@ -31,7 +31,6 @@ aggregateProperties:
     type: varchar
     maxLength: 16
     nullable: false
-    index: unique
   - name: isActive
     type: boolean
     nullable: false
@@ -77,6 +76,9 @@ additionalApis:
     resolverType: mutation
     httpMethod: post
   - path: tools/procedure/check-script
+    resolverType: mutation
+    httpMethod: post
+  - path: tools/procedure/run-scripts
     resolverType: mutation
     httpMethod: post
 excludedOperations:

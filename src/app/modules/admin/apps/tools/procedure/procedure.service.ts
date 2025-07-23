@@ -1,4 +1,4 @@
-import { checkScriptProcedureMutation, downScriptProcedureMutation, upScriptProcedureMutation } from './procedure.graphql';
+import { checkScriptProcedureMutation, downScriptProcedureMutation, runScriptsProcedureMutation, upScriptProcedureMutation } from './procedure.graphql';
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { ToolsCreateProcedure, ToolsProcedure, ToolsUpdateProcedureById, ToolsUpdateProcedures } from '@apps/tools';
@@ -491,6 +491,26 @@ export class ProcedureService
                 variables: {
                     procedureId,
                 },
+                context: {
+                    headers,
+                },
+            });
+    }
+
+    runScriptsProcedure<T>(
+        {
+            graphqlStatement = runScriptsProcedureMutation,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
                 context: {
                     headers,
                 },

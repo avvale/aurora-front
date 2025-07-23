@@ -4,7 +4,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { ToolsProcedure, ToolsProcedureType } from '@apps/tools';
 import { ProcedureService } from '@apps/tools/procedure';
-import { Action, Crumb, defaultDetailImports, log, mapActions, MatFormFieldAppearanceComponent, SnackBarInvalidFormComponent, uuid, VersionInputComponent, ViewDetailComponent } from '@aurora';
+import { Action, ChipComponent, Crumb, defaultDetailImports, log, mapActions, MatFormFieldAppearanceComponent, SnackBarInvalidFormComponent, uuid, VersionInputComponent, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { lastValueFrom, takeUntil } from 'rxjs';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
@@ -18,7 +18,7 @@ import { KeyValuePipe } from '@angular/common';
     standalone: true,
     imports: [
         ...defaultDetailImports,
-        KeyValuePipe, MatCheckboxModule, MatFormFieldAppearanceComponent,
+        ChipComponent, KeyValuePipe, MatCheckboxModule, MatFormFieldAppearanceComponent,
         MatSelectModule, MonacoEditorModule, MtxDatetimepickerModule, VersionInputComponent,
     ],
 })
@@ -108,7 +108,6 @@ export class ProcedureDetailComponent extends ViewDetailComponent
             type: [null, [Validators.required]],
             version: ['', [Validators.required, Validators.maxLength(16)]],
             isActive: [false, [Validators.required]],
-            isUpdated: [false, [Validators.required]],
             upScript: '',
             downScript: '',
             sort: null,
@@ -245,6 +244,7 @@ export class ProcedureDetailComponent extends ViewDetailComponent
                         }
                     });
                 break;
+
             case 'tools::procedure.detail.downScript':
                 const downScriptDialogRef = this.confirmationService.open({
                     title  : `${this.translocoService.translate('Uninstall')} ${this.translocoService.translate('tools.Script')}`,

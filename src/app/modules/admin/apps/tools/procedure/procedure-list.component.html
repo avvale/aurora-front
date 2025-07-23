@@ -32,6 +32,25 @@
                 </mat-icon>
                 {{ t('New.M') }}
             </button>
+            <button
+                mat-flat-button
+                class="ml-3"
+                color="accent"
+                (click)="
+                    actionService.action({
+                        id          : 'tools::procedure.list.runScripts',
+                        isViewAction: false
+                    })
+                "
+            >
+                <mat-icon
+                    fontSet="material-symbols-outlined"
+                    class="icon-size-5 mr-2"
+                >
+                    bolt
+                </mat-icon>
+                {{ t('tools.Run') }}
+            </button>
         </div>
         <!-- / Actions -->
 
