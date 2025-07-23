@@ -50,11 +50,13 @@ export const procedureColumnsConfig: ColumnConfig[] = [
         field: 'executedAt',
         sort: 'executedAt',
         translation: 'tools.ExecutedAt',
+        bodyClass: 'min-w-48',
     },
     {
         type: ColumnDataType.TIMESTAMP,
         field: 'checkedAt',
         sort: 'checkedAt',
         translation: 'tools.CheckedAt',
+        bodyClass: 'min-w-48',
     },
 ];
