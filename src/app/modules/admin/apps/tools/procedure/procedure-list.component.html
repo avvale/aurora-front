@@ -22,20 +22,6 @@
                 mat-flat-button
                 class="ml-3"
                 color="accent"
-                [routerLink]="'new'"
-            >
-                <mat-icon
-                    fontSet="material-symbols-outlined"
-                    class="icon-size-5 mr-2"
-                >
-                    flowsheet
-                </mat-icon>
-                {{ t('New.M') }}
-            </button>
-            <button
-                mat-flat-button
-                class="ml-3"
-                color="accent"
                 (click)="
                     actionService.action({
                         id          : 'tools::procedure.list.runScripts',
@@ -83,6 +69,24 @@
                     </au-grid-column-translation>
                 }
             </au-grid-translations>
+            <ng-template
+                auGridCellValueTemplate
+                field="isUpdated"
+                let-isUpdated
+                let-columnConfig="columnConfig"
+            >
+                @if (isUpdated)
+                {
+                    <div class="inline-block">
+                        <au-chip
+                            color="primary"
+                            size="small"
+                        >
+                            {{ t('tools.IsUpdated') }}
+                        </au-chip>
+                    </div>
+                }
+            </ng-template>
         </au-grid>
         <!-- / Grid -->
 

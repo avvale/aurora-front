@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { procedureColumnsConfig, ProcedureService } from '@apps/tools/procedure';
 import { ToolsProcedure } from '@apps/tools/tools.types';
-import { Action, ColumnConfig, ColumnDataType, Crumb, defaultListImports, EnvironmentsInformationService, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, queryStatementHandler, ViewBaseComponent } from '@aurora';
+import { Action, ChipComponent, ColumnConfig, ColumnDataType, Crumb, defaultListImports, EnvironmentsInformationService, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, queryStatementHandler, ViewBaseComponent } from '@aurora';
 import { firstValueFrom, lastValueFrom, Observable, takeUntil } from 'rxjs';
 
 export const procedureMainGridListId = 'tools::procedure.list.mainGridList';
@@ -14,6 +14,7 @@ export const procedureMainGridListId = 'tools::procedure.list.mainGridList';
     standalone     : true,
     imports        : [
         ...defaultListImports,
+        ChipComponent,
     ],
 })
 export class ProcedureListComponent extends ViewBaseComponent

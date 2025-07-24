@@ -57,33 +57,6 @@
                 </button>
             }
 
-            @if (currentViewAction.id === 'tools::procedure.detail.new')
-            {
-                <button
-                    mat-flat-button
-                    type="submit"
-                    form="toolsProcedureFormDetail"
-                    class="ml-3"
-                    color="accent"
-                    [disabled]="fg.pristine || ('tools::procedure.detail.create' | getSpinnerFlag | async)"
-                >
-                    @if ('tools::procedure.detail.create' | getSpinnerFlag | async)
-                    {
-                        <mat-icon>
-                            <mat-spinner diameter="20"></mat-spinner>
-                        </mat-icon>
-                    }
-                    @else
-                    {
-                        <mat-icon
-                            svgIcon="mat_solid:save"
-                            class="icon-size-5 mr-2"
-                        >
-                        </mat-icon>
-                    }
-                    {{ t('Create') }}
-                </button>
-            }
         </div>
         <!-- / Actions -->
 
@@ -139,7 +112,12 @@
                         class="col-3"
                     >
                         <mat-label>{{ t('tools.Version') }}</mat-label>
-                        <au-version-input formControlName="version"/>
+                        <input
+                            matInput
+                            formControlName="version"
+                            maxlength="16"
+                            required
+                        >
                         <mat-error>{{ formErrors?.version | async }}</mat-error>
                     </mat-form-field>
                     <mat-form-field

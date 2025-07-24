@@ -38,6 +38,7 @@ export const procedureColumnsConfig: ColumnConfig[] = [
         field: 'isUpdated',
         sort: 'isUpdated',
         translation: 'tools.IsUpdated',
+        bodyClass: 'min-w-36',
     },
     {
         type: ColumnDataType.NUMBER,

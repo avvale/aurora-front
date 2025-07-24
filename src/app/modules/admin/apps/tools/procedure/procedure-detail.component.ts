@@ -4,7 +4,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { ToolsProcedure, ToolsProcedureType } from '@apps/tools';
 import { ProcedureService } from '@apps/tools/procedure';
-import { Action, ChipComponent, Crumb, defaultDetailImports, log, mapActions, MatFormFieldAppearanceComponent, SnackBarInvalidFormComponent, uuid, VersionInputComponent, ViewDetailComponent } from '@aurora';
+import { Action, ChipComponent, Crumb, defaultDetailImports, log, mapActions, MatFormFieldAppearanceComponent, SnackBarInvalidFormComponent, uuid, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { lastValueFrom, takeUntil } from 'rxjs';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
@@ -19,13 +19,13 @@ import { KeyValuePipe } from '@angular/common';
     imports: [
         ...defaultDetailImports,
         ChipComponent, KeyValuePipe, MatCheckboxModule, MatFormFieldAppearanceComponent,
-        MatSelectModule, MonacoEditorModule, MtxDatetimepickerModule, VersionInputComponent,
+        MatSelectModule, MonacoEditorModule, MtxDatetimepickerModule,
     ],
 })
 export class ProcedureDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
-    editorOptions = { theme: 'vs', language: 'sql' };
+    editorOptions = { theme: 'vs', language: 'sql', readOnly: true };
     toolsProcedureType = ToolsProcedureType;
 
     // Object retrieved from the database request,
@@ -104,13 +104,13 @@ export class ProcedureDetailComponent extends ViewDetailComponent
         /* eslint-disable key-spacing */
         this.fg = this.fb.group({
             id: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
-            name: ['', [Validators.required, Validators.maxLength(128)]],
-            type: [null, [Validators.required]],
-            version: ['', [Validators.required, Validators.maxLength(16)]],
+            name: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(128)]],
+            type: [{ value: null, disabled: true }, [Validators.required]],
+            version: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(16)]],
             isActive: [false, [Validators.required]],
             upScript: '',
             downScript: '',
-            sort: null,
+            sort: [{ value: null, disabled: true }],
         });
         /* eslint-enable key-spacing */
     }
