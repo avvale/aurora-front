@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { inboxColumnsConfig, InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
-import { Action, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, QueryStatementHandler, ViewBaseComponent } from '@aurora';
+import { Action, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, queryStatementHandler, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 
 export const inboxMainGridListId = 'message::inbox.list.mainGridList';
@@ -79,6 +79,7 @@ export class InboxListComponent extends ViewBaseComponent
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id)
         {
+            /* #region common actions */
             case 'message::inbox.list.view':
                 this.columnsConfig$ = this.gridColumnsConfigStorageService
                     .getColumnsConfig(this.gridId, this.originColumnsConfig)
@@ -99,8 +100,7 @@ export class InboxListComponent extends ViewBaseComponent
                     this.inboxService.pagination({
                         query: action.meta.query ?
                             action.meta.query :
-                            QueryStatementHandler
-                                .init({ columnsConfig: inboxColumnsConfig })
+                            queryStatementHandler({ columnsConfig: inboxColumnsConfig })
                                 .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.gridId))
                                 .setSort(this.gridStateService.getSort(this.gridId))
                                 .setPage(this.gridStateService.getPage(this.gridId))
@@ -176,14 +176,8 @@ export class InboxListComponent extends ViewBaseComponent
                         }),
                 );
 
-                // format export rows
-                (rows.objects as any[]).forEach(row =>
-                {
-                    // row.id = row.id;
-                });
-
                 const columns: string[] = inboxColumnsConfig.map(inboxColumnConfig => inboxColumnConfig.field);
-                const headers: string[] = columns.map(column => this.translocoService.translate('message.' + column.toPascalCase()));
+                const headers: string[] = inboxColumnsConfig.map(inboxColumnConfig => this.translocoService.translate(inboxColumnConfig.translation));
 
                 exportRows(
                     rows.objects,
@@ -193,6 +187,7 @@ export class InboxListComponent extends ViewBaseComponent
                     action.meta.format,
                 );
                 break;
+                /* #endregion common actions */
         }
     }
 }
