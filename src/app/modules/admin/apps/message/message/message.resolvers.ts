@@ -4,10 +4,12 @@ import { IamTag, IamTenant } from '@apps/iam';
 import { messageColumnsConfig, MessageService } from '@apps/message/message';
 import { MessageMessage } from '@apps/message/message.types';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
-import { ActionService, GridData, GridFiltersStorageService, GridStateService, IamService, QueryStatementHandler } from '@aurora';
+import { ActionService, GridData, GridFiltersStorageService, GridStateService, IamService, queryStatementHandler, QueryStatementHandler } from '@aurora';
 import { messageAccountsDialogGridId, messageAccountsGridId } from './message-detail.component';
-import { Subject, first, map } from 'rxjs';
+import { Subject, first, forkJoin, map } from 'rxjs';
 import { messageMainGridListId } from './message-list.component';
+import { TenantService } from '@apps/iam/tenant';
+import gql from 'graphql-tag';
 
 export const messagePaginationResolver: ResolveFn<GridData<MessageMessage>> = (
     route: ActivatedRouteSnapshot,
@@ -65,11 +67,22 @@ export const messageNewResolver: ResolveFn<{
 
     return messageService.getRelations({
         clientId         : iamService.me.clientId,
-        constraintTenants: {
-            where: {
-                id: iamService.me.dTenants,
+        constraintGetTenants: queryStatementHandler(
+            {
+                queryStatement: {
+                    where: {
+                        id: iamService.me.dTenants,
+                    },
+                    include: [
+                        {
+                            association: 'parent',
+                        },
+                    ],
+                },
             },
-        },
+        )
+            .setPage({ pageIndex: 0, pageSize: 10 })
+            .getQueryStatement(),
         constraintPaginateSelectedAccounts: {
             where: {
                 id: [],
@@ -106,6 +119,7 @@ export const messageEditResolver: ResolveFn<{
     const actionService = inject(ActionService);
     const messageService = inject(MessageService);
     const iamService = inject(IamService);
+    const tenantService = inject(TenantService);
 
     actionService.action({
         id          : 'message::message.detail.edit',
@@ -120,18 +134,113 @@ export const messageEditResolver: ResolveFn<{
      }>();
 
     messageService
-        .findById({
+        .findByIdWithRelations({
             id: route.paramMap.get('id'),
+            clientId         : iamService.me.clientId,
+            constraintGetTenants: queryStatementHandler(
+                {
+                    queryStatement: {
+                        where: {
+                            id: iamService.me.dTenants,
+                        },
+                        include: [
+                            {
+                                association: 'parent',
+                            },
+                        ],
+                    },
+                },
+            )
+                .setPage({ pageIndex: 0, pageSize: 10 })
+                .getQueryStatement(),
+            constraintPaginateSelectedAccounts: {
+                where: {
+                    id: [],
+                },
+                include: [
+                    {
+                        association: 'user',
+                        required   : true,
+
+                    },
+                ],
+            },
+            constraintPaginateAccounts: {
+                include: [
+                    {
+                        association: 'user',
+                        required   : true,
+                    },
+                ],
+            },
         })
-        .pipe(
-            map(response => response.object),
-            first(),
-        )
-        .subscribe(message =>
+        .subscribe(dataFromFindByIdWithRelations =>
         {
-            messageService.getRelations({
+            forkJoin({
+                messageGetTenantRecipients: tenantService
+                    .get({
+                        graphqlStatement:  gql`
+                            query IamGetTenants (
+                                $query: QueryStatement
+                                $constraint: QueryStatement
+                            ) {
+                                objects: iamGetTenants (
+                                    query: $query
+                                    constraint: $constraint
+                                ) {
+                                    id
+                                    name
+                                    parentId
+                                    parent {
+                                        id
+                                        name
+                                    }
+                                    isActive
+                                }
+                            }
+                        `,
+                        query: {
+                            where: {
+                                id: Array.from(new Set([
+                                    ...dataFromFindByIdWithRelations.object.tenantIds,
+                                    ...dataFromFindByIdWithRelations.object.tenantRecipientIds,
+                                ])),
+                            },
+                        },
+                        constraint: {
+                            where: {
+                                id: iamService.me.dTenants,
+                            },
+                            include: [
+                                {
+                                    association: 'parent',
+                                },
+                            ],
+                        },
+                    }),
+            })
+                .pipe(
+                    first(),
+                    map(data  => ({
+                        messageGetTenantSenders: data.messageGetTenantRecipients
+                            .objects
+                            .filter(object => dataFromFindByIdWithRelations.object.tenantIds.includes(object.id)),
+                        messageGetTenantRecipients: data.messageGetTenantRecipients
+                            .objects
+                            .filter(object => dataFromFindByIdWithRelations.object.tenantRecipientIds.includes(object.id)),
+                    })),
+                )
+                .subscribe(dataFromForkJoin =>
+                {
+                    messageResponse.next({
+                        ...dataFromForkJoin,
+                        ...dataFromFindByIdWithRelations,
+                    });
+                });
+
+            /* messageService.getRelations({
                 clientId         : iamService.me.clientId,
-                constraintTenants: {
+                constraintPaginateTenants: {
                     where: {
                         id: iamService.me.dTenants,
                     },
@@ -165,7 +274,7 @@ export const messageEditResolver: ResolveFn<{
                         ...relations,
                         object: message,
                     });
-                });
+                }); */
 
         });
 

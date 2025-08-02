@@ -4,7 +4,7 @@ import { IamAccount, IamTag, IamTenant } from '@apps/iam';
 import { AccountService } from '@apps/iam/account';
 import { TagService } from '@apps/iam/tag';
 import { TenantService } from '@apps/iam/tenant';
-import { countTotalRecipientsMessageQuery, createMutation, deleteByIdMutation, deleteMutation, draftMessageMessageMutation, fields, findByIdQuery, findQuery, getQuery, getRelations, paginationQuery, removeAttachmentMessageMutation, sendMessageMessageMutation, updateByIdMutation, updateMutation } from '@apps/message/message';
+import { countTotalRecipientsMessageQuery, createMutation, deleteByIdMutation, deleteMutation, draftMessageMessageMutation, fields, findByIdQuery, findByIdWithRelationsQuery, findQuery, getQuery, getRelations, paginationQuery, removeAttachmentMessageMutation, sendMessageMessageMutation, updateByIdMutation, updateMutation } from '@apps/message/message';
 import { MessageCreateMessage, MessageMessage, MessageUpdateMessageById, MessageUpdateMessages } from '@apps/message/message.types';
 import { ClientService } from '@apps/o-auth/client';
 import { OAuthClient } from '@apps/o-auth/o-auth.types';
@@ -184,6 +184,101 @@ export class MessageService
             );
     }
 
+    findByIdWithRelations(
+        {
+            graphqlStatement = findByIdWithRelationsQuery,
+            id = '',
+            constraint = {},
+            headers = {},
+            queryTags = {},
+            constraintTags = {},
+            queryGetTenants = {},
+            constraintGetTenants = {},
+            queryPaginateSelectedAccounts = {},
+            constraintPaginateSelectedAccounts = {},
+            queryPaginateAccounts = {},
+            constraintPaginateAccounts = {},
+            clientId = '',
+            constraintClient = {},
+            scope,
+        }: {
+            graphqlStatement?: DocumentNode;
+            id?: string;
+            constraint?: QueryStatement;
+            headers?: GraphQLHeaders;
+            queryTags?: QueryStatement;
+            constraintTags?: QueryStatement;
+            queryGetTenants?: QueryStatement;
+            constraintGetTenants?: QueryStatement;
+            queryPaginateSelectedAccounts?: QueryStatement;
+            constraintPaginateSelectedAccounts?: QueryStatement;
+            queryPaginateAccounts?: QueryStatement;
+            constraintPaginateAccounts?: QueryStatement;
+            clientId?: string;
+            constraintClient?: QueryStatement;
+            scope?: string;
+        } = {},
+    ): Observable<{
+        object: MessageMessage;
+        iamGetTags: IamTag[];
+        iamGetTenants: IamTenant[];
+        iamPaginateSelectedAccounts: GridData<IamAccount>;
+        iamPaginateAccounts: GridData<IamAccount>;
+        oAuthFindClientById: OAuthClient;
+    }>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                object: MessageMessage;
+                iamGetTags: IamTag[];
+                iamGetTenants: IamTenant[];
+                iamPaginateSelectedAccounts: GridData<IamAccount>;
+                iamPaginateAccounts: GridData<IamAccount>;
+                oAuthFindClientById: OAuthClient;
+            }>({
+                query    : parseGqlFields(graphqlStatement, fields, constraint),
+                variables: {
+                    id,
+                    constraint,
+                    queryTags,
+                    constraintTags,
+                    queryGetTenants,
+                    constraintGetTenants,
+                    queryPaginateSelectedAccounts,
+                    constraintPaginateSelectedAccounts,
+                    queryPaginateAccounts,
+                    constraintPaginateAccounts,
+                    clientId,
+                    constraintClient,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data),
+                tap(data =>
+                {
+                    if (scope)
+                    {
+                        this.setScopeMessage(scope, data.object);
+                    }
+                    else
+                    {
+                        this.messageSubject$.next(data.object);
+                    }
+                    this.tagService.tagsSubject$.next(data.iamGetTags);
+                    this.tenantService.tenantsSubject$.next(data.iamGetTenants);
+                    this.accountService.setScopePagination(messageSelectedAccountsScopePagination, data.iamPaginateSelectedAccounts);
+                    this.accountService.setScopePagination(messageAccountsScopeDialogPagination, data.iamPaginateAccounts);
+                    this.clientService.clientSubject$.next(data.oAuthFindClientById);
+                }),
+            );
+    }
+
     find(
         {
             graphqlStatement = findQuery,
@@ -268,8 +363,8 @@ export class MessageService
         {
             queryTags = {},
             constraintTags = {},
-            queryTenants = {},
-            constraintTenants = {},
+            queryGetTenants = {},
+            constraintGetTenants = {},
             queryPaginateSelectedAccounts = {},
             constraintPaginateSelectedAccounts = {},
             queryPaginateAccounts = {},
@@ -280,8 +375,8 @@ export class MessageService
         }: {
             queryTags?: QueryStatement;
             constraintTags?: QueryStatement;
-            queryTenants?: QueryStatement;
-            constraintTenants?: QueryStatement;
+            queryGetTenants?: QueryStatement;
+            constraintGetTenants?: QueryStatement;
             queryPaginateSelectedAccounts?: QueryStatement;
             constraintPaginateSelectedAccounts?: QueryStatement;
             queryPaginateAccounts?: QueryStatement;
@@ -311,8 +406,8 @@ export class MessageService
                 variables: {
                     queryTags,
                     constraintTags,
-                    queryTenants,
-                    constraintTenants,
+                    queryGetTenants,
+                    constraintGetTenants,
                     queryPaginateSelectedAccounts,
                     constraintPaginateSelectedAccounts,
                     queryPaginateAccounts,
