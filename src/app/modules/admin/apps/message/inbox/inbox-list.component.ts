@@ -7,12 +7,11 @@ import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 export const inboxMainGridListId = 'message::inbox.list.mainGridList';
 
 @Component({
-    selector       : 'message-inbox-list',
-    templateUrl    : './inbox-list.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'message-inbox-list',
+    templateUrl: './inbox-list.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [
+    imports: [
         ...defaultListImports,
     ],
 })

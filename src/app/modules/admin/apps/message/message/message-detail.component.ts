@@ -24,7 +24,6 @@ export const messageAccountsScopeDialogPagination = 'message::messageDialogAccou
     templateUrl: './message-detail.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         ...defaultDetailImports,
         AsyncMatSelectSearchModule, ChipComponent, FileUploadComponent, FormatFileSizePipe,

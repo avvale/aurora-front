@@ -3,12 +3,11 @@ import { ChangeDetectionStrategy, Component, Injector, ViewEncapsulation } from 
 import { Action, Crumb, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
 
 @Component({
-    selector       : 'kitchen-sink-decimals',
-    templateUrl    : './icons.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'kitchen-sink-decimals',
+    templateUrl: './icons.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [
+    imports: [
         ...defaultDetailImports,
     ],
 })

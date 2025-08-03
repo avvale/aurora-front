@@ -4,12 +4,11 @@ import { Validators } from '@angular/forms';
 import { Action, Crumb, DecimalDirective, ViewDetailComponent, defaultDetailImports, log } from '@aurora';
 
 @Component({
-    selector       : 'kitchen-sink-decimals',
-    templateUrl    : './decimals.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'kitchen-sink-decimals',
+    templateUrl: './decimals.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [
+    imports: [
         ...defaultDetailImports,
         DecimalDirective,
     ],

@@ -25,7 +25,6 @@ import { TenantService } from '../tenant/tenant.service';
     templateUrl: './account-detail.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         ...defaultDetailImports,
         MatCheckboxModule, MatSelectModule, NgForOf,

@@ -6,12 +6,11 @@ import { gridData } from './grid-data';
 import { JsonPipe } from '@angular/common';
 
 @Component({
-    selector       : 'kitchen-sink-grid',
-    templateUrl    : './grid.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'kitchen-sink-grid',
+    templateUrl: './grid.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [
+    imports: [
         ...defaultListImports,
         JsonPipe,
     ],

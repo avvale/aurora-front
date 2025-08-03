@@ -6,12 +6,11 @@ import { FileUploaderService } from '@aurora/components/file-uploader/file-uploa
 import { BehaviorSubject, Observable, lastValueFrom, map } from 'rxjs';
 
 @Component({
-    selector       : 'kitchen-sink-attachments',
-    templateUrl    : './attachments.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'kitchen-sink-attachments',
+    templateUrl: './attachments.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [
+    imports: [
         ...defaultDetailImports,
         Attachments, FileUploadComponent,
     ],

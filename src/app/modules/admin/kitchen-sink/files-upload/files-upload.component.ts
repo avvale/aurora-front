@@ -9,12 +9,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MaterialFileInputModule } from 'ngx-custom-material-file-input';
 
 @Component({
-    selector       : 'kitchen-sink-file-upload',
-    templateUrl    : './files-upload.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'kitchen-sink-file-upload',
+    templateUrl: './files-upload.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [
+    imports: [
         ...defaultDetailImports,
         FileUploadComponent, MatDividerModule, MatToolbarModule, NgIf,
         MaterialFileInputModule,

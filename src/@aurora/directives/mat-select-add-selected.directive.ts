@@ -1,8 +1,7 @@
 import { Directive, HostListener, Input, OnInit, WritableSignal } from '@angular/core';
 
 @Directive({
-    selector  : '[auMatSelectAddSelectedDirective]',
-    standalone: true,
+    selector: '[auMatSelectAddSelectedDirective]',
 })
 export class MatSelectAddSelectedDirective implements OnInit
 {
