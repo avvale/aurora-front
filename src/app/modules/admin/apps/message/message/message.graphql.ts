@@ -51,22 +51,6 @@ export const relationsFields = `
         id
         scopeOptions
     }
-    iamPaginateSelectedAccounts: iamPaginateAccounts (
-        query: $queryPaginateSelectedAccounts
-        constraint: $constraintPaginateSelectedAccounts
-    ) {
-        total
-        rows
-        count
-    }
-    iamPaginateAccounts (
-        query: $queryPaginateAccounts
-        constraint: $constraintPaginateAccounts
-    ) {
-        total
-        rows
-        count
-    }
 `;
 
 // default methods
@@ -107,10 +91,6 @@ export const getRelations = gql`
         $constraintTags: QueryStatement
         $queryGetTenants: QueryStatement
         $constraintGetTenants: QueryStatement
-        $queryPaginateSelectedAccounts: QueryStatement
-        $constraintPaginateSelectedAccounts: QueryStatement
-        $queryPaginateAccounts: QueryStatement
-        $constraintPaginateAccounts: QueryStatement
         $clientId: ID
         $constraintClient: QueryStatement
     ) {
@@ -141,10 +121,6 @@ export const findByIdWithRelationsQuery = gql`
         $constraintTags: QueryStatement
         $queryGetTenants: QueryStatement
         $constraintGetTenants: QueryStatement
-        $queryPaginateSelectedAccounts: QueryStatement
-        $constraintPaginateSelectedAccounts: QueryStatement
-        $queryPaginateAccounts: QueryStatement
-        $constraintPaginateAccounts: QueryStatement
         $clientId: ID
         $constraintClient: QueryStatement
     ) {
