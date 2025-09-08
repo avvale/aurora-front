@@ -203,13 +203,14 @@
                                                 <ngx-mat-select-search
                                                     [formControl]="(originColumnsConfig | getAsyncMatSelectSearchColumnConfig:formFilter.get('field').value).asyncMatSelectSearchState.itemFilterCtrl"
                                                     [placeholderLabel]="('find' | gridTranslate:'message':gridId | async) + ' ' + (formFilter.get('field').value | gridTranslate:'column':gridId  | async | lowercase)"
+                                                    [noEntriesFoundLabel]="('noResultsFound' | gridTranslate:'message':gridId | async)"
                                                 >
                                                 </ngx-mat-select-search>
                                             </mat-option>
                                             @if ((originColumnsConfig | getAsyncMatSelectSearchColumnConfig:formFilter.get('field').value).asyncMatSelectSearchState.selectedItems().size > 0)
                                             {
                                                 <mat-optgroup [label]="'selectedOptions' | gridTranslate:'message':gridId | async">
-                                                    @for (item of (originColumnsConfig | getAsyncMatSelectSearchColumnConfig:formFilter.get('field').value).asyncMatSelectSearchState.selectedItems(); track item.id)
+                                                    @for (item of (originColumnsConfig | getAsyncMatSelectSearchColumnConfig:formFilter.get('field').value).asyncMatSelectSearchState.selectedItems().values(); track item.id)
                                                     {
                                                         <mat-option
                                                             [value]="item.id"
@@ -233,7 +234,7 @@
                                                 </mat-optgroup>
                                                 <mat-divider></mat-divider>
                                             }
-                                            @for (item of (originColumnsConfig | getAsyncMatSelectSearchColumnConfig:formFilter.get('field').value).asyncMatSelectSearchState.filteredItems(); track item.id)
+                                            @for (item of (originColumnsConfig | getAsyncMatSelectSearchColumnConfig:formFilter.get('field').value).asyncMatSelectSearchState.filteredItems().values(); track item.id)
                                             {
                                                 @if (!(originColumnsConfig | getAsyncMatSelectSearchColumnConfig:formFilter.get('field').value).asyncMatSelectSearchState.selectedItems().has(item))
                                                 {
