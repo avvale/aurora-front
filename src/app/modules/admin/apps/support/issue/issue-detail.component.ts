@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, ViewEnc
 import { Validators } from '@angular/forms';
 import { SupportIssue } from '@apps/support';
 import { IssueService } from '@apps/support/issue';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ScreenCaptureService } from '../screen-capture.service';
+import { IssueVideoPreviewDialogComponent } from './issue-video-preview-dialog.component';
 import { Action, Crumb, defaultDetailImports, log, mapActions, SnackBarInvalidFormComponent, uuid, ViewDetailComponent } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
 
@@ -36,11 +38,13 @@ export class IssueDetailComponent extends ViewDetailComponent
     recordingState = signal<'idle' | 'recording' | 'recorded'>('idle');
     recordedVideoUrl = signal<string | null>(null);
     isPlaybackVisible = signal<boolean>(false);
+    private previewDialogRef: MatDialogRef<IssueVideoPreviewDialogComponent> | null = null;
     private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly issueService: IssueService,
         private readonly screenCaptureService: ScreenCaptureService,
+        private readonly dialog: MatDialog,
     )
     {
         super();
@@ -48,6 +52,7 @@ export class IssueDetailComponent extends ViewDetailComponent
         this.destroyRef.onDestroy(() =>
         {
             this.revokeObjectUrl(this.recordedVideoUrl());
+            this.closePreviewDialog();
 
             if (this.recordingState() === 'recording')
             {
@@ -101,6 +106,7 @@ export class IssueDetailComponent extends ViewDetailComponent
 
         try
         {
+            this.closePreviewDialog();
             await this.screenCaptureService.startCapture(undefined, { includeSystemAudio: true });
             this.recordingState.set('recording');
             this.isPlaybackVisible.set(false);
@@ -127,10 +133,7 @@ export class IssueDetailComponent extends ViewDetailComponent
 
     async stopScreenRecording(): Promise<void>
     {
-        if (this.recordingState() !== 'recording')
-        {
-            return;
-        }
+        if (this.recordingState() !== 'recording') return;
 
         try
         {
@@ -168,14 +171,26 @@ export class IssueDetailComponent extends ViewDetailComponent
         }
     }
 
-    togglePlayback(): void
+    openPreviewDialog(): void
     {
-        if (this.recordingState() !== 'recorded' || !this.recordedVideoUrl())
+        if (this.recordingState() !== 'recorded' || !this.recordedVideoUrl() || this.previewDialogRef)
         {
             return;
         }
 
-        this.isPlaybackVisible.update(value => !value);
+        this.previewDialogRef = this.dialog.open(IssueVideoPreviewDialogComponent, {
+            data: { videoUrl: this.recordedVideoUrl() },
+            width: '720px',
+            maxWidth: '90vw',
+        });
+
+        this.isPlaybackVisible.set(true);
+
+        this.previewDialogRef.afterClosed().subscribe(() =>
+        {
+            this.isPlaybackVisible.set(false);
+            this.previewDialogRef = null;
+        });
     }
 
     deleteRecording(): void
@@ -186,7 +201,18 @@ export class IssueDetailComponent extends ViewDetailComponent
         this.recordedVideoUrl.set(null);
         this.isPlaybackVisible.set(false);
         this.recordingState.set('idle');
+        this.closePreviewDialog();
         this.fg.get('video')?.reset();
+    }
+
+    private closePreviewDialog(): void
+    {
+        if (this.previewDialogRef)
+        {
+            this.previewDialogRef.close();
+            this.previewDialogRef = null;
+        }
+        this.isPlaybackVisible.set(false);
     }
 
     private revokeObjectUrl(url: string | null): void
@@ -290,6 +316,7 @@ export class IssueDetailComponent extends ViewDetailComponent
                         {
                             this.recordingState.set('recorded');
                             this.isPlaybackVisible.set(false);
+                            this.closePreviewDialog();
 
                             if (typeof item.video === 'string')
                             {
@@ -301,6 +328,7 @@ export class IssueDetailComponent extends ViewDetailComponent
                             this.recordingState.set('idle');
                             this.recordedVideoUrl.set(null);
                             this.isPlaybackVisible.set(false);
+                            this.closePreviewDialog();
                         }
                     });
                 break;

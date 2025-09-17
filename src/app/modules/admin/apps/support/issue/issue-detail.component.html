@@ -170,37 +170,43 @@
                     <div class="col-12">
                         <div class="rounded-lg border p-4">
                             <div class="flex flex-wrap items-center gap-3">
-                                <button
-                                    *ngIf="recordingState() === 'idle'"
-                                    mat-flat-button
-                                    type="button"
-                                    color="primary"
-                                    (click)="startScreenRecording()"
-                                >
-                                    <mat-icon class="icon-size-5 mr-2">videocam</mat-icon>
-                                    Iniciar grabación
-                                </button>
+                                @if (recordingState() === 'idle')
+                                {
+                                    <button
+                                        mat-flat-button
+                                        type="button"
+                                        color="primary"
+                                        (click)="startScreenRecording()"
+                                    >
+                                        <mat-icon class="icon-size-5 mr-2">videocam</mat-icon>
+                                        Grabar pantalla
+                                    </button>
+                                }
 
-                                <button
-                                    *ngIf="recordingState() === 'recording'"
-                                    mat-flat-button
-                                    type="button"
-                                    color="warn"
-                                    (click)="stopScreenRecording()"
-                                >
-                                    <mat-icon class="icon-size-5 mr-2">stop</mat-icon>
-                                    Detener grabación
-                                </button>
+                                @if (recordingState() === 'recording')
+                                {
+                                    <button
+                                        mat-flat-button
+                                        type="button"
+                                        color="warn"
+                                        (click)="stopScreenRecording()"
+                                    >
+                                        <mat-icon class="icon-size-5 mr-2">stop</mat-icon>
+                                        Detener grabación
+                                    </button>
+                                }
 
-                                <ng-container *ngIf="recordingState() === 'recorded'">
+                                @if (recordingState() === 'recorded')
+                                {
                                     <button
                                         mat-stroked-button
                                         type="button"
                                         color="primary"
-                                        (click)="togglePlayback()"
+                                        (click)="openPreviewDialog()"
+                                        [disabled]="isPlaybackVisible()"
                                     >
                                         <mat-icon class="icon-size-5 mr-2">play_arrow</mat-icon>
-                                        {{ isPlaybackVisible() ? 'Ocultar previsualización' : 'Reproducir grabación' }}
+                                        Reproducir grabación
                                     </button>
 
                                     <button
@@ -212,15 +218,9 @@
                                         <mat-icon class="icon-size-5 mr-2">delete</mat-icon>
                                         Borrar grabación
                                     </button>
-                                </ng-container>
-                            </div>
 
-                            <video
-                                *ngIf="recordingState() === 'recorded' && recordedVideoUrl() && isPlaybackVisible()"
-                                class="mt-4 w-full rounded border"
-                                [src]="recordedVideoUrl()"
-                                controls
-                            ></video>
+                                }
+                            </div>
                         </div>
                     </div>
 

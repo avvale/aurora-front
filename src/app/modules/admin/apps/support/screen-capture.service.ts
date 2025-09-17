@@ -152,43 +152,57 @@ export class ScreenCaptureService
         this.recorder = new MediaRecorder(this.mediaStream, supported ? { mimeType: supported } : undefined);
 
         // Resolver el blob solo cuando el recorder se detiene y emitió el último chunk
-        this.stopPromise = new Promise<Blob>((resolve) => {
-        this.recorder!.ondataavailable = (e) => { if (e.data.size > 0) this.chunks.push(e.data); };
-        this.recorder!.onstop = () => {
-            const blob = new Blob(this.chunks, { type: this.chosenMimeType });
-            this.chunks = [];
-            this.stopTracks();
-            resolve(blob);
-        };
+        this.stopPromise = new Promise<Blob>(resolve =>
+        {
+                this.recorder!.ondataavailable = e => {
+                    if (e.data.size > 0) this.chunks.push(e.data);
+                };
+
+                this.recorder!.onstop = () => {
+                    const blob = new Blob(this.chunks, { type: this.chosenMimeType });
+                    this.chunks = [];
+                    this.stopTracks();
+                    resolve(blob);
+                };
         });
 
         this.recorder.start(); // empieza a grabar (un solo blob se emite al parar)
   }
 
-  async stop(): Promise<Blob | undefined> {
-    if (!this.recorder) return;
-    const waitForStop = this.stopPromise;
-    this.recorder.stop();
-    return await waitForStop;
-  }
+    async stop(): Promise<Blob | undefined>
+    {
+        if (!this.recorder) return;
 
-  private stopTracks() {
-    this.mediaStream?.getTracks().forEach(t => t.stop());
-    this.displayStream?.getTracks().forEach(t => t.stop());
-    this.micStream?.getTracks().forEach(t => t.stop());
-    this.mediaStream = undefined;
-    this.displayStream = undefined;
-    this.micStream = undefined;
-    if (this.audioContext) {
-      try { this.audioContext.close(); } catch {}
-      this.audioContext = undefined;
+        const waitForStop = this.stopPromise;
+        this.recorder.stop();
+
+        return await waitForStop;
     }
-  }
+
+    private stopTracks()
+    {
+        this.mediaStream?.getTracks().forEach(t => t.stop());
+        this.displayStream?.getTracks().forEach(t => t.stop());
+        this.micStream?.getTracks().forEach(t => t.stop());
+        this.mediaStream = undefined;
+        this.displayStream = undefined;
+        this.micStream = undefined;
+
+        if (this.audioContext)
+        {
+            try
+            {
+                this.audioContext.close();
+            }
+            catch { }
+            this.audioContext = undefined;
+        }
+    }
 
   /** Lista micrófonos disponibles. Requiere permiso para ver `label`. */
-  async listAudioInputDevices(): Promise<MediaDeviceInfo[]>
-  {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    return devices.filter(d => d.kind === 'audioinput');
-  }
+    async listAudioInputDevices(): Promise<MediaDeviceInfo[]>
+    {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        return devices.filter(d => d.kind === 'audioinput');
+    }
 }
