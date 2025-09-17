@@ -91,6 +91,7 @@ export const appRoutes: Route[] = [
             { path: 'kitchen-sink', loadChildren: () => import('app/modules/admin/kitchen-sink/kitchen-sink.routes') },
             { path: 'message', loadChildren: () => import('app/modules/admin/apps/message/message.routes') },
             { path: 'settings', loadChildren: () => import('@apps/settings/settings.routes') },
+            { path: 'support', loadChildren: () => import('app/modules/admin/apps/support/support.routes') },
         ],
     },
 

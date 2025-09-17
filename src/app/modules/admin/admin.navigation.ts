@@ -8,6 +8,7 @@ import { searchEngineNavigation } from '@apps/search-engine/search-engine.naviga
 import { toolsNavigation } from '@apps/tools/tools.navigation';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { kitchenSinkNavigation } from './kitchen-sink/kitchen-sink.navigation';
+import { supportNavigation } from './apps/support/support.navigation';
 
 export const adminNavigation: FuseNavigationItem[] = [
     auditingNavigation,
@@ -19,4 +20,5 @@ export const adminNavigation: FuseNavigationItem[] = [
     queueManagerNavigation,
     searchEngineNavigation,
     toolsNavigation,
+    supportNavigation
 ];
