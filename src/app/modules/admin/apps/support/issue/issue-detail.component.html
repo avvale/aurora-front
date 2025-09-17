@@ -93,6 +93,61 @@
 
                 <div class="layout__container">
 
+                    <div class="col-12 pb-4">
+                        <div class="flex flex-wrap items-center gap-3">
+                            @if (recordingState() === 'idle')
+                            {
+                                <button
+                                    mat-flat-button
+                                    type="button"
+                                    color="primary"
+                                    (click)="startScreenRecording()"
+                                >
+                                    <mat-icon class="icon-size-5 mr-2">videocam</mat-icon>
+                                    Grabar pantalla
+                                </button>
+                            }
+
+                            @if (recordingState() === 'recording')
+                            {
+                                <button
+                                    mat-flat-button
+                                    type="button"
+                                    color="warn"
+                                    (click)="stopScreenRecording()"
+                                >
+                                    <mat-icon class="icon-size-5 mr-2">stop</mat-icon>
+                                    Detener grabación
+                                </button>
+                            }
+
+                            @if (recordingState() === 'recorded')
+                            {
+                                <button
+                                    mat-stroked-button
+                                    type="button"
+                                    color="primary"
+                                    (click)="openPreviewDialog()"
+                                    [disabled]="isPlaybackVisible()"
+                                >
+                                    <mat-icon class="icon-size-5 mr-2">play_arrow</mat-icon>
+                                    Reproducir grabación
+                                </button>
+
+                                <button
+                                    mat-stroked-button
+                                    type="button"
+                                    color="warn"
+                                    (click)="deleteRecording()"
+                                >
+                                    <mat-icon class="icon-size-5 mr-2">delete</mat-icon>
+                                    Borrar grabación
+                                </button>
+
+                            }
+                        </div>
+                    </div>
+
                     <mat-form-field
                         appearance="outline"
                         class="col-4"
@@ -166,61 +221,6 @@
                         </textarea>
                         <mat-error>{{ formErrors?.description | async }}</mat-error>
                     </mat-form-field>
-
-                    <div class="col-12">
-                        <div class="flex flex-wrap items-center gap-3">
-                            @if (recordingState() === 'idle')
-                            {
-                                <button
-                                    mat-flat-button
-                                    type="button"
-                                    color="primary"
-                                    (click)="startScreenRecording()"
-                                >
-                                    <mat-icon class="icon-size-5 mr-2">videocam</mat-icon>
-                                    Grabar pantalla
-                                </button>
-                            }
-
-                            @if (recordingState() === 'recording')
-                            {
-                                <button
-                                    mat-flat-button
-                                    type="button"
-                                    color="warn"
-                                    (click)="stopScreenRecording()"
-                                >
-                                    <mat-icon class="icon-size-5 mr-2">stop</mat-icon>
-                                    Detener grabación
-                                </button>
-                            }
-
-                            @if (recordingState() === 'recorded')
-                            {
-                                <button
-                                    mat-stroked-button
-                                    type="button"
-                                    color="primary"
-                                    (click)="openPreviewDialog()"
-                                    [disabled]="isPlaybackVisible()"
-                                >
-                                    <mat-icon class="icon-size-5 mr-2">play_arrow</mat-icon>
-                                    Reproducir grabación
-                                </button>
-
-                                <button
-                                    mat-stroked-button
-                                    type="button"
-                                    color="warn"
-                                    (click)="deleteRecording()"
-                                >
-                                    <mat-icon class="icon-size-5 mr-2">delete</mat-icon>
-                                    Borrar grabación
-                                </button>
-
-                            }
-                        </div>
-                    </div>
 
                 </div>
 
