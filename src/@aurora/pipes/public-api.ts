@@ -12,5 +12,6 @@ export * from '@aurora/pipes/last.pipe';
 export * from '@aurora/pipes/log.pipe';
 export * from '@aurora/pipes/markdown-to-html.pipe';
 export * from '@aurora/pipes/safe.pipe';
+export * from '@aurora/pipes/set-value-object.pipe';
 export * from '@aurora/pipes/sort-by.pipe';
 export * from '@aurora/pipes/truncate-words.pipe';
