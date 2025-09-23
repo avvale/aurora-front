@@ -79,9 +79,48 @@ A la hora de redactar un mensaje nos encontramos los siguientes campos bajo la p
 
 ![[message-07.jpg]]
 
-Con los campos.
 **Enviar el**, fecha que deseas enviar el mensaje, ideal para dejar un mensaje programado.
 **Es importante,** check para que al destinatario le aparezca el mensaje como importante.
 **Asunto**, indica de que va a tratar el mensaje a enviar.
 **Zona de contenido**, escribe el cuerpo del mensaje usando las posibilidades del editor de texto.
 **Zona de adjuntos**, adjunta imágenes o ficheros que quieres enviar con el mensaje.
+
+
+## Reglas técnicas
+
+### Cron
+Con la instalación del módulo, se implementa una tarea cron que **se ejecuta cada 5 min**, esta tarea es la encarga de consultar todos los mensajes pendientes de envío y que su fecha de envío es nula o anterior a la fecha actual.
+
+Todos aquellos mensajes que cumplan con esos requisitos, serán puestos en bandeja de salida y marcados como enviados.
+
+> [!Atención]
+> Cuando un mensaje es enviado no podrá ser modificado.
+
+### Inbox
+Cada cuenta, cada vez que realiza un login contra el sistema, procederá comprobar su **Configuración de Inbox**, en esta configuración se indica cual fuel el último mensaje que ha sido consultado, en caso de no tener una **Configuración de Inbox** se procederá a crear una nueva estableciendo el código del último mensaje enviado como valor de último mensaje recibido.
+
+El siguiente paso será comprobar contra las bandeja de salida, si hay algún mensaje que cumpla con el target en receptores, y además que su código de mensaje sea superior al código registrado en su **Configuración de Inbox**, todos los mensajes que cumplan esta casuística serán creados en el Inbox de la cuenta.
+
+Una vez realiza todo el proceso, marcaremos en la **Configuración del Inbox** de la cuenta, el código del mensaje más reciente enviado.
+
+### Contabilización de leídos
+Cuando nos posicionamos sobre un mensaje, a los 4 segundos se marcará como leído de forma automática. Esto provocará dos cambios:
+
+- El mensaje quedará marcado como, leído.
+- El mensaje quedará marcado como, leído al menos una vez.
+
+El valor de **leído**, el usuario de la cuenta, lo podrá modificar desde su gestor de mensajes, pero el valor de  **leído al menos una vez**, no lo podrá cambiar.
+
+### KPIs por mensaje
+En la cabecera de una edición del mensaje en el Gestor de Mensajes, disponemos de los siguientes KPIs.
+
+![[message-08.jpg]]
+
+**Destinatarios,** número total de cuentas que recibirán el mensaje.
+**Leídos,** número de mensajes leídos **al menos una vez**.
+**Por leer,** sale de la resta de destinatarios y **mensajes leídos al menos una vez**. 
+
+## Log de mensajes
+Dentro del apartado **Log de Mensajes** tenemos la posibilidad de buscar en todos los buzones de entrada un mensaje concreto enviado a una cuenta concreta, para comprobar si ese mensaje en particular ha sido leído al menos una vez o leído.
+
+![[message-09.jpg]]
