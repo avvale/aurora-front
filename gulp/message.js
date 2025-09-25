@@ -20,6 +20,7 @@ function copyMessage()
         fse.copy('cliter/message', 'publish/cliter/message', { overwrite: true }),
         fse.copy('src/app/modules/admin/apps/message', 'publish/src/app/modules/admin/apps/message', { overwrite: true }),
         fse.copy('public/i18n/message', 'publish/public/i18n/message', { overwrite: true }),
+        fse.copy('docs/message', 'publish/docs/message', { overwrite: true }),
     ]);
 }
 
