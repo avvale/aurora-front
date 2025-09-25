@@ -72,7 +72,7 @@ export class AccountListComponent extends ViewBaseComponent
             translation: 'Selects',
             sticky     : true,
         },
-        ...accountColumnsConfig,
+        ...accountColumnsConfig(this.translocoService),
     ];
 
     constructor(
@@ -118,7 +118,7 @@ export class AccountListComponent extends ViewBaseComponent
                     this.accountService.pagination({
                         query: action.meta.query ?
                             action.meta.query :
-                            queryStatementHandler({ columnsConfig: accountColumnsConfig })
+                            queryStatementHandler({ columnsConfig: accountColumnsConfig() })
                                 .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.gridId))
                                 .setSort(this.gridStateService.getSort(this.gridId))
                                 .setPage(this.gridStateService.getPage(this.gridId))
@@ -201,8 +201,8 @@ export class AccountListComponent extends ViewBaseComponent
                         }),
                 );
 
-                const columns: string[] = accountColumnsConfig.map(accountColumnConfig => accountColumnConfig.field);
-                const headers: string[] = accountColumnsConfig.map(accountColumnConfig => this.translocoService.translate(accountColumnConfig.translation));
+                const columns: string[] = accountColumnsConfig().map(accountColumnConfig => accountColumnConfig.field);
+                const headers: string[] = accountColumnsConfig().map(accountColumnConfig => this.translocoService.translate(accountColumnConfig.translation));
 
                 exportRows(
                     rows.objects,

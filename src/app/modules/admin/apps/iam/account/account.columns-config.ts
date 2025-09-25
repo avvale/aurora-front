@@ -1,11 +1,15 @@
-import { ColumnConfig, ColumnDataType } from '@aurora';
+import { ColumnConfig, ColumnDataType, getFieldValuesFromEnum } from '@aurora';
+import { TranslocoService } from '@jsverse/transloco';
+import { IamAccountType } from '../iam.types';
 
-export const accountColumnsConfig: ColumnConfig[] = [
+export const accountColumnsConfig: (translocoService?: TranslocoService) => ColumnConfig[] = (translocoService: TranslocoService) => [
     {
         type: ColumnDataType.ENUM,
         field: 'type',
         sort: 'type',
         translation: 'Type',
+        searchable: false,
+        fieldValues: () => getFieldValuesFromEnum(IamAccountType, value => `${translocoService && translocoService.translate('iam.AccountTypes.' + value)}`),
     },
     {
         type: ColumnDataType.STRING,

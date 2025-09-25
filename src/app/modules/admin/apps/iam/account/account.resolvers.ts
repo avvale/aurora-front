@@ -26,7 +26,7 @@ export const accountPaginationResolver: ResolveFn<GridData<IamAccount>> = (
     gridStateService.setExportActionId(gridId, 'iam::account.list.export');
 
     return accountService.pagination({
-        query: queryStatementHandler({ columnsConfig: accountColumnsConfig })
+        query: queryStatementHandler({ columnsConfig: accountColumnsConfig() })
             .setColumFilters(gridFiltersStorageService.getColumnFilterState(gridId))
             .setSort(gridStateService.getSort(gridId))
             .setPage(gridStateService.getPage(gridId))

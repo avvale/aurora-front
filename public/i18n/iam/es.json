@@ -3,7 +3,7 @@
     "AccountId": "AccountId",
     "AccountIds": "AccountIds",
     "Accounts": "Accounts",
-    "AccountType": {
+    "AccountTypes": {
         "SERVICE": "Servicio",
         "USER": "Usuario"
     },
