@@ -3,10 +3,6 @@
     "AccountId": "AccountId",
     "AccountIds": "AccountIds",
     "Accounts": "Accounts",
-    "AccountTypes": {
-        "SERVICE": "Servicio",
-        "USER": "Usuario"
-    },
     "AddChildTenants": "Añadir tenants hijos",
     "Avatar": "Avatar",
     "BoundedContext": "BoundedContext",

@@ -9,7 +9,7 @@ export const accountColumnsConfig: (translocoService?: TranslocoService) => Colu
         sort: 'type',
         translation: 'Type',
         searchable: false,
-        fieldValues: () => getFieldValuesFromEnum(IamAccountType, value => `${translocoService && translocoService.translate('iam.AccountTypes.' + value)}`),
+        fieldValues: () => getFieldValuesFromEnum(IamAccountType, value => `${translocoService && translocoService.translate('AccountTypes.' + value)}`),
     },
     {
         type: ColumnDataType.STRING,

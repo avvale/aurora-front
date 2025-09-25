@@ -142,7 +142,7 @@ export const messageEditResolver: ResolveFn<{
             forkJoin({
                 iamPaginateSelectedAccounts: accountService
                     .pagination({
-                        query: queryStatementHandler({ columnsConfig: accountColumnsConfig })
+                        query: queryStatementHandler({ columnsConfig: accountColumnsConfig() })
                             .setColumFilters(gridFiltersStorageService.getColumnFilterState(messageAccountsGridId))
                             .setSort(gridStateService.getSort(messageAccountsGridId))
                             .setPage(gridStateService.getPage(messageAccountsGridId))

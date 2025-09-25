@@ -1,6 +1,10 @@
 {
     "Accept": "Accept",
     "Account": "Account",
+    "AccountTypes": {
+        "SERVICE": "Service",
+        "USER": "User"
+    },
     "Actions": "Actions",
     "Active": "Active",
     "Add": "Add",

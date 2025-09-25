@@ -1,6 +1,10 @@
 {
     "Accept": "Aceptar",
     "Account": "Cuenta",
+    "AccountTypes": {
+        "SERVICE": "Servicio",
+        "USER": "Usuario"
+    },
     "Actions": "Acciones",
     "Active": "Activo",
     "Add": "Añadir",

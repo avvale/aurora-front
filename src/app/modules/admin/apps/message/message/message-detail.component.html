@@ -476,6 +476,15 @@
                                         </button>
                                     </ng-container>
                                 </ng-template>
+                                <ng-template
+                                    auGridSelectMultipleCellValueDialogTemplate
+                                    field="type"
+                                    let-type
+                                    let-columnConfig="columnConfig"
+                                    let-row="row"
+                                >
+                                    {{ t('AccountTypes.' + type) }}
+                                </ng-template>
                             </au-grid-select-multiple-elements>
                             <!-- #endregion component to manage account recipients -->
 

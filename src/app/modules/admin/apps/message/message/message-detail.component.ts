@@ -8,7 +8,7 @@ import { accountColumnsConfig, AccountService } from '@apps/iam/account';
 import { TenantService } from '@apps/iam/tenant';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
 import { MessageService } from '@apps/message/message';
-import { Action, AsyncMatSelectSearchModule, ChipComponent, ColumnConfig, ColumnDataType, Crumb, DatetimepickerSqlFormatDirective, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, IamService, initAsyncMatSelectSearch, initAsyncMatSelectSearchState, log, manageAsyncMatSelectSearch, mapActions, Operator, queryStatementHandler, QueryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SetValueObjectPipe, SnackBarInvalidFormComponent, SplitButtonModule, uuid, ViewDetailComponent } from '@aurora';
+import { Action, AsyncMatSelectSearchModule, ChipComponent, ColumnConfig, ColumnDataType, Crumb, DatetimepickerSqlFormatDirective, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleCellValueDialogTemplateDirective, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, IamService, initAsyncMatSelectSearch, initAsyncMatSelectSearchState, log, manageAsyncMatSelectSearch, mapActions, Operator, queryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SetValueObjectPipe, SnackBarInvalidFormComponent, SplitButtonModule, uuid, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { combineLatest, lastValueFrom, Observable, ReplaySubject, skip, startWith, takeUntil } from 'rxjs';
@@ -27,8 +27,8 @@ export const messageAccountsScopeDialogPagination = 'message::messageDialogAccou
     imports: [
         ...defaultDetailImports,
         AsyncMatSelectSearchModule, ChipComponent, DatetimepickerSqlFormatDirective, EditorComponent,
-        FileUploadComponent, FormatFileSizePipe, GetColorStatusMessagePipe, MatCheckboxModule,
-        MatSelectModule, MtxDatetimepickerModule, GridSelectMultipleElementsModule, MatTabsModule,
+        FileUploadComponent, FormatFileSizePipe, GetColorStatusMessagePipe, GridSelectMultipleCellValueDialogTemplateDirective,
+        MatCheckboxModule, MatSelectModule, MtxDatetimepickerModule, GridSelectMultipleElementsModule, MatTabsModule,
         SetValueObjectPipe, SplitButtonModule,
     ],
     providers: [
@@ -166,7 +166,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             translation: 'Selects',
             sticky     : true,
         },
-        ...accountColumnsConfig,
+        ...accountColumnsConfig(this.translocoService),
     ];
 
     // start message accounts grid
@@ -204,7 +204,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             translation: 'Selects',
             sticky     : true,
         },
-        ...accountColumnsConfig,
+        ...accountColumnsConfig(this.translocoService),
     ];
     /* #endregion variables to manage grid-select-multiple-elements accountRecipientIds */
 
@@ -418,8 +418,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             id          : 'message::message.detail.accountsPagination',
             isViewAction: false,
             meta        : {
-                query: QueryStatementHandler
-                    .init({ columnsConfig: accountColumnsConfig })
+                query: queryStatementHandler({ columnsConfig: accountColumnsConfig() })
                     .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.accountsDialogGridId))
                     .setSort(this.gridStateService.getSort(this.accountsDialogGridId))
                     .setPage(this.gridStateService.getPage(this.accountsDialogGridId))
@@ -617,8 +616,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                         .pagination({
                             query: action.meta.query ?
                                 action.meta.query :
-                                QueryStatementHandler
-                                    .init({ columnsConfig: accountColumnsConfig })
+                                queryStatementHandler({ columnsConfig: accountColumnsConfig() })
                                     .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.messageAccountsGridId))
                                     .setSort(this.gridStateService.getSort(this.messageAccountsGridId))
                                     .setPage(this.gridStateService.getPage(this.messageAccountsGridId))
@@ -752,12 +750,19 @@ export class MessageDetailComponent extends ViewDetailComponent
                         .pagination({
                             query: action.meta.query ?
                                 action.meta.query :
-                                queryStatementHandler({ columnsConfig: accountColumnsConfig })
+                                queryStatementHandler({ columnsConfig: accountColumnsConfig() })
                                     .setColumFilters(this.gridFiltersStorageService.getColumnFilterState(this.accountsDialogGridId))
                                     .setSort(this.gridStateService.getSort(this.accountsDialogGridId))
                                     .setPage(this.gridStateService.getPage(this.accountsDialogGridId))
                                     .setSearch(this.gridStateService.getSearchState(this.accountsDialogGridId))
                                     .getQueryStatement(),
+                            constraint: {
+                                include: [
+                                    {
+                                        association: 'user',
+                                    },
+                                ],
+                            },
                             scope: messageAccountsScopeDialogPagination,
                         }),
                 );
