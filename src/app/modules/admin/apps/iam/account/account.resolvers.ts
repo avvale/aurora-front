@@ -32,6 +32,13 @@ export const accountPaginationResolver: ResolveFn<GridData<IamAccount>> = (
             .setPage(gridStateService.getPage(gridId))
             .setSearch(gridStateService.getSearchState(gridId))
             .getQueryStatement(),
+        constraint: {
+            include: [
+                {
+                    association: 'user',
+                },
+            ],
+        },
     });
 };
 

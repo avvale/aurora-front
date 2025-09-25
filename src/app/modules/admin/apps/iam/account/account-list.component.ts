@@ -124,6 +124,13 @@ export class AccountListComponent extends ViewBaseComponent
                                 .setPage(this.gridStateService.getPage(this.gridId))
                                 .setSearch(this.gridStateService.getSearchState(this.gridId))
                                 .getQueryStatement(),
+                        constraint: {
+                            include: [
+                                {
+                                    association: 'user',
+                                },
+                            ],
+                        },
                     }),
                 );
                 break;
