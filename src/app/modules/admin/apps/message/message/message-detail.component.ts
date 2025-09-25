@@ -185,7 +185,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             {
                 const actions = [];
 
-                if (this.managedObject().status !== this.messageMessageStatus.SENT)
+                if (this.managedObject()?.status !== this.messageMessageStatus.SENT)
                 {
                     actions.push({
                         id          : 'message::message.detail.removeMessageAccount',

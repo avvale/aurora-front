@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "9ea4d0ad45842214",
+        "id": "797ac4d72ff29fe8",
         "type": "tabs",
         "children": [
           {
-            "id": "526646f0d1bfdf9d",
+            "id": "6991b1e612c7458a",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -169,21 +169,21 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "526646f0d1bfdf9d",
+  "active": "6991b1e612c7458a",
   "lastOpenFiles": [
+    "message/assets/message-14.jpg",
+    "message/assets/message-13.jpg",
+    "message/assets/message-12.jpg",
+    "message/assets/message-11.jpg",
+    "message/assets/message-10.jpg",
+    "Proyecto Aurora.md",
+    "message/message.md",
     "message/assets/message-09.jpg",
     "message/assets/message-08.jpg",
     "message/assets/message-07.jpg",
     "message/assets/message-06.jpg",
     "message/assets/message-05.jpg",
     "message/assets/message-04 1.jpg",
-    "message/assets/message-04.jpg",
-    "message/assets/message-03.jpg",
-    "message/assets/message-02.jpg",
-    "message/assets/message-01.jpg",
-    "message/message.md",
-    "message/message.md",
-    "message/assets/Captura de pantalla 2025-09-16 a las 10.49.24.png",
     "message/assets",
     "assets",
     "iam",

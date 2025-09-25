@@ -3,6 +3,29 @@ dependencias:
   - iam
   - o-auth
 ---
+## Índice
+- [[#Descripción]]
+- [[#Bandeja de entrada]]
+	- [[#Vista rápida]]
+	- [[#Vista detalle]]
+- [[#Gestor de mensajes]]
+	- [[#Selección de destinatarios]]
+		- [[#Tenants gestores]]
+		- [[#Tenants destinatarios]]
+		- [[#Scope destinatarios]]
+		- [[#Tags destinatarios]]
+		- [[#Cuentas destinatarias]]
+		- [[#Combinación de grupos destinatarios y cuentas destinatarias]]
+		- [[#Envío a todas las cuentas]]
+		- [[#Envío solo a cuentas destinatarias]]
+	- [[#Redacción de mensaje]]
+- [[#Reglas técnicas]]
+	- [[#Cron]]
+	- [[#Inbox]]
+	- [[#Contabilización de leídos]]
+	- [[#KPIs por mensaje]]
+- [[#Log de mensajes]]
+
 ## Descripción
 Message es una aplicación pensada para emitir comunicados a los usuarios de aurora. 
 Solo está disponible para usuario logueados dentro de Aurora, por lo que es necesario algún tipo de autenticación para identificar los usuarios.
@@ -59,20 +82,29 @@ Los tenants que aparecen en el listado, son tenants a los que pertenece el usuar
 
 #### Tenants destinatarios
 Introduciremos aquellos tenants que recibirán el mensaje redactado, solo aparecerán aquellos tenants que el usuario creador del mensaje pertenezca.
-
+En caso de no indicar ningún tenant, automáticamente se seleccionarán todos los tenants a los que pertenece el usuario que está creando el mensaje.
+![[message-10.jpg]]
 #### Scope destinatarios
 Dentro del package OAuth podemos generar Scopes asociados a un Client (CLIENT_CREDENTIALS, PASSWORD AUTHORIZATION_CODE), estos scopes son asignados a cuentas de IAM, seleccionando estos scopes estamos incluyendo las cuentas a las que serán enviadas el mensaje.
-
+![[message-11.jpg]]
 #### Tags destinatarios
 Dentro del package de IAM podemos crear tags que pueden ser asignados a cuentas, seleccionando estos tags en el apartado de tads destinatarios, estamos incluyendo a las cuentas que posean esos tagas.
-
+![[message-12.jpg]]
 #### Cuentas destinatarias
 Dentro de esta sección podremos seleccionar usuarios de forma unitaria.
+![[message-13.jpg]]
 
-#### Combinación de destinatarios
+#### Combinación de grupos destinatarios y cuentas destinatarias
 Las opciones **Tenant destinatarios, Scope destinatarios y Tags destinatarios**, son filtros **excluyentes**, de tal manera que si seleccionamos uno o varios tenants, unos o varios scopes y uno o varios tags, solo se enviará el mensaje a las cuentas de los tenants indicados que sus cuentas tengan alguno de los scopes indicados y alguna de las tags indicadas.
 
 Si además seleccionamos alguna cuenta en la tabla **Cuentas destinatarias**, es una opción **incluyente**, de tal manera que se enviará el mensaje a esas cuentas, indistintamente de las opciones marcadas anteriormente.
+![[message-14.jpg]]
+
+#### Envío a todas las cuentas
+Si deja todos los campos de destinatarios vacíos, se enviará el mensaje a todos los integrantes de la organización, siempre y cuado el usuario tenga acceso a todos los tenants de la organización. Siempre se establecerán por defecto todos los tenants a los que el usuario creador del mensaje tiene acceso.
+
+#### Envío solo a cuentas destinatarias
+Otro escenario posible es el envío a solo unas cuentas en particular, para realizar esta operación hay que dejar todos los campos de grupos destinatarios vacíos y solo indicar las cuentas destinatarias  a enviar.
 
 ### Redacción de mensaje
 A la hora de redactar un mensaje nos encontramos los siguientes campos bajo la pestaña **Redacción de mensaje:**

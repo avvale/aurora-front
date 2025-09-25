@@ -28,7 +28,7 @@
 
             @if (
                 currentViewAction.id === 'message::message.detail.edit' &&
-                managedObject().status !== messageMessageStatus.SENT
+                managedObject()?.status !== messageMessageStatus.SENT
             )
             {
                 <button
@@ -409,9 +409,21 @@
                                         close: t('Close')
                                     }"
                                 >
-                                    @for (columnConfig of originStagesColumnsConfig; track columnConfig.field)
+                                    @for (columnConfig of originMessageAccountsColumnsConfig; track columnConfig.field)
                                     {
                                         <au-grid-column-translation [field]="columnConfig.field">
+                                            {{ t(columnConfig.translation ? columnConfig.translation : columnConfig.field.toPascalCase()) }}
+                                        </au-grid-column-translation>
+                                    }
+                                </au-grid-translations>
+                                <au-grid-translations
+                                    [for]="accountsDialogGridId"
+                                >
+                                    @for (columnConfig of accountsDialogColumnsConfig$ | async; track columnConfig.field)
+                                    {
+                                        <au-grid-column-translation
+                                            [field]="columnConfig.field"
+                                        >
                                             {{ t(columnConfig.translation ? columnConfig.translation : columnConfig.field.toPascalCase()) }}
                                         </au-grid-column-translation>
                                     }
@@ -420,7 +432,7 @@
                                     auGridSelectMultipleCustomHeaderTemplate
                                     position="left"
                                 >
-                                    @if (managedObject().status !== messageMessageStatus.SENT)
+                                    @if (managedObject()?.status !== messageMessageStatus.SENT)
                                     {
                                         <div class="flex justify-start items-center">
                                             <button
@@ -447,7 +459,7 @@
                                                 {{ t('RemoveSelected') }}
                                             </button>
                                         </div>
-                                    } 
+                                    }
                                 </ng-template>
                                 <ng-template
                                     auGridSelectMultipleCustomHeaderDialogTemplate
@@ -568,7 +580,7 @@
                                 </mat-form-field>
                             }
 
-                            @if (managedObject().status !== messageMessageStatus.SENT)
+                            @if (managedObject()?.status !== messageMessageStatus.SENT)
                             {
                                 <au-file-upload
                                     class="col-12"
@@ -668,7 +680,7 @@
                                         <p class="text-base opacity-60">
                                             {{ (attachment.size | formatFileSize).size }}{{ (attachment.size | formatFileSize).unit }}
                                         </p>
-                                        @if (managedObject().status !== messageMessageStatus.SENT)
+                                        @if (managedObject()?.status !== messageMessageStatus.SENT)
                                         {
                                             <button
                                                 class="ml-3"
