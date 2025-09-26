@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { accountColumnsConfig, AccountService } from '@apps/iam/account';
-import { IamAccount } from '@apps/iam/iam.types';
-import { Action, AuthenticationService, AuthorizationService, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, queryStatementHandler, ViewBaseComponent } from '@aurora';
+import { IamAccount, IamTenant } from '@apps/iam/iam.types';
+import { Action, AuthenticationService, AuthorizationService, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, IamService, initAsyncMatSelectSearch, initAsyncMatSelectSearchState, JoinPipe, log, manageAsyncMatSelectSearch, MapPipe, Operator, queryStatementHandler, uuid, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
+import { TenantService } from '../tenant';
 
 export const accountMainGridListId = 'iam::account.list.mainGridList';
 
@@ -13,12 +16,32 @@ export const accountMainGridListId = 'iam::account.list.mainGridList';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports        : [
         ...defaultListImports,
+        JoinPipe, MapPipe, MatBadgeModule, MatTooltipModule,
     ],
 })
 export class AccountListComponent extends ViewBaseComponent
 {
     // ---- customizations ----
-    // ..
+    /* #region variables to manage async-search-multiple-select senders account dialog IamTenant[] */
+    tenantAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTenant>();
+    tenantManageAsyncMatSelectSearch = manageAsyncMatSelectSearch({
+        columnFilter: {
+            id      : uuid(),
+            field   : 'IamTenant.name::unaccent',
+            type    : ColumnDataType.STRING,
+            operator: Operator.iLike,
+            value   : null,
+        },
+        paginationService   : this.tenantService,
+        paginationConstraint: {
+            where: {
+                // constraint para buscar tenants dentro del scope del usuario
+                // TODO, hacer esta validación en el servidor
+                id: this.iamService.me.dTenants,
+            },
+        },
+    });
+    /* #endregion variables to manage async-search-multiple-select senders account dialog IamTenant[] */
 
     breadcrumb: Crumb[] = [
         { translation: 'App', routerLink: ['/']},
@@ -72,7 +95,13 @@ export class AccountListComponent extends ViewBaseComponent
             translation: 'Selects',
             sticky     : true,
         },
-        ...accountColumnsConfig({ translocoService: this.translocoService }),
+        ...accountColumnsConfig({
+            translocoService: this.translocoService,
+            tenantsAsyncMatSelectSearch: {
+                asyncMatSelectSearchState : this.tenantAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.tenantManageAsyncMatSelectSearch,
+            },
+        }),
     ];
 
     constructor(
@@ -82,9 +111,20 @@ export class AccountListComponent extends ViewBaseComponent
         private readonly accountService: AccountService,
         private readonly authenticationService: AuthenticationService,
         private readonly authorizationService: AuthorizationService,
+        private readonly tenantService: TenantService,
+        private readonly iamService: IamService,
     )
     {
         super();
+
+        /* #region variables to manage async-search-multiple-select IamTenant[] */
+        initAsyncMatSelectSearch<string, IamTenant>({
+            asyncMatSelectSearchState : this.tenantAsyncMatSelectSearchState,
+            manageAsyncMatSelectSearch: this.tenantManageAsyncMatSelectSearch,
+            itemPagination            : this.activatedRoute.snapshot.data.data.iamGetTenants,
+            initSelectedItems         : [],
+        });
+        /* #endregion variables to manage async-search-multiple-select IamTenant[] */
     }
 
     // this method will be called after the ngOnInit of
@@ -128,6 +168,9 @@ export class AccountListComponent extends ViewBaseComponent
                             include: [
                                 {
                                     association: 'user',
+                                },
+                                {
+                                    association: 'tenants',
                                 },
                             ],
                         },

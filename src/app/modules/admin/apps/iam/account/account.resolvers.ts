@@ -37,6 +37,9 @@ export const accountPaginationResolver: ResolveFn<GridData<IamAccount>> = (
                 {
                     association: 'user',
                 },
+                {
+                    association: 'tenants',
+                },
             ],
         },
     });

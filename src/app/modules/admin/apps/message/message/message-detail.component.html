@@ -496,6 +496,7 @@
                                         fontSet="material-symbols-outlined"
                                         class="icon-size-6 mr-2 cursor-pointer"
                                         [matTooltip]="tenants | map:'name' | join"
+                                        aria-hidden="false"
                                         matBadgeSize="small"
                                         matBadge="{{ tenants.length > 0 ? tenants.length : '' }}"
                                     >

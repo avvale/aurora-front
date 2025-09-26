@@ -134,15 +134,23 @@ aggregateProperties:
             primaryKey: true
             length: 36
             nullable: false
-            aggregateName: IamTenant
-            modulePath: iam/tenant
+            relationship:
+              type: many-to-one
+              aggregateName: IamTenant
+              modulePath: iam/tenant
+              field: tenant
+              avoidConstraint: true
           - name: accountId
             type: id
             primaryKey: true
             length: 36
             nullable: false
-            aggregateName: IamAccount
-            modulePath: iam/account
+            relationship:
+              type: many-to-one
+              aggregateName: IamAccount
+              modulePath: iam/account
+              field: account
+              avoidConstraint: true
     webComponent:
       type: multiple-select
   - name: user

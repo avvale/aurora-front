@@ -26,31 +26,12 @@ export const accountColumnsConfig: (
     },
     {
         type: ColumnDataType.STRING,
-        field: 'code',
-        sort: 'code',
-        translation: 'Code',
-    },
-    {
-        type: ColumnDataType.ARRAY,
-        field: 'scopes',
-        sort: 'scopes',
-        translation: 'Scopes',
-    },
-    {
-        type: ColumnDataType.ARRAY,
-        field: 'tags',
-        sort: 'tags',
-        translation: 'Tags',
-    },
-    {
-        type: ColumnDataType.STRING,
         searchComponent: SearchComponentType.ASYNC_MULTIPLE_SELECT,
         searchableField: 'dTenants',
         searchableFieldType: ColumnDataType.ARRAY,
         field: 'tenants',
         sort: 'dTenants',
         translation: 'Tenants',
-        bodyClass: 'min-w-48',
         meta: {
             asyncMatSelectSearch: tenantsAsyncMatSelectSearch,
         },
@@ -75,13 +56,31 @@ export const accountColumnsConfig: (
         translation: 'Name',
         bodyClass: 'min-w-48',
     },
-    {
+    /* {
         type: ColumnDataType.STRING,
         field: 'user.surname',
         searchableField: '$user.surname$',
         sort: 'user.surname',
         translation: 'Surname',
         bodyClass: 'min-w-48',
+    }, */
+    {
+        type: ColumnDataType.STRING,
+        field: 'code',
+        sort: 'code',
+        translation: 'Code',
+    },
+    {
+        type: ColumnDataType.ARRAY,
+        field: 'scopes',
+        sort: 'scopes',
+        translation: 'Scopes',
+    },
+    {
+        type: ColumnDataType.ARRAY,
+        field: 'tags',
+        sort: 'tags',
+        translation: 'Tags',
     },
     {
         type: ColumnDataType.BOOLEAN,

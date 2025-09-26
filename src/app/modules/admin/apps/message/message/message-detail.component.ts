@@ -279,7 +279,7 @@ export class MessageDetailComponent extends ViewDetailComponent
         });
         /* #endregion variables to manage async-search-multiple-select recipients IamTenant[] */
 
-         /* #region variables to manage async-search-multiple-select recipients IamTenant[] */
+        /* #region variables to manage async-search-multiple-select recipients IamTenant[] */
         initAsyncMatSelectSearch<string, IamTenant>({
             asyncMatSelectSearchState : this.tenantDialogAccountSendersAsyncMatSelectSearchState,
             manageAsyncMatSelectSearch: this.tenantDialogAccountSendersManageAsyncMatSelectSearch,
