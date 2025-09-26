@@ -41,6 +41,8 @@ export const accountPaginationResolver: ResolveFn<GridData<IamAccount>> = (
                     association: 'tenants',
                 },
             ],
+            subQuery: false,
+            distinct: true,
         },
     });
 };

@@ -173,6 +173,8 @@ export class AccountListComponent extends ViewBaseComponent
                                     association: 'tenants',
                                 },
                             ],
+                            subQuery: false,
+                            distinct: true,
                         },
                     }),
                 );
