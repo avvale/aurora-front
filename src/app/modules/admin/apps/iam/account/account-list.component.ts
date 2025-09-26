@@ -72,7 +72,7 @@ export class AccountListComponent extends ViewBaseComponent
             translation: 'Selects',
             sticky     : true,
         },
-        ...accountColumnsConfig(this.translocoService),
+        ...accountColumnsConfig({ translocoService: this.translocoService }),
     ];
 
     constructor(

@@ -187,6 +187,7 @@
     "Synchronized.M": "Sincronizado",
     "SynchronizeWarning": "Va a sincronizar el registro {{ entity }} {{ id }}",
     "SyncStatus": "Estado de sincronización",
+    "Tags": "Etiquetas",
     "Tenant": "Tenant",
     "Tenants": "Tenants",
     "Title": "Título",

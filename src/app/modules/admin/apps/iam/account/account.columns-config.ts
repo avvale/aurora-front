@@ -1,8 +1,21 @@
-import { ColumnConfig, ColumnDataType, getFieldValuesFromEnum } from '@aurora';
+import { ColumnConfig, ColumnDataType, getFieldValuesFromEnum, SearchComponentType } from '@aurora';
 import { TranslocoService } from '@jsverse/transloco';
 import { IamAccountType } from '../iam.types';
 
-export const accountColumnsConfig: (translocoService?: TranslocoService) => ColumnConfig[] = (translocoService: TranslocoService) => [
+export const accountColumnsConfig: (
+     param?: {
+        translocoService?: TranslocoService;
+        tenantsAsyncMatSelectSearch?: unknown;
+    }
+) => ColumnConfig[] = (
+    {
+        translocoService = null,
+        tenantsAsyncMatSelectSearch = null,
+    }: {
+        translocoService?: TranslocoService;
+        tenantsAsyncMatSelectSearch?: unknown;
+    } = {},
+) => [
     {
         type: ColumnDataType.ENUM,
         field: 'type',
@@ -28,6 +41,19 @@ export const accountColumnsConfig: (translocoService?: TranslocoService) => Colu
         field: 'tags',
         sort: 'tags',
         translation: 'Tags',
+    },
+    {
+        type: ColumnDataType.STRING,
+        searchComponent: SearchComponentType.ASYNC_MULTIPLE_SELECT,
+        searchableField: 'dTenants',
+        searchableFieldType: ColumnDataType.ARRAY,
+        field: 'tenants',
+        sort: 'dTenants',
+        translation: 'Tenants',
+        bodyClass: 'min-w-48',
+        meta: {
+            asyncMatSelectSearch: tenantsAsyncMatSelectSearch,
+        },
     },
     {
         type: ColumnDataType.STRING,

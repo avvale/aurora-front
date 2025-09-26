@@ -187,6 +187,7 @@
     "Synchronized.M": "Synchronize",
     "SynchronizeWarning": "You are going to synchronize record {{ entity }} {{ id }}",
     "SyncStatus": "Sync Status",
+    "Tags": "Tags",
     "Tenant": "Tenant",
     "Tenants": "Tenants",
     "Title": "Title",

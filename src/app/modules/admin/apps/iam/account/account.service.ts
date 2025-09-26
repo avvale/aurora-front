@@ -10,7 +10,7 @@ import { IamRole, IamTag, IamTenant } from '../iam.types';
 import { RoleService } from '../role';
 import { TagService } from '../tag';
 import { TenantService } from '../tenant/tenant.service';
-import { checkPasswordMeAccountQuery, checkUniqueEmailAccountQuery, checkUniqueUsernameAccountQuery, findByIdWithRelationsQuery, getRelations, updateMeAccountMutation } from './account.graphql';
+import { checkPasswordMeAccountQuery, checkUniqueEmailAccountQuery, checkUniqueUsernameAccountQuery, findByIdWithRelationsQuery, getRelations, paginationWithRelationsQuery, updateMeAccountMutation } from './account.graphql';
 
 @Injectable({
     providedIn: 'root',
@@ -140,6 +140,75 @@ export class AccountService
                 first(),
                 map(result => result.data.pagination),
                 tap(pagination => scope ? this.setScopePagination(scope, pagination) : this.paginationSubject$.next(pagination)),
+            );
+    }
+
+    paginationWithRelations(
+        {
+            graphqlStatement = paginationWithRelationsQuery,
+            query = {},
+            constraint = {},
+            queryGetTenants = {},
+            constraintGetTenants = {},
+            queryGetSelectedTenants = {},
+            constraintGetSelectedTenants = {},
+            headers = {},
+            scope,
+        }: {
+            graphqlStatement?: DocumentNode;
+            query?: QueryStatement;
+            constraint?: QueryStatement;
+            queryGetTenants?: QueryStatement;
+            constraintGetTenants?: QueryStatement;
+            queryGetSelectedTenants?: QueryStatement;
+            constraintGetSelectedTenants?: QueryStatement;
+            headers?: GraphQLHeaders;
+            scope?: string;
+        } = {},
+    ): Observable<{
+        pagination: GridData<IamAccount>;
+        iamGetTenants: IamTenant[];
+        iamGetSelectedTenants: IamTenant[];
+    }>
+    {
+        // get result, map ang throw data across observable
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                pagination: GridData<IamAccount>;
+                iamGetTenants: IamTenant[];
+                iamGetSelectedTenants: IamTenant[];
+            }>({
+                query    : graphqlStatement,
+                variables: {
+                    query,
+                    constraint,
+                    queryGetTenants,
+                    constraintGetTenants,
+                    queryGetSelectedTenants,
+                    constraintGetSelectedTenants,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data),
+                tap(data =>
+                {
+                    if (scope)
+                    {
+                        this.setScopePagination(scope, data.pagination);
+                    }
+                    else
+                    {
+                        this.paginationSubject$.next(data.pagination);
+                    }
+                     this.tenantService.tenantsSubject$.next(data.iamGetTenants);
+                    // TODO, faltan los GetSelectedTenants
+                }),
             );
     }
 

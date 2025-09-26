@@ -61,6 +61,13 @@ export const relationsFields = `
     }
 `;
 
+export const tenantsFields = `
+    id
+    name
+    code
+    isActive
+`;
+
 // default methods
 export const paginationQuery = gql`
     query IamPaginateAccounts (
@@ -74,6 +81,38 @@ export const paginationQuery = gql`
             total
             rows
             count
+        }
+    }
+`;
+
+export const paginationWithRelationsQuery = gql`
+    query IamPaginateAccountsWithRelations (
+        $query: QueryStatement
+        $constraint: QueryStatement
+        $queryGetTenants: QueryStatement
+        $constraintGetTenants: QueryStatement
+        $queryGetSelectedTenants: QueryStatement
+        $constraintGetSelectedTenants: QueryStatement
+    ) {
+        pagination: iamPaginateAccounts (
+            query: $query
+            constraint: $constraint
+        ) {
+            total
+            rows
+            count
+        }
+        iamGetTenants (
+            query: $queryGetTenants
+            constraint: $constraintGetTenants
+        ) {
+            ${tenantsFields}
+        }
+        iamGetSelectedTenants: iamGetTenants (
+            query: $queryGetSelectedTenants
+            constraint: $constraintGetSelectedTenants
+        ) {
+            ${tenantsFields}
         }
     }
 `;

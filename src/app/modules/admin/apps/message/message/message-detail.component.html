@@ -485,6 +485,23 @@
                                 >
                                     {{ t('AccountTypes.' + type) }}
                                 </ng-template>
+                                <ng-template
+                                    auGridSelectMultipleCellValueDialogTemplate
+                                    field="tenants"
+                                    let-tenants
+                                    let-columnConfig="columnConfig"
+                                    let-row="row"
+                                >
+                                   <mat-icon
+                                        fontSet="material-symbols-outlined"
+                                        class="icon-size-6 mr-2 cursor-pointer"
+                                        [matTooltip]="tenants | map:'name' | join"
+                                        matBadgeSize="small"
+                                        matBadge="{{ tenants.length > 0 ? tenants.length : '' }}"
+                                    >
+                                        tenancy
+                                    </mat-icon>
+                                </ng-template>
                             </au-grid-select-multiple-elements>
                             <!-- #endregion component to manage account recipients -->
 
