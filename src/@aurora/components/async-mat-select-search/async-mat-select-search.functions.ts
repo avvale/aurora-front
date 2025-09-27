@@ -22,6 +22,8 @@ export const initAsyncMatSelectSearchState = <T, E>(): AsyncMatSelectSearchState
         filteredItems      : signal(new Map<T, E>()),
         isLoading          : signal(false),
         keyword            : '',
+        indexKey           : 'id',
+        valueKey           : 'id',
     };
 };
 
@@ -31,7 +33,10 @@ export const initAsyncMatSelectSearch = <T, E>(
         manageAsyncMatSelectSearch = null,
         itemPagination = [],
         initSelectedItems = [],
+        // key to identify each item in the list, usually the primary key of the entity
         indexKey = 'id',
+        // key that will be used as the value of the option, usually the primary key of the entity
+        valueKey = 'id',
     }: {
         asyncMatSelectSearchState?: AsyncMatSelectSearchState<T, E>;
         manageAsyncMatSelectSearch?: <E>(
@@ -45,6 +50,7 @@ export const initAsyncMatSelectSearch = <T, E>(
         itemPagination?: E[];
         initSelectedItems?: E[];
         indexKey?: string;
+        valueKey?: string;
     } = {},
 ): void =>
 {
@@ -56,11 +62,16 @@ export const initAsyncMatSelectSearch = <T, E>(
                 selectedItemsMap =>
                 {
                     for (const selectedItem of initSelectedItems)
-                        selectedItemsMap.set(selectedItem['id'], selectedItem);
+                        selectedItemsMap.set(selectedItem[indexKey], selectedItem);
 
                     return selectedItemsMap;
                 });
     }
+
+    // set key to identify each item in the Map (selectedItems and filteredItems), usually the primary key of the entity
+    asyncMatSelectSearchState.indexKey = indexKey;
+    // set value key that will be used as the value of the option
+    asyncMatSelectSearchState.valueKey = valueKey;
 
     // init select filter with all items
     asyncMatSelectSearchState.itemsToShow = itemPagination;
@@ -88,6 +99,7 @@ export const manageAsyncMatSelectSearch = ({
     columnFilter = null,
     paginationService = null,
     paginationConstraint = {},
+    // key to identify each item in the list, usually the primary key of the entity
     indexKey = 'id',
 }: {
     columnFilter?: GridColumnFilter;
@@ -141,7 +153,7 @@ export const manageAsyncMatSelectSearch = ({
         // when reset search
         else if (!hasSearch && !isFromScrollEndEvent)
         {
-            // reset organizationalEntitiesFound to show pagination results
+            // reset items found to show pagination results
             asyncMatSelectSearchState.foundItemsToShow = [];
             asyncMatSelectSearchState.columnFilters = [];
             asyncMatSelectSearchState.filteredItems.set(arrayToMap<T, E>(asyncMatSelectSearchState.itemsToShow, indexKey));
@@ -170,6 +182,7 @@ export const manageAsyncMatSelectSearch = ({
         asyncMatSelectSearchState.page = pagination;
 
         asyncMatSelectSearchState.isLoading.set(true);
+        // load items using pagination
         const itemsPagination = await lastValueFrom<GridData<E>>(
             paginationService
                 .pagination({
@@ -178,7 +191,7 @@ export const manageAsyncMatSelectSearch = ({
                         .setColumFilters(asyncMatSelectSearchState.columnFilters)
                         .getQueryStatement(),
                     constraint: paginationConstraint,
-                }),
+                })
         );
 
         // save count in state
