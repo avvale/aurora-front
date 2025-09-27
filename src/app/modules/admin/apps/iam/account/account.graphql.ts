@@ -61,11 +61,22 @@ export const relationsFields = `
     }
 `;
 
-export const tenantsFields = `
+export const tenantFields = `
     id
     name
     code
     isActive
+`;
+
+export const scopeFields = `
+    id
+    code
+    name
+`;
+
+export const tagFields = `
+    id
+    name
 `;
 
 // default methods
@@ -93,6 +104,14 @@ export const paginationWithRelationsQuery = gql`
         $constraintGetTenants: QueryStatement
         $queryGetSelectedTenants: QueryStatement
         $constraintGetSelectedTenants: QueryStatement
+        $queryGetScopes: QueryStatement
+        $constraintGetScopes: QueryStatement
+        $queryGetSelectedScopes: QueryStatement
+        $constraintGetSelectedScopes: QueryStatement
+        $queryGetTags: QueryStatement
+        $constraintGetTags: QueryStatement
+        $queryGetSelectedTags: QueryStatement
+        $constraintGetSelectedTags: QueryStatement
     ) {
         pagination: iamPaginateAccounts (
             query: $query
@@ -106,13 +125,37 @@ export const paginationWithRelationsQuery = gql`
             query: $queryGetTenants
             constraint: $constraintGetTenants
         ) {
-            ${tenantsFields}
+            ${tenantFields}
         }
         iamGetSelectedTenants: iamGetTenants (
             query: $queryGetSelectedTenants
             constraint: $constraintGetSelectedTenants
         ) {
-            ${tenantsFields}
+            ${tenantFields}
+        }
+        oAuthGetScopes (
+            query: $queryGetScopes
+            constraint: $constraintGetScopes
+        ) {
+            ${scopeFields}
+        }
+        oAuthGetSelectedScopes: oAuthGetScopes (
+            query: $queryGetSelectedScopes
+            constraint: $constraintGetSelectedScopes
+        ) {
+            ${scopeFields}
+        }
+        iamGetTags (
+            query: $queryGetTags
+            constraint: $constraintGetTags
+        ) {
+            ${tagFields}
+        }
+        iamGetSelectedTags: iamGetTags (
+            query: $queryGetSelectedTags
+            constraint: $constraintGetSelectedTags
+        ) {
+            ${tagFields}
         }
     }
 `;

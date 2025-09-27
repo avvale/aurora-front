@@ -6,14 +6,20 @@ export const accountColumnsConfig: (
      param?: {
         translocoService?: TranslocoService;
         tenantsAsyncMatSelectSearch?: unknown;
+        scopesAsyncMatSelectSearch?: unknown;
+        tagsAsyncMatSelectSearch?: unknown;
     }
 ) => ColumnConfig[] = (
     {
         translocoService = null,
         tenantsAsyncMatSelectSearch = null,
+        scopesAsyncMatSelectSearch = null,
+        tagsAsyncMatSelectSearch = null,
     }: {
         translocoService?: TranslocoService;
         tenantsAsyncMatSelectSearch?: unknown;
+        scopesAsyncMatSelectSearch?: unknown;
+        tagsAsyncMatSelectSearch?: unknown;
     } = {},
 ) => [
     {
@@ -25,15 +31,32 @@ export const accountColumnsConfig: (
         fieldValues: () => getFieldValuesFromEnum(IamAccountType, value => `${translocoService && translocoService.translate('AccountTypes.' + value)}`),
     },
     {
-        type: ColumnDataType.STRING,
+        type: ColumnDataType.ARRAY,
         searchComponent: SearchComponentType.ASYNC_MULTIPLE_SELECT,
         searchableField: 'dTenants',
         searchableFieldType: ColumnDataType.ARRAY,
         field: 'tenants',
-        sort: 'dTenants',
         translation: 'Tenants',
         meta: {
             asyncMatSelectSearch: tenantsAsyncMatSelectSearch,
+        },
+    },
+    {
+        type: ColumnDataType.ARRAY,
+        searchComponent: SearchComponentType.ASYNC_MULTIPLE_SELECT,
+        field: 'scopes',
+        translation: 'Scopes',
+        meta: {
+            asyncMatSelectSearch: scopesAsyncMatSelectSearch,
+        },
+    },
+    {
+        type: ColumnDataType.ARRAY,
+        searchComponent: SearchComponentType.ASYNC_MULTIPLE_SELECT,
+        field: 'tags',
+        translation: 'Tags',
+        meta: {
+            asyncMatSelectSearch: tagsAsyncMatSelectSearch,
         },
     },
     {
@@ -56,31 +79,19 @@ export const accountColumnsConfig: (
         translation: 'Name',
         bodyClass: 'min-w-48',
     },
-    /* {
+    {
         type: ColumnDataType.STRING,
         field: 'user.surname',
         searchableField: '$user.surname$',
         sort: 'user.surname',
         translation: 'Surname',
         bodyClass: 'min-w-48',
-    }, */
+    },
     {
         type: ColumnDataType.STRING,
         field: 'code',
         sort: 'code',
         translation: 'Code',
-    },
-    {
-        type: ColumnDataType.ARRAY,
-        field: 'scopes',
-        sort: 'scopes',
-        translation: 'Scopes',
-    },
-    {
-        type: ColumnDataType.ARRAY,
-        field: 'tags',
-        sort: 'tags',
-        translation: 'Tags',
     },
     {
         type: ColumnDataType.BOOLEAN,

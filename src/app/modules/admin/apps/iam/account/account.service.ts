@@ -3,7 +3,7 @@ import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, paginationQuery, updateByIdMutation, updateMutation } from '@apps/iam/account';
 import { IamAccount, IamCreateAccount, IamUpdateAccountById, IamUpdateAccounts } from '@apps/iam/iam.types';
 import { ClientService } from '@apps/o-auth/client';
-import { OAuthClient } from '@apps/o-auth/o-auth.types';
+import { OAuthClient, OAuthScope } from '@apps/o-auth/o-auth.types';
 import { GraphQLHeaders, GraphQLService, GridData, QueryStatement, parseGqlFields } from '@aurora';
 import { BehaviorSubject, Observable, first, map, tap } from 'rxjs';
 import { IamRole, IamTag, IamTenant } from '../iam.types';
@@ -11,6 +11,7 @@ import { RoleService } from '../role';
 import { TagService } from '../tag';
 import { TenantService } from '../tenant/tenant.service';
 import { checkPasswordMeAccountQuery, checkUniqueEmailAccountQuery, checkUniqueUsernameAccountQuery, findByIdWithRelationsQuery, getRelations, paginationWithRelationsQuery, updateMeAccountMutation } from './account.graphql';
+import { ScopeService } from '@apps/o-auth/scope';
 
 @Injectable({
     providedIn: 'root',
@@ -32,6 +33,7 @@ export class AccountService
         private readonly roleService: RoleService,
         private readonly tagService: TagService,
         private readonly clientService: ClientService,
+        private readonly scopeService: ScopeService,
     ) {}
 
     /**
@@ -152,6 +154,14 @@ export class AccountService
             constraintGetTenants = {},
             queryGetSelectedTenants = {},
             constraintGetSelectedTenants = {},
+            queryGetScopes = {},
+            constraintGetScopes = {},
+            queryGetSelectedScopes = {},
+            constraintGetSelectedScopes = {},
+            queryGetTags = {},
+            constraintGetTags = {},
+            queryGetSelectedTags = {},
+            constraintGetSelectedTags = {},
             headers = {},
             scope,
         }: {
@@ -162,6 +172,14 @@ export class AccountService
             constraintGetTenants?: QueryStatement;
             queryGetSelectedTenants?: QueryStatement;
             constraintGetSelectedTenants?: QueryStatement;
+            queryGetScopes?: QueryStatement;
+            constraintGetScopes?: QueryStatement;
+            queryGetSelectedScopes?: QueryStatement;
+            constraintGetSelectedScopes?: QueryStatement;
+            queryGetTags?: QueryStatement;
+            constraintGetTags?: QueryStatement;
+            queryGetSelectedTags?: QueryStatement;
+            constraintGetSelectedTags?: QueryStatement;
             headers?: GraphQLHeaders;
             scope?: string;
         } = {},
@@ -169,6 +187,10 @@ export class AccountService
         pagination: GridData<IamAccount>;
         iamGetTenants: IamTenant[];
         iamGetSelectedTenants: IamTenant[];
+        oAuthGetScopes: OAuthScope[];
+        oAuthGetSelectedScopes: OAuthScope[];
+        iamGetTags: IamTag[];
+        iamGetSelectedTags: IamTag[];
     }>
     {
         // get result, map ang throw data across observable
@@ -178,6 +200,10 @@ export class AccountService
                 pagination: GridData<IamAccount>;
                 iamGetTenants: IamTenant[];
                 iamGetSelectedTenants: IamTenant[];
+                oAuthGetScopes: OAuthScope[];
+                oAuthGetSelectedScopes: OAuthScope[];
+                iamGetTags: IamTag[];
+                iamGetSelectedTags: IamTag[];
             }>({
                 query    : graphqlStatement,
                 variables: {
@@ -187,6 +213,14 @@ export class AccountService
                     constraintGetTenants,
                     queryGetSelectedTenants,
                     constraintGetSelectedTenants,
+                    queryGetScopes,
+                    constraintGetScopes,
+                    queryGetSelectedScopes,
+                    constraintGetSelectedScopes,
+                    queryGetTags,
+                    constraintGetTags,
+                    queryGetSelectedTags,
+                    constraintGetSelectedTags,
                 },
                 context: {
                     headers,
@@ -206,8 +240,12 @@ export class AccountService
                     {
                         this.paginationSubject$.next(data.pagination);
                     }
-                     this.tenantService.tenantsSubject$.next(data.iamGetTenants);
-                    // TODO, faltan los GetSelectedTenants
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.iamGetSelectedTenants
+                    this.tenantService.tenantsSubject$.next(data.iamGetTenants);
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.oAuthGetSelectedScopes
+                    this.scopeService.scopesSubject$.next(data.oAuthGetScopes);
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.iamGetSelectedTags
+                    this.tagService.tagsSubject$.next(data.iamGetTags);
                 }),
             );
     }
