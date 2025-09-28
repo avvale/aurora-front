@@ -5,7 +5,7 @@ import { accountColumnsConfig, AccountService } from '@apps/iam/account';
 import { TenantService } from '@apps/iam/tenant';
 import { messageColumnsConfig, MessageService } from '@apps/message/message';
 import { MessageMessage } from '@apps/message/message.types';
-import { OAuthClient } from '@apps/o-auth/o-auth.types';
+import { OAuthClient, OAuthScope } from '@apps/o-auth';
 import { ActionService, GridData, GridFiltersStorageService, GridStateService, IamService, queryStatementHandler } from '@aurora';
 import gql from 'graphql-tag';
 import { first, forkJoin, map, Subject } from 'rxjs';
@@ -41,9 +41,9 @@ export const messagePaginationResolver: ResolveFn<GridData<MessageMessage>> = (
 };
 
 export const messageNewResolver: ResolveFn<{
-    iamGetTags: IamTag[];
     iamGetTenants: IamTenant[];
-    oAuthFindClientById: OAuthClient;
+    oAuthGetScopes: OAuthScope[];
+    iamGetTags: IamTag[];
 }> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
@@ -66,7 +66,6 @@ export const messageNewResolver: ResolveFn<{
     gridStateService.setExportActionId(messageAccountsDialogGridId, 'message::message.detail.exportAccounts');
 
     return messageService.getRelations({
-        clientId         : iamService.me.clientId,
         constraintGetTenants: queryStatementHandler(
             {
                 queryStatement: {

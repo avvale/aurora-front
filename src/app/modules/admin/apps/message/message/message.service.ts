@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import { IamAccount, IamTag, IamTenant } from '@apps/iam';
 import { AccountService } from '@apps/iam/account';
@@ -6,8 +6,9 @@ import { TagService } from '@apps/iam/tag';
 import { TenantService } from '@apps/iam/tenant';
 import { countTotalRecipientsMessageQuery, createMutation, deleteByIdMutation, deleteMutation, draftMessageMessageMutation, fields, findByIdQuery, findByIdWithRelationsQuery, findQuery, getQuery, getRelations, paginationQuery, removeAttachmentMessageMutation, sendMessageMessageMutation, updateByIdMutation, updateMutation } from '@apps/message/message';
 import { MessageCreateMessage, MessageMessage, MessageUpdateMessageById, MessageUpdateMessages } from '@apps/message/message.types';
+import { OAuthClient, OAuthScope } from '@apps/o-auth';
 import { ClientService } from '@apps/o-auth/client';
-import { OAuthClient } from '@apps/o-auth/o-auth.types';
+import { ScopeService } from '@apps/o-auth/scope';
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
 import { messageSelectedAccountsScopePagination } from './message-detail.component';
@@ -26,8 +27,9 @@ export class MessageService
     messageScoped: { [key: string]: BehaviorSubject<MessageMessage | null>; } = {};
     messagesScoped: { [key: string]: BehaviorSubject<MessageMessage[] | null>; } = {};
 
-    private tagService = inject(TagService);
     private tenantService = inject(TenantService);
+    private scopeService = inject(ScopeService);
+    private tagService = inject(TagService);
     private clientService = inject(ClientService);
     private accountService = inject(AccountService);
 
@@ -345,44 +347,44 @@ export class MessageService
 
     getRelations(
         {
-            queryTags = {},
-            constraintTags = {},
             queryGetTenants = {},
             constraintGetTenants = {},
-            clientId = '',
-            constraintClient = {},
+            queryGetScopes = {},
+            constraintGetScopes = {},
+            queryGetTags = {},
+            constraintGetTags = {},
             headers = {},
         }: {
-            queryTags?: QueryStatement;
-            constraintTags?: QueryStatement;
             queryGetTenants?: QueryStatement;
             constraintGetTenants?: QueryStatement;
-            clientId?: string;
-            constraintClient?: QueryStatement;
+            queryGetScopes?: QueryStatement;
+            constraintGetScopes?: QueryStatement;
+            queryGetTags?: QueryStatement;
+            constraintGetTags?: QueryStatement;
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<{
-        iamGetTags: IamTag[];
         iamGetTenants: IamTenant[];
-        oAuthFindClientById: OAuthClient;
+        oAuthGetScopes: OAuthScope[];
+        iamGetTags: IamTag[];
     }>
     {
         return this.graphqlService
             .client()
             .watchQuery<{
-                iamGetTags: IamTag[];
                 iamGetTenants: IamTenant[];
+                oAuthGetScopes: OAuthScope[];
+                iamGetTags: IamTag[];
                 iamPaginateAccounts: GridData<IamAccount>;
-                oAuthFindClientById: OAuthClient;
             }>({
                 query    : getRelations,
                 variables: {
-                    queryTags,
-                    constraintTags,
                     queryGetTenants,
                     constraintGetTenants,
-                    clientId,
-                    constraintClient,
+                    queryGetScopes,
+                    constraintGetScopes,
+                    queryGetTags,
+                    constraintGetTags,
                 },
                 context: {
                     headers,
@@ -394,10 +396,10 @@ export class MessageService
                 map(result => result.data),
                 tap(data =>
                 {
-                    this.tagService.tagsSubject$.next(data.iamGetTags);
                     this.tenantService.tenantsSubject$.next(data.iamGetTenants);
+                    this.scopeService.scopesSubject$.next(data.oAuthGetScopes);
+                    this.tagService.tagsSubject$.next(data.iamGetTags);
                     this.accountService.setScopePagination(messageSelectedAccountsScopePagination, { count: 0, total: 0, rows: [] });
-                    this.clientService.clientSubject$.next(data.oAuthFindClientById);
                 }),
             );
     }

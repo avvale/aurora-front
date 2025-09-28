@@ -4,7 +4,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { IamAccount, IamTenant } from '@apps/iam';
+import { IamAccount, IamTag, IamTenant } from '@apps/iam';
 import { accountColumnsConfig, AccountService } from '@apps/iam/account';
 import { TenantService } from '@apps/iam/tenant';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
@@ -15,6 +15,7 @@ import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { combineLatest, lastValueFrom, Observable, ReplaySubject, skip, startWith, takeUntil } from 'rxjs';
 import { GetColorStatusMessagePipe } from '../shared';
 import { MatBadgeModule } from '@angular/material/badge';
+import { OAuthScope } from '@apps/o-auth';
 
 export const messageAccountsDialogGridId = 'message::message.detail.accountsDialogGridList';
 export const messageAccountsGridId = 'message::message.detail.messageAccountsGridList';
@@ -45,9 +46,9 @@ export class MessageDetailComponent extends ViewDetailComponent
 {
     // ---- customizations ----
     scopeRecipientFilterCtrl: FormControl = new FormControl<string>('');
-    filteredScopeRecipients$: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+    filteredScopeRecipients$: ReplaySubject<OAuthScope[]> = new ReplaySubject<OAuthScope[]>(1);
     tagRecipientFilterCtrl: FormControl = new FormControl<string>('');
-    filteredTagRecipients$: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+    filteredTagRecipients$: ReplaySubject<IamTag[]> = new ReplaySubject<IamTag[]>(1);
     showTenantsBelongsInput: WritableSignal<boolean> = signal(true);
     totalRecipients: WritableSignal<number> = signal(0);
     status: Signal<string> = computed(() => this.managedObject() ? this.managedObject().status : MessageMessageStatus.DRAFT);
@@ -294,7 +295,7 @@ export class MessageDetailComponent extends ViewDetailComponent
     init(): void
     {
         // tenants
-        this.initScopeRecipientsFilter(this.activatedRoute.snapshot.data.data.oAuthFindClientById.scopeOptions);
+        this.initScopeRecipientsFilter(this.activatedRoute.snapshot.data.data.oAuthGetScopes);
         this.initTagRecipientsFilter(this.activatedRoute.snapshot.data.data.iamGetTags);
 
         combineLatest([
@@ -323,7 +324,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             });
     }
 
-    initScopeRecipientsFilter(scopes: string[]): void
+    initScopeRecipientsFilter(scopes: OAuthScope[]): void
     {
         // init select filter with all items
         this.filteredScopeRecipients$.next(scopes);
@@ -335,16 +336,15 @@ export class MessageDetailComponent extends ViewDetailComponent
             .subscribe(async () =>
             {
                 this.selectSearchService
-                    .filterSelect<string>(
+                    .filterSelect<OAuthScope>(
                         this.scopeRecipientFilterCtrl,
                         scopes,
                         this.filteredScopeRecipients$,
-                        scope => scope,
                     );
             });
     }
 
-    initTagRecipientsFilter(tags: string[]): void
+    initTagRecipientsFilter(tags: IamTag[]): void
     {
         // init select filter with all items
         this.filteredTagRecipients$.next(tags);
@@ -356,7 +356,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             .subscribe(async () =>
             {
                 this.selectSearchService
-                    .filterSelect<string>(
+                    .filterSelect<IamTag>(
                         this.tagRecipientFilterCtrl,
                         tags,
                         this.filteredTagRecipients$,
@@ -801,6 +801,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                                 include: [
                                     {
                                         association: 'user',
+                                        required   : true,
                                     },
                                     {
                                         association: 'tenants',

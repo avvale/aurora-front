@@ -348,8 +348,8 @@
                                     </mat-option>
                                     @for (scope of filteredScopeRecipients$ | async; track scope)
                                     {
-                                        <mat-option [value]="scope">
-                                            {{ scope }}
+                                        <mat-option [value]="scope.code">
+                                            {{ scope.name }}
                                         </mat-option>
                                     }
                                 </mat-select>

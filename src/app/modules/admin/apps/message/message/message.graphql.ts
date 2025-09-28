@@ -24,13 +24,6 @@ export const fields = `
 `;
 
 export const relationsFields = `
-    iamGetTags (
-        query: $queryTags
-        constraint: $constraintTags
-    ) {
-        id
-        name
-    }
     iamGetTenants (
         query: $queryGetTenants
         constraint: $constraintGetTenants
@@ -44,12 +37,20 @@ export const relationsFields = `
         }
         isActive
     }
-    oAuthFindClientById (
-        id: $clientId
-        constraint: $constraintClient
+    oAuthGetScopes (
+        query: $queryGetScopes
+        constraint: $constraintGetScopes
     ) {
         id
-        scopeOptions
+        code
+        name
+    }
+    iamGetTags (
+        query: $queryGetTags
+        constraint: $constraintGetTags
+    ) {
+        id
+        name
     }
 `;
 
@@ -87,12 +88,12 @@ export const getQuery = gql`
 
 export const getRelations = gql`
     query MessageGetMessagesRelations(
-        $queryTags: QueryStatement
-        $constraintTags: QueryStatement
         $queryGetTenants: QueryStatement
         $constraintGetTenants: QueryStatement
-        $clientId: ID
-        $constraintClient: QueryStatement
+        $queryGetScopes: QueryStatement
+        $constraintGetScopes: QueryStatement
+        $queryGetTags: QueryStatement
+        $constraintGetTags: QueryStatement
     ) {
         ${relationsFields}
     }
