@@ -72,7 +72,7 @@
     "Tenants": "Tenants",
     "TwoFactorAuthenticationSecret": "TwoFactorAuthenticationSecret",
     "Type": "Type",
-    "User": "User",
-    "Username": "Nombre de usuario",
-    "Users": "Users"
+    "User": "Usuario",
+    "Username": "Usuario",
+    "Users": "Usuarios"
 }

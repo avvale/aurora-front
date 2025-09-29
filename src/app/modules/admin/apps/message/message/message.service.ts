@@ -196,6 +196,12 @@ export class MessageService
             constraintGetScopes = {},
             queryGetTags = {},
             constraintGetTags = {},
+            queryGetSelectedTenants = {},
+            constraintGetSelectedTenants = {},
+            queryGetSelectedScopes = {},
+            constraintGetSelectedScopes = {},
+            queryGetSelectedTags = {},
+            constraintGetSelectedTags = {},
             scope,
         }: {
             graphqlStatement?: DocumentNode;
@@ -208,6 +214,12 @@ export class MessageService
             constraintGetScopes?: QueryStatement;
             queryGetTags?: QueryStatement;
             constraintGetTags?: QueryStatement;
+            queryGetSelectedTenants?: QueryStatement;
+            constraintGetSelectedTenants?: QueryStatement;
+            queryGetSelectedScopes?: QueryStatement;
+            constraintGetSelectedScopes?: QueryStatement;
+            queryGetSelectedTags?: QueryStatement;
+            constraintGetSelectedTags?: QueryStatement;
             scope?: string;
         } = {},
     ): Observable<{
@@ -215,6 +227,9 @@ export class MessageService
         iamGetTenants: IamTenant[];
         oAuthGetScopes: OAuthScope[];
         iamGetTags: IamTag[];
+        iamGetSelectedTenants: IamTenant[];
+        oAuthGetSelectedScopes: OAuthScope[];
+        iamGetSelectedTags: IamTag[];
         iamPaginateSelectedAccounts: GridData<IamAccount>;
     }>
     {
@@ -225,6 +240,9 @@ export class MessageService
                 iamGetTenants: IamTenant[];
                 oAuthGetScopes: OAuthScope[];
                 iamGetTags: IamTag[];
+                iamGetSelectedTenants: IamTenant[];
+                oAuthGetSelectedScopes: OAuthScope[];
+                iamGetSelectedTags: IamTag[];
                 iamPaginateSelectedAccounts: GridData<IamAccount>;
             }>({
                 query    : parseGqlFields(graphqlStatement, fields, constraint),
@@ -237,6 +255,12 @@ export class MessageService
                     constraintGetScopes,
                     queryGetTags,
                     constraintGetTags,
+                    queryGetSelectedTenants,
+                    constraintGetSelectedTenants,
+                    queryGetSelectedScopes,
+                    constraintGetSelectedScopes,
+                    queryGetSelectedTags,
+                    constraintGetSelectedTags,
                 },
                 context: {
                     headers,
@@ -256,12 +280,13 @@ export class MessageService
                     {
                         this.messageSubject$.next(data.object);
                     }
-                    // select tenants are obtained by activatedRoute.snapshot.data.data.iamGetSelectedTenants
                     this.tenantService.tenantsSubject$.next(data.iamGetTenants);
-                    // select tenants are obtained by activatedRoute.snapshot.data.data.oAuthGetSelectedScopes
                     this.scopeService.scopesSubject$.next(data.oAuthGetScopes);
-                    // select tenants are obtained by activatedRoute.snapshot.data.data.iamGetSelectedTags
                     this.tagService.tagsSubject$.next(data.iamGetTags);
+
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.iamGetSelectedTenants
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.oAuthGetSelectedScopes
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.iamGetSelectedTags
                 }),
             );
     }
@@ -354,6 +379,12 @@ export class MessageService
             constraintGetScopes = {},
             queryGetTags = {},
             constraintGetTags = {},
+            queryGetSelectedTenants = {},
+            constraintGetSelectedTenants = {},
+            queryGetSelectedScopes = {},
+            constraintGetSelectedScopes = {},
+            queryGetSelectedTags = {},
+            constraintGetSelectedTags = {},
             headers = {},
         }: {
             queryGetTenants?: QueryStatement;
@@ -362,12 +393,21 @@ export class MessageService
             constraintGetScopes?: QueryStatement;
             queryGetTags?: QueryStatement;
             constraintGetTags?: QueryStatement;
+            queryGetSelectedTenants?: QueryStatement;
+            constraintGetSelectedTenants?: QueryStatement;
+            queryGetSelectedScopes?: QueryStatement;
+            constraintGetSelectedScopes?: QueryStatement;
+            queryGetSelectedTags?: QueryStatement;
+            constraintGetSelectedTags?: QueryStatement;
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<{
         iamGetTenants: IamTenant[];
         oAuthGetScopes: OAuthScope[];
         iamGetTags: IamTag[];
+        iamGetSelectedTenants: IamTenant[];
+        oAuthGetSelectedScopes: OAuthScope[];
+        iamGetSelectedTags: IamTag[];
     }>
     {
         return this.graphqlService
@@ -376,7 +416,9 @@ export class MessageService
                 iamGetTenants: IamTenant[];
                 oAuthGetScopes: OAuthScope[];
                 iamGetTags: IamTag[];
-                iamPaginateAccounts: GridData<IamAccount>;
+                iamGetSelectedTenants: IamTenant[];
+                oAuthGetSelectedScopes: OAuthScope[];
+                iamGetSelectedTags: IamTag[];
             }>({
                 query    : getRelations,
                 variables: {
@@ -386,6 +428,12 @@ export class MessageService
                     constraintGetScopes,
                     queryGetTags,
                     constraintGetTags,
+                    queryGetSelectedTenants,
+                    constraintGetSelectedTenants,
+                    queryGetSelectedScopes,
+                    constraintGetSelectedScopes,
+                    queryGetSelectedTags,
+                    constraintGetSelectedTags,
                 },
                 context: {
                     headers,
@@ -401,6 +449,10 @@ export class MessageService
                     this.scopeService.scopesSubject$.next(data.oAuthGetScopes);
                     this.tagService.tagsSubject$.next(data.iamGetTags);
                     this.accountService.setScopePagination(messageSelectedAccountsScopePagination, { count: 0, total: 0, rows: [] });
+
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.iamGetSelectedTenants
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.oAuthGetSelectedScopes
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.iamGetSelectedTags
                 }),
             );
     }

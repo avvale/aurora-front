@@ -9,7 +9,7 @@ import { accountColumnsConfig, AccountService } from '@apps/iam/account';
 import { TenantService } from '@apps/iam/tenant';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
 import { MessageService } from '@apps/message/message';
-import { Action, AsyncMatSelectSearchModule, ChipComponent, ColumnConfig, ColumnDataType, Crumb, DatetimepickerSqlFormatDirective, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleCellValueDialogTemplateDirective, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, IamService, initAsyncMatSelectSearch, initAsyncMatSelectSearchState, JoinPipe, log, manageAsyncMatSelectSearch, mapActions, MapPipe, MatSelectAddSelectedDirective, Operator, queryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SetValueObjectPipe, SnackBarInvalidFormComponent, SplitButtonModule, uuid, ViewDetailComponent } from '@aurora';
+import { Action, AsyncMatSelectSearchModule, ChipComponent, ColumnConfig, ColumnDataType, Crumb, DatetimepickerSqlFormatDirective, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleCellValueDialogTemplateDirective, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, initAsyncMatSelectSearch, initAsyncMatSelectSearchState, JoinPipe, log, manageAsyncMatSelectSearch, mapActions, MapPipe, MatSelectAddSelectedDirective, Operator, queryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SetValueObjectPipe, SnackBarInvalidFormComponent, SplitButtonModule, uuid, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { combineLatest, lastValueFrom, Observable, ReplaySubject, skip, startWith, takeUntil } from 'rxjs';
@@ -78,35 +78,12 @@ export class MessageDetailComponent extends ViewDetailComponent
     // It should not be used habitually, since the source of truth is the form.
     managedObject: WritableSignal<MessageMessage> = signal(null);
 
-    /* #region variables to manage async-search-multiple-select senders IamTenant[] */
-    tenantSendersAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTenant>();
-    tenantSendersManageAsyncMatSelectSearch = manageAsyncMatSelectSearch({
-        columnFilter: {
-            id      : uuid(),
-            field   : 'IamTenant.name::unaccent',
-            type    : ColumnDataType.STRING,
-            operator: Operator.iLike,
-            value   : null,
-        },
-        paginationService   : this.tenantService,
-        paginationConstraint: {
-            where: {
-                // constraint para buscar tenants dentro del scope del usuario
-                // TODO, hacer esta validación en el servidor
-                id: this.iamService.me.dTenants,
-            },
-            include: [
-                {
-                    association: 'parent',
-                },
-            ],
-        },
-    });
-    /* #endregion variables to manage async-search-multiple-select senders IamTenant[] */
-
-    /* #region variables to manage async-search-multiple-select recipients IamTenant[] */
+    /* #region variables to manage async-search-multiple-select managers and recipients IamTenant[] */
+    tenantManagersAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTenant>();
     tenantRecipientsAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTenant>();
-    tenantRecipientsManageAsyncMatSelectSearch = manageAsyncMatSelectSearch({
+    tenantAccountRecipientsAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTenant>();
+    tenantDialogAccountRecipientsAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTenant>();
+    tenantAsyncMatSelectSearch = manageAsyncMatSelectSearch({
         columnFilter: {
             id      : uuid(),
             field   : 'IamTenant.name::unaccent',
@@ -116,11 +93,6 @@ export class MessageDetailComponent extends ViewDetailComponent
         },
         paginationService   : this.tenantService,
         paginationConstraint: {
-            where: {
-                // constraint para buscar tenants dentro del scope del usuario
-                // TODO, hacer esta validación en el servidor
-                id: this.iamService.me.dTenants,
-            },
             include: [
                 {
                     association: 'parent',
@@ -128,32 +100,12 @@ export class MessageDetailComponent extends ViewDetailComponent
             ],
         },
     });
-    /* #endregion variables to manage async-search-multiple-select recipients IamTenant[] */
+    /* #endregion variables to manage async-search-multiple-select managers and recipients IamTenant[] */
 
-    /* #region variables to manage async-search-multiple-select senders account dialog IamTenant[] */
-    tenantDialogAccountSendersAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTenant>();
-    tenantDialogAccountSendersManageAsyncMatSelectSearch = manageAsyncMatSelectSearch({
-        columnFilter: {
-            id      : uuid(),
-            field   : 'IamTenant.name::unaccent',
-            type    : ColumnDataType.STRING,
-            operator: Operator.iLike,
-            value   : null,
-        },
-        paginationService   : this.tenantService,
-        paginationConstraint: {
-            where: {
-                // constraint para buscar tenants dentro del scope del usuario
-                // TODO, hacer esta validación en el servidor
-                id: this.iamService.me.dTenants,
-            },
-        },
-    });
-    /* #endregion variables to manage async-search-multiple-select senders account dialog IamTenant[] */
-
-    /* #region variables to manage async-search-multiple-select senders account dialog OAuthScope[] */
-    scopeDialogAccountSendersAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, OAuthScope>();
-    scopeDialogAccountSendersManageAsyncMatSelectSearch = manageAsyncMatSelectSearch({
+    /* #region variables to manage async-search-multiple-select OAuthScope[] */
+    scopeAccountRecipientsAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, OAuthScope>();
+    scopeDialogAccountRecipientsAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, OAuthScope>();
+    scopeManageAsyncMatSelectSearch = manageAsyncMatSelectSearch({
         columnFilter: {
             id      : uuid(),
             field   : 'OAuthScope.name::unaccent',
@@ -163,11 +115,12 @@ export class MessageDetailComponent extends ViewDetailComponent
         },
         paginationService: this.scopeService,
     });
-    /* #endregion variables to manage async-search-multiple-select senders account dialog OAuthScope[] */
+    /* #endregion variables to manage async-search-multiple-select OAuthScope[] */
 
     /* #region variables to manage async-search-multiple-select senders account dialog IamTag[] */
-    tagDialogAccountSendersAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTag>();
-    tagDialogAccountSendersManageAsyncMatSelectSearch = manageAsyncMatSelectSearch({
+    tagAccountRecipientsAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTag>();
+    tagDialogAccountRecipientsAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTag>();
+    tagManageAsyncMatSelectSearch = manageAsyncMatSelectSearch({
         columnFilter: {
             id      : uuid(),
             field   : 'IamTag.name::unaccent',
@@ -227,16 +180,16 @@ export class MessageDetailComponent extends ViewDetailComponent
         ...accountColumnsConfig({
             translocoService: this.translocoService,
             tenantsAsyncMatSelectSearch: {
-                asyncMatSelectSearchState : this.tenantDialogAccountSendersAsyncMatSelectSearchState,
-                manageAsyncMatSelectSearch: this.tenantDialogAccountSendersManageAsyncMatSelectSearch,
+                asyncMatSelectSearchState : this.tenantDialogAccountRecipientsAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.tenantAsyncMatSelectSearch,
             },
             scopesAsyncMatSelectSearch: {
-                asyncMatSelectSearchState : this.scopeDialogAccountSendersAsyncMatSelectSearchState,
-                manageAsyncMatSelectSearch: this.scopeDialogAccountSendersManageAsyncMatSelectSearch,
+                asyncMatSelectSearchState : this.scopeDialogAccountRecipientsAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.scopeManageAsyncMatSelectSearch,
             },
             tagsAsyncMatSelectSearch: {
-                asyncMatSelectSearchState : this.tagDialogAccountSendersAsyncMatSelectSearchState,
-                manageAsyncMatSelectSearch: this.tagDialogAccountSendersManageAsyncMatSelectSearch,
+                asyncMatSelectSearchState : this.tagDialogAccountRecipientsAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.tagManageAsyncMatSelectSearch,
             },
         }),
     ];
@@ -279,16 +232,16 @@ export class MessageDetailComponent extends ViewDetailComponent
         ...accountColumnsConfig({
             translocoService: this.translocoService,
             tenantsAsyncMatSelectSearch: {
-                asyncMatSelectSearchState : this.tenantDialogAccountSendersAsyncMatSelectSearchState,
-                manageAsyncMatSelectSearch: this.tenantDialogAccountSendersManageAsyncMatSelectSearch,
+                asyncMatSelectSearchState : this.tenantAccountRecipientsAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.tenantAsyncMatSelectSearch,
             },
             scopesAsyncMatSelectSearch: {
-                asyncMatSelectSearchState : this.scopeDialogAccountSendersAsyncMatSelectSearchState,
-                manageAsyncMatSelectSearch: this.scopeDialogAccountSendersManageAsyncMatSelectSearch,
+                asyncMatSelectSearchState : this.scopeAccountRecipientsAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.scopeManageAsyncMatSelectSearch,
             },
             tagsAsyncMatSelectSearch: {
-                asyncMatSelectSearchState : this.tagDialogAccountSendersAsyncMatSelectSearchState,
-                manageAsyncMatSelectSearch: this.tagDialogAccountSendersManageAsyncMatSelectSearch,
+                asyncMatSelectSearchState : this.tagAccountRecipientsAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.tagManageAsyncMatSelectSearch,
             },
         }),
     ];
@@ -310,59 +263,91 @@ export class MessageDetailComponent extends ViewDetailComponent
         private readonly accountService: AccountService,
         private readonly downloadService: DownloadService,
         private readonly tenantService: TenantService,
-        private readonly iamService: IamService,
         private readonly scopeService: ScopeService,
         private readonly tagService: TagService,
     )
     {
         super();
 
-        /* #region variables to manage async-search-multiple-select senders IamTenant[] */
+        /* #region variables to manage async-search-multiple-select managers IamTenant[] */
         initAsyncMatSelectSearch<string, IamTenant>({
-            asyncMatSelectSearchState : this.tenantSendersAsyncMatSelectSearchState,
-            manageAsyncMatSelectSearch: this.tenantSendersManageAsyncMatSelectSearch,
+            asyncMatSelectSearchState : this.tenantManagersAsyncMatSelectSearchState,
+            manageAsyncMatSelectSearch: this.tenantAsyncMatSelectSearch,
             itemPagination            : this.activatedRoute.snapshot.data.data.iamGetTenants,
-            initSelectedItems         : this.activatedRoute.snapshot.data.data.messageGetTenantSenders,
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.iamGetSelectedTenantManagers,
         });
-        /* #endregion variables to manage async-search-multiple-select senders IamTenant[] */
+        /* #endregion variables to manage async-search-multiple-select managers IamTenant[] */
 
         /* #region variables to manage async-search-multiple-select recipients IamTenant[] */
         initAsyncMatSelectSearch<string, IamTenant>({
             asyncMatSelectSearchState : this.tenantRecipientsAsyncMatSelectSearchState,
-            manageAsyncMatSelectSearch: this.tenantRecipientsManageAsyncMatSelectSearch,
+            manageAsyncMatSelectSearch: this.tenantAsyncMatSelectSearch,
             itemPagination            : this.activatedRoute.snapshot.data.data.iamGetTenants,
-            initSelectedItems         : this.activatedRoute.snapshot.data.data.messageGetTenantRecipients,
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.iamGetSelectedTenantRecipients,
         });
         /* #endregion variables to manage async-search-multiple-select recipients IamTenant[] */
 
-        /* #region variables to manage async-search-multiple-select dialog IamTenant[] */
+        /* #region variables to manage async-search-multiple-select account recipients IamTenant[] */
         initAsyncMatSelectSearch<string, IamTenant>({
-            asyncMatSelectSearchState : this.tenantDialogAccountSendersAsyncMatSelectSearchState,
-            manageAsyncMatSelectSearch: this.tenantDialogAccountSendersManageAsyncMatSelectSearch,
+            asyncMatSelectSearchState : this.tenantAccountRecipientsAsyncMatSelectSearchState,
+            manageAsyncMatSelectSearch: this.tenantAsyncMatSelectSearch,
             itemPagination            : this.activatedRoute.snapshot.data.data.iamGetTenants,
-            initSelectedItems         : this.activatedRoute.snapshot.data.data.iamGetSelectedTenants,
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.iamGetSelectedTenantsAccount,
         });
-        /* #endregion variables to manage async-search-multiple-select dialog IamTenant[] */
+        /* #endregion variables to manage async-search-multiple-select account recipients IamTenant[] */
 
-        /* #region variables to manage async-search-multiple-select dialog oAuthScope[] */
+        /* #region variables to manage async-search-multiple-select dialog account recipients IamTenant[] */
+        initAsyncMatSelectSearch<string, IamTenant>({
+            asyncMatSelectSearchState : this.tenantDialogAccountRecipientsAsyncMatSelectSearchState,
+            manageAsyncMatSelectSearch: this.tenantAsyncMatSelectSearch,
+            itemPagination            : this.activatedRoute.snapshot.data.data.iamGetTenants,
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.iamGetSelectedTenantsDialogAccount,
+        });
+        /* #endregion variables to manage async-search-multiple-select dialog account recipients IamTenant[] */
+
+        /* #region variables to manage async-search-multiple-select account recipients oAuthScope[] */
         initAsyncMatSelectSearch<string, OAuthScope>({
-            asyncMatSelectSearchState : this.scopeDialogAccountSendersAsyncMatSelectSearchState,
-            manageAsyncMatSelectSearch: this.scopeDialogAccountSendersManageAsyncMatSelectSearch,
+            asyncMatSelectSearchState : this.scopeAccountRecipientsAsyncMatSelectSearchState,
+            manageAsyncMatSelectSearch: this.scopeManageAsyncMatSelectSearch,
             itemPagination            : this.activatedRoute.snapshot.data.data.oAuthGetScopes,
-            initSelectedItems         : this.activatedRoute.snapshot.data.data.oAuthGetSelectedScopes,
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.oAuthGetSelectedScopesAccount,
+            indexKey                  : 'code',
             valueKey                  : 'code',
         });
-        /* #endregion variables to manage async-search-multiple-select dialog oAuthScope[] */
+        /* #endregion variables to manage async-search-multiple-select account recipients oAuthScope[] */
 
-        /* #region variables to manage async-search-multiple-select dialog IamTag[] */
+         /* #region variables to manage async-search-multiple-select dialog account recipients oAuthScope[] */
+        initAsyncMatSelectSearch<string, OAuthScope>({
+            asyncMatSelectSearchState : this.scopeDialogAccountRecipientsAsyncMatSelectSearchState,
+            manageAsyncMatSelectSearch: this.scopeManageAsyncMatSelectSearch,
+            itemPagination            : this.activatedRoute.snapshot.data.data.oAuthGetScopes,
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.oAuthGetSelectedScopesDialogAccount,
+            indexKey                  : 'code',
+            valueKey                  : 'code',
+        });
+        /* #endregion variables to manage async-search-multiple-select dialog account recipients oAuthScope[] */
+
+        /* #region variables to manage async-search-multiple-select account recipients IamTag[] */
         initAsyncMatSelectSearch<string, IamTag>({
-            asyncMatSelectSearchState : this.tagDialogAccountSendersAsyncMatSelectSearchState,
-            manageAsyncMatSelectSearch: this.tagDialogAccountSendersManageAsyncMatSelectSearch,
+            asyncMatSelectSearchState : this.tagAccountRecipientsAsyncMatSelectSearchState,
+            manageAsyncMatSelectSearch: this.tagManageAsyncMatSelectSearch,
             itemPagination            : this.activatedRoute.snapshot.data.data.iamGetTags,
-            initSelectedItems         : this.activatedRoute.snapshot.data.data.iamGetSelectedTags,
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.iamGetSelectedTagsAccount,
+            indexKey                  : 'name',
             valueKey                  : 'name',
         });
-        /* #endregion variables to manage async-search-multiple-select dialog IamTag[] */
+        /* #endregion variables to manage async-search-multiple-select account recipients IamTag[] */
+
+        /* #region variables to manage async-search-multiple-select dialog account recipients IamTag[] */
+        initAsyncMatSelectSearch<string, IamTag>({
+            asyncMatSelectSearchState : this.tagDialogAccountRecipientsAsyncMatSelectSearchState,
+            manageAsyncMatSelectSearch: this.tagManageAsyncMatSelectSearch,
+            itemPagination            : this.activatedRoute.snapshot.data.data.iamGetTags,
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.iamGetSelectedTagsDialogAccount,
+            indexKey                  : 'name',
+            valueKey                  : 'name',
+        });
+        /* #endregion variables to manage async-search-multiple-select dialog account recipients IamTag[] */
     }
 
     // this method will be called after the ngOnInit of

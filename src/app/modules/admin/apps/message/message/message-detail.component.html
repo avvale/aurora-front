@@ -200,12 +200,11 @@
                                     <mat-label>{{ t('message.TenantSenders') }}</mat-label>
                                     <mat-select
                                         formControlName="tenantIds"
-                                        #tenantsSelect
                                         multiple
                                         auScrollEnd
                                         (scrollEnd)="
-                                            tenantSendersManageAsyncMatSelectSearch({
-                                                asyncMatSelectSearchState: tenantSendersAsyncMatSelectSearchState,
+                                            tenantAsyncMatSelectSearch({
+                                                asyncMatSelectSearchState: tenantManagersAsyncMatSelectSearchState,
                                                 isFromScrollEndEvent: true,
                                                 noResultsFoundTranslation: t('NoResultsFound'),
                                             })
@@ -213,22 +212,22 @@
                                     >
                                         <mat-option>
                                             <ngx-mat-select-search
-                                                [formControl]="tenantSendersAsyncMatSelectSearchState.itemFilterCtrl"
+                                                [formControl]="tenantManagersAsyncMatSelectSearchState.itemFilterCtrl"
                                                 [placeholderLabel]="t('message.FindTenant')"
                                                 [noEntriesFoundLabel]="t('NoResultsFound')"
                                             >
                                             </ngx-mat-select-search>
                                         </mat-option>
-                                        @if (tenantSendersAsyncMatSelectSearchState.selectedItems().size > 0)
+                                        @if (tenantManagersAsyncMatSelectSearchState.selectedItems().size > 0)
                                         {
                                             <mat-optgroup [label]="t('SelectedOptions')">
-                                                @for (tenant of tenantSendersAsyncMatSelectSearchState.selectedItems().values(); track tenant.id)
+                                                @for (tenant of tenantManagersAsyncMatSelectSearchState.selectedItems().values(); track tenant.id)
                                                 {
                                                     <mat-option
                                                         [value]="tenant.id"
                                                         auMatSelectAddSelectedDirective
                                                         [object]="tenant"
-                                                        [selectedItems]="tenantSendersAsyncMatSelectSearchState.selectedItems"
+                                                        [selectedItems]="tenantManagersAsyncMatSelectSearchState.selectedItems"
                                                     >
                                                         {{ tenant.name }}{{ (tenant.parent ? ' [' + tenant.parent?.name + ']' : '') }}
                                                     </mat-option>
@@ -236,23 +235,23 @@
                                             </mat-optgroup>
                                             <mat-divider></mat-divider>
                                         }
-                                        @for (tenant of tenantSendersAsyncMatSelectSearchState.filteredItems().values(); track tenant.id)
+                                        @for (tenant of tenantManagersAsyncMatSelectSearchState.filteredItems().values(); track tenant.id)
                                         {
-                                            @if (!tenantSendersAsyncMatSelectSearchState.selectedItems().has(tenant.id))
+                                            @if (!tenantManagersAsyncMatSelectSearchState.selectedItems().has(tenant.id))
                                             {
                                                 <mat-option
                                                     [value]="tenant.id"
                                                     [disabled]="tenant.id === null"
                                                     auMatSelectAddSelectedDirective
                                                     [object]="tenant"
-                                                    [selectedItems]="tenantSendersAsyncMatSelectSearchState.selectedItems"
+                                                    [selectedItems]="tenantManagersAsyncMatSelectSearchState.selectedItems"
                                                 >
                                                     {{ tenant.name }}{{ (tenant.parent ? ' [' + tenant.parent?.name + ']' : '') }}
                                                 </mat-option>
                                             }
                                         }
                                     </mat-select>
-                                    @if (tenantSendersAsyncMatSelectSearchState.isLoading())
+                                    @if (tenantManagersAsyncMatSelectSearchState.isLoading())
                                     {
                                         <mat-icon matSuffix>
                                             <mat-spinner diameter="20"></mat-spinner>
@@ -269,11 +268,10 @@
                                 <mat-label>{{ t('message.TenantRecipients') }}</mat-label>
                                 <mat-select
                                     formControlName="tenantRecipientIds"
-                                    #tenantsSelect
                                     multiple
                                     auScrollEnd
                                     (scrollEnd)="
-                                        tenantRecipientsManageAsyncMatSelectSearch({
+                                        tenantAsyncMatSelectSearch({
                                             asyncMatSelectSearchState: tenantRecipientsAsyncMatSelectSearchState,
                                             isFromScrollEndEvent: true,
                                             noResultsFoundTranslation: t('NoResultsFound'),
