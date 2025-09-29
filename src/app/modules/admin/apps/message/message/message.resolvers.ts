@@ -62,8 +62,8 @@ export const messageNewResolver: ResolveFn<{
     gridStateService.setPaginationActionId(messageAccountsGridId, 'message::message.detail.messageAccountsPagination');
     gridStateService.setExportActionId(messageAccountsGridId, 'message::message.detail.exportMessageAccounts');
 
-    gridStateService.setPaginationActionId(messageAccountsDialogGridId, 'message::message.detail.accountsPagination');
-    gridStateService.setExportActionId(messageAccountsDialogGridId, 'message::message.detail.exportAccounts');
+    gridStateService.setPaginationActionId(messageAccountsDialogGridId, 'message::message.detail.messageAccountsDialogPagination');
+    gridStateService.setExportActionId(messageAccountsDialogGridId, 'message::message.detail.exportMessageAccountsDialog');
 
     return messageService.getRelations({
         constraintGetTenants: queryStatementHandler(
@@ -108,6 +108,12 @@ export const messageEditResolver: ResolveFn<{
         isViewAction: true,
     });
 
+    gridStateService.setPaginationActionId(messageAccountsGridId, 'message::message.detail.messageAccountsPagination');
+    gridStateService.setExportActionId(messageAccountsGridId, 'message::message.detail.exportMessageAccounts');
+
+    gridStateService.setPaginationActionId(messageAccountsDialogGridId, 'message::message.detail.messageAccountsDialogPagination');
+    gridStateService.setExportActionId(messageAccountsDialogGridId, 'message::message.detail.exportMessageAccountsDialog');
+
     const messageResponse = new Subject<{
         object: MessageMessage;
         iamGetTenants: IamTenant[];
@@ -151,6 +157,14 @@ export const messageEditResolver: ResolveFn<{
                             where: {
                                 id: dataFromFindByIdWithRelations.object.accountRecipientIds
                             },
+                            include: [
+                                {
+                                    association: 'user',
+                                },
+                                {
+                                    association: 'tenants',
+                                },
+                            ],
                         },
                         scope: messageSelectedAccountsScopePagination,
                     }),

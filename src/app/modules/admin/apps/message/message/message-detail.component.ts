@@ -9,7 +9,7 @@ import { accountColumnsConfig, AccountService } from '@apps/iam/account';
 import { TenantService } from '@apps/iam/tenant';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
 import { MessageService } from '@apps/message/message';
-import { Action, AsyncMatSelectSearchModule, ChipComponent, ColumnConfig, ColumnDataType, Crumb, DatetimepickerSqlFormatDirective, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleCellValueDialogTemplateDirective, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, IamService, initAsyncMatSelectSearch, initAsyncMatSelectSearchState, JoinPipe, log, manageAsyncMatSelectSearch, mapActions, MapPipe, Operator, queryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SetValueObjectPipe, SnackBarInvalidFormComponent, SplitButtonModule, uuid, ViewDetailComponent } from '@aurora';
+import { Action, AsyncMatSelectSearchModule, ChipComponent, ColumnConfig, ColumnDataType, Crumb, DatetimepickerSqlFormatDirective, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleCellValueDialogTemplateDirective, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, IamService, initAsyncMatSelectSearch, initAsyncMatSelectSearchState, JoinPipe, log, manageAsyncMatSelectSearch, mapActions, MapPipe, MatSelectAddSelectedDirective, Operator, queryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SetValueObjectPipe, SnackBarInvalidFormComponent, SplitButtonModule, uuid, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { EditorComponent, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { combineLatest, lastValueFrom, Observable, ReplaySubject, skip, startWith, takeUntil } from 'rxjs';
@@ -18,6 +18,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { OAuthScope } from '@apps/o-auth';
 import { ScopeService } from '@apps/o-auth/scope';
 import { TagService } from '@apps/iam/tag';
+import { GridSelectMultipleCellValueTemplateDirective } from '@aurora/components/grid-select-multiple-elements/directives/grid-select-multiple-cell-value-template.directive';
 
 export const messageAccountsDialogGridId = 'message::message.detail.accountsDialogGridList';
 export const messageAccountsGridId = 'message::message.detail.messageAccountsGridList';
@@ -31,10 +32,12 @@ export const messageAccountsScopeDialogPagination = 'message::messageDialogAccou
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ...defaultDetailImports,
+        GridSelectMultipleCellValueTemplateDirective,
         AsyncMatSelectSearchModule, ChipComponent, DatetimepickerSqlFormatDirective,
         EditorComponent, FileUploadComponent, FormatFileSizePipe, GetColorStatusMessagePipe,
         GridSelectMultipleCellValueDialogTemplateDirective, JoinPipe, MatBadgeModule,
-        MatCheckboxModule, MatSelectModule, MtxDatetimepickerModule, GridSelectMultipleElementsModule,
+        MatCheckboxModule, MatSelectAddSelectedDirective, MatSelectModule,
+        MtxDatetimepickerModule, GridSelectMultipleElementsModule,
         MapPipe, MatTabsModule, MatTooltipModule, SetValueObjectPipe, SplitButtonModule,
     ],
     providers: [
@@ -275,6 +278,18 @@ export class MessageDetailComponent extends ViewDetailComponent
         },
         ...accountColumnsConfig({
             translocoService: this.translocoService,
+            tenantsAsyncMatSelectSearch: {
+                asyncMatSelectSearchState : this.tenantDialogAccountSendersAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.tenantDialogAccountSendersManageAsyncMatSelectSearch,
+            },
+            scopesAsyncMatSelectSearch: {
+                asyncMatSelectSearchState : this.scopeDialogAccountSendersAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.scopeDialogAccountSendersManageAsyncMatSelectSearch,
+            },
+            tagsAsyncMatSelectSearch: {
+                asyncMatSelectSearchState : this.tagDialogAccountSendersAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.tagDialogAccountSendersManageAsyncMatSelectSearch,
+            },
         }),
     ];
     /* #endregion variables to manage grid-select-multiple-elements accountRecipientIds */
@@ -516,7 +531,7 @@ export class MessageDetailComponent extends ViewDetailComponent
     handleOpenAccountsDialog(): void
     {
         this.actionService.action({
-            id          : 'message::message.detail.accountsPagination',
+            id          : 'message::message.detail.messageAccountsDialogPagination',
             isViewAction: false,
             meta        : {
                 query: queryStatementHandler({ columnsConfig: accountColumnsConfig() })
@@ -528,8 +543,8 @@ export class MessageDetailComponent extends ViewDetailComponent
             },
             afterRunAction: (action: Action) =>
             {
-                this.gridStateService.setPaginationActionId(this.accountsDialogGridId, 'message::message.detail.accountsPagination');
-                this.gridStateService.setExportActionId(this.accountsDialogGridId, 'message::message.detail.exportAccounts');
+                this.gridStateService.setPaginationActionId(this.accountsDialogGridId, 'message::message.detail.messageAccountsDialogPagination');
+                this.gridStateService.setExportActionId(this.accountsDialogGridId, 'message::message.detail.exportMessageAccountsDialog');
                 this.messageAccountsGridSelectMultipleElementsComponent.handleElementsDialog({
                     data: {
                         gridId   : this.accountsDialogGridId,
@@ -731,6 +746,9 @@ export class MessageDetailComponent extends ViewDetailComponent
                                     {
                                         association: 'user',
                                     },
+                                    {
+                                        association: 'tenants',
+                                    },
                                 ],
                             },
                             scope: messageSelectedAccountsScopePagination,
@@ -749,7 +767,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                 });
 
                 this.actionService.action({
-                    id          : 'message::message.detail.accountsPagination',
+                    id          : 'message::message.detail.messageAccountsDialogPagination',
                     isViewAction: false,
                 });
 
@@ -775,7 +793,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                 });
 
                 this.actionService.action({
-                    id          : 'message::message.detail.accountsPagination',
+                    id          : 'message::message.detail.messageAccountsDialogPagination',
                     isViewAction: false,
                 });
 
@@ -801,7 +819,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                 });
 
                 this.actionService.action({
-                    id          : 'message::message.detail.accountsPagination',
+                    id          : 'message::message.detail.messageAccountsDialogPagination',
                     isViewAction: false,
                 });
 
@@ -829,7 +847,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                 });
 
                 this.actionService.action({
-                    id          : 'message::message.detail.accountsPagination',
+                    id          : 'message::message.detail.messageAccountsDialogPagination',
                     isViewAction: false,
                 });
 
@@ -845,7 +863,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                 /* #endregion actions to manage Message Accounts grid-select-multiple-elements */
 
             /* #region actions to manage Accounts grid-select-multiple-elements dialog */
-            case 'message::message.detail.accountsPagination':
+            case 'message::message.detail.messageAccountsDialogPagination':
                 await lastValueFrom(
                     this.accountService
                         .paginationWithRelations({
