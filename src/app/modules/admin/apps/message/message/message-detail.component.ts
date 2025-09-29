@@ -16,6 +16,8 @@ import { combineLatest, lastValueFrom, Observable, ReplaySubject, skip, startWit
 import { GetColorStatusMessagePipe } from '../shared';
 import { MatBadgeModule } from '@angular/material/badge';
 import { OAuthScope } from '@apps/o-auth';
+import { ScopeService } from '@apps/o-auth/scope';
+import { TagService } from '@apps/iam/tag';
 
 export const messageAccountsDialogGridId = 'message::message.detail.accountsDialogGridList';
 export const messageAccountsGridId = 'message::message.detail.messageAccountsGridList';
@@ -146,6 +148,34 @@ export class MessageDetailComponent extends ViewDetailComponent
     });
     /* #endregion variables to manage async-search-multiple-select senders account dialog IamTenant[] */
 
+    /* #region variables to manage async-search-multiple-select senders account dialog OAuthScope[] */
+    scopeDialogAccountSendersAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, OAuthScope>();
+    scopeDialogAccountSendersManageAsyncMatSelectSearch = manageAsyncMatSelectSearch({
+        columnFilter: {
+            id      : uuid(),
+            field   : 'OAuthScope.name::unaccent',
+            type    : ColumnDataType.STRING,
+            operator: Operator.iLike,
+            value   : null,
+        },
+        paginationService: this.scopeService,
+    });
+    /* #endregion variables to manage async-search-multiple-select senders account dialog OAuthScope[] */
+
+    /* #region variables to manage async-search-multiple-select senders account dialog IamTag[] */
+    tagDialogAccountSendersAsyncMatSelectSearchState = initAsyncMatSelectSearchState<string, IamTag>();
+    tagDialogAccountSendersManageAsyncMatSelectSearch = manageAsyncMatSelectSearch({
+        columnFilter: {
+            id      : uuid(),
+            field   : 'IamTag.name::unaccent',
+            type    : ColumnDataType.STRING,
+            operator: Operator.iLike,
+            value   : null,
+        },
+        paginationService: this.tagService,
+    });
+    /* #endregion variables to manage async-search-multiple-select senders account dialog IamTag[] */
+
     // relationships
     /* #region variables to manage grid-select-multiple-elements messageAccountsGridSelectMultipleElementsComponent */
     // start accounts dialog
@@ -196,6 +226,14 @@ export class MessageDetailComponent extends ViewDetailComponent
             tenantsAsyncMatSelectSearch: {
                 asyncMatSelectSearchState : this.tenantDialogAccountSendersAsyncMatSelectSearchState,
                 manageAsyncMatSelectSearch: this.tenantDialogAccountSendersManageAsyncMatSelectSearch,
+            },
+            scopesAsyncMatSelectSearch: {
+                asyncMatSelectSearchState : this.scopeDialogAccountSendersAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.scopeDialogAccountSendersManageAsyncMatSelectSearch,
+            },
+            tagsAsyncMatSelectSearch: {
+                asyncMatSelectSearchState : this.tagDialogAccountSendersAsyncMatSelectSearchState,
+                manageAsyncMatSelectSearch: this.tagDialogAccountSendersManageAsyncMatSelectSearch,
             },
         }),
     ];
@@ -258,6 +296,8 @@ export class MessageDetailComponent extends ViewDetailComponent
         private readonly downloadService: DownloadService,
         private readonly tenantService: TenantService,
         private readonly iamService: IamService,
+        private readonly scopeService: ScopeService,
+        private readonly tagService: TagService,
     )
     {
         super();
@@ -280,14 +320,34 @@ export class MessageDetailComponent extends ViewDetailComponent
         });
         /* #endregion variables to manage async-search-multiple-select recipients IamTenant[] */
 
-        /* #region variables to manage async-search-multiple-select recipients IamTenant[] */
+        /* #region variables to manage async-search-multiple-select dialog IamTenant[] */
         initAsyncMatSelectSearch<string, IamTenant>({
             asyncMatSelectSearchState : this.tenantDialogAccountSendersAsyncMatSelectSearchState,
             manageAsyncMatSelectSearch: this.tenantDialogAccountSendersManageAsyncMatSelectSearch,
             itemPagination            : this.activatedRoute.snapshot.data.data.iamGetTenants,
-            initSelectedItems         : [],
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.iamGetSelectedTenants,
         });
-        /* #endregion variables to manage async-search-multiple-select recipients IamTenant[] */
+        /* #endregion variables to manage async-search-multiple-select dialog IamTenant[] */
+
+        /* #region variables to manage async-search-multiple-select dialog oAuthScope[] */
+        initAsyncMatSelectSearch<string, OAuthScope>({
+            asyncMatSelectSearchState : this.scopeDialogAccountSendersAsyncMatSelectSearchState,
+            manageAsyncMatSelectSearch: this.scopeDialogAccountSendersManageAsyncMatSelectSearch,
+            itemPagination            : this.activatedRoute.snapshot.data.data.oAuthGetScopes,
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.oAuthGetSelectedScopes,
+            valueKey                  : 'code',
+        });
+        /* #endregion variables to manage async-search-multiple-select dialog oAuthScope[] */
+
+        /* #region variables to manage async-search-multiple-select dialog IamTag[] */
+        initAsyncMatSelectSearch<string, IamTag>({
+            asyncMatSelectSearchState : this.tagDialogAccountSendersAsyncMatSelectSearchState,
+            manageAsyncMatSelectSearch: this.tagDialogAccountSendersManageAsyncMatSelectSearch,
+            itemPagination            : this.activatedRoute.snapshot.data.data.iamGetTags,
+            initSelectedItems         : this.activatedRoute.snapshot.data.data.iamGetSelectedTags,
+            valueKey                  : 'name',
+        });
+        /* #endregion variables to manage async-search-multiple-select dialog IamTag[] */
     }
 
     // this method will be called after the ngOnInit of
@@ -808,21 +868,33 @@ export class MessageDetailComponent extends ViewDetailComponent
                                     },
                                 ],
                             },
-                            queryGetTenants: queryStatementHandler(
-                                {
-                                    queryStatement: {
-                                        where: {
-                                            id: this.iamService.me.dTenants,
-                                        },
-                                    },
-                                },
-                            )
+                            queryGetTenants: queryStatementHandler()
                                 .setPage({ pageIndex: 0, pageSize: 10 })
                                 .getQueryStatement(),
                             queryGetSelectedTenants: {
                                 where: {
                                     id: this.gridFiltersStorageService
                                         .getColumnFilter(this.accountsDialogGridId, 'tenants')?.value
+                                        || [],
+                                },
+                            },
+                            queryGetScopes: queryStatementHandler()
+                                .setPage({ pageIndex: 0, pageSize: 10 })
+                                .getQueryStatement(),
+                            queryGetSelectedScopes: {
+                                where: {
+                                    code: this.gridFiltersStorageService
+                                        .getColumnFilter(this.accountsDialogGridId, 'scopes')?.value
+                                        || [],
+                                },
+                            },
+                            queryGetTags: queryStatementHandler()
+                                .setPage({ pageIndex: 0, pageSize: 10 })
+                                .getQueryStatement(),
+                            queryGetSelectedTags: {
+                                where: {
+                                    name: this.gridFiltersStorageService
+                                        .getColumnFilter(this.accountsDialogGridId, 'tags')?.value
                                         || [],
                                 },
                             },

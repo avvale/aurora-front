@@ -118,12 +118,12 @@ export const findByIdWithRelationsQuery = gql`
     query MessageFindMessageByIdWithRelations (
         $id: ID
         $constraint: QueryStatement
-        $queryTags: QueryStatement
-        $constraintTags: QueryStatement
         $queryGetTenants: QueryStatement
         $constraintGetTenants: QueryStatement
-        $clientId: ID
-        $constraintClient: QueryStatement
+        $queryGetScopes: QueryStatement
+        $constraintGetScopes: QueryStatement
+        $queryGetTags: QueryStatement
+        $constraintGetTags: QueryStatement
     ) {
         object: messageFindMessageById (
             id: $id

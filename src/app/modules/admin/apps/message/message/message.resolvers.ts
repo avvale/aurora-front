@@ -5,7 +5,7 @@ import { accountColumnsConfig, AccountService } from '@apps/iam/account';
 import { TenantService } from '@apps/iam/tenant';
 import { messageColumnsConfig, MessageService } from '@apps/message/message';
 import { MessageMessage } from '@apps/message/message.types';
-import { OAuthClient, OAuthScope } from '@apps/o-auth';
+import { OAuthScope } from '@apps/o-auth';
 import { ActionService, GridData, GridFiltersStorageService, GridStateService, IamService, queryStatementHandler } from '@aurora';
 import gql from 'graphql-tag';
 import { first, forkJoin, map, Subject } from 'rxjs';
@@ -70,6 +70,7 @@ export const messageNewResolver: ResolveFn<{
             {
                 queryStatement: {
                     where: {
+                        // TODO, hacer esta validación en el servidor
                         id: iamService.me.dTenants,
                     },
                     include: [
@@ -89,7 +90,6 @@ export const messageEditResolver: ResolveFn<{
     object: MessageMessage;
     iamGetTags: IamTag[];
     iamGetTenants: IamTenant[];
-    oAuthFindClientById: OAuthClient;
 }> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
@@ -110,19 +110,19 @@ export const messageEditResolver: ResolveFn<{
 
     const messageResponse = new Subject<{
         object: MessageMessage;
-        iamGetTags: IamTag[];
         iamGetTenants: IamTenant[];
-        oAuthFindClientById: OAuthClient;
+        oAuthGetScopes: OAuthScope[];
+        iamGetTags: IamTag[];
      }>();
 
     messageService
         .findByIdWithRelations({
             id: route.paramMap.get('id'),
-            clientId         : iamService.me.clientId,
             constraintGetTenants: queryStatementHandler(
                 {
                     queryStatement: {
                         where: {
+                            // TODO, hacer esta validación en el servidor
                             id: iamService.me.dTenants,
                         },
                         include: [
@@ -185,9 +185,6 @@ export const messageEditResolver: ResolveFn<{
                             },
                         },
                         constraint: {
-                            where: {
-                                id: iamService.me.dTenants,
-                            },
                             include: [
                                 {
                                     association: 'parent',

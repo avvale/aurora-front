@@ -6,8 +6,7 @@ import { TagService } from '@apps/iam/tag';
 import { TenantService } from '@apps/iam/tenant';
 import { countTotalRecipientsMessageQuery, createMutation, deleteByIdMutation, deleteMutation, draftMessageMessageMutation, fields, findByIdQuery, findByIdWithRelationsQuery, findQuery, getQuery, getRelations, paginationQuery, removeAttachmentMessageMutation, sendMessageMessageMutation, updateByIdMutation, updateMutation } from '@apps/message/message';
 import { MessageCreateMessage, MessageMessage, MessageUpdateMessageById, MessageUpdateMessages } from '@apps/message/message.types';
-import { OAuthClient, OAuthScope } from '@apps/o-auth';
-import { ClientService } from '@apps/o-auth/client';
+import { OAuthScope } from '@apps/o-auth';
 import { ScopeService } from '@apps/o-auth/scope';
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
@@ -30,7 +29,6 @@ export class MessageService
     private tenantService = inject(TenantService);
     private scopeService = inject(ScopeService);
     private tagService = inject(TagService);
-    private clientService = inject(ClientService);
     private accountService = inject(AccountService);
 
     constructor(
@@ -192,53 +190,53 @@ export class MessageService
             id = '',
             constraint = {},
             headers = {},
-            queryTags = {},
-            constraintTags = {},
             queryGetTenants = {},
             constraintGetTenants = {},
-            clientId = '',
-            constraintClient = {},
+            queryGetScopes = {},
+            constraintGetScopes = {},
+            queryGetTags = {},
+            constraintGetTags = {},
             scope,
         }: {
             graphqlStatement?: DocumentNode;
             id?: string;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
-            queryTags?: QueryStatement;
-            constraintTags?: QueryStatement;
             queryGetTenants?: QueryStatement;
             constraintGetTenants?: QueryStatement;
-            clientId?: string;
-            constraintClient?: QueryStatement;
+            queryGetScopes?: QueryStatement;
+            constraintGetScopes?: QueryStatement;
+            queryGetTags?: QueryStatement;
+            constraintGetTags?: QueryStatement;
             scope?: string;
         } = {},
     ): Observable<{
         object: MessageMessage;
-        iamGetTags: IamTag[];
         iamGetTenants: IamTenant[];
+        oAuthGetScopes: OAuthScope[];
+        iamGetTags: IamTag[];
         iamPaginateSelectedAccounts: GridData<IamAccount>;
-        oAuthFindClientById: OAuthClient;
     }>
     {
         return this.graphqlService
             .client()
             .watchQuery<{
                 object: MessageMessage;
-                iamGetTags: IamTag[];
                 iamGetTenants: IamTenant[];
+                oAuthGetScopes: OAuthScope[];
+                iamGetTags: IamTag[];
                 iamPaginateSelectedAccounts: GridData<IamAccount>;
-                oAuthFindClientById: OAuthClient;
             }>({
                 query    : parseGqlFields(graphqlStatement, fields, constraint),
                 variables: {
                     id,
                     constraint,
-                    queryTags,
-                    constraintTags,
                     queryGetTenants,
                     constraintGetTenants,
-                    clientId,
-                    constraintClient,
+                    queryGetScopes,
+                    constraintGetScopes,
+                    queryGetTags,
+                    constraintGetTags,
                 },
                 context: {
                     headers,
@@ -258,9 +256,12 @@ export class MessageService
                     {
                         this.messageSubject$.next(data.object);
                     }
-                    this.tagService.tagsSubject$.next(data.iamGetTags);
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.iamGetSelectedTenants
                     this.tenantService.tenantsSubject$.next(data.iamGetTenants);
-                    this.clientService.clientSubject$.next(data.oAuthFindClientById);
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.oAuthGetSelectedScopes
+                    this.scopeService.scopesSubject$.next(data.oAuthGetScopes);
+                    // select tenants are obtained by activatedRoute.snapshot.data.data.iamGetSelectedTags
+                    this.tagService.tagsSubject$.next(data.iamGetTags);
                 }),
             );
     }
