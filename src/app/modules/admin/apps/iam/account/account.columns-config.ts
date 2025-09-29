@@ -22,6 +22,8 @@ export const accountColumnsConfig: (
         tagsAsyncMatSelectSearch?: unknown;
     } = {},
 ) => [
+    /*
+    Account types currently disabled; user accounts and service accounts are displayed in separate sections.
     {
         type: ColumnDataType.ENUM,
         field: 'type',
@@ -30,6 +32,7 @@ export const accountColumnsConfig: (
         searchable: false,
         fieldValues: () => getFieldValuesFromEnum(IamAccountType, value => `${translocoService && translocoService.translate('AccountTypes.' + value)}`),
     },
+    */
     {
         type: ColumnDataType.ARRAY,
         searchComponent: SearchComponentType.ASYNC_MULTIPLE_SELECT,
