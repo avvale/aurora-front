@@ -113,7 +113,7 @@ export const paginationWithRelationsQuery = gql`
         $queryGetSelectedTags: QueryStatement
         $constraintGetSelectedTags: QueryStatement
     ) {
-        pagination: iamPaginateAccounts (
+        pagination: iamPaginateWithTenantConstraintAccounts (
             query: $query
             constraint: $constraint
         ) {
@@ -246,6 +246,16 @@ export const createMutation = gql`
     }
 `;
 
+export const insertMutation = gql`
+    mutation IamCreateAccounts (
+        $payload: [IamCreateAccountInput]!
+    ) {
+        iamCreateAccounts (
+            payload: $payload
+        )
+    }
+`;
+
 export const updateByIdMutation = gql`
     mutation IamUpdateAccountById (
         $payload: IamUpdateAccountByIdInput!
@@ -336,6 +346,22 @@ export const checkUniqueEmailAccountQuery = gql`
             email: $email
             avoidEmails: $avoidEmails
         )
+    }
+`;
+
+export const paginateWithTenantConstraintAccountsQuery = gql`
+    query IamPaginateWithTenantConstraintAccounts (
+        $query: QueryStatement
+        $constraint: QueryStatement
+    ) {
+        pagination: iamPaginateWithTenantConstraintAccounts (
+            query: $query
+            constraint: $constraint
+        ) {
+            total
+            rows
+            count
+        }
     }
 `;
 

@@ -10,7 +10,7 @@ import { IamRole, IamTag, IamTenant } from '../iam.types';
 import { RoleService } from '../role';
 import { TagService } from '../tag';
 import { TenantService } from '../tenant/tenant.service';
-import { checkPasswordMeAccountQuery, checkUniqueEmailAccountQuery, checkUniqueUsernameAccountQuery, findByIdWithRelationsQuery, getRelations, paginationWithRelationsQuery, updateMeAccountMutation } from './account.graphql';
+import { checkPasswordMeAccountQuery, checkUniqueEmailAccountQuery, checkUniqueUsernameAccountQuery, findByIdWithRelationsQuery, getRelations, insertMutation, paginateWithTenantConstraintAccountsQuery, paginationWithRelationsQuery, updateMeAccountMutation } from './account.graphql';
 import { ScopeService } from '@apps/o-auth/scope';
 
 @Injectable({
@@ -253,7 +253,7 @@ export class AccountService
     findById(
         {
             graphqlStatement = findByIdQuery,
-            id = '',
+            id = null,
             constraint = {},
             headers = {},
             scope,
@@ -511,6 +511,31 @@ export class AccountService
             });
     }
 
+    insert<T>(
+        {
+            graphqlStatement = insertMutation,
+            objects = null,
+            headers = {},
+        }: {
+            graphqlStatement?: DocumentNode;
+            objects?: IamCreateAccount[];
+            headers?: GraphQLHeaders;
+        } = {},
+    ): Observable<FetchResult<T>>
+    {
+        return this.graphqlService
+            .client()
+            .mutate({
+                mutation : graphqlStatement,
+                variables: {
+                    payload: objects,
+                },
+                context: {
+                    headers,
+                },
+            });
+    }
+
     updateById<T>(
         {
             graphqlStatement = updateByIdMutation,
@@ -723,6 +748,42 @@ export class AccountService
             .pipe(
                 first(),
                 map(result => result.data.iamCheckUniqueEmailAccount),
+            );
+    }
+
+    paginateWithTenantConstraintAccounts(
+        {
+            graphqlStatement = paginateWithTenantConstraintAccountsQuery,
+            query = {},
+            constraint = {},
+            headers = {},
+            scope,
+        }: {
+            graphqlStatement?: DocumentNode;
+            query?: QueryStatement;
+            constraint?: QueryStatement;
+            headers?: GraphQLHeaders;
+            scope?: string;
+        } = {},
+    ): Observable<GridData<IamAccount>>
+    {
+        return this.graphqlService
+            .client()
+            .watchQuery<{ pagination: GridData<IamAccount>; }>({
+                query    : graphqlStatement,
+                variables: {
+                    query,
+                    constraint,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges
+            .pipe(
+                first(),
+                map(result => result.data.pagination),
+                tap(pagination => scope ? this.setScopePagination(scope, pagination) : this.paginationSubject$.next(pagination)),
             );
     }
 

@@ -1,24 +1,23 @@
-import { findByIdWithRelationsQuery, getRelations, getWithTenantConstraintTenantsQuery, paginateWithTenantConstraintTenantsQuery } from './tenant.graphql';
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
-import { IamCreateTenant, IamTenant, IamUpdateTenantById, IamUpdateTenants } from '@apps/iam';
-import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, insertMutation, paginationQuery, updateByIdMutation, updateMutation } from '@apps/iam/tenant';
+import { IamCreateRoleAccount, IamRoleAccount, IamUpdateRoleAccountById, IamUpdateRolesAccounts } from '@apps/iam';
+import { createMutation, deleteByIdMutation, deleteMutation, fields, findByIdQuery, findQuery, getQuery, insertMutation, paginationQuery, updateByIdMutation, updateMutation } from '@apps/iam/role-account';
 import { GraphQLHeaders, GraphQLService, GridData, parseGqlFields, QueryStatement } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
-export class TenantService
+export class RoleAccountService
 {
-    paginationSubject$: BehaviorSubject<GridData<IamTenant> | null> = new BehaviorSubject(null);
-    tenantSubject$: BehaviorSubject<IamTenant | null> = new BehaviorSubject(null);
-    tenantsSubject$: BehaviorSubject<IamTenant[] | null> = new BehaviorSubject(null);
+    paginationSubject$: BehaviorSubject<GridData<IamRoleAccount> | null> = new BehaviorSubject(null);
+    roleAccountSubject$: BehaviorSubject<IamRoleAccount | null> = new BehaviorSubject(null);
+    rolesAccountsSubject$: BehaviorSubject<IamRoleAccount[] | null> = new BehaviorSubject(null);
 
     // scoped subjects
-    paginationScoped: { [key: string]: BehaviorSubject<GridData<IamTenant> | null>; } = {};
-    tenantScoped: { [key: string]: BehaviorSubject<IamTenant | null>; } = {};
-    tenantsScoped: { [key: string]: BehaviorSubject<IamTenant[] | null>; } = {};
+    paginationScoped: { [key: string]: BehaviorSubject<GridData<IamRoleAccount> | null>; } = {};
+    roleAccountScoped: { [key: string]: BehaviorSubject<IamRoleAccount | null>; } = {};
+    rolesAccountsScoped: { [key: string]: BehaviorSubject<IamRoleAccount[] | null>; } = {};
 
     constructor(
         private readonly graphqlService: GraphQLService,
@@ -27,24 +26,24 @@ export class TenantService
     /**
     * Getters
     */
-    get pagination$(): Observable<GridData<IamTenant>>
+    get pagination$(): Observable<GridData<IamRoleAccount>>
     {
         return this.paginationSubject$.asObservable();
     }
 
-    get tenant$(): Observable<IamTenant>
+    get roleAccount$(): Observable<IamRoleAccount>
     {
-        return this.tenantSubject$.asObservable();
+        return this.roleAccountSubject$.asObservable();
     }
 
-    get tenants$(): Observable<IamTenant[]>
+    get rolesAccounts$(): Observable<IamRoleAccount[]>
     {
-        return this.tenantsSubject$.asObservable();
+        return this.rolesAccountsSubject$.asObservable();
     }
 
     // allows to store different types of pagination under different scopes this allows us
     // to have multiple observables with different streams of pagination data.
-    setScopePagination(scope: string, pagination: GridData<IamTenant>): void
+    setScopePagination(scope: string, pagination: GridData<IamRoleAccount>): void
     {
         if (this.paginationScoped[scope])
         {
@@ -56,44 +55,44 @@ export class TenantService
     }
 
     // get pagination observable by scope
-    getScopePagination(scope: string): Observable<GridData<IamTenant>>
+    getScopePagination(scope: string): Observable<GridData<IamRoleAccount>>
     {
         if (!this.paginationScoped[scope]) this.paginationScoped[scope] = new BehaviorSubject(null);
         return this.paginationScoped[scope].asObservable();
     }
 
-    setScopeTenant(scope: string, object: IamTenant): void
+    setScopeRoleAccount(scope: string, object: IamRoleAccount): void
     {
-        if (this.tenantScoped[scope])
+        if (this.roleAccountScoped[scope])
         {
-            this.tenantScoped[scope].next(object);
+            this.roleAccountScoped[scope].next(object);
             return;
         }
         // create new subject if not exist
-        this.tenantScoped[scope] = new BehaviorSubject(object);
+        this.roleAccountScoped[scope] = new BehaviorSubject(object);
     }
 
-    getScopeTenant(scope: string): Observable<IamTenant>
+    getScopeRoleAccount(scope: string): Observable<IamRoleAccount>
     {
-        if (!this.tenantScoped[scope]) this.tenantScoped[scope] = new BehaviorSubject(null);
-        return this.tenantScoped[scope].asObservable();
+        if (!this.roleAccountScoped[scope]) this.roleAccountScoped[scope] = new BehaviorSubject(null);
+        return this.roleAccountScoped[scope].asObservable();
     }
 
-    setScopeTenants(scope: string, objects: IamTenant[]): void
+    setScopeRolesAccounts(scope: string, objects: IamRoleAccount[]): void
     {
-        if (this.tenantsScoped[scope])
+        if (this.rolesAccountsScoped[scope])
         {
-            this.tenantsScoped[scope].next(objects);
+            this.rolesAccountsScoped[scope].next(objects);
             return;
         }
         // create new subject if not exist
-        this.tenantsScoped[scope] = new BehaviorSubject(objects);
+        this.rolesAccountsScoped[scope] = new BehaviorSubject(objects);
     }
 
-    getScopeTenants(scope: string): Observable<IamTenant[]>
+    getScopeRolesAccounts(scope: string): Observable<IamRoleAccount[]>
     {
-        if (!this.tenantsScoped[scope]) this.tenantsScoped[scope] = new BehaviorSubject(null);
-        return this.tenantsScoped[scope].asObservable();
+        if (!this.rolesAccountsScoped[scope]) this.rolesAccountsScoped[scope] = new BehaviorSubject(null);
+        return this.rolesAccountsScoped[scope].asObservable();
     }
 
     pagination(
@@ -110,12 +109,12 @@ export class TenantService
             headers?: GraphQLHeaders;
             scope?: string;
         } = {},
-    ): Observable<GridData<IamTenant>>
+    ): Observable<GridData<IamRoleAccount>>
     {
         // get result, map ang throw data across observable
         return this.graphqlService
             .client()
-            .watchQuery<{ pagination: GridData<IamTenant>; }>({
+            .watchQuery<{ pagination: GridData<IamRoleAccount>; }>({
                 query    : graphqlStatement,
                 variables: {
                     query,
@@ -136,29 +135,32 @@ export class TenantService
     findById(
         {
             graphqlStatement = findByIdQuery,
-            id = null,
+            roleId = null,
+            accountId = null,
             constraint = {},
             headers = {},
             scope,
         }: {
             graphqlStatement?: DocumentNode;
-            id?: string;
+            roleId?: string;
+            accountId?: string;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
             scope?: string;
         } = {},
     ): Observable<{
-        object: IamTenant;
+        object: IamRoleAccount;
     }>
     {
         return this.graphqlService
             .client()
             .watchQuery<{
-                object: IamTenant;
+                object: IamRoleAccount;
             }>({
                 query    : parseGqlFields(graphqlStatement, fields, constraint),
                 variables: {
-                    id,
+                    roleId,
+                    accountId,
                     constraint,
                 },
                 context: {
@@ -169,66 +171,7 @@ export class TenantService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data => scope ? this.setScopeTenant(scope, data.object) : this.tenantSubject$.next(data.object)),
-            );
-    }
-
-    findByIdWithRelations(
-        {
-            graphqlStatement = findByIdWithRelationsQuery,
-            id = '',
-            constraint = {},
-            queryTenants = {},
-            constraintTenants = {},
-            headers = {},
-            scope,
-        }: {
-            graphqlStatement?: DocumentNode;
-            id?: string;
-            constraint?: QueryStatement;
-            queryTenants?: QueryStatement;
-            constraintTenants?: QueryStatement;
-            headers?: GraphQLHeaders;
-            scope?: string;
-        } = {},
-    ): Observable<{
-        object: IamTenant;
-        iamGetTenants: IamTenant[];
-    }>
-    {
-        return this.graphqlService
-            .client()
-            .watchQuery<{
-                object: IamTenant;
-                iamGetTenants: IamTenant[];
-            }>({
-                query    : parseGqlFields(graphqlStatement, fields, constraint),
-                variables: {
-                    id,
-                    constraint,
-                    queryTenants,
-                    constraintTenants,
-                },
-                context: {
-                    headers,
-                },
-            })
-            .valueChanges
-            .pipe(
-                first(),
-                map(result => result.data),
-                tap(data =>
-                {
-                    if (scope)
-                    {
-                        this.setScopeTenant(scope, data.object);
-                    }
-                    else
-                    {
-                        this.tenantSubject$.next(data.object);
-                    }
-                    this.tenantsSubject$.next(data.iamGetTenants);
-                }),
+                tap(data => scope ? this.setScopeRoleAccount(scope, data.object) : this.roleAccountSubject$.next(data.object)),
             );
     }
 
@@ -247,13 +190,13 @@ export class TenantService
             scope?: string;
         } = {},
     ): Observable<{
-        object: IamTenant;
+        object: IamRoleAccount;
     }>
     {
         return this.graphqlService
             .client()
             .watchQuery<{
-                object: IamTenant;
+                object: IamRoleAccount;
             }>({
                 query    : parseGqlFields(graphqlStatement, fields, query, constraint),
                 variables: {
@@ -268,7 +211,7 @@ export class TenantService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data => scope ? this.setScopeTenant(scope, data.object) : this.tenantSubject$.next(data.object)),
+                tap(data => scope ? this.setScopeRoleAccount(scope, data.object) : this.roleAccountSubject$.next(data.object)),
             );
     }
 
@@ -287,13 +230,13 @@ export class TenantService
             scope?: string;
         } = {},
     ): Observable<{
-        objects: IamTenant[];
+        objects: IamRoleAccount[];
     }>
     {
         return this.graphqlService
             .client()
             .watchQuery<{
-                objects: IamTenant[];
+                objects: IamRoleAccount[];
             }>({
                 query    : parseGqlFields(graphqlStatement, fields, query, constraint),
                 variables: {
@@ -308,46 +251,7 @@ export class TenantService
             .pipe(
                 first(),
                 map(result => result.data),
-                tap(data => scope ? this.setScopeTenants(scope, data.objects) : this.tenantsSubject$.next(data.objects)),
-            );
-    }
-
-    getRelations(
-        {
-            queryTenants = {},
-            constraintTenants = {},
-            headers = {},
-        }: {
-            queryTenants?: QueryStatement;
-            constraintTenants?: QueryStatement;
-            headers?: GraphQLHeaders;
-        } = {},
-    ): Observable<{
-        iamGetTenants: IamTenant[];
-    }>
-    {
-        return this.graphqlService
-            .client()
-            .watchQuery<{
-                iamGetTenants: IamTenant[];
-            }>({
-                query    : getRelations,
-                variables: {
-                    queryTenants,
-                    constraintTenants,
-                },
-                context: {
-                    headers,
-                },
-            })
-            .valueChanges
-            .pipe(
-                first(),
-                map(result => result.data),
-                tap(data =>
-                {
-                    this.tenantsSubject$.next(data.iamGetTenants);
-                }),
+                tap(data => scope ? this.setScopeRolesAccounts(scope, data.objects) : this.rolesAccountsSubject$.next(data.objects)),
             );
     }
 
@@ -358,7 +262,7 @@ export class TenantService
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            object?: IamCreateTenant;
+            object?: IamCreateRoleAccount;
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<FetchResult<T>>
@@ -383,7 +287,7 @@ export class TenantService
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            objects?: IamCreateTenant[];
+            objects?: IamCreateRoleAccount[];
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<FetchResult<T>>
@@ -408,7 +312,7 @@ export class TenantService
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            object?: IamUpdateTenantById;
+            object?: IamUpdateRoleAccountById;
             headers?: GraphQLHeaders;
         } = {},
     ): Observable<FetchResult<T>>
@@ -435,7 +339,7 @@ export class TenantService
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            object?: IamUpdateTenants;
+            object?: IamUpdateRolesAccounts;
             query?: QueryStatement;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
@@ -460,12 +364,14 @@ export class TenantService
     deleteById<T>(
         {
             graphqlStatement = deleteByIdMutation,
-            id = null,
+            roleId = null,
+            accountId = null,
             constraint = {},
             headers = {},
         }: {
             graphqlStatement?: DocumentNode;
-            id?: string;
+            roleId?: string;
+            accountId?: string;
             constraint?: QueryStatement;
             headers?: GraphQLHeaders;
         } = {},
@@ -476,7 +382,8 @@ export class TenantService
             .mutate({
                 mutation : graphqlStatement,
                 variables: {
-                    id,
+                    roleId,
+                    accountId,
                     constraint,
                 },
                 context: {
@@ -511,82 +418,5 @@ export class TenantService
                     headers,
                 },
             });
-    }
-
-    // Queries additionalApis
-    getWithTenantConstraintTenants(
-        {
-            graphqlStatement = getWithTenantConstraintTenantsQuery,
-            query = {},
-            constraint = {},
-            headers = {},
-            scope,
-        }: {
-            graphqlStatement?: DocumentNode;
-            query?: QueryStatement;
-            constraint?: QueryStatement;
-            headers?: GraphQLHeaders;
-            scope?: string;
-        } = {},
-    ): Observable<{
-        objects: IamTenant[];
-    }>
-    {
-        return this.graphqlService
-            .client()
-            .watchQuery<{
-                objects: IamTenant[];
-            }>({
-                query    : graphqlStatement,
-                variables: {
-                    query,
-                    constraint,
-                },
-                context: {
-                    headers,
-                },
-            })
-            .valueChanges
-            .pipe(
-                first(),
-                map(result => result.data),
-                tap(data => scope ? this.setScopeTenants(scope, data.objects) : this.tenantsSubject$.next(data.objects)),
-            );
-    }
-
-    paginateWithTenantConstraintTenants(
-        {
-            graphqlStatement = paginateWithTenantConstraintTenantsQuery,
-            query = {},
-            constraint = {},
-            headers = {},
-            scope,
-        }: {
-            graphqlStatement?: DocumentNode;
-            query?: QueryStatement;
-            constraint?: QueryStatement;
-            headers?: GraphQLHeaders;
-            scope?: string;
-        } = {},
-    ): Observable<GridData<IamTenant>>
-    {
-        return this.graphqlService
-            .client()
-            .watchQuery<{ pagination: GridData<IamTenant>; }>({
-                query    : graphqlStatement,
-                variables: {
-                    query,
-                    constraint,
-                },
-                context: {
-                    headers,
-                },
-            })
-            .valueChanges
-            .pipe(
-                first(),
-                map(result => result.data.pagination),
-                tap(pagination => scope ? this.setScopePagination(scope, pagination) : this.paginationSubject$.next(pagination)),
-            );
     }
 }

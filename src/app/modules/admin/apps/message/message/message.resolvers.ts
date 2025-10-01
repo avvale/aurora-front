@@ -303,11 +303,13 @@ export const messageEditResolver: ResolveFn<{
                             include: [
                                 {
                                     association: 'user',
+                                    required   : true,
                                 },
                                 {
                                     association: 'tenants',
                                 },
                             ],
+                            distinct: true,
                         },
                         scope: messageSelectedAccountsScopePagination,
                     }),
@@ -318,7 +320,7 @@ export const messageEditResolver: ResolveFn<{
                                 $query: QueryStatement
                                 $constraint: QueryStatement
                             ) {
-                                objects: iamGetTenants (
+                                objects: iamGetWithTenantConstraintTenants (
                                     query: $query
                                     constraint: $constraint
                                 ) {

@@ -6,7 +6,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IamAccount, IamTag, IamTenant } from '@apps/iam';
 import { accountColumnsConfig, AccountService } from '@apps/iam/account';
-import { TenantService } from '@apps/iam/tenant';
+import { paginateWithTenantConstraintTenantsQuery, TenantService } from '@apps/iam/tenant';
 import { MessageMessage, MessageMessageStatus } from '@apps/message';
 import { MessageService } from '@apps/message/message';
 import { Action, AsyncMatSelectSearchModule, ChipComponent, ColumnConfig, ColumnDataType, Crumb, DatetimepickerSqlFormatDirective, defaultDetailImports, DownloadService, FileUploadComponent, FormatFileSizePipe, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridSelectMultipleCellValueDialogTemplateDirective, GridSelectMultipleElementsComponent, GridSelectMultipleElementsModule, GridState, GridStateService, initAsyncMatSelectSearch, initAsyncMatSelectSearchState, JoinPipe, log, manageAsyncMatSelectSearch, mapActions, MapPipe, MatSelectAddSelectedDirective, Operator, queryStatementHandler, SelectionChange, SelectionModel, SelectSearchService, SetValueObjectPipe, SnackBarInvalidFormComponent, SplitButtonModule, uuid, ViewDetailComponent } from '@aurora';
@@ -92,6 +92,7 @@ export class MessageDetailComponent extends ViewDetailComponent
             value   : null,
         },
         paginationService   : this.tenantService,
+        paginationGraphqlStatement: paginateWithTenantConstraintTenantsQuery,
         paginationConstraint: {
             include: [
                 {
@@ -730,11 +731,13 @@ export class MessageDetailComponent extends ViewDetailComponent
                                 include: [
                                     {
                                         association: 'user',
+                                        required   : true,
                                     },
                                     {
                                         association: 'tenants',
                                     },
                                 ],
+                                distinct: true,
                             },
                             scope: messageSelectedAccountsScopePagination,
                         }),
@@ -870,6 +873,7 @@ export class MessageDetailComponent extends ViewDetailComponent
                                         association: 'tenants',
                                     },
                                 ],
+                                distinct: true,
                             },
                             queryGetTenants: queryStatementHandler()
                                 .setPage({ pageIndex: 0, pageSize: 10 })

@@ -46,6 +46,7 @@ export const accountPaginationResolver: ResolveFn<{
                     association: 'tenants',
                 },
             ],
+            distinct: true,
         },
         queryGetTenants: queryStatementHandler()
             .setPage({ pageIndex: 0, pageSize: 10 })

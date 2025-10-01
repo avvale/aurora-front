@@ -1,6 +1,5 @@
 import { ColumnConfig, ColumnDataType, getFieldValuesFromEnum, SearchComponentType } from '@aurora';
 import { TranslocoService } from '@jsverse/transloco';
-import { IamAccountType } from '../iam.types';
 
 export const accountColumnsConfig: (
      param?: {

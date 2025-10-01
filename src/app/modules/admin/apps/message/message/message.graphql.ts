@@ -24,7 +24,7 @@ export const fields = `
 `;
 
 export const relationsFields = `
-    iamGetTenants (
+    iamGetTenants: iamGetWithTenantConstraintTenants (
         query: $queryGetTenants
         constraint: $constraintGetTenants
     ) {
@@ -52,7 +52,7 @@ export const relationsFields = `
         id
         name
     }
-    iamGetSelectedTenants: iamGetTenants (
+    iamGetSelectedTenants: iamGetWithTenantConstraintTenants (
         query: $queryGetSelectedTenants
         constraint: $constraintGetSelectedTenants
     ) {
