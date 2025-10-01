@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { ColumnConfig, GridColumnFilter, GridData, QueryStatement, arrayToMap, log, queryStatementHandler } from '@aurora';
 import { debounceTime, lastValueFrom } from 'rxjs';
 import { AsyncMatSelectSearchState } from './async-mat-select-search.types';
+import { DocumentNode } from '@apollo/client/core';
 
 export const initAsyncMatSelectSearchState = <T, E>(): AsyncMatSelectSearchState<T, E> =>
 {
@@ -98,12 +99,14 @@ export const initAsyncMatSelectSearch = <T, E>(
 export const manageAsyncMatSelectSearch = ({
     columnFilter = null,
     paginationService = null,
+    paginationGraphqlStatement = null,
     paginationConstraint = {},
     // key to identify each item in the list, usually the primary key of the entity
     indexKey = 'id',
 }: {
     columnFilter?: GridColumnFilter;
     paginationService?: any;
+    paginationGraphqlStatement?: DocumentNode;
     paginationConstraint?: QueryStatement;
     indexKey?: string;
 } = {}) =>
@@ -186,6 +189,7 @@ export const manageAsyncMatSelectSearch = ({
         const itemsPagination = await lastValueFrom<GridData<E>>(
             paginationService
                 .pagination({
+                    graphqlStatement: paginationGraphqlStatement || undefined,
                     query: queryStatementHandler()
                         .setPage(pagination)
                         .setColumFilters(asyncMatSelectSearchState.columnFilters)
