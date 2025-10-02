@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
-import { Action, Crumb, defaultDetailImports, log, mapActions, SnackBarInvalidFormComponent, Utils, ViewDetailComponent } from '@aurora';
+import { Action, Crumb, defaultDetailImports, log, mapActions, SnackBarInvalidFormComponent, uuid, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { QuillEditorComponent } from 'ngx-quill';
 import { lastValueFrom, takeUntil } from 'rxjs';
@@ -27,7 +27,7 @@ export class InboxDetailComponent extends ViewDetailComponent
     // it should only be used to obtain uninitialized
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
-    managedObject: MessageInbox;
+    managedObject: WritableSignal<MessageInbox> = signal(null);
     quillModules: any = {
         toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
@@ -79,12 +79,12 @@ export class InboxDetailComponent extends ViewDetailComponent
                 SnackBarInvalidFormComponent,
                 {
                     data: {
-                        message   : `${this.translocoService.translate('InvalidForm')}`,
+                        message: `${this.translocoService.translate('InvalidForm')}`,
                         textButton: `${this.translocoService.translate('InvalidFormOk')}`,
                     },
-                    panelClass      : 'error-snackbar',
+                    panelClass: 'error-snackbar',
                     verticalPosition: 'top',
-                    duration        : 10000,
+                    duration: 10000,
                 },
             );
             return;
@@ -111,7 +111,7 @@ export class InboxDetailComponent extends ViewDetailComponent
             messageId: [null, [Validators.minLength(36), Validators.maxLength(36)]],
             sort: [null, [Validators.required]],
             accountId: ['', [Validators.required, Validators.minLength(36), Validators.maxLength(36)]],
-            accountCode: ['', [Validators.minLength(128), Validators.maxLength(128)]],
+            accountCode: ['', [Validators.maxLength(128)]],
             isImportant: [false, [Validators.required]],
             sentAt: ['', [Validators.required]],
             subject: ['', [Validators.required, Validators.maxLength(255)]],
@@ -134,7 +134,7 @@ export class InboxDetailComponent extends ViewDetailComponent
         {
             /* #region common actions */
             case 'message::inbox.detail.new':
-                this.fg.get('id').setValue(Utils.uuid());
+                this.fg.get('id').setValue(uuid());
                 break;
 
             case 'message::inbox.detail.edit':
@@ -143,7 +143,7 @@ export class InboxDetailComponent extends ViewDetailComponent
                     .pipe(takeUntil(this.unsubscribeAll$))
                     .subscribe(item =>
                     {
-                        this.managedObject = item;
+                        this.managedObject.set(item);
                         this.fg.patchValue(item);
                     });
                 break;
@@ -163,7 +163,7 @@ export class InboxDetailComponent extends ViewDetailComponent
                         undefined,
                         {
                             verticalPosition: 'top',
-                            duration        : 3000,
+                            duration: 3000,
                         },
                     );
 
@@ -190,7 +190,7 @@ export class InboxDetailComponent extends ViewDetailComponent
                         undefined,
                         {
                             verticalPosition: 'top',
-                            duration        : 3000,
+                            duration: 3000,
                         },
                     );
 

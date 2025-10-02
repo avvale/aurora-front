@@ -61,7 +61,6 @@
                         <mat-icon>
                             <mat-spinner diameter="20"></mat-spinner>
                         </mat-icon>
-
                     }
                     @else
                     {
@@ -114,6 +113,7 @@
                         <input
                             matInput
                             formControlName="accountCode"
+                            maxlength="128"
                         >
                         <mat-error>{{ formErrors?.accountCode | async }}</mat-error>
                     </mat-form-field>
