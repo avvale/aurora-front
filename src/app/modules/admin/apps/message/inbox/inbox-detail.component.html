@@ -95,7 +95,7 @@
 
                     <mat-form-field
                         appearance="outline"
-                        class="col-12"
+                        class="col-2"
                     >
                         <mat-label>{{ t('message.Sort') }}</mat-label>
                         <input
@@ -107,7 +107,7 @@
                     </mat-form-field>
                     <mat-form-field
                         appearance="outline"
-                        class="col-12"
+                        class="col-4"
                     >
                         <mat-label>{{ t('message.AccountCode') }}</mat-label>
                         <input
@@ -117,16 +117,9 @@
                         >
                         <mat-error>{{ formErrors?.accountCode | async }}</mat-error>
                     </mat-form-field>
-                    <div class="col-4 pt-5">
-                        <mat-checkbox
-                            formControlName="isImportant"
-                        >
-                            {{ t('message.IsImportant') }}
-                        </mat-checkbox>
-                    </div>
                     <mat-form-field
                         appearance="outline"
-                        class="au-datepicker col-4"
+                        class="au-datepicker col-3"
                     >
                         <mat-label>{{ t('message.SentAt') }}</mat-label>
                         <input
@@ -153,6 +146,13 @@
                         </mtx-datetimepicker>
                         <mat-error>{{ formErrors?.sentAt | async }}</mat-error>
                     </mat-form-field>
+                    <div class="col-3 pt-5">
+                        <mat-checkbox
+                            formControlName="isImportant"
+                        >
+                            {{ t('message.IsImportant') }}
+                        </mat-checkbox>
+                    </div>
                     <mat-form-field
                         appearance="outline"
                         class="col-12"
