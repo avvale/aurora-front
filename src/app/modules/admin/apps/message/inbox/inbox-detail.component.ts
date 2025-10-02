@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { InboxService } from '@apps/message/inbox';
 import { MessageInbox } from '@apps/message/message.types';
-import { Action, Crumb, defaultDetailImports, log, mapActions, SnackBarInvalidFormComponent, uuid, ViewDetailComponent } from '@aurora';
+import { Action, Crumb, DatetimepickerSqlFormatDirective, defaultDetailImports, log, mapActions, SnackBarInvalidFormComponent, uuid, ViewDetailComponent } from '@aurora';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { QuillEditorComponent } from 'ngx-quill';
 import { lastValueFrom, takeUntil } from 'rxjs';
@@ -15,7 +15,8 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ...defaultDetailImports,
-        MatCheckboxModule, MtxDatetimepickerModule, QuillEditorComponent,
+        DatetimepickerSqlFormatDirective, MatCheckboxModule, MtxDatetimepickerModule,
+        QuillEditorComponent,
     ],
 })
 export class InboxDetailComponent extends ViewDetailComponent
