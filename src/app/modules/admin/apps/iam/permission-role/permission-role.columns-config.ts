@@ -9,12 +9,4 @@ export const permissionRoleColumnsConfig: ColumnConfig[] = [
         translation: 'Name',
         isUnaccent: true,
     },
-    {
-        type: ColumnDataType.STRING,
-        field: 'role.name',
-        searchableField: '$role.name$',
-        sort: 'role.name',
-        translation: 'Name',
-        isUnaccent: true,
-    },
 ];

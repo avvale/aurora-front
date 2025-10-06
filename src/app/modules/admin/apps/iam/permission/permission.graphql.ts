@@ -3,19 +3,9 @@ import gql from 'graphql-tag';
 export const fields = `
     name
     boundedContextId
-    boundedContext {
-        id
-        name
-        root
-        sort
-        isActive
-    }
     roles {
         id
-        name
-        isMaster
     }
-    
     createdAt
     updatedAt
 `;
