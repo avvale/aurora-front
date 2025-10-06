@@ -3,9 +3,19 @@ import gql from 'graphql-tag';
 export const fields = `
     name
     boundedContextId
+    boundedContext {
+        id
+        name
+        root
+        sort
+        isActive
+    }
     roles {
         id
+        name
+        isMaster
     }
+    
     createdAt
     updatedAt
 `;
@@ -56,7 +66,7 @@ export const getQuery = gql`
 `;
 
 export const getRelations = gql`
-    query IamGetPermissionsRelations(
+    query IamGetPermissionsRelations (
         $queryBoundedContexts: QueryStatement
         $constraintBoundedContexts: QueryStatement
     ) {
@@ -121,6 +131,16 @@ export const createMutation = gql`
         ) {
             ${fields}
         }
+    }
+`;
+
+export const insertMutation = gql`
+    mutation IamCreatePermissions (
+        $payload: [IamCreatePermissionInput]!
+    ) {
+        iamCreatePermissions (
+            payload: $payload
+        )
     }
 `;
 

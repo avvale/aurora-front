@@ -81,6 +81,19 @@
                         appearance="outline"
                         class="col-12"
                     >
+                        <mat-label>{{ t('Id') }}</mat-label>
+                        <input
+                            matInput
+                            formControlName="id"
+                            maxlength="36"
+                            required
+                        >
+                        <mat-error>{{ formErrors?.id | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
                         <mat-label>{{ t('iam.Name') }}</mat-label>
                         <input
                             matInput
