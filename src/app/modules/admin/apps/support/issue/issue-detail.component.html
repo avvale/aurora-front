@@ -93,19 +93,24 @@
 
                 <div class="layout__container">
 
-                    <div class="col-12 pb-4">
+                    <div class="col-12 pb-3">
                         <div class="flex flex-wrap items-center gap-3">
                             @if (recordingState() === 'idle')
                             {
-                                <button
-                                    mat-flat-button
-                                    type="button"
-                                    color="primary"
-                                    (click)="startScreenRecording()"
-                                >
-                                    <mat-icon class="icon-size-5 mr-2">videocam</mat-icon>
-                                    Grabar pantalla
-                                </button>
+                                <div class="flex flex-col items-start">
+                                    <button
+                                        mat-flat-button
+                                        type="button"
+                                        color="primary"
+                                        (click)="startScreenRecording()"
+                                    >
+                                        <mat-icon class="icon-size-5 mr-2">videocam</mat-icon>
+                                        Grabar pantalla
+                                    </button>
+                                    <div class="mt-1 text-xs text-gray-400">
+                                        Inicie grabación de pantalla para adjuntarla a la incidencia.
+                                    </div>
+                                </div>
                             }
 
                             @if (recordingState() === 'recording')
@@ -148,54 +153,6 @@
                         </div>
                     </div>
 
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-4"
-                    >
-                        <mat-label>{{ t('support.AccountUsername') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="accountUsername"
-                            maxlength="128"
-                        >
-                        <mat-error>{{ formErrors?.accountUsername | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-2"
-                    >
-                        <mat-label>{{ t('support.FrontVersion') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="frontVersion"
-                            maxlength="16"
-                        >
-                        <mat-error>{{ formErrors?.frontVersion | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-2"
-                    >
-                        <mat-label>{{ t('support.BackVersion') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="backVersion"
-                            maxlength="16"
-                        >
-                        <mat-error>{{ formErrors?.backVersion | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-4"
-                    >
-                        <mat-label>{{ t('support.Environment') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="environment"
-                            maxlength="36"
-                        >
-                        <mat-error>{{ formErrors?.environment | async }}</mat-error>
-                    </mat-form-field>
                     <mat-form-field
                         appearance="outline"
                         class="col-12"

@@ -150,7 +150,11 @@ export class IssueDetailComponent extends ViewDetailComponent
 
             this.recordedVideoUrl.set(url);
             this.recordingState.set('recorded');
-            this.fg.get('video')?.setValue(blob);
+
+            console.log('Recorded blob', Date.now());
+            const fileName = `issue-screen-recording-${Date.now()}.webm`;
+            const file = new File([blob], fileName, { type: blob.type || 'video/webm' });
+            this.fg.get('video')?.setValue(file);
         }
         catch (error)
         {
