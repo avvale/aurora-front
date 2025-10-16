@@ -25,9 +25,6 @@ import { DenseLayoutComponent } from './layouts/vertical/dense/dense.component';
 import { FuturisticLayoutComponent } from './layouts/vertical/futuristic/futuristic.component';
 import { ThinLayoutComponent } from './layouts/vertical/thin/thin.component';
 
-// ---- customizations ----
-import { EnvironmentsInformationComponent } from '@aurora';
-
 @Component({
     selector: 'layout',
     templateUrl: './layout.component.html',
@@ -35,7 +32,6 @@ import { EnvironmentsInformationComponent } from '@aurora';
     encapsulation: ViewEncapsulation.None,
     imports: [
         EmptyLayoutComponent,
-        EnvironmentsInformationComponent,
         CenteredLayoutComponent,
         EnterpriseLayoutComponent,
         MaterialLayoutComponent,
