@@ -25,6 +25,9 @@ import { DenseLayoutComponent } from './layouts/vertical/dense/dense.component';
 import { FuturisticLayoutComponent } from './layouts/vertical/futuristic/futuristic.component';
 import { ThinLayoutComponent } from './layouts/vertical/thin/thin.component';
 
+// ---- customizations ----
+import { EnvironmentsInformationComponent, IamService } from '@aurora';
+
 @Component({
     selector: 'layout',
     templateUrl: './layout.component.html',
@@ -32,6 +35,7 @@ import { ThinLayoutComponent } from './layouts/vertical/thin/thin.component';
     encapsulation: ViewEncapsulation.None,
     imports: [
         EmptyLayoutComponent,
+        EnvironmentsInformationComponent,
         CenteredLayoutComponent,
         EnterpriseLayoutComponent,
         MaterialLayoutComponent,
@@ -61,7 +65,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _fuseConfigService: FuseConfigService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _fusePlatformService: FusePlatformService
+        private _fusePlatformService: FusePlatformService,
+        public readonly iamService: IamService,
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
