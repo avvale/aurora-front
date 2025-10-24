@@ -221,10 +221,7 @@ export class IssueDetailComponent extends ViewDetailComponent
 
     private revokeObjectUrl(url: string | null): void
     {
-        if (url?.startsWith('blob:'))
-        {
-            URL.revokeObjectURL(url);
-        }
+        if (url?.startsWith('blob:')) URL.revokeObjectURL(url);
     }
 
     private translateWithFallback(key: string, fallback: string): string

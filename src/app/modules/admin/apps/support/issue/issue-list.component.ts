@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { issueColumnsConfig, IssueService } from '@apps/support/issue';
-import { SupportIssue } from '@apps/support/support.types';
+import { issueColumnsConfig, IssueRecordingSnackbarComponent, IssueService } from '@apps/support/issue';
+import { SupportIssue } from '@apps/support';
 import { Action, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, queryStatementHandler, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 
@@ -72,6 +72,15 @@ export class IssueListComponent extends ViewBaseComponent
     // the parent class you can use instead of ngOnInit
     init(): void
     { /**/ }
+
+    openRecordingAssistant(): void {
+        this.snackBar.openFromComponent(IssueRecordingSnackbarComponent, {
+            horizontalPosition: 'end',
+            verticalPosition: 'bottom',
+            panelClass:['support-issue-recording-snackbar-wrapper'],
+            data: {}
+        });
+    }
 
     async handleAction(action: Action): Promise<void>
     {

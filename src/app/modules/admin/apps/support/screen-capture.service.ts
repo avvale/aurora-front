@@ -4,10 +4,10 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class ScreenCaptureService
 {
-    private mediaStream?: MediaStream; // stream final
-    private displayStream?: MediaStream; // stream de getDisplayMedia
-    private micStream?: MediaStream; // stream de micrófono (opcional)
-    private audioContext?: AudioContext; // para mezclar audio (opcional)
+    private mediaStream?: MediaStream; // final stream
+    private displayStream?: MediaStream; // getDisplayMedia stream
+    private micStream?: MediaStream; // microphone stream (optional)
+    private audioContext?: AudioContext; // for mixing audio (optional)
     private recorder?: MediaRecorder;
     private chunks: Blob[] = [];
     private stopPromise?: Promise<Blob>;
@@ -27,8 +27,9 @@ export class ScreenCaptureService
     ): Promise<void>
     {
         const opts = typeof audio === 'boolean' ? { includeSystemAudio: audio } : (audio ?? {});
-        // 1) Pedir permiso de captura (el usuario elige la fuente)
-        // Sugerencias al selector (Chromium). Otros navegadores las ignorarán.
+
+        // 1) Request capture permission (user chooses source)
+        // Suggestions for the selector (Chromium). Other browsers will ignore them.
         const isTabPreferred = (opts as any).surface === 'tab';
         const includeMonitors = (opts as any).showMonitors ?? ((opts as any).surface === 'screen' ? true : !isTabPreferred);
         const allowSwitching = (opts as any).allowSurfaceSwitching !== false;
@@ -41,8 +42,8 @@ export class ScreenCaptureService
                     // @ts-ignore
                     preferCurrentTab: isTabPreferred || undefined,
                     frameRate: 30,
-                    backgroundBlur: true, // solo en algunos navegadores (Chrome 109+)
-                    // Hints de Chromium (se ignoran si no existen):
+                    backgroundBlur: true, // only in some browsers (Chrome 109+)
+                    // Chromium hints (ignored if they don't exist):
                     // @ts-ignore
                     surfaceSwitching: allowSwitching ? 'include' : 'exclude',
                     // @ts-ignore
@@ -50,10 +51,10 @@ export class ScreenCaptureService
                     // @ts-ignore
                     monitorTypeSurfaces: includeMonitors ? 'include' : 'exclude',
                 },
-                audio: !!opts.includeSystemAudio // audio del sistema/pestaña (depende del navegador)
+                audio: !!opts.includeSystemAudio // system/tab audio (depends on browser)
         });
 
-        // 2) (Opcional) Recortar al área de tu app (Region Capture – Chromium)
+        // 2) (Optional) Crop to your app's area (Region Capture – Chromium)
         if (appElement)
         {
             const [track] = this.displayStream.getVideoTracks();
@@ -62,7 +63,8 @@ export class ScreenCaptureService
 
             if (hasCropTarget && canCrop)
             {
-                try {
+                try
+                {
                     const target = await (window as any).CropTarget.fromElement(appElement);
                     await (track as any).cropTo(target);
                 }
@@ -70,7 +72,9 @@ export class ScreenCaptureService
                 {
                     console.warn('Region Capture cropTo failed; continuing without crop.', err);
                 }
-            } else {
+            }
+            else
+            {
                 // Not supported in this browser/runtime; continue without cropping
                 if (!hasCropTarget || !canCrop)
                 {
@@ -79,7 +83,7 @@ export class ScreenCaptureService
             }
         }
 
-        // 2.5) (Opcional) Capturar micrófono específico
+        // 2.5) (Optional) Capture specific microphone
         if ((opts as any).micDeviceId || (opts as any).micConstraints)
         {
             try
@@ -96,7 +100,7 @@ export class ScreenCaptureService
             }
         }
 
-        // 2.6) Construir el stream final (video + audio)
+        // 2.6) Build the final stream (video + audio)
         const finalStream = new MediaStream();
         const videoTrack = this.displayStream.getVideoTracks()[0];
         if (videoTrack) finalStream.addTrack(videoTrack);
