@@ -107,7 +107,7 @@ export class IssueDetailComponent extends ViewDetailComponent
         try
         {
             this.closePreviewDialog();
-            await this.screenCaptureService.startCapture(undefined, { includeSystemAudio: true });
+            await this.screenCaptureService.start(undefined, { includeSystemAudio: true });
             this.recordingState.set('recording');
             this.isPlaybackVisible.set(false);
             this.recordedVideoUrl.set(null);

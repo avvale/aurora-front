@@ -135,7 +135,7 @@ export class IssueRecordingSnackbarComponent
         try
         {
             //this.closePreviewDialog();
-            await this.screenCaptureService.startCapture(
+            await this.screenCaptureService.start(
                 undefined,
                 {
                     includeSystemAudio: true,

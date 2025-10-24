@@ -13,7 +13,7 @@ export class ScreenCaptureService
     private stopPromise?: Promise<Blob>;
     private chosenMimeType = 'video/webm';
 
-    async startCapture(
+    async start(
         appElement?: HTMLElement,
         audio: boolean | {
             includeSystemAudio?: boolean;
@@ -203,7 +203,7 @@ export class ScreenCaptureService
         }
     }
 
-  /** Lista micrófonos disponibles. Requiere permiso para ver `label`. */
+    /** Lista micrófonos disponibles. Requiere permiso para ver `label`. */
     async listAudioInputDevices(): Promise<MediaDeviceInfo[]>
     {
         const devices = await navigator.mediaDevices.enumerateDevices();
