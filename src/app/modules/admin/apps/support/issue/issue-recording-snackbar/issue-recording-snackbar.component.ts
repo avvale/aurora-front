@@ -5,6 +5,7 @@ import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarAction, MatSnackBarActions,
 import { ScreenCaptureService } from "@apps/support/screen-capture.service";
 import { Counter, log } from "@aurora";
 import { TranslocoService } from "@jsverse/transloco";
+import { saveAs } from 'file-saver';
 
 @Component({
     selector: 'support-issue-recording-snackbar',
@@ -37,28 +38,37 @@ export class IssueRecordingSnackbarComponent
     screenCaptureService = inject(ScreenCaptureService);
     data = inject(MAT_SNACK_BAR_DATA);
 
-    private revokeObjectUrl(url: string | null): void
+    async startRecording(): Promise<void>
     {
-        if (url?.startsWith('blob:')) URL.revokeObjectURL(url);
+        await this.startScreenRecording();
+        Counter.startCounter();
     }
+
+    async stopRecording(): Promise<void>
+    {
+        Counter.stopCounter();
+        await this.stopScreenRecording();
+        this.snackBarRef.dismiss();
+    }
+
+
+
+
+
+
+
+
+
+    
 
     restartRecording(): void
     {
         Counter.resetCounter();
     }
 
-    finishRecording(): void
-    {
-        Counter.stopCounter();
-        this.snackBarRef.dismiss();
-        this.screenCaptureService.stop();
-    }
+    
 
-    async startRecording(): Promise<void>
-    {
-        await this.startScreenRecording();
-        Counter.startCounter();
-    }
+    
 
     pauseRecording(): void
     {
@@ -151,8 +161,6 @@ export class IssueRecordingSnackbarComponent
     {
         if (!['recording', 'paused'].includes(this.recordingState())) return;
 
-        Counter.stopCounter();
-
         try
         {
             const blob = await this.screenCaptureService.stop();
@@ -172,6 +180,9 @@ export class IssueRecordingSnackbarComponent
             console.log('Recorded blob', Date.now());
             const fileName = `issue-screen-recording-${Date.now()}.webm`;
             const file = new File([blob], fileName, { type: blob.type || 'video/webm' });
+
+            console.log('Recorded file', file);
+            //saveAs(blob, fileName);
             // this.fg.get('video')?.setValue(file);
         }
         catch (error)
@@ -189,5 +200,10 @@ export class IssueRecordingSnackbarComponent
             );
             this.recordingState.set('idle');
         }
+    }
+
+    private revokeObjectUrl(url: string | null): void
+    {
+        if (url?.startsWith('blob:')) URL.revokeObjectURL(url);
     }
 }
