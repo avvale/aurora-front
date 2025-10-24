@@ -171,7 +171,43 @@ export class ScreenCaptureService
         });
 
         this.recorder.start(); // empieza a grabar (un solo blob se emite al parar)
-  }
+    }
+
+    pause(): void
+    {
+        if (!this.recorder) return;
+
+        const { state } = this.recorder;
+        if (state === 'recording')
+        {
+            try
+            {
+                this.recorder.pause();
+            }
+            catch (error)
+            {
+                console.warn('No se pudo pausar la grabación.', error);
+            }
+        }
+    }
+
+    resume(): void
+    {
+        if (!this.recorder) return;
+
+        const { state } = this.recorder;
+        if (state === 'paused')
+        {
+            try
+            {
+                this.recorder.resume();
+            }
+            catch (error)
+            {
+                console.warn('No se pudo reanudar la grabación.', error);
+            }
+        }
+    }
 
     async stop(): Promise<Blob | undefined>
     {
@@ -181,6 +217,18 @@ export class ScreenCaptureService
         this.recorder.stop();
 
         return await waitForStop;
+    }
+
+    getRecorderState(): RecordingState
+    {
+        return this.recorder?.state ?? 'inactive';
+    }
+
+    /** Lista micrófonos disponibles. Requiere permiso para ver `label`. */
+    async listAudioInputDevices(): Promise<MediaDeviceInfo[]>
+    {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        return devices.filter(d => d.kind === 'audioinput');
     }
 
     private stopTracks()
@@ -201,12 +249,5 @@ export class ScreenCaptureService
             catch { }
             this.audioContext = undefined;
         }
-    }
-
-    /** Lista micrófonos disponibles. Requiere permiso para ver `label`. */
-    async listAudioInputDevices(): Promise<MediaDeviceInfo[]>
-    {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        return devices.filter(d => d.kind === 'audioinput');
     }
 }

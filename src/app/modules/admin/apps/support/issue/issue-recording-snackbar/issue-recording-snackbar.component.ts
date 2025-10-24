@@ -3,7 +3,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel, MatSnackBarRef } from "@angular/material/snack-bar";
 import { ScreenCaptureService } from "@apps/support/screen-capture.service";
-import { log } from "@aurora";
+import { Counter, log } from "@aurora";
 import { TranslocoService } from "@jsverse/transloco";
 
 @Component({
@@ -25,11 +25,10 @@ import { TranslocoService } from "@jsverse/transloco";
 })
 export class IssueRecordingSnackbarComponent
 {
-    recordingState = signal<'idle' | 'recording' | 'recorded'>('idle');
+    recordingState = signal<'idle' | 'recording' | 'paused' | 'recorded'>('idle');
     isPlaybackVisible = signal<boolean>(false);
-    counter = signal(0);
     recordedVideoUrl = signal<string | null>(null);
-    counterInterval: any;
+    counterValue = Counter.getCounterValue();
 
     // injections
     snackBarRef = inject(MatSnackBarRef);
@@ -43,54 +42,40 @@ export class IssueRecordingSnackbarComponent
         if (url?.startsWith('blob:')) URL.revokeObjectURL(url);
     }
 
-    getCounter(): string
-    {
-        const minutes = Math.floor(this.counter() / 60);
-        const seconds = this.counter() % 60;
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    startCounter(): void
-    {
-        this.counterInterval = setInterval(() => {
-        this.counter.set(this.counter() + 1);
-        }, 1000);
-    }
-
-    stopCounter(): void
-    {
-        clearInterval(this.counterInterval);
-        this.counterInterval = null;
-    }
-
-    resetCounter(): void
-    {
-        this.counter.set(0);
-    }
-
-
     restartRecording(): void
     {
-        this.stopCounter();
-        this.resetCounter();
-        this.startCounter();
+        Counter.resetCounter();
     }
 
     finishRecording(): void
     {
-        this.stopCounter();
+        Counter.stopCounter();
         this.snackBarRef.dismiss();
+        this.screenCaptureService.stop();
+    }
+
+    async startRecording(): Promise<void>
+    {
+        await this.startScreenRecording();
+        Counter.startCounter();
     }
 
     pauseRecording(): void
     {
-        this.stopCounter();
+        if (this.recordingState() !== 'recording') return;
+
+        this.screenCaptureService.pause();
+        Counter.stopCounter();
+        this.recordingState.set('paused');
     }
 
-    async resumeRecording(): Promise<void>
+    resumeRecording(): void
     {
-        this.startCounter();
-        await this.startScreenRecording();
+        if (this.recordingState() !== 'paused') return;
+
+        this.screenCaptureService.resume();
+        this.recordingState.set('recording');
+        Counter.startCounter();
     }
 
     discardRecording(): void
@@ -164,7 +149,9 @@ export class IssueRecordingSnackbarComponent
 
     async stopScreenRecording(): Promise<void>
     {
-        if (this.recordingState() !== 'recording') return;
+        if (!['recording', 'paused'].includes(this.recordingState())) return;
+
+        Counter.stopCounter();
 
         try
         {
