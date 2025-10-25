@@ -13,6 +13,15 @@ import { defaultDetailImports, log, ViewDetailComponent } from '@aurora';
         ::ng-deep .support-issue-config-recording-snackbar-wrapper > * {
             min-width: 0px !important;
         }
+        ::ng-deep .support-issue-config-recording-snackbar-wrapper .mat-mdc-form-field .mat-mdc-floating-label,
+        ::ng-deep .support-issue-config-recording-snackbar-wrapper .mat-mdc-form-field .mdc-floating-label {
+            color: #fff !important;
+        }
+        ::ng-deep .support-issue-config-recording-snackbar-wrapper .mat-mdc-select-value,
+        ::ng-deep .support-issue-config-recording-snackbar-wrapper .mat-mdc-select-placeholder {
+            color: #fff;
+        }
+        
         :host {
             display: flex;
             min-width: none;

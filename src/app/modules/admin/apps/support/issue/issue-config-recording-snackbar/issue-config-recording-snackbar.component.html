@@ -16,7 +16,10 @@
             tiny
         >
             <mat-label>{{ t('support.Display') }}</mat-label>
-            <mat-select formControlName="displaySurface">
+            <mat-select
+                formControlName="displaySurface"
+                panelClass="support-issue-config-select-panel"
+            >
                 <mat-option value="tab">{{ t('support.CurrentTab') }}</mat-option>
                 <mat-option value="window">{{ t('support.Window') }}</mat-option>
                 <mat-option value="screen">{{ t('support.FullScreen') }}</mat-option>
@@ -30,7 +33,10 @@
             tiny
         >
             <mat-label>{{ t('support.Audio') }}</mat-label>
-            <mat-select formControlName="audioDeviceId">
+            <mat-select
+                formControlName="audioDeviceId"
+                panelClass="support-issue-config-select-panel"
+            >
                 <mat-option value="none">{{ t('support.NoMicrophone') }}</mat-option>
                 @for (inputDeviceInfo of inputDevicesInfo; track inputDeviceInfo.deviceId)
                 {
