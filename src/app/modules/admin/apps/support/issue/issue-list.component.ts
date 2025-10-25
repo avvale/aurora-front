@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { issueColumnsConfig, IssueRecordingSnackbarComponent, IssueService } from '@apps/support/issue';
-import { SupportIssue } from '@apps/support';
+import { issueColumnsConfig, IssueConfigRecordingSnackbarComponent, IssueRecordingSnackbarComponent, IssueService } from '@apps/support/issue';
+import { ScreenCaptureConfigService, ScreenCaptureService, SupportIssue } from '@apps/support';
 import { Action, ColumnConfig, ColumnDataType, Crumb, defaultListImports, exportRows, GridColumnsConfigStorageService, GridData, GridFiltersStorageService, GridState, GridStateService, log, queryStatementHandler, ViewBaseComponent } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 
@@ -63,6 +63,8 @@ export class IssueListComponent extends ViewBaseComponent
         private readonly gridFiltersStorageService: GridFiltersStorageService,
         private readonly gridStateService: GridStateService,
         private readonly issueService: IssueService,
+        private readonly screenCaptureConfigService: ScreenCaptureConfigService,
+        private readonly screenCaptureService: ScreenCaptureService,
     )
     {
         super();
@@ -73,13 +75,45 @@ export class IssueListComponent extends ViewBaseComponent
     init(): void
     { /**/ }
 
-    openRecordingAssistant(): void {
-        this.snackBar.openFromComponent(IssueRecordingSnackbarComponent, {
-            horizontalPosition: 'end',
-            verticalPosition: 'bottom',
-            panelClass:['support-issue-recording-snackbar-wrapper'],
-            data: {}
-        });
+    openRecordingScreen(): void
+    {
+        const snackBarRef = this.snackBar.openFromComponent(
+            IssueConfigRecordingSnackbarComponent,
+            {
+                horizontalPosition: 'end',
+                verticalPosition: 'bottom',
+                panelClass:['support-issue-config-recording-snackbar-wrapper'],
+                data: {}
+            }
+        );
+
+        snackBarRef
+            .afterDismissed()
+            .subscribe(async () =>
+            {
+                const screenCaptureConfig = this.screenCaptureConfigService.getConfig();
+                if (!screenCaptureConfig.displaySurface || !screenCaptureConfig.audioDeviceId) return;
+                if (!this.screenCaptureService.isCompatibilityScreenRecord()) return;
+                /* if (
+                    !await this.screenCaptureService.startScreenRecording(
+                        {
+                            displaySurface: screenCaptureConfig.displaySurface,
+                            audioDeviceId: screenCaptureConfig.audioDeviceId,
+                        }
+                    )
+                ) return; */
+
+                this.snackBar.openFromComponent(
+                    IssueRecordingSnackbarComponent,
+                    {
+                        horizontalPosition: 'end',
+                        verticalPosition: 'bottom',
+                        panelClass:['support-issue-recording-snackbar-wrapper'],
+                        data: {}
+                    }
+                );
+
+            });
     }
 
     async handleAction(action: Action): Promise<void>

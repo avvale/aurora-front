@@ -1,10 +1,11 @@
-import { Component, inject, signal } from "@angular/core";
-import { MatButtonModule } from "@angular/material/button";
-import { MatIcon } from "@angular/material/icon";
-import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel, MatSnackBarRef } from "@angular/material/snack-bar";
-import { ScreenCaptureService } from "@apps/support/screen-capture.service";
-import { Counter, log } from "@aurora";
-import { TranslocoService } from "@jsverse/transloco";
+import { Component, inject, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel, MatSnackBarRef } from '@angular/material/snack-bar';
+import { ScreenCaptureService } from '@apps/support';
+import { Counter, log } from '@aurora';
+import { TranslocoService } from '@jsverse/transloco';
 import { saveAs } from 'file-saver';
 
 @Component({
@@ -20,13 +21,12 @@ import { saveAs } from 'file-saver';
         }
     `,
     imports: [
-        MatButtonModule, MatIcon, MatSnackBarAction,
+        MatButtonModule, MatIcon, MatSelectModule, MatSnackBarAction,
         MatSnackBarActions, MatSnackBarLabel,
     ],
 })
 export class IssueRecordingSnackbarComponent
 {
-    recordingState = signal<'idle' | 'recording' | 'paused' | 'recorded'>('idle');
     isPlaybackVisible = signal<boolean>(false);
     recordedVideoUrl = signal<string | null>(null);
     counterValue = Counter.getCounterValue();
@@ -72,19 +72,19 @@ export class IssueRecordingSnackbarComponent
 
     pauseRecording(): void
     {
-        if (this.recordingState() !== 'recording') return;
+        if (this.screenCaptureService.recordingState() !== 'recording') return;
 
         this.screenCaptureService.pause();
         Counter.stopCounter();
-        this.recordingState.set('paused');
+        this.screenCaptureService.recordingState.set('paused');
     }
 
     resumeRecording(): void
     {
-        if (this.recordingState() !== 'paused') return;
+        if (this.screenCaptureService.recordingState() !== 'paused') return;
 
         this.screenCaptureService.resume();
-        this.recordingState.set('recording');
+        this.screenCaptureService.recordingState.set('recording');
         Counter.startCounter();
     }
 
@@ -96,7 +96,7 @@ export class IssueRecordingSnackbarComponent
     async startScreenRecording(): Promise<void>
     {
         // prevent starting a new recording if one already exists
-        if (this.recordingState() === 'recorded')
+        if (this.screenCaptureService.recordingState() === 'recorded')
         {
             const message = this.translocoService.translate('support.ScreenRecordingExists');
 
@@ -129,14 +129,15 @@ export class IssueRecordingSnackbarComponent
 
         try
         {
-            //this.closePreviewDialog();
             await this.screenCaptureService.start(
                 undefined,
                 {
                     includeSystemAudio: true,
+                    includeMicAudio: true,
+                    surface: 'window',
                 }
             );
-            this.recordingState.set('recording');
+            this.screenCaptureService.recordingState.set('recording');
             this.isPlaybackVisible.set(false);
             this.recordedVideoUrl.set(null);
             //this.fg.get('video')?.setValue(null);
@@ -159,7 +160,7 @@ export class IssueRecordingSnackbarComponent
 
     async stopScreenRecording(): Promise<void>
     {
-        if (!['recording', 'paused'].includes(this.recordingState())) return;
+        if (!['recording', 'paused'].includes(this.screenCaptureService.recordingState())) return;
 
         try
         {
@@ -167,7 +168,7 @@ export class IssueRecordingSnackbarComponent
 
             if (!blob)
             {
-                this.recordingState.set('idle');
+                this.screenCaptureService.recordingState.set('idle');
                 return;
             }
 
@@ -175,14 +176,14 @@ export class IssueRecordingSnackbarComponent
             const url = URL.createObjectURL(blob);
 
             this.recordedVideoUrl.set(url);
-            this.recordingState.set('recorded');
+            this.screenCaptureService.recordingState.set('recorded');
 
             console.log('Recorded blob', Date.now());
             const fileName = `issue-screen-recording-${Date.now()}.webm`;
             const file = new File([blob], fileName, { type: blob.type || 'video/webm' });
 
             console.log('Recorded file', file);
-            //saveAs(blob, fileName);
+            saveAs(blob, fileName);
             // this.fg.get('video')?.setValue(file);
         }
         catch (error)
@@ -198,7 +199,7 @@ export class IssueRecordingSnackbarComponent
                     verticalPosition: 'top',
                 },
             );
-            this.recordingState.set('idle');
+            this.screenCaptureService.recordingState.set('idle');
         }
     }
 

@@ -1,9 +1,14 @@
 // screen-capture.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { log } from '@aurora';
+import { TranslocoService } from '@jsverse/transloco';
 
 @Injectable({ providedIn: 'root' })
 export class ScreenCaptureService
 {
+    recordingState = signal<'idle' | 'recording' | 'paused' | 'recorded'>('idle');
+
     private mediaStream?: MediaStream; // final stream
     private displayStream?: MediaStream; // getDisplayMedia stream
     private micStream?: MediaStream; // microphone stream (optional)
@@ -13,10 +18,86 @@ export class ScreenCaptureService
     private stopPromise?: Promise<Blob>;
     private chosenMimeType = 'video/webm';
 
+    constructor(
+        private readonly snackBar: MatSnackBar,
+        private readonly translocoService: TranslocoService,
+    ) {}
+
+    isCompatibilityScreenRecord(): boolean
+    {
+        // prevent starting a new recording if one already exists
+        if (this.recordingState() === 'recorded')
+        {
+            this.snackBar.open(
+                this.translocoService.translate('support.ScreenRecordingExists'),
+                undefined,
+                {
+                    duration: 4000,
+                    verticalPosition: 'top',
+                },
+            );
+            return false;
+        }
+
+        // check for screen recording support
+        if (!navigator?.mediaDevices?.getDisplayMedia)
+        {
+            this.snackBar.open(
+                this.translocoService.translate('support.ScreenRecordingNotSupported'),
+                undefined,
+                {
+                    duration: 4000,
+                    verticalPosition: 'top',
+                },
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    async startScreenRecording(): Promise<boolean>
+    {
+        try
+        {
+            await this.start(
+                undefined,
+                {
+                    includeSystemAudio: true,
+                    includeMicAudio: true,
+                    surface: 'window',
+                }
+            );
+
+            this.recordingState.set('recording');
+            //this.isPlaybackVisible.set(false);
+            //this.recordedVideoUrl.set(null);
+            //this.fg.get('video')?.setValue(null);
+
+            return true;
+        }
+        catch (error)
+        {
+            log('[DEBUG] Error starting screen recording: ', error);
+
+            this.snackBar.open(
+                this.translocoService.translate('support.StartScreenRecordingError'),
+                undefined,
+                {
+                    duration: 4000,
+                    verticalPosition: 'top',
+                },
+            );
+
+            return false;
+        }
+    }
+
     async start(
         appElement?: HTMLElement,
         audio: boolean | {
             includeSystemAudio?: boolean;
+            includeMicAudio?: boolean;
             micDeviceId?: string;
             micConstraints?: MediaTrackConstraints;
             surface?: 'tab' | 'window' | 'screen' | 'any';
@@ -26,7 +107,11 @@ export class ScreenCaptureService
         } = false
     ): Promise<void>
     {
-        const opts = typeof audio === 'boolean' ? { includeSystemAudio: audio } : (audio ?? {});
+        console.log('Starting screen capture with audio options:', audio);
+
+        const opts = typeof audio === 'boolean'
+            ? { includeSystemAudio: audio, includeMicAudio: audio }
+            : { includeMicAudio: true, ...(audio ?? {}) };
 
         // 1) Request capture permission (user chooses source)
         // Suggestions for the selector (Chromium). Other browsers will ignore them.
@@ -35,14 +120,25 @@ export class ScreenCaptureService
         const allowSwitching = (opts as any).allowSurfaceSwitching !== false;
         const allowSelf = (opts as any).allowSelfCapture === true;
 
+        const displayAudioConstraints: boolean | MediaTrackConstraints = !!opts.includeSystemAudio
+            ? ({
+                // Estas banderas solo existen en Chromium; se fuerzan al tipo estándar.
+                // @ts-ignore
+                systemAudio: 'include',
+                // @ts-ignore
+                suppressLocalAudioPlayback: false,
+            } as MediaTrackConstraints)
+            : false;
+
         this.displayStream = await navigator
             .mediaDevices
             .getDisplayMedia({
                 video: {
-                    // @ts-ignore
-                    preferCurrentTab: isTabPreferred || undefined,
+                    // sets the default selection for the type of element to be recorded
+                    displaySurface: 'tab',
+                    // preferCurrentTab: isTabPreferred || undefined,
                     frameRate: 30,
-                    backgroundBlur: true, // only in some browsers (Chrome 109+)
+                    //backgroundBlur: true, // only in some browsers (Chrome 109+)
                     // Chromium hints (ignored if they don't exist):
                     // @ts-ignore
                     surfaceSwitching: allowSwitching ? 'include' : 'exclude',
@@ -51,7 +147,8 @@ export class ScreenCaptureService
                     // @ts-ignore
                     monitorTypeSurfaces: includeMonitors ? 'include' : 'exclude',
                 },
-                audio: !!opts.includeSystemAudio // system/tab audio (depends on browser)
+                audio: displayAudioConstraints, // system/tab audio (depends on browser)
+                preferCurrentTab: isTabPreferred || undefined,
         });
 
         // 2) (Optional) Crop to your app's area (Region Capture – Chromium)
@@ -84,7 +181,8 @@ export class ScreenCaptureService
         }
 
         // 2.5) (Optional) Capture specific microphone
-        if ((opts as any).micDeviceId || (opts as any).micConstraints)
+        const wantsMic = !!(opts as any).includeMicAudio || (opts as any).micDeviceId || (opts as any).micConstraints;
+        if (wantsMic)
         {
             try
             {
@@ -92,7 +190,11 @@ export class ScreenCaptureService
                     ...((opts as any).micConstraints || {}),
                     ...((opts as any).micDeviceId ? { deviceId: { exact: (opts as any).micDeviceId } as any } : {}),
                 };
-                this.micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints, video: false });
+                const hasExplicitConstraint = Object.keys(audioConstraints).length > 0;
+                this.micStream = await navigator.mediaDevices.getUserMedia({
+                    audio: hasExplicitConstraint ? audioConstraints : true,
+                    video: false,
+                });
             }
             catch (e)
             {

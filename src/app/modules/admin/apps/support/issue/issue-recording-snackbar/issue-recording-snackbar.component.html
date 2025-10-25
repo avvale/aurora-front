@@ -1,6 +1,6 @@
 <div matSnackBarLabel class="w-auto px-2 py-0 border-e-2 border-white/20">
     <div class="flex items-center h-full px-2">
-        @if (recordingState() === 'recording')
+        @if (screenCaptureService.recordingState() === 'recording')
         {
             <mat-icon
                 svgIcon="mat_solid:circle"
@@ -28,7 +28,7 @@
         >
         </mat-icon>
     </button>
-    @if (recordingState() === 'recording')
+    @if (screenCaptureService.recordingState() === 'recording')
     {
         <button mat-button class="px-2 min-w-min" (click)="pauseRecording()">
             <mat-icon
@@ -38,9 +38,9 @@
             </mat-icon>
         </button>
     }
-    @if (recordingState() === 'idle' || recordingState() === 'paused')
+    @if (screenCaptureService.recordingState() === 'idle' || screenCaptureService.recordingState() === 'paused')
     {
-        <button mat-button class="px-2 min-w-min" (click)="recordingState() === 'idle' ? startRecording() : resumeRecording()">
+        <button mat-button class="px-2 min-w-min" (click)="screenCaptureService.recordingState() === 'idle' ? startRecording() : resumeRecording()">
             <mat-icon
                 svgIcon="mat_solid:play_arrow"
                 class="mr-0 icon-size-5 text-white"
