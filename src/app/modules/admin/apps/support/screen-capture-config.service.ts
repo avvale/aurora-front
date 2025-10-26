@@ -1,14 +1,15 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
+import { SupportIssueDisplaySurface } from './support.types';
 
 @Injectable({ providedIn: 'root' })
 export class ScreenCaptureConfigService
 {
-    displaySurface: WritableSignal<string> = signal(null);
+    displaySurface: WritableSignal<SupportIssueDisplaySurface> = signal(null);
     audioDeviceId: WritableSignal<string> = signal(null);
 
     setConfig(
         config: {
-            displaySurface: string;
+            displaySurface: SupportIssueDisplaySurface;
             audioDeviceId: string;
         },
     ): void
@@ -18,7 +19,7 @@ export class ScreenCaptureConfigService
     }
 
     getConfig(): {
-        displaySurface: string;
+        displaySurface: SupportIssueDisplaySurface;
         audioDeviceId: string;
     }
     {

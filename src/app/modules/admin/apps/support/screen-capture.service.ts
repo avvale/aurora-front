@@ -3,11 +3,12 @@ import { Injectable, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { log } from '@aurora';
 import { TranslocoService } from '@jsverse/transloco';
+import { SupportIssueDisplaySurface, SupportIssueRecordingState } from './support.types';
 
 @Injectable({ providedIn: 'root' })
 export class ScreenCaptureService
 {
-    recordingState = signal<'idle' | 'recording' | 'paused' | 'recorded'>('idle');
+    recordingState = signal<SupportIssueRecordingState>('idle');
 
     private mediaStream?: MediaStream; // final stream
     private displayStream?: MediaStream; // getDisplayMedia stream
@@ -56,18 +57,31 @@ export class ScreenCaptureService
         return true;
     }
 
-    async startScreenRecording(): Promise<boolean>
+    async startScreenRecording(
+        {
+            appElement = null,
+            displaySurface = null,
+            audioDeviceId = null,
+            includeSystemAudio = true,
+            includeMicAudio = true,
+        }: {
+            appElement?: HTMLElement;
+            displaySurface?: SupportIssueDisplaySurface;
+            audioDeviceId?: string;
+            includeSystemAudio?: boolean;
+            includeMicAudio?: boolean;
+        } = {}
+    ): Promise<boolean>
     {
         try
         {
-            await this.start(
-                undefined,
-                {
-                    includeSystemAudio: true,
-                    includeMicAudio: true,
-                    surface: 'window',
-                }
-            );
+            await this.start({
+                appElement,
+                displaySurface,
+                audioDeviceId,
+                includeSystemAudio,
+                includeMicAudio
+            });
 
             this.recordingState.set('recording');
             //this.isPlaybackVisible.set(false);
@@ -94,51 +108,34 @@ export class ScreenCaptureService
     }
 
     async start(
-        appElement?: HTMLElement,
-        audio: boolean | {
+        {
+            appElement = null,
+            displaySurface = null,
+            audioDeviceId = null,
+            includeSystemAudio = true,
+            includeMicAudio = true,
+            allowSwitching = true,
+            allowSelf = false,
+            includeMonitors = false,
+        }: {
+            appElement?: HTMLElement;
+            displaySurface?: SupportIssueDisplaySurface;
+            audioDeviceId?: string;
             includeSystemAudio?: boolean;
             includeMicAudio?: boolean;
-            micDeviceId?: string;
-            micConstraints?: MediaTrackConstraints;
-            surface?: 'tab' | 'window' | 'screen' | 'any';
-            allowSurfaceSwitching?: boolean;
-            allowSelfCapture?: boolean;
-            showMonitors?: boolean;
-        } = false
+            allowSwitching?: boolean;
+            allowSelf?: boolean;
+            includeMonitors?: boolean;
+        } = {}
     ): Promise<void>
     {
-        console.log('Starting screen capture with audio options:', audio);
-
-        const opts = typeof audio === 'boolean'
-            ? { includeSystemAudio: audio, includeMicAudio: audio }
-            : { includeMicAudio: true, ...(audio ?? {}) };
-
-        // 1) Request capture permission (user chooses source)
-        // Suggestions for the selector (Chromium). Other browsers will ignore them.
-        const isTabPreferred = (opts as any).surface === 'tab';
-        const includeMonitors = (opts as any).showMonitors ?? ((opts as any).surface === 'screen' ? true : !isTabPreferred);
-        const allowSwitching = (opts as any).allowSurfaceSwitching !== false;
-        const allowSelf = (opts as any).allowSelfCapture === true;
-
-        const displayAudioConstraints: boolean | MediaTrackConstraints = !!opts.includeSystemAudio
-            ? ({
-                // Estas banderas solo existen en Chromium; se fuerzan al tipo estándar.
-                // @ts-ignore
-                systemAudio: 'include',
-                // @ts-ignore
-                suppressLocalAudioPlayback: false,
-            } as MediaTrackConstraints)
-            : false;
-
         this.displayStream = await navigator
             .mediaDevices
             .getDisplayMedia({
                 video: {
                     // sets the default selection for the type of element to be recorded
-                    displaySurface: 'tab',
-                    // preferCurrentTab: isTabPreferred || undefined,
+                    displaySurface,
                     frameRate: 30,
-                    //backgroundBlur: true, // only in some browsers (Chrome 109+)
                     // Chromium hints (ignored if they don't exist):
                     // @ts-ignore
                     surfaceSwitching: allowSwitching ? 'include' : 'exclude',
@@ -147,8 +144,18 @@ export class ScreenCaptureService
                     // @ts-ignore
                     monitorTypeSurfaces: includeMonitors ? 'include' : 'exclude',
                 },
-                audio: displayAudioConstraints, // system/tab audio (depends on browser)
-                preferCurrentTab: isTabPreferred || undefined,
+                audio: includeSystemAudio ?
+                    (
+                        {
+                            // These flags only exist in Chromium; they are forced to the standard type.
+                            // @ts-ignore
+                            systemAudio: 'include',
+                            // @ts-ignore
+                            suppressLocalAudioPlayback: false,
+                        } as MediaTrackConstraints
+                    ) : false, // system/tab audio (depends on browser)
+                preferCurrentTab: displaySurface === 'tab',
+
         });
 
         // 2) (Optional) Crop to your app's area (Region Capture – Chromium)
@@ -167,7 +174,7 @@ export class ScreenCaptureService
                 }
                 catch (err)
                 {
-                    console.warn('Region Capture cropTo failed; continuing without crop.', err);
+                    log('[DEBUG] Region Capture cropTo failed; continuing without crop.', err);
                 }
             }
             else
@@ -175,20 +182,20 @@ export class ScreenCaptureService
                 // Not supported in this browser/runtime; continue without cropping
                 if (!hasCropTarget || !canCrop)
                 {
-                    console.warn('Region Capture not supported (no CropTarget or track.cropTo).');
+                    log('[DEBUG] Region Capture not supported (no CropTarget or track.cropTo).');
                 }
             }
         }
 
         // 2.5) (Optional) Capture specific microphone
-        const wantsMic = !!(opts as any).includeMicAudio || (opts as any).micDeviceId || (opts as any).micConstraints;
+        const wantsMic = !!includeMicAudio || audioDeviceId // || (opts as any).micConstraints;
         if (wantsMic)
         {
             try
             {
                 const audioConstraints: MediaTrackConstraints = {
-                    ...((opts as any).micConstraints || {}),
-                    ...((opts as any).micDeviceId ? { deviceId: { exact: (opts as any).micDeviceId } as any } : {}),
+                    //...((opts as any).micConstraints || {}),
+                    ...(audioDeviceId ? { deviceId: { exact: audioDeviceId } as any } : {}),
                 };
                 const hasExplicitConstraint = Object.keys(audioConstraints).length > 0;
                 this.micStream = await navigator.mediaDevices.getUserMedia({
@@ -198,7 +205,7 @@ export class ScreenCaptureService
             }
             catch (e)
             {
-                console.warn('No se pudo obtener el micrófono solicitado:', e);
+                log('[DEBUG] The requested microphone could not be obtained: ', e);
             }
         }
 
@@ -208,7 +215,7 @@ export class ScreenCaptureService
         if (videoTrack) finalStream.addTrack(videoTrack);
 
         const audioTracks: MediaStreamTrack[] = [];
-        if ((opts as any).includeSystemAudio)
+        if (includeSystemAudio)
         {
             const sys = this.displayStream.getAudioTracks()[0];
             if (sys) audioTracks.push(sys);
@@ -225,7 +232,7 @@ export class ScreenCaptureService
         }
         else if (audioTracks.length > 1)
         {
-            // Mezclar sistema + mic en una sola pista usando WebAudio
+            // Mixing system + mic into a single track using WebAudio
             try
             {
                 this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -241,31 +248,46 @@ export class ScreenCaptureService
             }
             catch (e)
             {
-                console.warn('Fallo al mezclar audio. Se usará solo el primero.', e);
+                log('[DEBUG] Error mixing audio. Only the first one will be used: ', e);
                 finalStream.addTrack(audioTracks[0]);
             }
         }
 
         this.mediaStream = finalStream;
 
-        // 3) Preparar el recorder
+        // 3) Prepare the recorder
         this.chunks = [];
-        // Elegir un mimeType soportado para evitar resultados vacíos
-        const candidates = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
-        const supported = candidates.find(t => (window as any).MediaRecorder?.isTypeSupported?.(t));
+
+        // Choose a supported mimeType to avoid empty results
+        const mimeTypes = [
+            'video/webm;codecs=vp9',
+            'video/webm;codecs=vp8',
+            'video/webm'
+        ];
+        const supported = mimeTypes.find(mimeType => (window as any).MediaRecorder?.isTypeSupported?.(mimeType));
         this.chosenMimeType = supported ?? 'video/webm';
 
-        this.recorder = new MediaRecorder(this.mediaStream, supported ? { mimeType: supported } : undefined);
+        this.recorder = new MediaRecorder(
+            this.mediaStream,
+            supported ? { mimeType: supported } : undefined
+        );
 
-        // Resolver el blob solo cuando el recorder se detiene y emitió el último chunk
+        // Resolve the blob only when the recorder stops and has emitted the last chunk.
         this.stopPromise = new Promise<Blob>(resolve =>
         {
-                this.recorder!.ondataavailable = e => {
-                    if (e.data.size > 0) this.chunks.push(e.data);
+                this.recorder!.ondataavailable = mediaRecorder =>
+                {
+                    if (mediaRecorder.data.size > 0) this.chunks.push(mediaRecorder.data);
                 };
 
-                this.recorder!.onstop = () => {
-                    const blob = new Blob(this.chunks, { type: this.chosenMimeType });
+                this.recorder!.onstop = () =>
+                {
+                    const blob = new Blob(
+                        this.chunks,
+                        {
+                            type: this.chosenMimeType
+                        }
+                    );
                     this.chunks = [];
                     this.stopTracks();
                     resolve(blob);

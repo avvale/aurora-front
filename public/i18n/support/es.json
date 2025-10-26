@@ -4,7 +4,7 @@
     "Attachments": "Attachments",
     "Audio": "Audio",
     "BackVersion": "BackVersion",
-    "CurrentTab": "Tab actual",
+    "CurrentTab": "Pestaña actual",
     "Description": "Descripción",
     "Display": "Pantalla",
     "Environment": "Entorno",
@@ -17,8 +17,9 @@
     "Meta": "Meta",
     "NoMicrophone": "Sin micrófono",
     "RecordClip": "Grabar clip",
+    "ScreenRecordingExists": "Ya existe una grabación de pantalla en curso.",
     "StartScreenRecordingError": "Error al iniciar la grabación de pantalla",
-    "Subject": "Subject",
+    "Subject": "Asunto",
     "Video": "Video",
-    "Window": "Window"
+    "Window": "Ventana"
 }

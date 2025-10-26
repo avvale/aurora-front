@@ -94,15 +94,18 @@ export class IssueListComponent extends ViewBaseComponent
                 const screenCaptureConfig = this.screenCaptureConfigService.getConfig();
                 if (!screenCaptureConfig.displaySurface || !screenCaptureConfig.audioDeviceId) return;
                 if (!this.screenCaptureService.isCompatibilityScreenRecord()) return;
-                /* if (
+
+                // try to start screen recording
+                if (
                     !await this.screenCaptureService.startScreenRecording(
                         {
                             displaySurface: screenCaptureConfig.displaySurface,
                             audioDeviceId: screenCaptureConfig.audioDeviceId,
                         }
                     )
-                ) return; */
+                ) return;
 
+                // start counter and open snackbar
                 this.snackBar.openFromComponent(
                     IssueRecordingSnackbarComponent,
                     {

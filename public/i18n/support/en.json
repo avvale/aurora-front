@@ -17,6 +17,7 @@
     "Meta": "Meta",
     "NoMicrophone": "No Microphone",
     "RecordClip": "Record clip",
+    "ScreenRecordingExists": "A screen recording is already in progress.",
     "StartScreenRecordingError": "Error starting screen recording",
     "Subject": "Subject",
     "Video": "Video",

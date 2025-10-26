@@ -38,9 +38,14 @@ export class IssueRecordingSnackbarComponent
     screenCaptureService = inject(ScreenCaptureService);
     data = inject(MAT_SNACK_BAR_DATA);
 
-    async startRecording(): Promise<void>
+    constructor()
     {
-        await this.startScreenRecording();
+        this.startRecording();
+    }
+
+    startRecording(): void
+    {
+       //  await this.startScreenRecording();
         Counter.startCounter();
     }
 
@@ -125,36 +130,6 @@ export class IssueRecordingSnackbarComponent
                 },
             );
             return;
-        }
-
-        try
-        {
-            await this.screenCaptureService.start(
-                undefined,
-                {
-                    includeSystemAudio: true,
-                    includeMicAudio: true,
-                    surface: 'window',
-                }
-            );
-            this.screenCaptureService.recordingState.set('recording');
-            this.isPlaybackVisible.set(false);
-            this.recordedVideoUrl.set(null);
-            //this.fg.get('video')?.setValue(null);
-        }
-        catch (error)
-        {
-            log('[DEBUG] Error starting screen recording', error);
-            const message = this.translocoService.translate('support.ScreenRecordingStartError');
-
-            this.snackBar.open(
-                message,
-                undefined,
-                {
-                    duration: 4000,
-                    verticalPosition: 'top',
-                },
-            );
         }
     }
 
