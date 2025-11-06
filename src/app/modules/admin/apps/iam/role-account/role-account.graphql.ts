@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 export const fields = `
     role {
         id
+        rowId
         name
         isMaster
     }
@@ -27,11 +28,11 @@ export const relationsFields = `
 
 // default methods
 export const paginationQuery = gql`
-    query IamPaginateRolesAccounts (
+    query IamPaginateRolesAccounts(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        pagination: iamPaginateRolesAccounts (
+        pagination: iamPaginateRolesAccounts(
             query: $query
             constraint: $constraint
         ) {
@@ -43,14 +44,11 @@ export const paginationQuery = gql`
 `;
 
 export const getQuery = gql`
-    query IamGetRolesAccounts (
+    query IamGetRolesAccounts(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        objects: iamGetRolesAccounts (
-            query: $query
-            constraint: $constraint
-        ) {
+        objects: iamGetRolesAccounts(query: $query, constraint: $constraint) {
             roleId
             accountId
             #FIELDS
@@ -59,12 +57,12 @@ export const getQuery = gql`
 `;
 
 export const findByIdQuery = gql`
-    query IamFindRoleAccountById (
+    query IamFindRoleAccountById(
         $roleId: ID
         $accountId: ID
         $constraint: QueryStatement
     ) {
-        object: iamFindRoleAccountById (
+        object: iamFindRoleAccountById(
             roleId: $roleId
             accountId: $accountId
             constraint: $constraint
@@ -77,14 +75,11 @@ export const findByIdQuery = gql`
 `;
 
 export const findQuery = gql`
-    query IamFindRoleAccount (
+    query IamFindRoleAccount(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        object: iamFindRoleAccount (
-            query: $query
-            constraint: $constraint
-        ) {
+        object: iamFindRoleAccount(query: $query, constraint: $constraint) {
             roleId
             accountId
             #FIELDS
@@ -105,12 +100,8 @@ export const createMutation = gql`
 `;
 
 export const insertMutation = gql`
-    mutation IamCreateRolesAccounts (
-        $payload: [IamCreateRoleAccountInput]!
-    ) {
-        iamCreateRolesAccounts (
-            payload: $payload
-        )
+    mutation IamCreateRolesAccounts($payload: [IamCreateRoleAccountInput]!) {
+        iamCreateRolesAccounts(payload: $payload)
     }
 `;
 
