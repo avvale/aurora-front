@@ -77,15 +77,16 @@ export class IssueListComponent extends ViewBaseComponent
 
     openRecordingScreen(): void
     {
-        const snackBarRef = this.snackBar.openFromComponent(
-            IssueConfigRecordingSnackbarComponent,
-            {
-                horizontalPosition: 'end',
-                verticalPosition: 'bottom',
-                panelClass:['support-issue-config-recording-snackbar-wrapper'],
-                data: {}
-            }
-        );
+        const snackBarRef = this.snackBar
+            .openFromComponent(
+                IssueConfigRecordingSnackbarComponent,
+                {
+                    horizontalPosition: 'end',
+                    verticalPosition: 'bottom',
+                    panelClass:['support-issue-config-recording-snackbar-wrapper'],
+                    data: {}
+                }
+            );
 
         snackBarRef
             .afterDismissed()
@@ -106,16 +107,16 @@ export class IssueListComponent extends ViewBaseComponent
                 ) return;
 
                 // start counter and open snackbar
-                this.snackBar.openFromComponent(
-                    IssueRecordingSnackbarComponent,
-                    {
-                        horizontalPosition: 'end',
-                        verticalPosition: 'bottom',
-                        panelClass:['support-issue-recording-snackbar-wrapper'],
-                        data: {}
-                    }
-                );
-
+                this.snackBar
+                    .openFromComponent(
+                        IssueRecordingSnackbarComponent,
+                        {
+                            horizontalPosition: 'end',
+                            verticalPosition: 'bottom',
+                            panelClass:['support-issue-recording-snackbar-wrapper'],
+                            data: {}
+                        }
+                    );
             });
     }
 
