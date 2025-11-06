@@ -4,9 +4,20 @@ export const fields = `
     rowId
     name
     boundedContextId
+    boundedContext {
+        id
+        rowId
+        name
+        root
+        sort
+        isActive
+    }
     roles {
         id
+        name
+        isMaster
     }
+    
     createdAt
     updatedAt
 `;
