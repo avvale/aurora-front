@@ -11,7 +11,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/iam/role/role-detail.component.html",
-            "integrity": "sha1:de1585cd205a098fb3bb9eb05602c1bed276819e"
+            "integrity": "sha1:d9d3d22e2566d89cbf85694ef1ced87af86e560d"
         },
         {
             "path": "src/app/modules/admin/apps/iam/role/role-detail.component.ts",
@@ -19,7 +19,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/iam/role/role-list.component.html",
-            "integrity": "sha1:3942800e65e846030a37b22ba7e3e7b6669f4fd3"
+            "integrity": "sha1:31f9344ec89c69703fbc5f7b6dd951cd403c9d5e"
         },
         {
             "path": "src/app/modules/admin/apps/iam/role/role-list.component.ts",

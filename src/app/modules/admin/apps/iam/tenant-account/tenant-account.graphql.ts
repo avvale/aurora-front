@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 export const fields = `
     tenant {
         id
+        rowId
         name
         code
         logo
@@ -30,11 +31,11 @@ export const relationsFields = `
 
 // default methods
 export const paginationQuery = gql`
-    query IamPaginateTenantsAccounts (
+    query IamPaginateTenantsAccounts(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        pagination: iamPaginateTenantsAccounts (
+        pagination: iamPaginateTenantsAccounts(
             query: $query
             constraint: $constraint
         ) {
@@ -46,14 +47,11 @@ export const paginationQuery = gql`
 `;
 
 export const getQuery = gql`
-    query IamGetTenantsAccounts (
+    query IamGetTenantsAccounts(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        objects: iamGetTenantsAccounts (
-            query: $query
-            constraint: $constraint
-        ) {
+        objects: iamGetTenantsAccounts(query: $query, constraint: $constraint) {
             tenantId
             accountId
             #FIELDS
@@ -62,12 +60,12 @@ export const getQuery = gql`
 `;
 
 export const findByIdQuery = gql`
-    query IamFindTenantAccountById (
+    query IamFindTenantAccountById(
         $tenantId: ID
         $accountId: ID
         $constraint: QueryStatement
     ) {
-        object: iamFindTenantAccountById (
+        object: iamFindTenantAccountById(
             tenantId: $tenantId
             accountId: $accountId
             constraint: $constraint
@@ -80,14 +78,11 @@ export const findByIdQuery = gql`
 `;
 
 export const findQuery = gql`
-    query IamFindTenantAccount (
+    query IamFindTenantAccount(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        object: iamFindTenantAccount (
-            query: $query
-            constraint: $constraint
-        ) {
+        object: iamFindTenantAccount(query: $query, constraint: $constraint) {
             tenantId
             accountId
             #FIELDS
@@ -108,12 +103,10 @@ export const createMutation = gql`
 `;
 
 export const insertMutation = gql`
-    mutation IamCreateTenantsAccounts (
+    mutation IamCreateTenantsAccounts(
         $payload: [IamCreateTenantAccountInput]!
     ) {
-        iamCreateTenantsAccounts (
-            payload: $payload
-        )
+        iamCreateTenantsAccounts(payload: $payload)
     }
 `;
 
