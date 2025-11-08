@@ -9,6 +9,7 @@ export const fields = `
     }
     account {
         id
+        rowId
         type
         code
         email
