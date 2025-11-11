@@ -41,7 +41,7 @@ aggregateProperties:
     nullable: false
   - name: value
     type: text
-    nullable: false
+    nullable: true
   - name: isActive
     type: boolean
     nullable: false

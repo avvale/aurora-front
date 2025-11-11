@@ -2,12 +2,6 @@ import { ColumnConfig, ColumnDataType } from '@aurora';
 
 export const keyValueColumnsConfig: ColumnConfig[] = [
     {
-        type: ColumnDataType.NUMBER,
-        field: 'rowId',
-        sort: 'rowId',
-        translation: 'tools.RowId',
-    },
-    {
         type: ColumnDataType.STRING,
         field: 'key',
         sort: 'key',

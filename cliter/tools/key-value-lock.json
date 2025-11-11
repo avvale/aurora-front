@@ -15,7 +15,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/tools/key-value/key-value-detail.component.ts",
-            "integrity": "sha1:f78b13207aa6093ef98f79fea91db6c8d2f72e31"
+            "integrity": "sha1:63cbf109a253b3616ac74bf8d67ae94aa1cda241"
         },
         {
             "path": "src/app/modules/admin/apps/tools/key-value/key-value-list.component.html",
