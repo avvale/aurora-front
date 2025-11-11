@@ -2,22 +2,25 @@ import { ColumnConfig, ColumnDataType } from '@aurora';
 
 export const accessTokenColumnsConfig: ColumnConfig[] = [
     {
-        type: ColumnDataType.STRING,
-        field: 'clientId',
-        sort: 'clientId',
-        translation: 'oAuth.ClientId',
+        type: ColumnDataType.NUMBER,
+        field: 'rowId',
+        sort: 'rowId',
+        translation: 'oAuth.RowId',
     },
     {
         type: ColumnDataType.STRING,
-        field: 'accountId',
-        sort: 'accountId',
-        translation: 'oAuth.AccountId',
+        field: 'client.name',
+        searchableField: '$client.name$',
+        sort: 'client.name',
+        translation: 'Name',
+        isUnaccent: true,
     },
     {
         type: ColumnDataType.STRING,
         field: 'token',
         sort: 'token',
         translation: 'oAuth.Token',
+        isUnaccent: true,
     },
     {
         type: ColumnDataType.STRING,

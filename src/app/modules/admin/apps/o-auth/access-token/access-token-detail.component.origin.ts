@@ -12,7 +12,6 @@ import { AccessTokenService } from '@apps/o-auth/access-token';
 import {
     Action,
     Crumb,
-    DatetimepickerSqlFormatDirective,
     defaultDetailImports,
     log,
     mapActions,
@@ -31,7 +30,6 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     standalone: true,
     imports: [
         ...defaultDetailImports,
-        DatetimepickerSqlFormatDirective,
         MatCheckboxModule,
         MtxDatetimepickerModule,
     ],
