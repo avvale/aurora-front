@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import {
-    OAuthApplication,
-    OAuthCreateApplication,
-    OAuthUpdateApplicationById,
-    OAuthUpdateApplications,
+    OAuthApplicationClient,
+    OAuthCreateApplicationClient,
+    OAuthUpdateApplicationClientById,
+    OAuthUpdateApplicationsClients,
 } from '@apps/o-auth';
 import {
     createMutation,
@@ -18,7 +18,7 @@ import {
     paginationQuery,
     updateByIdMutation,
     updateMutation,
-} from '@apps/o-auth/application';
+} from '@apps/o-auth/application-client';
 import {
     GraphQLHeaders,
     GraphQLService,
@@ -31,23 +31,24 @@ import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-export class ApplicationService {
-    paginationSubject$: BehaviorSubject<GridData<OAuthApplication> | null> =
+export class ApplicationClientService {
+    paginationSubject$: BehaviorSubject<GridData<OAuthApplicationClient> | null> =
         new BehaviorSubject(null);
-    applicationSubject$: BehaviorSubject<OAuthApplication | null> =
+    applicationClientSubject$: BehaviorSubject<OAuthApplicationClient | null> =
         new BehaviorSubject(null);
-    applicationsSubject$: BehaviorSubject<OAuthApplication[] | null> =
-        new BehaviorSubject(null);
+    applicationsClientsSubject$: BehaviorSubject<
+        OAuthApplicationClient[] | null
+    > = new BehaviorSubject(null);
 
     // scoped subjects
     paginationScoped: {
-        [key: string]: BehaviorSubject<GridData<OAuthApplication> | null>;
+        [key: string]: BehaviorSubject<GridData<OAuthApplicationClient> | null>;
     } = {};
-    applicationScoped: {
-        [key: string]: BehaviorSubject<OAuthApplication | null>;
+    applicationClientScoped: {
+        [key: string]: BehaviorSubject<OAuthApplicationClient | null>;
     } = {};
-    applicationsScoped: {
-        [key: string]: BehaviorSubject<OAuthApplication[] | null>;
+    applicationsClientsScoped: {
+        [key: string]: BehaviorSubject<OAuthApplicationClient[] | null>;
     } = {};
 
     constructor(private readonly graphqlService: GraphQLService) {}
@@ -55,23 +56,23 @@ export class ApplicationService {
     /**
      * Getters
      */
-    get pagination$(): Observable<GridData<OAuthApplication>> {
+    get pagination$(): Observable<GridData<OAuthApplicationClient>> {
         return this.paginationSubject$.asObservable();
     }
 
-    get application$(): Observable<OAuthApplication> {
-        return this.applicationSubject$.asObservable();
+    get applicationClient$(): Observable<OAuthApplicationClient> {
+        return this.applicationClientSubject$.asObservable();
     }
 
-    get applications$(): Observable<OAuthApplication[]> {
-        return this.applicationsSubject$.asObservable();
+    get applicationsClients$(): Observable<OAuthApplicationClient[]> {
+        return this.applicationsClientsSubject$.asObservable();
     }
 
     // allows to store different types of pagination under different scopes this allows us
     // to have multiple observables with different streams of pagination data.
     setScopePagination(
         scope: string,
-        pagination: GridData<OAuthApplication>,
+        pagination: GridData<OAuthApplicationClient>,
     ): void {
         if (this.paginationScoped[scope]) {
             this.paginationScoped[scope].next(pagination);
@@ -82,40 +83,52 @@ export class ApplicationService {
     }
 
     // get pagination observable by scope
-    getScopePagination(scope: string): Observable<GridData<OAuthApplication>> {
+    getScopePagination(
+        scope: string,
+    ): Observable<GridData<OAuthApplicationClient>> {
         if (!this.paginationScoped[scope])
             this.paginationScoped[scope] = new BehaviorSubject(null);
         return this.paginationScoped[scope].asObservable();
     }
 
-    setScopeApplication(scope: string, object: OAuthApplication): void {
-        if (this.applicationScoped[scope]) {
-            this.applicationScoped[scope].next(object);
+    setScopeApplicationClient(
+        scope: string,
+        object: OAuthApplicationClient,
+    ): void {
+        if (this.applicationClientScoped[scope]) {
+            this.applicationClientScoped[scope].next(object);
             return;
         }
         // create new subject if not exist
-        this.applicationScoped[scope] = new BehaviorSubject(object);
+        this.applicationClientScoped[scope] = new BehaviorSubject(object);
     }
 
-    getScopeApplication(scope: string): Observable<OAuthApplication> {
-        if (!this.applicationScoped[scope])
-            this.applicationScoped[scope] = new BehaviorSubject(null);
-        return this.applicationScoped[scope].asObservable();
+    getScopeApplicationClient(
+        scope: string,
+    ): Observable<OAuthApplicationClient> {
+        if (!this.applicationClientScoped[scope])
+            this.applicationClientScoped[scope] = new BehaviorSubject(null);
+        return this.applicationClientScoped[scope].asObservable();
     }
 
-    setScopeApplications(scope: string, objects: OAuthApplication[]): void {
-        if (this.applicationsScoped[scope]) {
-            this.applicationsScoped[scope].next(objects);
+    setScopeApplicationsClients(
+        scope: string,
+        objects: OAuthApplicationClient[],
+    ): void {
+        if (this.applicationsClientsScoped[scope]) {
+            this.applicationsClientsScoped[scope].next(objects);
             return;
         }
         // create new subject if not exist
-        this.applicationsScoped[scope] = new BehaviorSubject(objects);
+        this.applicationsClientsScoped[scope] = new BehaviorSubject(objects);
     }
 
-    getScopeApplications(scope: string): Observable<OAuthApplication[]> {
-        if (!this.applicationsScoped[scope])
-            this.applicationsScoped[scope] = new BehaviorSubject(null);
-        return this.applicationsScoped[scope].asObservable();
+    getScopeApplicationsClients(
+        scope: string,
+    ): Observable<OAuthApplicationClient[]> {
+        if (!this.applicationsClientsScoped[scope])
+            this.applicationsClientsScoped[scope] = new BehaviorSubject(null);
+        return this.applicationsClientsScoped[scope].asObservable();
     }
 
     pagination({
@@ -130,11 +143,11 @@ export class ApplicationService {
         constraint?: QueryStatement;
         headers?: GraphQLHeaders;
         scope?: string;
-    } = {}): Observable<GridData<OAuthApplication>> {
+    } = {}): Observable<GridData<OAuthApplicationClient>> {
         // get result, map ang throw data across observable
         return this.graphqlService
             .client()
-            .watchQuery<{ pagination: GridData<OAuthApplication> }>({
+            .watchQuery<{ pagination: GridData<OAuthApplicationClient> }>({
                 query: graphqlStatement,
                 variables: {
                     query,
@@ -157,27 +170,30 @@ export class ApplicationService {
 
     findById({
         graphqlStatement = findByIdQuery,
-        id = null,
+        applicationId = null,
+        clientId = null,
         constraint = {},
         headers = {},
         scope,
     }: {
         graphqlStatement?: DocumentNode;
-        id?: string;
+        applicationId?: string;
+        clientId?: string;
         constraint?: QueryStatement;
         headers?: GraphQLHeaders;
         scope?: string;
     } = {}): Observable<{
-        object: OAuthApplication;
+        object: OAuthApplicationClient;
     }> {
         return this.graphqlService
             .client()
             .watchQuery<{
-                object: OAuthApplication;
+                object: OAuthApplicationClient;
             }>({
                 query: parseGqlFields(graphqlStatement, fields, constraint),
                 variables: {
-                    id,
+                    applicationId,
+                    clientId,
                     constraint,
                 },
                 context: {
@@ -189,8 +205,8 @@ export class ApplicationService {
                 map((result) => result.data),
                 tap((data) =>
                     scope
-                        ? this.setScopeApplication(scope, data.object)
-                        : this.applicationSubject$.next(data.object),
+                        ? this.setScopeApplicationClient(scope, data.object)
+                        : this.applicationClientSubject$.next(data.object),
                 ),
             );
     }
@@ -208,12 +224,12 @@ export class ApplicationService {
         headers?: GraphQLHeaders;
         scope?: string;
     } = {}): Observable<{
-        object: OAuthApplication;
+        object: OAuthApplicationClient;
     }> {
         return this.graphqlService
             .client()
             .watchQuery<{
-                object: OAuthApplication;
+                object: OAuthApplicationClient;
             }>({
                 query: parseGqlFields(
                     graphqlStatement,
@@ -234,8 +250,8 @@ export class ApplicationService {
                 map((result) => result.data),
                 tap((data) =>
                     scope
-                        ? this.setScopeApplication(scope, data.object)
-                        : this.applicationSubject$.next(data.object),
+                        ? this.setScopeApplicationClient(scope, data.object)
+                        : this.applicationClientSubject$.next(data.object),
                 ),
             );
     }
@@ -253,12 +269,12 @@ export class ApplicationService {
         headers?: GraphQLHeaders;
         scope?: string;
     } = {}): Observable<{
-        objects: OAuthApplication[];
+        objects: OAuthApplicationClient[];
     }> {
         return this.graphqlService
             .client()
             .watchQuery<{
-                objects: OAuthApplication[];
+                objects: OAuthApplicationClient[];
             }>({
                 query: parseGqlFields(
                     graphqlStatement,
@@ -279,8 +295,8 @@ export class ApplicationService {
                 map((result) => result.data),
                 tap((data) =>
                     scope
-                        ? this.setScopeApplications(scope, data.objects)
-                        : this.applicationsSubject$.next(data.objects),
+                        ? this.setScopeApplicationsClients(scope, data.objects)
+                        : this.applicationsClientsSubject$.next(data.objects),
                 ),
             );
     }
@@ -291,7 +307,7 @@ export class ApplicationService {
         headers = {},
     }: {
         graphqlStatement?: DocumentNode;
-        object?: OAuthCreateApplication;
+        object?: OAuthCreateApplicationClient;
         headers?: GraphQLHeaders;
     } = {}): Observable<FetchResult<T>> {
         return this.graphqlService.client().mutate({
@@ -311,7 +327,7 @@ export class ApplicationService {
         headers = {},
     }: {
         graphqlStatement?: DocumentNode;
-        objects?: OAuthCreateApplication[];
+        objects?: OAuthCreateApplicationClient[];
         headers?: GraphQLHeaders;
     } = {}): Observable<FetchResult<T>> {
         return this.graphqlService.client().mutate({
@@ -331,7 +347,7 @@ export class ApplicationService {
         headers = {},
     }: {
         graphqlStatement?: DocumentNode;
-        object?: OAuthUpdateApplicationById;
+        object?: OAuthUpdateApplicationClientById;
         headers?: GraphQLHeaders;
     } = {}): Observable<FetchResult<T>> {
         return this.graphqlService.client().mutate({
@@ -353,7 +369,7 @@ export class ApplicationService {
         headers = {},
     }: {
         graphqlStatement?: DocumentNode;
-        object?: OAuthUpdateApplications;
+        object?: OAuthUpdateApplicationsClients;
         query?: QueryStatement;
         constraint?: QueryStatement;
         headers?: GraphQLHeaders;
@@ -373,19 +389,22 @@ export class ApplicationService {
 
     deleteById<T>({
         graphqlStatement = deleteByIdMutation,
-        id = null,
+        applicationId = null,
+        clientId = null,
         constraint = {},
         headers = {},
     }: {
         graphqlStatement?: DocumentNode;
-        id?: string;
+        applicationId?: string;
+        clientId?: string;
         constraint?: QueryStatement;
         headers?: GraphQLHeaders;
     } = {}): Observable<FetchResult<T>> {
         return this.graphqlService.client().mutate({
             mutation: graphqlStatement,
             variables: {
-                id,
+                applicationId,
+                clientId,
                 constraint,
             },
             context: {
