@@ -22,6 +22,7 @@
         "TRIGGER": "Trigger"
     },
     "Procedures": "Procedimientos",
+    "RowId": "RowId",
     "Run": "Ejecutar",
     "RunScripts": "Ejecutar Scripts",
     "RunScriptsDisclaimer": "Esto ejecutará los scripts inferiores o iguales a la versión {{ version }} no instalados o actualizados en el orden en que están definidos. Asegúrese de comprender las implicaciones antes de continuar.",
