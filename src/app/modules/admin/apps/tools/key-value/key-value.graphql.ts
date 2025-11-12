@@ -5,6 +5,7 @@ export const fields = `
     key
     type
     value
+    isCached
     isActive
     description
     createdAt

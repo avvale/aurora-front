@@ -109,6 +109,7 @@ export class KeyValueDetailComponent extends ViewDetailComponent {
             key: ['', [Validators.required, Validators.maxLength(64)]],
             type: [null, [Validators.required]],
             value: '',
+            isCached: [false, [Validators.required]],
             isActive: [true, [Validators.required]],
             description: '',
         });

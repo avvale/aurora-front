@@ -141,6 +141,11 @@
                         <mat-error>{{ formErrors?.value | async }}</mat-error>
                     </mat-form-field>
                     <div class="col-4 pt-5">
+                        <mat-checkbox formControlName="isCached">
+                            {{ t('tools.IsCached') }}
+                        </mat-checkbox>
+                    </div>
+                    <div class="col-4 pt-5">
                         <mat-checkbox formControlName="isActive">
                             {{ t('tools.IsActive') }}
                         </mat-checkbox>

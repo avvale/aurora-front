@@ -7,6 +7,7 @@
     "InstallScript": "Install Script",
     "InstallWarning": "You are about to install the {{ name }} script. Make sure you understand the implications before proceeding.",
     "IsActive": "Is active",
+    "IsCached": "IsCached",
     "IsExecuted": "Executed",
     "IsUpdated": "Updated",
     "Key": "Key",

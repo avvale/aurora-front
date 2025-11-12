@@ -11,11 +11,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/tools/key-value/key-value-detail.component.html",
-            "integrity": "sha1:4d7261b2415073f15ca20bc35b995ed3d900b276"
+            "integrity": "sha1:df8be424e7c7cd847400874ac8ab9b2fcd2b0c22"
         },
         {
             "path": "src/app/modules/admin/apps/tools/key-value/key-value-detail.component.ts",
-            "integrity": "sha1:63cbf109a253b3616ac74bf8d67ae94aa1cda241"
+            "integrity": "sha1:3c7dfd2c35462b8354e26bdb425d88eb259d1fab"
         },
         {
             "path": "src/app/modules/admin/apps/tools/key-value/key-value-list.component.html",
@@ -27,11 +27,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/tools/key-value/key-value.columns-config.ts",
-            "integrity": "sha1:a5c9d39e271bee117234690f63477f23b7dedff9"
+            "integrity": "sha1:c9a20330a42f41e209febd1b878d7c3062b7f3f3"
         },
         {
             "path": "src/app/modules/admin/apps/tools/key-value/key-value.graphql.ts",
-            "integrity": "sha1:d4c460a43b34fe35dbd91f83819ec9bf95eb7f5c"
+            "integrity": "sha1:075559a13738d3662e72134629a8b9acc93736fb"
         },
         {
             "path": "src/app/modules/admin/apps/tools/key-value/key-value.resolvers.ts",
