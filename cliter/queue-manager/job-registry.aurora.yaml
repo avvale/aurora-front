@@ -10,7 +10,11 @@ aggregateProperties:
   - name: id
     type: id
     primaryKey: true
-    length: 36
+    nullable: false
+  - name: rowId
+    type: bigint
+    index: unique
+    autoIncrement: true
     nullable: false
   - name: queueName
     type: varchar
@@ -55,3 +59,12 @@ aggregateProperties:
   - name: deletedAt
     type: timestamp
     nullable: true
+excludedOperations:
+  - count
+  - getRaw
+  - max
+  - min
+  - rawSql
+  - sum
+  - updateAndIncrement
+  - upsert
