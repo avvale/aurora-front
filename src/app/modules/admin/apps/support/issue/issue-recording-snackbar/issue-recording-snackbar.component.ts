@@ -2,7 +2,14 @@ import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarAction, MatSnackBarActions, MatSnackBarLabel, MatSnackBarRef } from '@angular/material/snack-bar';
+import {
+    MAT_SNACK_BAR_DATA,
+    MatSnackBar,
+    MatSnackBarAction,
+    MatSnackBarActions,
+    MatSnackBarLabel,
+    MatSnackBarRef,
+} from '@angular/material/snack-bar';
 import { ScreenCaptureService } from '@apps/support';
 import { Counter, log } from '@aurora';
 import { TranslocoService } from '@jsverse/transloco';
@@ -21,12 +28,15 @@ import { saveAs } from 'file-saver';
         }
     `,
     imports: [
-        MatButtonModule, MatIcon, MatSelectModule, MatSnackBarAction,
-        MatSnackBarActions, MatSnackBarLabel,
+        MatButtonModule,
+        MatIcon,
+        MatSelectModule,
+        MatSnackBarAction,
+        MatSnackBarActions,
+        MatSnackBarLabel,
     ],
 })
-export class IssueRecordingSnackbarComponent
-{
+export class IssueRecordingSnackbarComponent {
     isPlaybackVisible = signal<boolean>(false);
     recordedVideoUrl = signal<string | null>(null);
     counterValue = Counter.getCounterValue();
@@ -38,45 +48,26 @@ export class IssueRecordingSnackbarComponent
     screenCaptureService = inject(ScreenCaptureService);
     data = inject(MAT_SNACK_BAR_DATA);
 
-    constructor()
-    {
+    constructor() {
         this.startRecording();
     }
 
-    startRecording(): void
-    {
-       //  await this.startScreenRecording();
+    startRecording(): void {
+        //  await this.startScreenRecording();
         Counter.startCounter();
     }
 
-    async stopRecording(): Promise<void>
-    {
+    async stopRecording(): Promise<void> {
         Counter.stopCounter();
         await this.stopScreenRecording();
         this.snackBarRef.dismiss();
     }
 
-
-
-
-
-
-
-
-
-    
-
-    restartRecording(): void
-    {
+    restartRecording(): void {
         Counter.resetCounter();
     }
 
-    
-
-    
-
-    pauseRecording(): void
-    {
+    pauseRecording(): void {
         if (this.screenCaptureService.recordingState() !== 'recording') return;
 
         this.screenCaptureService.pause();
@@ -84,8 +75,7 @@ export class IssueRecordingSnackbarComponent
         this.screenCaptureService.recordingState.set('paused');
     }
 
-    resumeRecording(): void
-    {
+    resumeRecording(): void {
         if (this.screenCaptureService.recordingState() !== 'paused') return;
 
         this.screenCaptureService.resume();
@@ -93,56 +83,50 @@ export class IssueRecordingSnackbarComponent
         Counter.startCounter();
     }
 
-    discardRecording(): void
-    {
+    discardRecording(): void {
         this.snackBarRef.dismiss();
     }
 
-    async startScreenRecording(): Promise<void>
-    {
+    async startScreenRecording(): Promise<void> {
         // prevent starting a new recording if one already exists
-        if (this.screenCaptureService.recordingState() === 'recorded')
-        {
-            const message = this.translocoService.translate('support.ScreenRecordingExists');
-
-            this.snackBar.open(
-                message,
-                undefined,
-                {
-                    duration: 4000,
-                    verticalPosition: 'top',
-                },
+        if (this.screenCaptureService.recordingState() === 'recorded') {
+            const message = this.translocoService.translate(
+                'support.ScreenRecordingExists',
             );
+
+            this.snackBar.open(message, undefined, {
+                duration: 4000,
+                verticalPosition: 'top',
+            });
             return;
         }
 
         // check for screen recording support
-        if (!navigator?.mediaDevices?.getDisplayMedia)
-        {
-            const message = this.translocoService.translate('support.ScreenRecordingNotSupported');
-
-            this.snackBar.open(
-                message,
-                undefined,
-                {
-                    duration: 4000,
-                    verticalPosition: 'top',
-                },
+        if (!navigator?.mediaDevices?.getDisplayMedia) {
+            const message = this.translocoService.translate(
+                'support.ScreenRecordingNotSupported',
             );
+
+            this.snackBar.open(message, undefined, {
+                duration: 4000,
+                verticalPosition: 'top',
+            });
             return;
         }
     }
 
-    async stopScreenRecording(): Promise<void>
-    {
-        if (!['recording', 'paused'].includes(this.screenCaptureService.recordingState())) return;
+    async stopScreenRecording(): Promise<void> {
+        if (
+            !['recording', 'paused'].includes(
+                this.screenCaptureService.recordingState(),
+            )
+        )
+            return;
 
-        try
-        {
+        try {
             const blob = await this.screenCaptureService.stop();
 
-            if (!blob)
-            {
+            if (!blob) {
                 this.screenCaptureService.recordingState.set('idle');
                 return;
             }
@@ -153,33 +137,28 @@ export class IssueRecordingSnackbarComponent
             this.recordedVideoUrl.set(url);
             this.screenCaptureService.recordingState.set('recorded');
 
-            console.log('Recorded blob', Date.now());
             const fileName = `issue-screen-recording-${Date.now()}.webm`;
-            const file = new File([blob], fileName, { type: blob.type || 'video/webm' });
+            const file = new File([blob], fileName, {
+                type: blob.type || 'video/webm',
+            });
 
-            console.log('Recorded file', file);
             saveAs(blob, fileName);
             // this.fg.get('video')?.setValue(file);
-        }
-        catch (error)
-        {
+        } catch (error) {
             log('[DEBUG] Error stopping screen recording', error);
-            const message = this.translocoService.translate('support.ScreenRecordingStopError');
-
-            this.snackBar.open(
-                message,
-                undefined,
-                {
-                    duration: 4000,
-                    verticalPosition: 'top',
-                },
+            const message = this.translocoService.translate(
+                'support.ScreenRecordingStopError',
             );
+
+            this.snackBar.open(message, undefined, {
+                duration: 4000,
+                verticalPosition: 'top',
+            });
             this.screenCaptureService.recordingState.set('idle');
         }
     }
 
-    private revokeObjectUrl(url: string | null): void
-    {
+    private revokeObjectUrl(url: string | null): void {
         if (url?.startsWith('blob:')) URL.revokeObjectURL(url);
     }
 }

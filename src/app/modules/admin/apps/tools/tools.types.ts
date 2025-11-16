@@ -1,14 +1,15 @@
 export enum ToolsProcedureType {
     FUNCTION = 'FUNCTION',
     PROCEDURE = 'PROCEDURE',
-    TRIGGER = 'TRIGGER'
+    TRIGGER = 'TRIGGER',
 }
 
 export interface ToolsKeyValue {
     id: string;
-    code: string;
+    key: string;
     type: string;
     value: string;
+    isCached: boolean;
     isActive: boolean;
     createdAt?: string;
     updatedAt?: string;
@@ -17,10 +18,11 @@ export interface ToolsKeyValue {
 
 export interface ToolsCreateKeyValue {
     id: string;
-    code: string;
+    key: string;
     type: string;
     value: string;
     isActive: boolean;
+    isCached: boolean;
 }
 
 export interface ToolsUpdateKeyValueById {

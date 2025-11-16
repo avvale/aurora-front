@@ -70,3 +70,34 @@ export interface SupportUpdateIssues {
 
 export type SupportIssueRecordingState = 'idle' | 'recording' | 'paused' | 'recorded';
 export type SupportIssueDisplaySurface = 'tab' | 'window' | 'screen' | 'any';
+
+export interface SupportConfig {
+    id: string;
+    rowId: number;
+    apiKey?: string;
+    listId?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
+}
+
+export interface SupportCreateConfig {
+    id: string;
+    rowId: number;
+    apiKey?: string;
+    listId?: string;
+}
+
+export interface SupportUpdateConfigById {
+    id: string;
+    rowId?: number;
+    apiKey?: string;
+    listId?: string;
+}
+
+export interface SupportUpdateConfigs {
+    id?: string;
+    rowId?: number;
+    apiKey?: string;
+    listId?: string;
+}

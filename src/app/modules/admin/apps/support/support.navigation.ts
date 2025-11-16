@@ -5,7 +5,7 @@ export const supportNavigation: FuseNavigationItem = {
     title: 'Support',
     type: 'collapsable',
     icon: 'support',
-    meta : {
+    meta: {
         permission: 'support.access',
     },
     children: [
@@ -15,8 +15,19 @@ export const supportNavigation: FuseNavigationItem = {
             type: 'basic',
             icon: 'bug_report',
             link: '/support/issue',
-            meta : {
+            meta: {
                 permission: 'support.issue.access',
+            },
+        },
+        {
+            id: 'configs',
+            title: 'Config',
+            type: 'basic',
+            icon: 'component_exchange',
+            iconFontSet: 'material-symbols-outlined',
+            link: '/support/config',
+            meta: {
+                permission: 'support.config.access',
             },
         },
     ],
