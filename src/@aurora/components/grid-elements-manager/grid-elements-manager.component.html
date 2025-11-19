@@ -18,11 +18,15 @@
                 [originColumnsConfig]="originColumnsConfig"
                 [hasSearch]="hasSearch"
                 [hasFilterButton]="hasFilterButton"
+                [hasPagination]="hasPagination"
+                [pageSizeOptions]="pageSizeOptions"
+                [hasDragAndDrop]="hasDragAndDrop"
                 (action)="action.emit($event)"
                 (columnFiltersChange)="columnFiltersChange.emit($event)"
                 (columnsConfigChange)="columnsConfigChange.emit($event)"
                 (search)="search.emit($event)"
                 (stateChange)="stateChange.emit($event)"
+                (rowDrop)="rowDrop.emit($event)"
             >
                 <ng-template
                     auGridCustomHeaderTemplate
