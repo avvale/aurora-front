@@ -1,5 +1,5 @@
 import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ContentChild, ContentChildren, EventEmitter, Input, Output, QueryList } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, ContentChildren, EventEmitter, input, Input, output, Output, QueryList } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Action } from '@aurora/aurora.types';
 import { GridCellValueTemplateDirective, GridComponent, GridCustomHeaderTemplateDirective } from '@aurora/components/grid';
@@ -8,6 +8,7 @@ import { GridCustomButtonsHeaderDialogTemplateDirective } from './directives/gri
 import { GridElementsManagerCellValueTemplateDirective } from './directives/grid-elements-manager-cell-value-template.directive';
 import { GridFormElementDetailDialogTemplateDirective } from './directives/grid-form-element-detail-dialog-template.directive';
 import { GridElementDetailDialogComponent } from './grid-element-detail-dialog.component';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'au-grid-elements-manager',
@@ -40,6 +41,11 @@ export class GridElementsManagerComponent
     @Input() hasSearch: boolean = true;
     @Input() hasFilterButton: boolean = true;
 
+    hasPagination = input<boolean>(true);
+    pageSizeOptions = input<number[]>([10, 25, 50, 100]);
+    hasDragAndDrop = input<boolean>(true);
+
+
     // outputs
     @Output() action = new EventEmitter<Action>();
     @Output() columnFiltersChange = new EventEmitter<GridState>();
@@ -49,6 +55,8 @@ export class GridElementsManagerComponent
     @Output() dialogAfterViewInit = new EventEmitter<void>();
     @Output() stateChange = new EventEmitter<GridState>();
     @Output() search = new EventEmitter<GridState>();
+
+    rowDrop = output<CdkDragDrop<any>>();
 
     // add custom buttons header
     @ContentChild(GridCustomButtonsHeaderDialogTemplateDirective) gridCustomButtonsHeaderDialogTemplate?: GridCustomButtonsHeaderDialogTemplateDirective;
