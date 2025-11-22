@@ -7,6 +7,7 @@ export const inboxColumnsConfig: ColumnConfig[] = [
         sort: 'tenantIds',
         translation: 'message.TenantIds',
         hidden: true,
+        searchable: false,
     },
     {
         type: ColumnDataType.NUMBER,
@@ -14,6 +15,7 @@ export const inboxColumnsConfig: ColumnConfig[] = [
         sort: 'sort',
         translation: 'message.Sort',
         hidden: true,
+        searchable: false,
     },
     {
         type: ColumnDataType.STRING,
@@ -29,7 +31,7 @@ export const inboxColumnsConfig: ColumnConfig[] = [
         translation: 'message.IsImportant',
     },
     {
-        type: ColumnDataType.STRING,
+        type: ColumnDataType.TIMESTAMP,
         field: 'sentAt',
         sort: 'sentAt',
         translation: 'message.SentAt',
@@ -49,36 +51,18 @@ export const inboxColumnsConfig: ColumnConfig[] = [
         isUnaccent: true,
         hidden: true,
     },
-    /* {
-        type       : ColumnDataType.STRING,
-        field      : 'link',
-        sort       : 'link',
-        translation: 'message.Link',
-        isUnaccent : true,
-    },
-    {
-        type       : ColumnDataType.BOOLEAN,
-        field      : 'isInternalLink',
-        sort       : 'isInternalLink',
-        translation: 'message.IsInternalLink',
-    },
-    {
-        type       : ColumnDataType.STRING,
-        field      : 'icon',
-        sort       : 'icon',
-        translation: 'message.Icon',
-        isUnaccent : true,
-    }, */
     {
         type: ColumnDataType.BOOLEAN,
         field: 'isRead',
         sort: 'isRead',
         translation: 'message.IsRead',
+        searchable: false,
     },
     {
         type: ColumnDataType.BOOLEAN,
         field: 'isReadAtLeastOnce',
         sort: 'isReadAtLeastOnce',
         translation: 'message.IsReadAtLeastOnce',
+        searchable: false,
     },
 ];
