@@ -1,13 +1,13 @@
 <div
-    matSnackBarActions
-    class="w-auto px-2 py-0 flex-col"
     *transloco="let t"
+    class="w-auto flex-col px-2 py-0"
+    matSnackBarActions
 >
     <form
-        id="supportIssueConfigSnackbarForm"
-        class="w-auto flex flex-col"
-        novalidate
+        id="screenRecordingConfigSnackbarForm"
+        class="flex w-auto flex-col"
         [formGroup]="fg"
+        novalidate
         (ngSubmit)="onSubmit($event)"
     >
         <mat-form-field
@@ -18,11 +18,17 @@
             <mat-label>{{ t('support.Display') }}</mat-label>
             <mat-select
                 formControlName="displaySurface"
-                panelClass="support-issue-config-select-panel"
+                panelClass="screen-recording-config-select-panel"
             >
-                <mat-option value="tab">{{ t('support.CurrentTab') }}</mat-option>
-                <mat-option value="window">{{ t('support.Window') }}</mat-option>
-                <mat-option value="screen">{{ t('support.FullScreen') }}</mat-option>
+                <mat-option value="tab">
+                    {{ t('support.CurrentTab') }}
+                </mat-option>
+                <mat-option value="window">
+                    {{ t('support.Window') }}
+                </mat-option>
+                <mat-option value="screen">
+                    {{ t('support.FullScreen') }}
+                </mat-option>
             </mat-select>
             <mat-icon matSuffix>airplay</mat-icon>
             <mat-error>{{ formErrors?.displaySurface | async }}</mat-error>
@@ -35,11 +41,15 @@
             <mat-label>{{ t('support.Audio') }}</mat-label>
             <mat-select
                 formControlName="audioDeviceId"
-                panelClass="support-issue-config-select-panel"
+                panelClass="screen-recording-config-select-panel"
             >
-                <mat-option value="none">{{ t('support.NoMicrophone') }}</mat-option>
-                @for (inputDeviceInfo of inputDevicesInfo; track inputDeviceInfo.deviceId)
-                {
+                <mat-option value="none">
+                    {{ t('support.NoMicrophone') }}
+                </mat-option>
+                @for (
+                    inputDeviceInfo of inputDevicesInfo;
+                    track inputDeviceInfo.deviceId
+                ) {
                     <mat-option [value]="inputDeviceInfo.deviceId">
                         {{ inputDeviceInfo.label }}
                     </mat-option>
@@ -50,26 +60,24 @@
         </mat-form-field>
         <div>
             <button
-                mat-flat-button
                 type="submit"
-                form="supportIssueConfigSnackbarForm"
-                color="warn"
                 class="px-3 text-sm leading-8"
+                mat-flat-button
+                form="screenRecordingConfigSnackbarForm"
+                color="warn"
             >
-                <mat-icon
-                    fontSet="material-symbols-outlined"
-                >
+                <mat-icon fontSet="material-symbols-outlined">
                     screen_record
                 </mat-icon>
                 {{ t('support.RecordClip') }}
             </button>
             <button
-                matIconButton class="ml-2"
+                class="ml-2"
+                matIconButton
                 (click)="dismiss()"
             >
                 <mat-icon>close</mat-icon>
             </button>
-
         </div>
     </form>
 </div>

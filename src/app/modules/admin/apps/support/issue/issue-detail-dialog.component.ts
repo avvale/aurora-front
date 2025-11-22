@@ -32,7 +32,7 @@ import { IssueVideoPreviewDialogComponent } from './issue-video-preview-dialog.c
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [...defaultDetailImports],
 })
-export class IssueDetailComponent extends ViewDetailComponent {
+export class IssueDetailDialogComponent extends ViewDetailComponent {
     // ---- customizations ----
     // ..
 

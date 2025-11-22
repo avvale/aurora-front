@@ -1,14 +1,13 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
-    inject,
     signal,
     ViewEncapsulation,
     WritableSignal,
 } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { RecordingService } from '@apps/screen-recording';
 import { SupportIssue } from '@apps/support';
 import { IssueService } from '@apps/support/issue';
 import {
@@ -22,7 +21,6 @@ import {
     ViewDetailComponent,
 } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
-import { ScreenCaptureService } from '../screen-capture.service';
 import { IssueVideoPreviewDialogComponent } from './issue-video-preview-dialog.component';
 
 @Component({
@@ -55,23 +53,13 @@ export class IssueDetailComponent extends ViewDetailComponent {
     isPlaybackVisible = signal<boolean>(false);
     private previewDialogRef: MatDialogRef<IssueVideoPreviewDialogComponent> | null =
         null;
-    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly issueService: IssueService,
-        private readonly screenCaptureService: ScreenCaptureService,
+        private readonly recordingService: RecordingService,
         private readonly dialog: MatDialog,
     ) {
         super();
-
-        this.destroyRef.onDestroy(() => {
-            this.revokeObjectUrl(this.recordedVideoUrl());
-            this.closePreviewDialog();
-
-            if (this.recordingState() === 'recording') {
-                void this.screenCaptureService.stop();
-            }
-        });
     }
 
     // this method will be called after the ngOnInit of
@@ -80,10 +68,10 @@ export class IssueDetailComponent extends ViewDetailComponent {
         /**/
     }
 
-    async startScreenRecording(): Promise<void> {
+    async handleScreenRecording(): Promise<void> {
         if (this.recordingState() === 'recorded') {
             const message = this.translateWithFallback(
-                'support.ScreenRecordingExists',
+                'screenRecording.ScreenRecordingExists',
                 'Ya existe una grabación. Elimina la anterior para grabar de nuevo.',
             );
             this.snackBar.open(message, undefined, {
@@ -95,7 +83,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
 
         if (!navigator?.mediaDevices?.getDisplayMedia) {
             const message = this.translateWithFallback(
-                'support.ScreenRecordingNotSupported',
+                'screenRecording.ScreenRecordingNotSupported',
                 'La grabación de pantalla no está soportada en este navegador.',
             );
             this.snackBar.open(message, undefined, {
@@ -107,7 +95,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
 
         try {
             this.closePreviewDialog();
-            //await this.screenCaptureService.start(undefined, { includeSystemAudio: true });
+            //await this.recordingService.start(undefined, { includeSystemAudio: true });
             this.recordingState.set('recording');
             this.isPlaybackVisible.set(false);
             this.recordedVideoUrl.set(null);
@@ -129,7 +117,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
         if (this.recordingState() !== 'recording') return;
 
         try {
-            const blob = await this.screenCaptureService.stop();
+            const blob = await this.recordingService.stop();
 
             if (!blob) {
                 this.recordingState.set('idle');

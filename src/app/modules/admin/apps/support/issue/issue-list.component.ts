@@ -3,17 +3,9 @@ import {
     Component,
     ViewEncapsulation,
 } from '@angular/core';
-import {
-    ScreenCaptureConfigService,
-    ScreenCaptureService,
-    SupportIssue,
-} from '@apps/support';
-import {
-    issueColumnsConfig,
-    IssueConfigRecordingSnackbarComponent,
-    IssueRecordingSnackbarComponent,
-    IssueService,
-} from '@apps/support/issue';
+import { RecordingService } from '@apps/screen-recording';
+import { SupportIssue } from '@apps/support';
+import { issueColumnsConfig, IssueService } from '@apps/support/issue';
 import {
     Action,
     ColumnConfig,
@@ -88,8 +80,7 @@ export class IssueListComponent extends ViewBaseComponent {
         private readonly gridFiltersStorageService: GridFiltersStorageService,
         private readonly gridStateService: GridStateService,
         private readonly issueService: IssueService,
-        private readonly screenCaptureConfigService: ScreenCaptureConfigService,
-        private readonly screenCaptureService: ScreenCaptureService,
+        private readonly recordingService: RecordingService,
     ) {
         super();
     }
@@ -101,44 +92,16 @@ export class IssueListComponent extends ViewBaseComponent {
     }
 
     openRecordingScreen(): void {
-        const snackBarRef = this.snackBar.openFromComponent(
-            IssueConfigRecordingSnackbarComponent,
-            {
-                horizontalPosition: 'end',
-                verticalPosition: 'bottom',
-                panelClass: ['support-issue-config-recording-snackbar-wrapper'],
-                data: {},
-            },
-        );
+        const observable = this.recordingService
+            .openConfigRecordingSnackbar()
+            .subscribe((res) => {
+                log(
+                    `[DEBUG] Recording screen snackbar closed with response: ${res}`,
+                );
+                console.log(res);
 
-        snackBarRef.afterDismissed().subscribe(async () => {
-            const screenCaptureConfig =
-                this.screenCaptureConfigService.getConfig();
-            if (
-                !screenCaptureConfig.displaySurface ||
-                !screenCaptureConfig.audioDeviceId
-            )
-                return;
-            if (!this.screenCaptureService.isCompatibilityScreenRecord())
-                return;
-
-            // try to start screen recording
-            if (
-                !(await this.screenCaptureService.startScreenRecording({
-                    displaySurface: screenCaptureConfig.displaySurface,
-                    audioDeviceId: screenCaptureConfig.audioDeviceId,
-                }))
-            )
-                return;
-
-            // start counter and open snackbar
-            this.snackBar.openFromComponent(IssueRecordingSnackbarComponent, {
-                horizontalPosition: 'end',
-                verticalPosition: 'bottom',
-                panelClass: ['support-issue-recording-snackbar-wrapper'],
-                data: {},
+                if (res.state === 'idle') observable.unsubscribe();
             });
-        });
     }
 
     async handleAction(action: Action): Promise<void> {
