@@ -22,7 +22,6 @@ import {
     ViewDetailComponent,
 } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
-import { ScreenCaptureService } from '../screen-capture.service';
 import { IssueVideoPreviewDialogComponent } from './issue-video-preview-dialog.component';
 
 @Component({
@@ -58,19 +57,9 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
 
     constructor(
         private readonly issueService: IssueService,
-        private readonly screenCaptureService: ScreenCaptureService,
         private readonly dialog: MatDialog,
     ) {
         super();
-
-        this.destroyRef.onDestroy(() => {
-            this.revokeObjectUrl(this.recordedVideoUrl());
-            this.closePreviewDialog();
-
-            if (this.recordingState() === 'recording') {
-                void this.screenCaptureService.stop();
-            }
-        });
     }
 
     // this method will be called after the ngOnInit of

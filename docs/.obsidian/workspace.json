@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "message/message.md",
+                "file": "storage-account/storage-account.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "message"
+              "title": "storage-account"
             }
           }
         ]
@@ -171,19 +171,20 @@
   },
   "active": "6991b1e612c7458a",
   "lastOpenFiles": [
+    "message/message.md",
+    "storage-account/storage-account.md",
+    "storage-account",
     "message/assets/message-14.jpg",
     "message/assets/message-13.jpg",
     "message/assets/message-12.jpg",
     "message/assets/message-11.jpg",
     "message/assets/message-10.jpg",
     "Proyecto Aurora.md",
-    "message/message.md",
     "message/assets/message-09.jpg",
     "message/assets/message-08.jpg",
     "message/assets/message-07.jpg",
     "message/assets/message-06.jpg",
     "message/assets/message-05.jpg",
-    "message/assets/message-04 1.jpg",
     "message/assets",
     "assets",
     "iam",

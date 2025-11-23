@@ -27,7 +27,7 @@ export const fields = `
     subject
     description
     attachments
-    video
+    screenRecording
     meta
     createdAt
     updatedAt
