@@ -145,9 +145,6 @@ export class RecordingService {
             });
 
             this.recordingState.set('recording');
-            //this.isPlaybackVisible.set(false);
-            //this.recordedVideoUrl.set(null);
-            //this.fg.get('video')?.setValue(null);
 
             return true;
         } catch (error) {

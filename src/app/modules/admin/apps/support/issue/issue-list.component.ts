@@ -102,16 +102,17 @@ export class IssueListComponent extends ViewBaseComponent {
         const observable = this.recordingService
             .openConfigRecordingSnackbar()
             .subscribe((res: ScreenRecordingResponse) => {
-                log(
-                    `[DEBUG] Recording screen snackbar closed with response: ${res}`,
-                );
-                console.log(res);
-
                 if (res.state === 'idle') observable.unsubscribe();
 
                 this.actionService.action({
                     id: 'support::issue.detailDialog.new',
                     isViewAction: true,
+                });
+
+                console.log({
+                    id: uuid(),
+                    file: res.file,
+                    relativePathSegments: ['aurora', 'screen-recording'],
                 });
 
                 this.dialog.open(IssueDetailDialogComponent, {

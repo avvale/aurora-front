@@ -12,30 +12,29 @@ import { Validators } from '@angular/forms';
 import {
     MAT_DIALOG_DATA,
     MatDialog,
+    MatDialogModule,
     MatDialogRef,
 } from '@angular/material/dialog';
+import { RecordingPreviewDialogComponent } from '@apps/screen-recording';
 import { SupportIssue } from '@apps/support';
 import { IssueService } from '@apps/support/issue';
 import {
     Action,
-    Crumb,
     defaultDetailImports,
     log,
-    mapActions,
     SnackBarInvalidFormComponent,
     StorageAccountFileManagerFileUploadedInput,
     uuid,
     ViewDetailComponent,
 } from '@aurora';
-import { lastValueFrom, takeUntil } from 'rxjs';
-import { IssueVideoPreviewDialogComponent } from './issue-video-preview-dialog.component';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
     selector: 'support-issue-detail-dialog',
     templateUrl: './issue-detail-dialog.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [...defaultDetailImports],
+    imports: [...defaultDetailImports, MatDialogModule],
 })
 export class IssueDetailDialogComponent extends ViewDetailComponent {
     // ---- customizations ----
@@ -47,23 +46,18 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
     // It should not be used habitually, since the source of truth is the form.
     managedObject: WritableSignal<SupportIssue> = signal(null);
 
-    // breadcrumb component definition
-    breadcrumb: Crumb[] = [
-        { translation: 'App' },
-        { translation: 'support.Issues', routerLink: ['/support/issue'] },
-        { translation: 'support.Issue' },
-    ];
-
     recordingState = signal<'idle' | 'recording' | 'recorded'>('idle');
     recordedVideoUrl = signal<string | null>(null);
     isPlaybackVisible = signal<boolean>(false);
-    private previewDialogRef: MatDialogRef<IssueVideoPreviewDialogComponent> | null =
+    screenRecordingVideoUrl = signal<string | null>(null);
+    private previewDialogRef: MatDialogRef<RecordingPreviewDialogComponent> | null =
         null;
     private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly issueService: IssueService,
         private readonly dialog: MatDialog,
+        public readonly dialogRef: MatDialogRef<IssueDetailDialogComponent>,
         @Inject(MAT_DIALOG_DATA)
         public data: {
             screenRecording: StorageAccountFileManagerFileUploadedInput;
@@ -75,22 +69,18 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
     // this method will be called after the ngOnInit of
     // the parent class you can use instead of ngOnInit
     init(): void {
-        /**/
+        this.fg.get('screenRecording')?.setValue(this.data.screenRecording);
     }
 
-    openPreviewDialog(): void {
-        if (
-            this.recordingState() !== 'recorded' ||
-            !this.recordedVideoUrl() ||
-            this.previewDialogRef
-        ) {
-            return;
-        }
+    openPreviewVideoDialog(): void {
+        this.screenRecordingVideoUrl.set(
+            URL.createObjectURL(this.data.screenRecording.file),
+        );
 
         this.previewDialogRef = this.dialog.open(
-            IssueVideoPreviewDialogComponent,
+            RecordingPreviewDialogComponent,
             {
-                data: { videoUrl: this.recordedVideoUrl() },
+                data: { videoUrl: this.screenRecordingVideoUrl() },
                 width: '720px',
                 maxWidth: '90vw',
             },
@@ -101,35 +91,8 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
         this.previewDialogRef.afterClosed().subscribe(() => {
             this.isPlaybackVisible.set(false);
             this.previewDialogRef = null;
+            URL.revokeObjectURL(this.screenRecordingVideoUrl());
         });
-    }
-
-    deleteRecording(): void {
-        const url = this.recordedVideoUrl();
-        this.revokeObjectUrl(url);
-
-        this.recordedVideoUrl.set(null);
-        this.isPlaybackVisible.set(false);
-        this.recordingState.set('idle');
-        this.closePreviewDialog();
-        this.fg.get('video')?.reset();
-    }
-
-    private closePreviewDialog(): void {
-        if (this.previewDialogRef) {
-            this.previewDialogRef.close();
-            this.previewDialogRef = null;
-        }
-        this.isPlaybackVisible.set(false);
-    }
-
-    private revokeObjectUrl(url: string | null): void {
-        if (url?.startsWith('blob:')) URL.revokeObjectURL(url);
-    }
-
-    private translateWithFallback(key: string, fallback: string): string {
-        const translation = this.translocoService.translate(key);
-        return translation !== key ? translation : fallback;
     }
 
     onSubmit($event): void {
@@ -162,12 +125,7 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
         }
 
         this.actionService.action({
-            id: mapActions(this.currentViewAction.id, {
-                'support::issue.detailDialog.new':
-                    'support::issue.detailDialog.create',
-                'support::issue.detailDialog.edit':
-                    'support::issue.detailDialog.update',
-            }),
+            id: 'support::issue.detailDialog.create',
             isViewAction: false,
         });
     }
@@ -196,7 +154,7 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
             subject: ['', [Validators.required, Validators.maxLength(510)]],
             description: ['', [Validators.required]],
             attachments: null,
-            video: null,
+            screenRecording: null,
         });
         /* eslint-enable key-spacing */
     }
@@ -209,30 +167,6 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
                 this.fg.get('id').setValue(uuid());
                 break;
 
-            case 'support::issue.detailDialog.edit':
-                this.issueService.issue$
-                    .pipe(takeUntil(this.unsubscribeAll$))
-                    .subscribe((item) => {
-                        this.managedObject.set(item);
-                        this.fg.patchValue(item);
-
-                        if (item?.video) {
-                            this.recordingState.set('recorded');
-                            this.isPlaybackVisible.set(false);
-                            this.closePreviewDialog();
-
-                            if (typeof item.video === 'string') {
-                                this.recordedVideoUrl.set(item.video);
-                            }
-                        } else {
-                            this.recordingState.set('idle');
-                            this.recordedVideoUrl.set(null);
-                            this.isPlaybackVisible.set(false);
-                            this.closePreviewDialog();
-                        }
-                    });
-                break;
-
             case 'support::issue.detailDialogDialog.create':
                 try {
                     await lastValueFrom(
@@ -243,29 +177,6 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
 
                     this.snackBar.open(
                         `${this.translocoService.translate('support.Issue')} ${this.translocoService.translate('Created.M')}`,
-                        undefined,
-                        {
-                            verticalPosition: 'top',
-                            duration: 3000,
-                        },
-                    );
-
-                    this.router.navigate(['support/issue']);
-                } catch (error) {
-                    log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
-                }
-                break;
-
-            case 'support::issue.detailDialog.update':
-                try {
-                    await lastValueFrom(
-                        this.issueService.updateById<SupportIssue>({
-                            object: this.fg.value,
-                        }),
-                    );
-
-                    this.snackBar.open(
-                        `${this.translocoService.translate('support.Issue')} ${this.translocoService.translate('Saved.M')}`,
                         undefined,
                         {
                             verticalPosition: 'top',

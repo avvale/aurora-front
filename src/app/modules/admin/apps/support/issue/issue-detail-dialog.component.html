@@ -75,6 +75,20 @@
                 (ngSubmit)="onSubmit($event)"
             >
                 <div class="layout__container">
+                    <button
+                        type="button"
+                        mat-flat-button
+                        color="warn"
+                        (click)="openPreviewVideoDialog()"
+                    >
+                        <mat-icon
+                            class="icon-size-5"
+                            fontSet="material-symbols-outlined"
+                        >
+                            video_file
+                        </mat-icon>
+                        {{ t('support.ShowScreenRecording') }}
+                    </button>
                     <mat-form-field
                         appearance="outline"
                         class="col-12"
