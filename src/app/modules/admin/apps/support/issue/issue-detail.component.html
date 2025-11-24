@@ -96,71 +96,29 @@
                 (ngSubmit)="onSubmit($event)"
             >
                 <div class="layout__container">
-                    <div class="col-12 pb-3">
-                        <div class="flex flex-wrap items-center gap-3">
-                            @if (recordingState() === 'idle') {
-                                <div class="flex flex-col items-start">
-                                    <button
-                                        type="button"
-                                        mat-flat-button
-                                        color="primary"
-                                        (click)="handleScreenRecording()"
-                                    >
-                                        <mat-icon class="mr-2 icon-size-5">
-                                            videocam
-                                        </mat-icon>
-                                        Grabar pantalla
-                                    </button>
-                                    <div class="mt-1 text-xs text-gray-400">
-                                        Inicie grabación de pantalla para
-                                        adjuntarla a la incidencia.
-                                    </div>
-                                </div>
-                            }
-
-                            @if (recordingState() === 'recording') {
-                                <button
-                                    type="button"
-                                    mat-flat-button
-                                    color="warn"
-                                    (click)="stopScreenRecording()"
+                    @if (managedObject()?.screenRecording?.url) {
+                        <div class="col-12 mb-4">
+                            <button
+                                type="button"
+                                mat-flat-button
+                                color="warn"
+                                (click)="
+                                    actionService.action({
+                                        id: 'support::issue.detail.openPreviewVideoDialog',
+                                        isViewAction: false,
+                                    })
+                                "
+                            >
+                                <mat-icon
+                                    class="icon-size-5"
+                                    fontSet="material-symbols-outlined"
                                 >
-                                    <mat-icon class="mr-2 icon-size-5">
-                                        stop
-                                    </mat-icon>
-                                    Detener grabación
-                                </button>
-                            }
-
-                            @if (recordingState() === 'recorded') {
-                                <button
-                                    type="button"
-                                    [disabled]="isPlaybackVisible()"
-                                    mat-stroked-button
-                                    color="primary"
-                                    (click)="openPreviewDialog()"
-                                >
-                                    <mat-icon class="mr-2 icon-size-5">
-                                        play_arrow
-                                    </mat-icon>
-                                    Reproducir grabación
-                                </button>
-
-                                <button
-                                    type="button"
-                                    mat-stroked-button
-                                    color="warn"
-                                    (click)="deleteRecording()"
-                                >
-                                    <mat-icon class="mr-2 icon-size-5">
-                                        delete
-                                    </mat-icon>
-                                    Borrar grabación
-                                </button>
-                            }
+                                    video_file
+                                </mat-icon>
+                                {{ t('support.ShowScreenRecording') }}
+                            </button>
                         </div>
-                    </div>
-
+                    }
                     <mat-form-field
                         appearance="outline"
                         class="col-12"

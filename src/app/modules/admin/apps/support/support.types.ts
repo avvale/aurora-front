@@ -13,7 +13,7 @@ export interface SupportIssue {
     subject: string;
     description: string;
     attachments?: any;
-    video?: any;
+    screenRecording?: any;
     meta?: any;
     createdAt?: string;
     updatedAt?: string;
@@ -68,7 +68,11 @@ export interface SupportUpdateIssues {
     meta?: any;
 }
 
-export type SupportIssueRecordingState = 'idle' | 'recording' | 'paused' | 'recorded';
+export type SupportIssueRecordingState =
+    | 'idle'
+    | 'recording'
+    | 'paused'
+    | 'recorded';
 export type SupportIssueDisplaySurface = 'tab' | 'window' | 'screen' | 'any';
 
 export interface SupportConfig {

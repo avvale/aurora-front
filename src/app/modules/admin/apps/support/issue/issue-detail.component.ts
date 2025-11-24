@@ -6,11 +6,8 @@ import {
     WritableSignal,
 } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import {
-    RecordingPreviewDialogComponent,
-    RecordingService,
-} from '@apps/screen-recording';
+import { MatDialog } from '@angular/material/dialog';
+import { RecordingPreviewDialogComponent } from '@apps/screen-recording';
 import { SupportIssue } from '@apps/support';
 import { IssueService } from '@apps/support/issue';
 import {
@@ -50,15 +47,8 @@ export class IssueDetailComponent extends ViewDetailComponent {
         { translation: 'support.Issue' },
     ];
 
-    recordingState = signal<'idle' | 'recording' | 'recorded'>('idle');
-    recordedVideoUrl = signal<string | null>(null);
-    isPlaybackVisible = signal<boolean>(false);
-    private previewDialogRef: MatDialogRef<RecordingPreviewDialogComponent> | null =
-        null;
-
     constructor(
         private readonly issueService: IssueService,
-        private readonly recordingService: RecordingService,
         private readonly dialog: MatDialog,
     ) {
         super();
@@ -68,141 +58,6 @@ export class IssueDetailComponent extends ViewDetailComponent {
     // the parent class you can use instead of ngOnInit
     init(): void {
         /**/
-    }
-
-    async handleScreenRecording(): Promise<void> {
-        if (this.recordingState() === 'recorded') {
-            const message = this.translateWithFallback(
-                'screenRecording.ScreenRecordingExists',
-                'Ya existe una grabación. Elimina la anterior para grabar de nuevo.',
-            );
-            this.snackBar.open(message, undefined, {
-                duration: 4000,
-                verticalPosition: 'top',
-            });
-            return;
-        }
-
-        if (!navigator?.mediaDevices?.getDisplayMedia) {
-            const message = this.translateWithFallback(
-                'screenRecording.ScreenRecordingNotSupported',
-                'La grabación de pantalla no está soportada en este navegador.',
-            );
-            this.snackBar.open(message, undefined, {
-                duration: 4000,
-                verticalPosition: 'top',
-            });
-            return;
-        }
-
-        try {
-            this.closePreviewDialog();
-            //await this.recordingService.start(undefined, { includeSystemAudio: true });
-            this.recordingState.set('recording');
-            this.isPlaybackVisible.set(false);
-            this.recordedVideoUrl.set(null);
-            this.fg.get('video')?.setValue(null);
-        } catch (error) {
-            log('[DEBUG] Error starting screen recording', error);
-            const message = this.translateWithFallback(
-                'support.ScreenRecordingStartError',
-                'No se pudo iniciar la grabación de pantalla.',
-            );
-            this.snackBar.open(message, undefined, {
-                duration: 4000,
-                verticalPosition: 'top',
-            });
-        }
-    }
-
-    async stopScreenRecording(): Promise<void> {
-        if (this.recordingState() !== 'recording') return;
-
-        try {
-            const blob = await this.recordingService.stop();
-
-            if (!blob) {
-                this.recordingState.set('idle');
-                return;
-            }
-
-            this.revokeObjectUrl(this.recordedVideoUrl());
-            const url = URL.createObjectURL(blob);
-
-            this.recordedVideoUrl.set(url);
-            this.recordingState.set('recorded');
-
-            const fileName = `issue-screen-recording-${Date.now()}.webm`;
-            const file = new File([blob], fileName, {
-                type: blob.type || 'video/webm',
-            });
-            this.fg.get('video')?.setValue(file);
-        } catch (error) {
-            log('[DEBUG] Error stopping screen recording', error);
-            const message = this.translateWithFallback(
-                'support.ScreenRecordingStopError',
-                'No se pudo detener la grabación correctamente.',
-            );
-            this.snackBar.open(message, undefined, {
-                duration: 4000,
-                verticalPosition: 'top',
-            });
-            this.recordingState.set('idle');
-        }
-    }
-
-    /* openPreviewDialog(): void {
-        if (
-            this.recordingState() !== 'recorded' ||
-            !this.recordedVideoUrl() ||
-            this.previewDialogRef
-        ) {
-            return;
-        }
-
-        this.previewDialogRef = this.dialog.open(
-            RecordingPreviewDialogComponent,
-            {
-                data: { videoUrl: this.recordedVideoUrl() },
-                width: '720px',
-                maxWidth: '90vw',
-            },
-        );
-
-        this.isPlaybackVisible.set(true);
-
-        this.previewDialogRef.afterClosed().subscribe(() => {
-            this.isPlaybackVisible.set(false);
-            this.previewDialogRef = null;
-        });
-    } */
-
-    deleteRecording(): void {
-        const url = this.recordedVideoUrl();
-        this.revokeObjectUrl(url);
-
-        this.recordedVideoUrl.set(null);
-        this.isPlaybackVisible.set(false);
-        this.recordingState.set('idle');
-        this.closePreviewDialog();
-        this.fg.get('video')?.reset();
-    }
-
-    private closePreviewDialog(): void {
-        if (this.previewDialogRef) {
-            this.previewDialogRef.close();
-            this.previewDialogRef = null;
-        }
-        this.isPlaybackVisible.set(false);
-    }
-
-    private revokeObjectUrl(url: string | null): void {
-        if (url?.startsWith('blob:')) URL.revokeObjectURL(url);
-    }
-
-    private translateWithFallback(key: string, fallback: string): string {
-        const translation = this.translocoService.translate(key);
-        return translation !== key ? translation : fallback;
     }
 
     onSubmit($event): void {
@@ -267,7 +122,6 @@ export class IssueDetailComponent extends ViewDetailComponent {
             subject: ['', [Validators.required, Validators.maxLength(510)]],
             description: ['', [Validators.required]],
             attachments: null,
-            video: null,
         });
         /* eslint-enable key-spacing */
     }
@@ -286,21 +140,6 @@ export class IssueDetailComponent extends ViewDetailComponent {
                     .subscribe((item) => {
                         this.managedObject.set(item);
                         this.fg.patchValue(item);
-
-                        if (item?.video) {
-                            this.recordingState.set('recorded');
-                            this.isPlaybackVisible.set(false);
-                            this.closePreviewDialog();
-
-                            if (typeof item.video === 'string') {
-                                this.recordedVideoUrl.set(item.video);
-                            }
-                        } else {
-                            this.recordingState.set('idle');
-                            this.recordedVideoUrl.set(null);
-                            this.isPlaybackVisible.set(false);
-                            this.closePreviewDialog();
-                        }
                     });
                 break;
 
@@ -350,6 +189,18 @@ export class IssueDetailComponent extends ViewDetailComponent {
                 }
                 break;
             /* #endregion common actions */
+
+            /* #region custom actions */
+            case 'support::issue.detail.openPreviewVideoDialog':
+                this.dialog.open(RecordingPreviewDialogComponent, {
+                    data: {
+                        videoUrl: this.managedObject().screenRecording.url,
+                    },
+                    width: '720px',
+                    maxWidth: '90vw',
+                });
+                break;
+            /* #endregion custom actions */
         }
     }
 }

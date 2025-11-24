@@ -46,7 +46,6 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
     // It should not be used habitually, since the source of truth is the form.
     managedObject: WritableSignal<SupportIssue> = signal(null);
 
-    isPlaybackVisible = signal<boolean>(false);
     screenRecordingVideoUrl = signal<string | null>(null);
     private previewDialogRef: MatDialogRef<RecordingPreviewDialogComponent> | null =
         null;
@@ -143,6 +142,11 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
                     );
 
                     this.dialogRef.close();
+
+                    this.actionService.action({
+                        id: 'support::issue.list.pagination',
+                        isViewAction: false,
+                    });
                 } catch (error) {
                     log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
                 }
@@ -164,10 +168,7 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
                     },
                 );
 
-                this.isPlaybackVisible.set(true);
-
                 this.previewDialogRef.afterClosed().subscribe(() => {
-                    this.isPlaybackVisible.set(false);
                     this.previewDialogRef = null;
                     URL.revokeObjectURL(this.screenRecordingVideoUrl());
                 });

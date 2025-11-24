@@ -77,6 +77,24 @@
                     </au-grid-column-translation>
                 }
             </au-grid-translations>
+
+            <ng-template
+                auGridCellValueTemplate
+                field="externalStatus"
+                let-externalStatus
+                let-columnConfig="columnConfig"
+            >
+                @if (externalStatus) {
+                    <div class="inline-block">
+                        <au-chip
+                            color="#524488"
+                            size="small"
+                        >
+                            {{ externalStatus | uppercase }}
+                        </au-chip>
+                    </div>
+                }
+            </ng-template>
         </au-grid>
         <!-- / Grid -->
     </div>

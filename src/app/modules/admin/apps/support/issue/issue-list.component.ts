@@ -1,3 +1,4 @@
+import { UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -12,6 +13,7 @@ import { SupportIssue } from '@apps/support';
 import { issueColumnsConfig, IssueService } from '@apps/support/issue';
 import {
     Action,
+    ChipComponent,
     ColumnConfig,
     ColumnDataType,
     Crumb,
@@ -38,7 +40,7 @@ export const issueMainGridListId = 'support::issue.list.mainGridList';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [...defaultListImports],
+    imports: [...defaultListImports, ChipComponent, UpperCasePipe],
 })
 export class IssueListComponent extends ViewBaseComponent {
     // ---- customizations ----
