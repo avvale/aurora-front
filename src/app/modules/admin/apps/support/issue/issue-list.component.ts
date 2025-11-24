@@ -109,12 +109,6 @@ export class IssueListComponent extends ViewBaseComponent {
                     isViewAction: true,
                 });
 
-                console.log({
-                    id: uuid(),
-                    file: res.file,
-                    relativePathSegments: ['aurora', 'screen-recording'],
-                });
-
                 this.dialog.open(IssueDetailDialogComponent, {
                     width: '720px',
                     maxWidth: '90vw',

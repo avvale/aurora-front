@@ -1,5 +1,7 @@
 ## Índice
 - [[#Descripción]]
+- [[#Carga de ficheros desde el front]]
+- [[#Carga de ficheros desde el back]]
 - [[#Bandeja de entrada]]
 	- [[#Vista rápida]]
 	- [[#Vista detalle]]
@@ -26,7 +28,7 @@ StorageAccount es un módulo pensado para abstraer el uso de ficheros, independi
 
 De esta manera damos un set de utilidades al desarrollador para el manejo de ficheros, ya se estén almacenando en local, Azure, AWS, GCP, etc.
 
-## Carga de ficheros
+## Carga de ficheros desde el front
 
 Una práctica común es la carga de uno o varios ficheros desde nuestra aplicación, pongamos un ejemplo.
 Tenemos un modelo de tipo user y queremos añadirle un fichero pdf para asociar un CV al usuario, por lo que en la api de creación del user, requerimos un campo donde establecer el CV.
@@ -47,6 +49,36 @@ input StorageAccountFileManagerFileUploadedInput
 - **id:** Campo obligatorio, uuid para la identificación del fichero a cargar.
 - **file:** Objeto binario de tipo [File](https://developer.mozilla.org/en-US/docs/Web/API/File), para este proceso la petición tiene que ser de tipo *multipart/form-data*, para forzar esto en graphQL hay que introducir la cabecera *'Apollo-Require-Preflight': 'true'*.
 - **relativePathSegments:** Ruta relativa al contenedor donde se alojará el fichero.
+
+
+
+## Carga de ficheros desde el back
+
+Los datos contenidos en StorageAccountFileManagerFileUploadedInput pueden llegar como argumento a la api o como propiedad dentro de un objeto.
+
+Usaremos el servicio *StorageAccountFileManagerService*, para manejar esta dato, de tal manera que lo inyectaremos en el handler correspondiente para subir el fichero al storage configurado.
+
+```typescript
+constructor(
+	private readonly commandBus: ICommandBus,
+	private readonly queryBus: IQueryBus,
+	private readonly storageAccountFileManagerService: StorageAccountFileManagerService,
+) {}
+
+async main(
+	payload: OjectInput,
+): Promise<boolean> {
+
+	await this.commandBus.dispatch(
+		new SupportCreateIssueCommand(payload),
+	);
+
+	if (payload.screenRecording) {
+		void this.storageAccountFileManagerService.uploadFile(payload.file);
+	}
+}
+```
+
 
 
 

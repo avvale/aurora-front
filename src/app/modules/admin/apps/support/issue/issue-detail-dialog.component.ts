@@ -125,7 +125,7 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
                 this.fg.get('id').setValue(uuid());
                 break;
 
-            case 'support::issue.detailDialogDialog.create':
+            case 'support::issue.detailDialog.create':
                 try {
                     await lastValueFrom(
                         this.issueService.create<SupportIssue>({
@@ -142,7 +142,7 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
                         },
                     );
 
-                    this.router.navigate(['support/issue']);
+                    this.dialogRef.close();
                 } catch (error) {
                     log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
                 }

@@ -151,7 +151,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
         }
     }
 
-    openPreviewDialog(): void {
+    /* openPreviewDialog(): void {
         if (
             this.recordingState() !== 'recorded' ||
             !this.recordedVideoUrl() ||
@@ -175,7 +175,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
             this.isPlaybackVisible.set(false);
             this.previewDialogRef = null;
         });
-    }
+    } */
 
     deleteRecording(): void {
         const url = this.recordedVideoUrl();

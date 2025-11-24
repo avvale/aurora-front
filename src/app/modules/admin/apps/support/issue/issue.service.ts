@@ -286,7 +286,9 @@ export class IssueService {
     create<T>({
         graphqlStatement = createMutation,
         object = null,
-        headers = {},
+        headers = {
+            'Apollo-Require-Preflight': 'true',
+        },
     }: {
         graphqlStatement?: DocumentNode;
         object?: SupportCreateIssue;
