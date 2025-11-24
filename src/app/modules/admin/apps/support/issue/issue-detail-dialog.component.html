@@ -7,7 +7,6 @@
         class="bg-card flex flex-0 flex-col border-b p-6 sm:flex-row sm:items-center sm:justify-between sm:px-2 sm:py-4 dark:bg-transparent"
     >
         <div class="min-w-0 flex-1">
-            <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
             <au-title>
                 <mat-icon
                     class="mr-2 icon-size-8"
@@ -19,13 +18,13 @@
 
         <!-- Actions -->
         <div class="mt-6 flex flex-shrink-0 items-center sm:ml-4 sm:mt-0">
-            @if (currentViewAction.id === 'support::issue.detail.edit') {
+            @if (currentViewAction.id === 'support::issue.detailDialog.new') {
                 <button
                     type="submit"
                     class="ml-3"
                     [disabled]="
                         fg.pristine ||
-                        ('support::issue.detail.update'
+                        ('support::issue.detailDialog.create'
                             | getSpinnerFlag
                             | async)
                     "
@@ -34,37 +33,9 @@
                     color="accent"
                 >
                     @if (
-                        'support::issue.detail.update' | getSpinnerFlag | async
-                    ) {
-                        <mat-icon>
-                            <mat-spinner diameter="20"></mat-spinner>
-                        </mat-icon>
-                    } @else {
-                        <mat-icon
-                            class="mr-2 icon-size-5"
-                            svgIcon="mat_solid:edit"
-                        ></mat-icon>
-                    }
-                    {{ t('Update') }}
-                </button>
-            }
-
-            @if (currentViewAction.id === 'support::issue.detail.new') {
-                <button
-                    type="submit"
-                    class="ml-3"
-                    [disabled]="
-                        fg.pristine ||
-                        ('support::issue.detail.create'
+                        'support::issue.detailDialog.create'
                             | getSpinnerFlag
-                            | async)
-                    "
-                    mat-flat-button
-                    form="supportIssueFormDetail"
-                    color="accent"
-                >
-                    @if (
-                        'support::issue.detail.create' | getSpinnerFlag | async
+                            | async
                     ) {
                         <mat-icon>
                             <mat-spinner diameter="20"></mat-spinner>
@@ -78,6 +49,14 @@
                     {{ t('Create') }}
                 </button>
             }
+            <button
+                class="ml-2"
+                [disableRipple]="true"
+                [mat-dialog-close]="undefined"
+                mat-icon-button
+            >
+                <mat-icon>close</mat-icon>
+            </button>
         </div>
         <!-- / Actions -->
     </div>
@@ -85,10 +64,10 @@
 
     <!-- Main -->
     <div
-        class="flex-auto overflow-y-auto px-6 pt-6 sm:px-10 sm:pt-10"
+        class="flex-auto overflow-y-auto px-2 pt-6"
         cdkScrollable
     >
-        <div class="form-card">
+        <div class="form-card px-1 pt-1">
             <form
                 id="supportIssueFormDetail"
                 [formGroup]="fg"
@@ -96,71 +75,6 @@
                 (ngSubmit)="onSubmit($event)"
             >
                 <div class="layout__container">
-                    <div class="col-12 pb-3">
-                        <div class="flex flex-wrap items-center gap-3">
-                            @if (recordingState() === 'idle') {
-                                <div class="flex flex-col items-start">
-                                    <button
-                                        type="button"
-                                        mat-flat-button
-                                        color="primary"
-                                        (click)="startScreenRecording()"
-                                    >
-                                        <mat-icon class="mr-2 icon-size-5">
-                                            videocam
-                                        </mat-icon>
-                                        Grabar pantalla
-                                    </button>
-                                    <div class="mt-1 text-xs text-gray-400">
-                                        Inicie grabación de pantalla para
-                                        adjuntarla a la incidencia.
-                                    </div>
-                                </div>
-                            }
-
-                            @if (recordingState() === 'recording') {
-                                <button
-                                    type="button"
-                                    mat-flat-button
-                                    color="warn"
-                                    (click)="stopScreenRecording()"
-                                >
-                                    <mat-icon class="mr-2 icon-size-5">
-                                        stop
-                                    </mat-icon>
-                                    Detener grabación
-                                </button>
-                            }
-
-                            @if (recordingState() === 'recorded') {
-                                <button
-                                    type="button"
-                                    [disabled]="isPlaybackVisible()"
-                                    mat-stroked-button
-                                    color="primary"
-                                    (click)="openPreviewDialog()"
-                                >
-                                    <mat-icon class="mr-2 icon-size-5">
-                                        play_arrow
-                                    </mat-icon>
-                                    Reproducir grabación
-                                </button>
-
-                                <button
-                                    type="button"
-                                    mat-stroked-button
-                                    color="warn"
-                                    (click)="deleteRecording()"
-                                >
-                                    <mat-icon class="mr-2 icon-size-5">
-                                        delete
-                                    </mat-icon>
-                                    Borrar grabación
-                                </button>
-                            }
-                        </div>
-                    </div>
-
                     <mat-form-field
                         appearance="outline"
                         class="col-12"

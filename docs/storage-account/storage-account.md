@@ -32,7 +32,21 @@ Una práctica común es la carga de uno o varios ficheros desde nuestra aplicaci
 Tenemos un modelo de tipo user y queremos añadirle un fichero pdf para asociar un CV al usuario, por lo que en la api de creación del user, requerimos un campo donde establecer el CV.
 Este campo tiene que ser de tipo **StorageAccountFileManagerFileUploadedInput**.
 
+```graphql
+input StorageAccountFileManagerFileUploadedInput
+{
+  id: ID!
+  file: Upload!
+  relativePathSegments: [GraphQLString]!
+  containerName: GraphQLString
+  hasCreateLibrary: GraphQLBoolean
+  meta: JSON
+}
+```
 
+- **id:** Campo obligatorio, uuid para la identificación del fichero a cargar.
+- **file:** Objeto binario de tipo [File](https://developer.mozilla.org/en-US/docs/Web/API/File), para este proceso la petición tiene que ser de tipo *multipart/form-data*, para forzar esto en graphQL hay que introducir la cabecera *'Apollo-Require-Preflight': 'true'*.
+- **relativePathSegments:** Ruta relativa al contenedor donde se alojará el fichero.
 
 
 

@@ -3,7 +3,11 @@ import {
     Component,
     ViewEncapsulation,
 } from '@angular/core';
-import { RecordingService } from '@apps/screen-recording';
+import { MatDialog } from '@angular/material/dialog';
+import {
+    RecordingService,
+    ScreenRecordingResponse,
+} from '@apps/screen-recording';
 import { SupportIssue } from '@apps/support';
 import { issueColumnsConfig, IssueService } from '@apps/support/issue';
 import {
@@ -20,9 +24,11 @@ import {
     GridStateService,
     log,
     queryStatementHandler,
+    uuid,
     ViewBaseComponent,
 } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
+import { IssueDetailDialogComponent } from './issue-detail-dialog.component';
 
 export const issueMainGridListId = 'support::issue.list.mainGridList';
 
@@ -72,7 +78,7 @@ export class IssueListComponent extends ViewBaseComponent {
             translation: 'Selects',
             sticky: true,
         },
-        ...issueColumnsConfig,
+        ...issueColumnsConfig({ translator: this.translocoService }),
     ];
 
     constructor(
@@ -81,6 +87,7 @@ export class IssueListComponent extends ViewBaseComponent {
         private readonly gridStateService: GridStateService,
         private readonly issueService: IssueService,
         private readonly recordingService: RecordingService,
+        private readonly dialog: MatDialog,
     ) {
         super();
     }
@@ -94,13 +101,33 @@ export class IssueListComponent extends ViewBaseComponent {
     openRecordingScreen(): void {
         const observable = this.recordingService
             .openConfigRecordingSnackbar()
-            .subscribe((res) => {
+            .subscribe((res: ScreenRecordingResponse) => {
                 log(
                     `[DEBUG] Recording screen snackbar closed with response: ${res}`,
                 );
                 console.log(res);
 
                 if (res.state === 'idle') observable.unsubscribe();
+
+                this.actionService.action({
+                    id: 'support::issue.detailDialog.new',
+                    isViewAction: true,
+                });
+
+                this.dialog.open(IssueDetailDialogComponent, {
+                    width: '720px',
+                    maxWidth: '90vw',
+                    data: {
+                        screenRecording: {
+                            id: uuid(),
+                            file: res.file,
+                            relativePathSegments: [
+                                'aurora',
+                                'screen-recording',
+                            ],
+                        },
+                    },
+                });
             });
     }
 
@@ -132,7 +159,7 @@ export class IssueListComponent extends ViewBaseComponent {
                         query: action.meta.query
                             ? action.meta.query
                             : queryStatementHandler({
-                                  columnsConfig: issueColumnsConfig,
+                                  columnsConfig: issueColumnsConfig(),
                               })
                                   .setColumFilters(
                                       this.gridFiltersStorageService.getColumnFilterState(
@@ -225,10 +252,10 @@ export class IssueListComponent extends ViewBaseComponent {
                     }),
                 );
 
-                const columns: string[] = issueColumnsConfig.map(
+                const columns: string[] = issueColumnsConfig().map(
                     (issueColumnConfig) => issueColumnConfig.field,
                 );
-                const headers: string[] = issueColumnsConfig.map(
+                const headers: string[] = issueColumnsConfig().map(
                     (issueColumnConfig) =>
                         this.translocoService.translate(
                             issueColumnConfig.translation,

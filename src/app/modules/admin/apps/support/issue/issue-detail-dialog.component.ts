@@ -2,13 +2,18 @@ import {
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
+    Inject,
     inject,
     signal,
     ViewEncapsulation,
     WritableSignal,
 } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {
+    MAT_DIALOG_DATA,
+    MatDialog,
+    MatDialogRef,
+} from '@angular/material/dialog';
 import { SupportIssue } from '@apps/support';
 import { IssueService } from '@apps/support/issue';
 import {
@@ -18,6 +23,7 @@ import {
     log,
     mapActions,
     SnackBarInvalidFormComponent,
+    StorageAccountFileManagerFileUploadedInput,
     uuid,
     ViewDetailComponent,
 } from '@aurora';
@@ -25,8 +31,8 @@ import { lastValueFrom, takeUntil } from 'rxjs';
 import { IssueVideoPreviewDialogComponent } from './issue-video-preview-dialog.component';
 
 @Component({
-    selector: 'support-issue-detail',
-    templateUrl: './issue-detail.component.html',
+    selector: 'support-issue-detail-dialog',
+    templateUrl: './issue-detail-dialog.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [...defaultDetailImports],
@@ -58,6 +64,10 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
     constructor(
         private readonly issueService: IssueService,
         private readonly dialog: MatDialog,
+        @Inject(MAT_DIALOG_DATA)
+        public data: {
+            screenRecording: StorageAccountFileManagerFileUploadedInput;
+        },
     ) {
         super();
     }
@@ -66,87 +76,6 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
     // the parent class you can use instead of ngOnInit
     init(): void {
         /**/
-    }
-
-    async startScreenRecording(): Promise<void> {
-        if (this.recordingState() === 'recorded') {
-            const message = this.translateWithFallback(
-                'support.ScreenRecordingExists',
-                'Ya existe una grabación. Elimina la anterior para grabar de nuevo.',
-            );
-            this.snackBar.open(message, undefined, {
-                duration: 4000,
-                verticalPosition: 'top',
-            });
-            return;
-        }
-
-        if (!navigator?.mediaDevices?.getDisplayMedia) {
-            const message = this.translateWithFallback(
-                'support.ScreenRecordingNotSupported',
-                'La grabación de pantalla no está soportada en este navegador.',
-            );
-            this.snackBar.open(message, undefined, {
-                duration: 4000,
-                verticalPosition: 'top',
-            });
-            return;
-        }
-
-        try {
-            this.closePreviewDialog();
-            //await this.screenCaptureService.start(undefined, { includeSystemAudio: true });
-            this.recordingState.set('recording');
-            this.isPlaybackVisible.set(false);
-            this.recordedVideoUrl.set(null);
-            this.fg.get('video')?.setValue(null);
-        } catch (error) {
-            log('[DEBUG] Error starting screen recording', error);
-            const message = this.translateWithFallback(
-                'support.ScreenRecordingStartError',
-                'No se pudo iniciar la grabación de pantalla.',
-            );
-            this.snackBar.open(message, undefined, {
-                duration: 4000,
-                verticalPosition: 'top',
-            });
-        }
-    }
-
-    async stopScreenRecording(): Promise<void> {
-        if (this.recordingState() !== 'recording') return;
-
-        try {
-            const blob = await this.screenCaptureService.stop();
-
-            if (!blob) {
-                this.recordingState.set('idle');
-                return;
-            }
-
-            this.revokeObjectUrl(this.recordedVideoUrl());
-            const url = URL.createObjectURL(blob);
-
-            this.recordedVideoUrl.set(url);
-            this.recordingState.set('recorded');
-
-            const fileName = `issue-screen-recording-${Date.now()}.webm`;
-            const file = new File([blob], fileName, {
-                type: blob.type || 'video/webm',
-            });
-            this.fg.get('video')?.setValue(file);
-        } catch (error) {
-            log('[DEBUG] Error stopping screen recording', error);
-            const message = this.translateWithFallback(
-                'support.ScreenRecordingStopError',
-                'No se pudo detener la grabación correctamente.',
-            );
-            this.snackBar.open(message, undefined, {
-                duration: 4000,
-                verticalPosition: 'top',
-            });
-            this.recordingState.set('idle');
-        }
     }
 
     openPreviewDialog(): void {
@@ -234,8 +163,10 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
 
         this.actionService.action({
             id: mapActions(this.currentViewAction.id, {
-                'support::issue.detail.new': 'support::issue.detail.create',
-                'support::issue.detail.edit': 'support::issue.detail.update',
+                'support::issue.detailDialog.new':
+                    'support::issue.detailDialog.create',
+                'support::issue.detailDialog.edit':
+                    'support::issue.detailDialog.update',
             }),
             isViewAction: false,
         });
@@ -274,11 +205,11 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id) {
             /* #region common actions */
-            case 'support::issue.detail.new':
+            case 'support::issue.detailDialog.new':
                 this.fg.get('id').setValue(uuid());
                 break;
 
-            case 'support::issue.detail.edit':
+            case 'support::issue.detailDialog.edit':
                 this.issueService.issue$
                     .pipe(takeUntil(this.unsubscribeAll$))
                     .subscribe((item) => {
@@ -302,7 +233,7 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
                     });
                 break;
 
-            case 'support::issue.detail.create':
+            case 'support::issue.detailDialogDialog.create':
                 try {
                     await lastValueFrom(
                         this.issueService.create<SupportIssue>({
@@ -325,7 +256,7 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
                 }
                 break;
 
-            case 'support::issue.detail.update':
+            case 'support::issue.detailDialog.update':
                 try {
                     await lastValueFrom(
                         this.issueService.updateById<SupportIssue>({

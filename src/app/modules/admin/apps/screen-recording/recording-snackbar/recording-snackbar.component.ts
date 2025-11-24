@@ -116,7 +116,6 @@ export class RecordingSnackbarComponent {
             this.recordingService.recordingState.set('idle');
             this.recordingService.recordingPropagate$.next({
                 state: this.recordingService.recordingState(),
-                fileName,
                 file,
             });
         } catch (error) {

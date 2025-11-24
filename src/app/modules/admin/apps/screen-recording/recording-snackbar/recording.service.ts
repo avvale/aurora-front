@@ -9,13 +9,15 @@ import { ConfigRecordingService } from '../config-recording-snackbar/config-reco
 import {
     ScreenRecordingDisplaySurface,
     ScreenRecordingRecordingState,
+    ScreenRecordingResponse,
 } from '../screen-recording.types';
 import { RecordingSnackbarComponent } from './recording-snackbar.component';
 
 @Injectable({ providedIn: 'root' })
 export class RecordingService {
     recordingState = signal<ScreenRecordingRecordingState>('idle');
-    recordingPropagate$: Subject<any> = new Subject<any>();
+    recordingPropagate$: Subject<ScreenRecordingResponse> =
+        new Subject<ScreenRecordingResponse>();
 
     private mediaStream?: MediaStream; // final stream
     private displayStream?: MediaStream; // getDisplayMedia stream

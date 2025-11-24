@@ -15,7 +15,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue-detail.component.ts",
-            "integrity": "sha1:cc778a52429bf54b560ebed97499e97421c67a99"
+            "integrity": "sha1:ff189566b73c9f13db76102d616e3ed6c12e5b53"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue-list.component.html",
@@ -23,19 +23,19 @@
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue-list.component.ts",
-            "integrity": "sha1:869696ce577b88c7b4f657a88a29867e085584af"
+            "integrity": "sha1:a7f5aac9f39caba147bcd2c546ca66f5190d929b"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue.columns-config.ts",
-            "integrity": "sha1:47834deb203eb0771d175d4f6c98ad11a66b06d6"
+            "integrity": "sha1:37252b02e3b7102fd27053e43e3d7a4c1b2bc8de"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue.graphql.ts",
-            "integrity": "sha1:8a811bc534eba3a7e926ba79c1ceb43968768a4e"
+            "integrity": "sha1:54f2569206334e54c1ef96dd23b5b3b2d5b6abbd"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue.resolvers.ts",
-            "integrity": "sha1:4102c97edb5d02bdad843b094dac881bc03d43c9"
+            "integrity": "sha1:c87ebe849b0679e4c08f7ededf1e4368d0abd6a7"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue.service.ts",

@@ -37,7 +37,7 @@ export const issuePaginationResolver: ResolveFn<GridData<SupportIssue>> = (
     gridStateService.setExportActionId(gridId, 'support::issue.list.export');
 
     return issueService.pagination({
-        query: queryStatementHandler({ columnsConfig: issueColumnsConfig })
+        query: queryStatementHandler({ columnsConfig: issueColumnsConfig() })
             .setColumFilters(
                 gridFiltersStorageService.getColumnFilterState(gridId),
             )
