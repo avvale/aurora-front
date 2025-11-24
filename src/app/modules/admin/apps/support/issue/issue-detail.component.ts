@@ -7,7 +7,10 @@ import {
 } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { RecordingService } from '@apps/screen-recording';
+import {
+    RecordingPreviewDialogComponent,
+    RecordingService,
+} from '@apps/screen-recording';
 import { SupportIssue } from '@apps/support';
 import { IssueService } from '@apps/support/issue';
 import {
@@ -21,7 +24,6 @@ import {
     ViewDetailComponent,
 } from '@aurora';
 import { lastValueFrom, takeUntil } from 'rxjs';
-import { IssueVideoPreviewDialogComponent } from './issue-video-preview-dialog.component';
 
 @Component({
     selector: 'support-issue-detail',
@@ -51,7 +53,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
     recordingState = signal<'idle' | 'recording' | 'recorded'>('idle');
     recordedVideoUrl = signal<string | null>(null);
     isPlaybackVisible = signal<boolean>(false);
-    private previewDialogRef: MatDialogRef<IssueVideoPreviewDialogComponent> | null =
+    private previewDialogRef: MatDialogRef<RecordingPreviewDialogComponent> | null =
         null;
 
     constructor(
@@ -159,7 +161,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
         }
 
         this.previewDialogRef = this.dialog.open(
-            IssueVideoPreviewDialogComponent,
+            RecordingPreviewDialogComponent,
             {
                 data: { videoUrl: this.recordedVideoUrl() },
                 width: '720px',

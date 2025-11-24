@@ -12,7 +12,7 @@ import {
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { TitleComponent } from '@aurora';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TRANSLOCO_SCOPE, TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'screen-recording-recording-preview',
@@ -25,6 +25,13 @@ import { TranslocoModule } from '@jsverse/transloco';
         MatIconModule,
         TitleComponent,
         TranslocoModule,
+    ],
+    providers: [
+        {
+            provide: TRANSLOCO_SCOPE,
+            useValue: 'screen-recording',
+            multi: true,
+        },
     ],
 })
 export class RecordingPreviewDialogComponent {

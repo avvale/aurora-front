@@ -46,8 +46,6 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
     // It should not be used habitually, since the source of truth is the form.
     managedObject: WritableSignal<SupportIssue> = signal(null);
 
-    recordingState = signal<'idle' | 'recording' | 'recorded'>('idle');
-    recordedVideoUrl = signal<string | null>(null);
     isPlaybackVisible = signal<boolean>(false);
     screenRecordingVideoUrl = signal<string | null>(null);
     private previewDialogRef: MatDialogRef<RecordingPreviewDialogComponent> | null =
@@ -70,29 +68,6 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
     // the parent class you can use instead of ngOnInit
     init(): void {
         this.fg.get('screenRecording')?.setValue(this.data.screenRecording);
-    }
-
-    openPreviewVideoDialog(): void {
-        this.screenRecordingVideoUrl.set(
-            URL.createObjectURL(this.data.screenRecording.file),
-        );
-
-        this.previewDialogRef = this.dialog.open(
-            RecordingPreviewDialogComponent,
-            {
-                data: { videoUrl: this.screenRecordingVideoUrl() },
-                width: '720px',
-                maxWidth: '90vw',
-            },
-        );
-
-        this.isPlaybackVisible.set(true);
-
-        this.previewDialogRef.afterClosed().subscribe(() => {
-            this.isPlaybackVisible.set(false);
-            this.previewDialogRef = null;
-            URL.revokeObjectURL(this.screenRecordingVideoUrl());
-        });
     }
 
     onSubmit($event): void {
@@ -133,24 +108,7 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
     createForm(): void {
         /* eslint-disable key-spacing */
         this.fg = this.fb.group({
-            id: [
-                '',
-                [
-                    Validators.required,
-                    Validators.minLength(36),
-                    Validators.maxLength(36),
-                ],
-            ],
-            externalId: ['', [Validators.maxLength(64)]],
-            externalStatus: ['', [Validators.maxLength(36)]],
-            accountId: [
-                null,
-                [Validators.minLength(36), Validators.maxLength(36)],
-            ],
-            accountUsername: ['', [Validators.maxLength(128)]],
-            frontVersion: ['', [Validators.maxLength(16)]],
-            backVersion: ['', [Validators.maxLength(16)]],
-            environment: ['', [Validators.maxLength(36)]],
+            id: null,
             subject: ['', [Validators.required, Validators.maxLength(510)]],
             description: ['', [Validators.required]],
             attachments: null,
@@ -190,6 +148,31 @@ export class IssueDetailDialogComponent extends ViewDetailComponent {
                 }
                 break;
             /* #endregion common actions */
+
+            /* #region custom actions */
+            case 'support::issue.detailDialog.openPreviewVideoDialog':
+                this.screenRecordingVideoUrl.set(
+                    URL.createObjectURL(this.data.screenRecording.file),
+                );
+
+                this.previewDialogRef = this.dialog.open(
+                    RecordingPreviewDialogComponent,
+                    {
+                        data: { videoUrl: this.screenRecordingVideoUrl() },
+                        width: '720px',
+                        maxWidth: '90vw',
+                    },
+                );
+
+                this.isPlaybackVisible.set(true);
+
+                this.previewDialogRef.afterClosed().subscribe(() => {
+                    this.isPlaybackVisible.set(false);
+                    this.previewDialogRef = null;
+                    URL.revokeObjectURL(this.screenRecordingVideoUrl());
+                });
+                break;
+            /* #endregion custom actions */
         }
     }
 }
