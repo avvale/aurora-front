@@ -1,6 +1,13 @@
 import { ColumnConfig, ColumnDataType } from '@aurora';
+import { TranslocoService } from '@jsverse/transloco';
 
-export const inboxColumnsConfig: ColumnConfig[] = [
+export const inboxColumnsConfig: (properties?: {
+    translator?: TranslocoService;
+}) => ColumnConfig[] = ({
+    translator = null,
+}: {
+    translator?: TranslocoService;
+} = {}): ColumnConfig[] => [
     {
         type: ColumnDataType.STRING,
         field: 'tenantIds',
@@ -11,9 +18,9 @@ export const inboxColumnsConfig: ColumnConfig[] = [
     },
     {
         type: ColumnDataType.NUMBER,
-        field: 'sort',
-        sort: 'sort',
-        translation: 'message.Sort',
+        field: 'messageRowId',
+        sort: 'messageRowId',
+        translation: 'message.MessageRowId',
         hidden: true,
         searchable: false,
     },

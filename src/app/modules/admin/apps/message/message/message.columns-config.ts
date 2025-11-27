@@ -1,6 +1,13 @@
 import { ColumnConfig, ColumnDataType } from '@aurora';
+import { TranslocoService } from '@jsverse/transloco';
 
-export const messageColumnsConfig: ColumnConfig[] = [
+export const messageColumnsConfig: (properties?: {
+    translator?: TranslocoService;
+}) => ColumnConfig[] = ({
+    translator = null,
+}: {
+    translator?: TranslocoService;
+} = {}): ColumnConfig[] => [
     {
         type: ColumnDataType.STRING,
         field: 'subject',
