@@ -10,6 +10,7 @@ import {
     CLICKUP_TASK_PLATFORM_LIST_ID,
     CLICKUP_TASK_PLATFORM_SPACE_ID,
     CLICKUP_TASK_PLATFORM_TEAM_ID,
+    CLICKUP_TASK_PLATFORM_WEBHOOK_ID,
     ClickupService,
     ClickupSpace,
 } from '@apps/support/click-up';
@@ -50,6 +51,7 @@ export const configEditResolver: ResolveFn<{
                         CLICKUP_TASK_PLATFORM_SPACE_ID,
                         CLICKUP_TASK_PLATFORM_FOLDER_ID,
                         CLICKUP_TASK_PLATFORM_LIST_ID,
+                        CLICKUP_TASK_PLATFORM_WEBHOOK_ID,
                     ],
                 },
             },

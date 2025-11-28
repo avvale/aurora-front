@@ -2,32 +2,12 @@ import gql from 'graphql-tag';
 
 export const fields = `
     rowId
+    name
+    service
+    endpoint
     externalId
-    externalStatus
-    accountId
-    account {
-        id
-        rowId
-        type
-        code
-        email
-        username
-        isActive
-        tags
-        scopes
-        dApplicationCodes
-        dPermissions
-        dTenants
-        meta
-    }
-    accountUsername
-    frontVersion
-    backVersion
-    environment
-    subject
-    description
-    attachments
-    screenRecording
+    events
+    secret
     meta
     createdAt
     updatedAt
@@ -38,11 +18,11 @@ export const relationsFields = `
 
 // default methods
 export const paginationQuery = gql`
-    query SupportPaginateIssues(
+    query ToolsPaginateWebhooks(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        pagination: supportPaginateIssues(
+        pagination: toolsPaginateWebhooks(
             query: $query
             constraint: $constraint
         ) {
@@ -54,11 +34,11 @@ export const paginationQuery = gql`
 `;
 
 export const getQuery = gql`
-    query SupportGetIssues(
+    query ToolsGetWebhooks(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        objects: supportGetIssues(query: $query, constraint: $constraint) {
+        objects: toolsGetWebhooks(query: $query, constraint: $constraint) {
             id
             #FIELDS
         }
@@ -66,8 +46,8 @@ export const getQuery = gql`
 `;
 
 export const findByIdQuery = gql`
-    query SupportFindIssueById($id: ID, $constraint: QueryStatement) {
-        object: supportFindIssueById(id: $id, constraint: $constraint) {
+    query ToolsFindWebhookById($id: ID, $constraint: QueryStatement) {
+        object: toolsFindWebhookById(id: $id, constraint: $constraint) {
             id
             #FIELDS
         }
@@ -75,11 +55,11 @@ export const findByIdQuery = gql`
 `;
 
 export const findQuery = gql`
-    query SupportFindIssue(
+    query ToolsFindWebhook(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        object: supportFindIssue(query: $query, constraint: $constraint) {
+        object: toolsFindWebhook(query: $query, constraint: $constraint) {
             id
             #FIELDS
         }
@@ -87,10 +67,10 @@ export const findQuery = gql`
 `;
 
 export const createMutation = gql`
-    mutation SupportCreateIssue (
-        $payload: SupportCreateIssueInput!
+    mutation ToolsCreateWebhook (
+        $payload: ToolsCreateWebhookInput!
     ) {
-        supportCreateIssue (
+        toolsCreateWebhook (
             payload: $payload
         ) {
             ${fields}
@@ -99,17 +79,17 @@ export const createMutation = gql`
 `;
 
 export const insertMutation = gql`
-    mutation SupportCreateIssues($payload: [SupportCreateIssueInput]!) {
-        supportCreateIssues(payload: $payload)
+    mutation ToolsCreateWebhooks($payload: [ToolsCreateWebhookInput]!) {
+        toolsCreateWebhooks(payload: $payload)
     }
 `;
 
 export const updateByIdMutation = gql`
-    mutation SupportUpdateIssueById (
-        $payload: SupportUpdateIssueByIdInput!
+    mutation ToolsUpdateWebhookById (
+        $payload: ToolsUpdateWebhookByIdInput!
         $constraint: QueryStatement
     ) {
-        supportUpdateIssueById (
+        toolsUpdateWebhookById (
             payload: $payload
             constraint: $constraint
         ) {
@@ -119,12 +99,12 @@ export const updateByIdMutation = gql`
 `;
 
 export const updateMutation = gql`
-    mutation SupportUpdateIssues (
-        $payload: SupportUpdateIssuesInput!
+    mutation ToolsUpdateWebhooks (
+        $payload: ToolsUpdateWebhooksInput!
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        supportUpdateIssues (
+        toolsUpdateWebhooks (
             payload: $payload
             query: $query
             constraint: $constraint
@@ -135,11 +115,11 @@ export const updateMutation = gql`
 `;
 
 export const deleteByIdMutation = gql`
-    mutation SupportDeleteIssueById (
+    mutation ToolsDeleteWebhookById (
         $id: ID!
         $constraint: QueryStatement
     ) {
-        supportDeleteIssueById (
+        toolsDeleteWebhookById (
             id: $id
             constraint: $constraint
         ) {
@@ -149,28 +129,15 @@ export const deleteByIdMutation = gql`
 `;
 
 export const deleteMutation = gql`
-    mutation SupportDeleteIssues (
+    mutation ToolsDeleteWebhooks (
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        supportDeleteIssues (
+        toolsDeleteWebhooks (
             query: $query
             constraint: $constraint
         ) {
             ${fields}
         }
-    }
-`;
-
-// Mutation additionalApis
-export const createWebhookConfigMutation = gql`
-    mutation SupportCreateWebhookConfig {
-        supportCreateWebhookConfig
-    }
-`;
-
-export const deleteWebhookConfigMutation = gql`
-    mutation SupportDeleteWebhookConfig {
-        supportDeleteWebhookConfig
     }
 `;

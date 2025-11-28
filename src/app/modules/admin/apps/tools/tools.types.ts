@@ -138,3 +138,54 @@ export interface ToolsUpdateMigrations {
     sort?: number;
     executedAt?: string;
 }
+
+export interface ToolsWebhook {
+    id: string;
+    rowId: number;
+    name: string;
+    service: string;
+    endpoint: string;
+    externalId?: string;
+    events?;
+    secret?: string;
+    meta?: any;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
+}
+
+export interface ToolsCreateWebhook {
+    id: string;
+    rowId: number;
+    name: string;
+    service: string;
+    endpoint: string;
+    externalId?: string;
+    events?: string[];
+    secret?: string;
+    meta?: any;
+}
+
+export interface ToolsUpdateWebhookById {
+    id: string;
+    rowId?: number;
+    name?: string;
+    service?: string;
+    endpoint?: string;
+    externalId?: string;
+    events?;
+    secret?: string;
+    meta?: any;
+}
+
+export interface ToolsUpdateWebhooks {
+    id?: string;
+    rowId?: number;
+    name?: string;
+    service?: string;
+    endpoint?: string;
+    externalId?: string;
+    events?: string[];
+    secret?: string;
+    meta?: any;
+}

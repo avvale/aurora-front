@@ -14,6 +14,7 @@ import {
     CLICKUP_TASK_PLATFORM_LIST_ID,
     CLICKUP_TASK_PLATFORM_SPACE_ID,
     CLICKUP_TASK_PLATFORM_TEAM_ID,
+    CLICKUP_TASK_PLATFORM_WEBHOOK_ID,
     ClickupFolder,
     ClickupList,
     ClickupService,
@@ -31,6 +32,7 @@ import {
     ViewDetailComponent,
 } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
+import { IssueService } from '../issue';
 
 @Component({
     selector: 'support-config-detail',
@@ -50,6 +52,7 @@ export class ConfigDetailComponent extends ViewDetailComponent {
     spaceId: ToolsKeyValue;
     folderId: ToolsKeyValue;
     listId: ToolsKeyValue;
+    webhookId: ToolsKeyValue;
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -67,6 +70,7 @@ export class ConfigDetailComponent extends ViewDetailComponent {
     constructor(
         private readonly keyValueService: KeyValueService,
         private readonly clickupService: ClickupService,
+        private readonly issueService: IssueService,
     ) {
         super();
     }
@@ -125,6 +129,10 @@ export class ConfigDetailComponent extends ViewDetailComponent {
             spaceId: ['', [Validators.maxLength(255)]],
             folderId: ['', [Validators.maxLength(255)]],
             listId: ['', [Validators.maxLength(255)]],
+            webhookId: [
+                { value: '', disabled: true },
+                [Validators.maxLength(255)],
+            ],
         });
         /* eslint-enable key-spacing */
     }
@@ -191,12 +199,18 @@ export class ConfigDetailComponent extends ViewDetailComponent {
                             (keyValue) =>
                                 keyValue.key === CLICKUP_TASK_PLATFORM_LIST_ID,
                         );
+                        this.webhookId = keyValues.find(
+                            (keyValue) =>
+                                keyValue.key ===
+                                CLICKUP_TASK_PLATFORM_WEBHOOK_ID,
+                        );
                         this.fg.patchValue({
                             apiKey: this.apiKey.value,
                             teamId: this.teamId.value,
                             spaceId: this.spaceId.value,
                             folderId: this.folderId.value,
                             listId: this.listId.value,
+                            webhookId: this.webhookId.value,
                         });
                     });
                 break;
@@ -265,6 +279,17 @@ export class ConfigDetailComponent extends ViewDetailComponent {
                 }
                 break;
             /* #endregion common actions */
+
+            /* #region custom actions */
+            case 'support::config.detail.createWebhook':
+                await lastValueFrom(this.issueService.createWebhookConfig());
+                break;
+
+            case 'support::config.detail.deleteWebhook':
+                await lastValueFrom(this.issueService.deleteWebhookConfig());
+                this.fg.get('webhookId').setValue('');
+                break;
+            /* #endregion custom actions */
         }
     }
 }

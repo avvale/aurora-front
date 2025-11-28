@@ -40,5 +40,6 @@
     "tags": "Tags",
     "tenants": "Tenants",
     "tools": "Tools",
-    "users": "Users"
+    "users": "Users",
+    "webhooks": "Webhooks"
 }

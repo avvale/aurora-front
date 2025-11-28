@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import {
-    SupportCreateIssue,
-    SupportIssue,
-    SupportUpdateIssueById,
-    SupportUpdateIssues,
-} from '@apps/support';
+    ToolsCreateWebhook,
+    ToolsUpdateWebhookById,
+    ToolsUpdateWebhooks,
+    ToolsWebhook,
+} from '@apps/tools';
 import {
     createMutation,
     deleteByIdMutation,
@@ -18,7 +18,7 @@ import {
     paginationQuery,
     updateByIdMutation,
     updateMutation,
-} from '@apps/support/issue';
+} from '@apps/tools/webhook';
 import {
     GraphQLHeaders,
     GraphQLService,
@@ -27,29 +27,25 @@ import {
     QueryStatement,
 } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
-import {
-    createWebhookConfigMutation,
-    deleteWebhookConfigMutation,
-} from './issue.graphql';
 
 @Injectable({
     providedIn: 'root',
 })
-export class IssueService {
-    paginationSubject$: BehaviorSubject<GridData<SupportIssue> | null> =
+export class WebhookService {
+    paginationSubject$: BehaviorSubject<GridData<ToolsWebhook> | null> =
         new BehaviorSubject(null);
-    issueSubject$: BehaviorSubject<SupportIssue | null> = new BehaviorSubject(
+    webhookSubject$: BehaviorSubject<ToolsWebhook | null> = new BehaviorSubject(
         null,
     );
-    issuesSubject$: BehaviorSubject<SupportIssue[] | null> =
+    webhooksSubject$: BehaviorSubject<ToolsWebhook[] | null> =
         new BehaviorSubject(null);
 
     // scoped subjects
     paginationScoped: {
-        [key: string]: BehaviorSubject<GridData<SupportIssue> | null>;
+        [key: string]: BehaviorSubject<GridData<ToolsWebhook> | null>;
     } = {};
-    issueScoped: { [key: string]: BehaviorSubject<SupportIssue | null> } = {};
-    issuesScoped: { [key: string]: BehaviorSubject<SupportIssue[] | null> } =
+    webhookScoped: { [key: string]: BehaviorSubject<ToolsWebhook | null> } = {};
+    webhooksScoped: { [key: string]: BehaviorSubject<ToolsWebhook[] | null> } =
         {};
 
     constructor(private readonly graphqlService: GraphQLService) {}
@@ -57,23 +53,23 @@ export class IssueService {
     /**
      * Getters
      */
-    get pagination$(): Observable<GridData<SupportIssue>> {
+    get pagination$(): Observable<GridData<ToolsWebhook>> {
         return this.paginationSubject$.asObservable();
     }
 
-    get issue$(): Observable<SupportIssue> {
-        return this.issueSubject$.asObservable();
+    get webhook$(): Observable<ToolsWebhook> {
+        return this.webhookSubject$.asObservable();
     }
 
-    get issues$(): Observable<SupportIssue[]> {
-        return this.issuesSubject$.asObservable();
+    get webhooks$(): Observable<ToolsWebhook[]> {
+        return this.webhooksSubject$.asObservable();
     }
 
     // allows to store different types of pagination under different scopes this allows us
     // to have multiple observables with different streams of pagination data.
     setScopePagination(
         scope: string,
-        pagination: GridData<SupportIssue>,
+        pagination: GridData<ToolsWebhook>,
     ): void {
         if (this.paginationScoped[scope]) {
             this.paginationScoped[scope].next(pagination);
@@ -84,40 +80,40 @@ export class IssueService {
     }
 
     // get pagination observable by scope
-    getScopePagination(scope: string): Observable<GridData<SupportIssue>> {
+    getScopePagination(scope: string): Observable<GridData<ToolsWebhook>> {
         if (!this.paginationScoped[scope])
             this.paginationScoped[scope] = new BehaviorSubject(null);
         return this.paginationScoped[scope].asObservable();
     }
 
-    setScopeIssue(scope: string, object: SupportIssue): void {
-        if (this.issueScoped[scope]) {
-            this.issueScoped[scope].next(object);
+    setScopeWebhook(scope: string, object: ToolsWebhook): void {
+        if (this.webhookScoped[scope]) {
+            this.webhookScoped[scope].next(object);
             return;
         }
         // create new subject if not exist
-        this.issueScoped[scope] = new BehaviorSubject(object);
+        this.webhookScoped[scope] = new BehaviorSubject(object);
     }
 
-    getScopeIssue(scope: string): Observable<SupportIssue> {
-        if (!this.issueScoped[scope])
-            this.issueScoped[scope] = new BehaviorSubject(null);
-        return this.issueScoped[scope].asObservable();
+    getScopeWebhook(scope: string): Observable<ToolsWebhook> {
+        if (!this.webhookScoped[scope])
+            this.webhookScoped[scope] = new BehaviorSubject(null);
+        return this.webhookScoped[scope].asObservable();
     }
 
-    setScopeIssues(scope: string, objects: SupportIssue[]): void {
-        if (this.issuesScoped[scope]) {
-            this.issuesScoped[scope].next(objects);
+    setScopeWebhooks(scope: string, objects: ToolsWebhook[]): void {
+        if (this.webhooksScoped[scope]) {
+            this.webhooksScoped[scope].next(objects);
             return;
         }
         // create new subject if not exist
-        this.issuesScoped[scope] = new BehaviorSubject(objects);
+        this.webhooksScoped[scope] = new BehaviorSubject(objects);
     }
 
-    getScopeIssues(scope: string): Observable<SupportIssue[]> {
-        if (!this.issuesScoped[scope])
-            this.issuesScoped[scope] = new BehaviorSubject(null);
-        return this.issuesScoped[scope].asObservable();
+    getScopeWebhooks(scope: string): Observable<ToolsWebhook[]> {
+        if (!this.webhooksScoped[scope])
+            this.webhooksScoped[scope] = new BehaviorSubject(null);
+        return this.webhooksScoped[scope].asObservable();
     }
 
     pagination({
@@ -132,11 +128,11 @@ export class IssueService {
         constraint?: QueryStatement;
         headers?: GraphQLHeaders;
         scope?: string;
-    } = {}): Observable<GridData<SupportIssue>> {
+    } = {}): Observable<GridData<ToolsWebhook>> {
         // get result, map ang throw data across observable
         return this.graphqlService
             .client()
-            .watchQuery<{ pagination: GridData<SupportIssue> }>({
+            .watchQuery<{ pagination: GridData<ToolsWebhook> }>({
                 query: graphqlStatement,
                 variables: {
                     query,
@@ -170,12 +166,12 @@ export class IssueService {
         headers?: GraphQLHeaders;
         scope?: string;
     } = {}): Observable<{
-        object: SupportIssue;
+        object: ToolsWebhook;
     }> {
         return this.graphqlService
             .client()
             .watchQuery<{
-                object: SupportIssue;
+                object: ToolsWebhook;
             }>({
                 query: parseGqlFields(graphqlStatement, fields, constraint),
                 variables: {
@@ -191,8 +187,8 @@ export class IssueService {
                 map((result) => result.data),
                 tap((data) =>
                     scope
-                        ? this.setScopeIssue(scope, data.object)
-                        : this.issueSubject$.next(data.object),
+                        ? this.setScopeWebhook(scope, data.object)
+                        : this.webhookSubject$.next(data.object),
                 ),
             );
     }
@@ -210,12 +206,12 @@ export class IssueService {
         headers?: GraphQLHeaders;
         scope?: string;
     } = {}): Observable<{
-        object: SupportIssue;
+        object: ToolsWebhook;
     }> {
         return this.graphqlService
             .client()
             .watchQuery<{
-                object: SupportIssue;
+                object: ToolsWebhook;
             }>({
                 query: parseGqlFields(
                     graphqlStatement,
@@ -236,8 +232,8 @@ export class IssueService {
                 map((result) => result.data),
                 tap((data) =>
                     scope
-                        ? this.setScopeIssue(scope, data.object)
-                        : this.issueSubject$.next(data.object),
+                        ? this.setScopeWebhook(scope, data.object)
+                        : this.webhookSubject$.next(data.object),
                 ),
             );
     }
@@ -255,12 +251,12 @@ export class IssueService {
         headers?: GraphQLHeaders;
         scope?: string;
     } = {}): Observable<{
-        objects: SupportIssue[];
+        objects: ToolsWebhook[];
     }> {
         return this.graphqlService
             .client()
             .watchQuery<{
-                objects: SupportIssue[];
+                objects: ToolsWebhook[];
             }>({
                 query: parseGqlFields(
                     graphqlStatement,
@@ -281,8 +277,8 @@ export class IssueService {
                 map((result) => result.data),
                 tap((data) =>
                     scope
-                        ? this.setScopeIssues(scope, data.objects)
-                        : this.issuesSubject$.next(data.objects),
+                        ? this.setScopeWebhooks(scope, data.objects)
+                        : this.webhooksSubject$.next(data.objects),
                 ),
             );
     }
@@ -290,12 +286,10 @@ export class IssueService {
     create<T>({
         graphqlStatement = createMutation,
         object = null,
-        headers = {
-            'Apollo-Require-Preflight': 'true',
-        },
+        headers = {},
     }: {
         graphqlStatement?: DocumentNode;
-        object?: SupportCreateIssue;
+        object?: ToolsCreateWebhook;
         headers?: GraphQLHeaders;
     } = {}): Observable<FetchResult<T>> {
         return this.graphqlService.client().mutate({
@@ -315,7 +309,7 @@ export class IssueService {
         headers = {},
     }: {
         graphqlStatement?: DocumentNode;
-        objects?: SupportCreateIssue[];
+        objects?: ToolsCreateWebhook[];
         headers?: GraphQLHeaders;
     } = {}): Observable<FetchResult<T>> {
         return this.graphqlService.client().mutate({
@@ -335,7 +329,7 @@ export class IssueService {
         headers = {},
     }: {
         graphqlStatement?: DocumentNode;
-        object?: SupportUpdateIssueById;
+        object?: ToolsUpdateWebhookById;
         headers?: GraphQLHeaders;
     } = {}): Observable<FetchResult<T>> {
         return this.graphqlService.client().mutate({
@@ -357,7 +351,7 @@ export class IssueService {
         headers = {},
     }: {
         graphqlStatement?: DocumentNode;
-        object?: SupportUpdateIssues;
+        object?: ToolsUpdateWebhooks;
         query?: QueryStatement;
         constraint?: QueryStatement;
         headers?: GraphQLHeaders;
@@ -415,39 +409,6 @@ export class IssueService {
                 query,
                 constraint,
             },
-            context: {
-                headers,
-            },
-        });
-    }
-
-    // Mutation additionalApis
-    createWebhookConfig<T>({
-        graphqlStatement = createWebhookConfigMutation,
-        headers = {},
-    }: {
-        graphqlStatement?: DocumentNode;
-        headers?: GraphQLHeaders;
-    } = {}): Observable<FetchResult<T>> {
-        return this.graphqlService.client().mutate({
-            mutation: graphqlStatement,
-            variables: {},
-            context: {
-                headers,
-            },
-        });
-    }
-
-    deleteWebhookConfig<T>({
-        graphqlStatement = deleteWebhookConfigMutation,
-        headers = {},
-    }: {
-        graphqlStatement?: DocumentNode;
-        headers?: GraphQLHeaders;
-    } = {}): Observable<FetchResult<T>> {
-        return this.graphqlService.client().mutate({
-            mutation: graphqlStatement,
-            variables: {},
             context: {
                 headers,
             },

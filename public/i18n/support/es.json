@@ -7,7 +7,9 @@
     "BackVersion": "BackVersion",
     "Config": "Config",
     "Configs": "Configs",
+    "CreateWebhook": "Crear Webhook",
     "CurrentTab": "Pestaña actual",
+    "DeleteWebhook": "Eliminar Webhook",
     "Description": "Descripción",
     "Display": "Pantalla",
     "Environment": "Entorno",
@@ -30,5 +32,6 @@
     "Subject": "Asunto",
     "TeamId": "Equipo",
     "Video": "Video",
+    "WebhookId": "Webhook",
     "Window": "Ventana"
 }

@@ -78,6 +78,13 @@ aggregateProperties:
   - name: deletedAt
     type: timestamp
     nullable: true
+additionalApis:
+  - path: support/config/create-webhook
+    resolverType: mutation
+    httpMethod: post
+  - path: support/config/delete-webhook
+    resolverType: mutation
+    httpMethod: post
 excludedOperations:
   - count
   - createBatch

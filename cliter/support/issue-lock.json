@@ -31,7 +31,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue.graphql.ts",
-            "integrity": "sha1:54f2569206334e54c1ef96dd23b5b3b2d5b6abbd"
+            "integrity": "sha1:7f950312889f85e48dd701f1f4731ed29b0ca32f"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue.resolvers.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue.service.ts",
-            "integrity": "sha1:69d075f879af619e75463ade1b7013b753eb8423"
+            "integrity": "sha1:264318192d7e24e211898923fa737ecf38e04435"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/index.ts",
