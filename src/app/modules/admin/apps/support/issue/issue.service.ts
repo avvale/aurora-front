@@ -19,6 +19,7 @@ import {
     updateByIdMutation,
     updateMutation,
 } from '@apps/support/issue';
+import { ToolsWebhook } from '@apps/tools';
 import {
     GraphQLHeaders,
     GraphQLService,
@@ -428,14 +429,20 @@ export class IssueService {
     }: {
         graphqlStatement?: DocumentNode;
         headers?: GraphQLHeaders;
-    } = {}): Observable<FetchResult<T>> {
-        return this.graphqlService.client().mutate({
-            mutation: graphqlStatement,
-            variables: {},
-            context: {
-                headers,
-            },
-        });
+    } = {}): Observable<ToolsWebhook> {
+        return this.graphqlService
+            .client()
+            .mutate<{ supportCreateWebhookConfig: ToolsWebhook }>({
+                mutation: graphqlStatement,
+                variables: {},
+                context: {
+                    headers,
+                },
+            })
+            .pipe(
+                first(),
+                map((result) => result.data.supportCreateWebhookConfig),
+            );
     }
 
     deleteWebhookConfig<T>({

@@ -165,7 +165,12 @@ export const deleteMutation = gql`
 // Mutation additionalApis
 export const createWebhookConfigMutation = gql`
     mutation SupportCreateWebhookConfig {
-        supportCreateWebhookConfig
+        supportCreateWebhookConfig {
+            id
+            name
+            service
+            externalId
+        }
     }
 `;
 

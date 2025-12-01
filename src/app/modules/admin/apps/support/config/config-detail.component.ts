@@ -282,7 +282,10 @@ export class ConfigDetailComponent extends ViewDetailComponent {
 
             /* #region custom actions */
             case 'support::config.detail.createWebhook':
-                await lastValueFrom(this.issueService.createWebhookConfig());
+                const webhook = await lastValueFrom(
+                    this.issueService.createWebhookConfig(),
+                );
+                this.fg.get('webhookId').setValue(webhook.externalId);
                 break;
 
             case 'support::config.detail.deleteWebhook':
