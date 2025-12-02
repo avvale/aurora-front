@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -5,7 +6,7 @@ import {
     ViewEncapsulation,
     WritableSignal,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { RecordingPreviewDialogComponent } from '@apps/screen-recording';
 import { SupportIssue } from '@apps/support';
@@ -28,11 +29,27 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [...defaultDetailImports],
+    imports: [...defaultDetailImports, DatePipe],
 })
 export class IssueDetailComponent extends ViewDetailComponent {
     // ---- customizations ----
-    // ..
+    commentFg: FormGroup;
+    comments: WritableSignal<any[]> = signal([
+        {
+            id: '1',
+            author: 'John Doe',
+            date: new Date(),
+            content: 'This is a sample comment.',
+            edit: false,
+        },
+        {
+            id: '2',
+            author: 'John Doe3',
+            date: new Date(),
+            content: 'This is a sample comment3.',
+            edit: false,
+        },
+    ]);
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -98,6 +115,42 @@ export class IssueDetailComponent extends ViewDetailComponent {
         });
     }
 
+    onSubmitComment($event): void {
+        // we have two nested forms, we check that the submit comes from the button
+        // that corresponds to the main form to the main form
+        if (
+            $event.submitter.getAttribute('form') !==
+            $event.submitter.form.getAttribute('id')
+        ) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            return;
+        }
+
+        // manage validations before execute actions
+        if (this.commentFg.invalid) {
+            log('[DEBUG] Error to validate form: ', this.commentFg);
+            this.validationMessagesService.validate();
+
+            this.snackBar.openFromComponent(SnackBarInvalidFormComponent, {
+                data: {
+                    message: `${this.translocoService.translate('InvalidForm')}`,
+                    textButton: `${this.translocoService.translate('InvalidFormOk')}`,
+                },
+                panelClass: 'error-snackbar',
+                verticalPosition: 'top',
+                duration: 10000,
+            });
+            return;
+        }
+
+        this.actionService.action({
+            id: 'support::issue.detail.updateComment',
+            isViewAction: false,
+            meta: { comment: this.commentFg.value },
+        });
+    }
+
     createForm(): void {
         /* eslint-disable key-spacing */
         this.fg = this.fb.group({
@@ -122,6 +175,11 @@ export class IssueDetailComponent extends ViewDetailComponent {
             subject: ['', [Validators.required, Validators.maxLength(510)]],
             description: ['', [Validators.required]],
             attachments: null,
+        });
+
+        this.commentFg = this.fb.group({
+            id: null,
+            content: ['', [Validators.required]],
         });
         /* eslint-enable key-spacing */
     }
@@ -205,6 +263,20 @@ export class IssueDetailComponent extends ViewDetailComponent {
                 break;
             case 'support::issue.detail.openRecordingScreen':
                 console.log('Open recording screen action');
+                break;
+            case 'support::issue.detail.editComment':
+                console.log('Edit comment action', action.meta.comment);
+                for (const comment of this.comments()) {
+                    if (comment.id === action.meta.comment.id) {
+                        comment.edit = true;
+                        this.commentFg.patchValue(comment);
+                        continue;
+                    }
+                    comment.edit = false;
+                }
+                break;
+            case 'support::issue.detail.updateComment':
+                console.log('Update comment action', action.meta.comment);
                 break;
             /* #endregion custom actions */
         }
