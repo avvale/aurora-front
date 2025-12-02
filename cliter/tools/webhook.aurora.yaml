@@ -59,6 +59,10 @@ aggregateProperties:
   - name: deletedAt
     type: timestamp
     nullable: true
+additionalApis:
+  - path: tools/webhook/digest
+    resolverType: mutation
+    httpMethod: post
 excludedOperations:
   - count
   - getRaw

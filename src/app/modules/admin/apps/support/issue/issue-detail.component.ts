@@ -200,6 +200,12 @@ export class IssueDetailComponent extends ViewDetailComponent {
                     maxWidth: '90vw',
                 });
                 break;
+            case 'support::issue.detail.newComment':
+                console.log('New comment action');
+                break;
+            case 'support::issue.detail.openRecordingScreen':
+                console.log('Open recording screen action');
+                break;
             /* #endregion custom actions */
         }
     }

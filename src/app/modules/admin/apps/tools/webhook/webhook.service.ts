@@ -27,6 +27,7 @@ import {
     QueryStatement,
 } from '@aurora';
 import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
+import { digestWebhookMutation } from './webhook.graphql';
 
 @Injectable({
     providedIn: 'root',
@@ -408,6 +409,27 @@ export class WebhookService {
             variables: {
                 query,
                 constraint,
+            },
+            context: {
+                headers,
+            },
+        });
+    }
+
+    // Mutation additionalApis
+    digestWebhook<T>({
+        graphqlStatement = digestWebhookMutation,
+        object = null,
+        headers = {},
+    }: {
+        graphqlStatement?: DocumentNode;
+        object?: ToolsUpdateWebhookById;
+        headers?: GraphQLHeaders;
+    } = {}): Observable<FetchResult<T>> {
+        return this.graphqlService.client().mutate({
+            mutation: graphqlStatement,
+            variables: {
+                payload: object,
             },
             context: {
                 headers,

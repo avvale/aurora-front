@@ -31,7 +31,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/tools/webhook/webhook.graphql.ts",
-            "integrity": "sha1:2c88ded4e827b33c66f3b3381511a4c485fbaf97"
+            "integrity": "sha1:442415ceb082d015209aeb812d4a1957f298306e"
         },
         {
             "path": "src/app/modules/admin/apps/tools/webhook/webhook.resolvers.ts",
@@ -39,7 +39,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/tools/webhook/webhook.service.ts",
-            "integrity": "sha1:47371c756627bbc2259728ddc6ccf445a0dffb15"
+            "integrity": "sha1:32514ba66bde1833758e7a656724d8651bca2c42"
         },
         {
             "path": "src/app/modules/admin/apps/tools/webhook/index.ts",

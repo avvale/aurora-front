@@ -100,34 +100,6 @@ export class IssueListComponent extends ViewBaseComponent {
         /**/
     }
 
-    openRecordingScreen(): void {
-        const observable = this.recordingService
-            .openConfigRecordingSnackbar()
-            .subscribe((res: ScreenRecordingResponse) => {
-                if (res.state === 'idle') observable.unsubscribe();
-
-                this.actionService.action({
-                    id: 'support::issue.detailDialog.new',
-                    isViewAction: true,
-                });
-
-                this.dialog.open(IssueDetailDialogComponent, {
-                    width: '720px',
-                    maxWidth: '90vw',
-                    data: {
-                        screenRecording: {
-                            id: uuid(),
-                            file: res.file,
-                            relativePathSegments: [
-                                'aurora',
-                                'screen-recording',
-                            ],
-                        },
-                    },
-                });
-            });
-    }
-
     async handleAction(action: Action): Promise<void> {
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id) {
@@ -268,6 +240,36 @@ export class IssueListComponent extends ViewBaseComponent {
                 );
                 break;
             /* #endregion common actions */
+
+            /* #region custom actions */
+            case 'support::issue.list.openRecordingScreen':
+                const observable = this.recordingService
+                    .openConfigRecordingSnackbar()
+                    .subscribe((res: ScreenRecordingResponse) => {
+                        if (res.state === 'idle') observable.unsubscribe();
+
+                        this.actionService.action({
+                            id: 'support::issue.detailDialog.new',
+                            isViewAction: true,
+                        });
+
+                        this.dialog.open(IssueDetailDialogComponent, {
+                            width: '720px',
+                            maxWidth: '90vw',
+                            data: {
+                                screenRecording: {
+                                    id: uuid(),
+                                    file: res.file,
+                                    relativePathSegments: [
+                                        'aurora',
+                                        'screen-recording',
+                                    ],
+                                },
+                            },
+                        });
+                    });
+                break;
+            /* #endregion custom actions */
         }
     }
 }

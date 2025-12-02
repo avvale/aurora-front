@@ -148,6 +148,43 @@
                 </div>
             </form>
         </div>
+
+        <div>
+            <button
+                type="button"
+                mat-flat-button
+                color="accent"
+                (click)="
+                    actionService.action({
+                        id: 'support::issue.detail.newComment',
+                        isViewAction: false,
+                    })
+                "
+            >
+                <mat-icon
+                    class="mr-2 icon-size-5"
+                    svgIcon="mat_solid:save"
+                ></mat-icon>
+                {{ t('Create') }}
+            </button>
+            <button
+                class="ml-3"
+                mat-flat-button
+                color="accent"
+                (click)="
+                    actionService.action({
+                        id: 'support::issue.detail.openRecordingScreen',
+                        isViewAction: false,
+                    })
+                "
+            >
+                <mat-icon
+                    class="mr-2 icon-size-5"
+                    svgIcon="mat_solid:videocam"
+                ></mat-icon>
+                {{ t('New.M') }} with Video
+            </button>
+        </div>
     </div>
     <!-- / Main -->
 </div>

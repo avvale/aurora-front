@@ -141,3 +141,13 @@ export const deleteMutation = gql`
         }
     }
 `;
+
+// Mutation additionalApis
+export const digestWebhookMutation = gql`
+    mutation ToolsDigestWebhook(
+        $payload: ToolsUpdateWebhookByIdInput!
+        $constraint: QueryStatement
+    ) {
+        toolsDigestWebhook(payload: $payload, constraint: $constraint)
+    }
+`;
