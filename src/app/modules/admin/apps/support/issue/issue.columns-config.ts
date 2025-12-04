@@ -10,13 +10,6 @@ export const issueColumnsConfig: (properties?: {
 } = {}): ColumnConfig[] => [
     {
         type: ColumnDataType.STRING,
-        field: 'externalId',
-        sort: 'externalId',
-        translation: 'support.ExternalId',
-        isUnaccent: true,
-    },
-    {
-        type: ColumnDataType.STRING,
         field: 'externalStatus',
         sort: 'externalStatus',
         translation: 'support.ExternalStatus',
@@ -24,11 +17,11 @@ export const issueColumnsConfig: (properties?: {
     },
     {
         type: ColumnDataType.STRING,
-        field: 'account.name',
-        searchableField: '$account.name$',
-        sort: 'account.name',
-        translation: 'Name',
+        field: 'displayName',
+        sort: 'displayName',
+        translation: 'support.DisplayName',
         isUnaccent: true,
+        bodyClass: 'min-w-48',
     },
     {
         type: ColumnDataType.STRING,
@@ -39,9 +32,9 @@ export const issueColumnsConfig: (properties?: {
     },
     {
         type: ColumnDataType.STRING,
-        field: 'displayName',
-        sort: 'displayName',
-        translation: 'support.DisplayName',
+        field: 'frontEnvironment',
+        sort: 'frontEnvironment',
+        translation: 'support.FrontEnvironment',
         isUnaccent: true,
     },
     {
@@ -53,6 +46,13 @@ export const issueColumnsConfig: (properties?: {
     },
     {
         type: ColumnDataType.STRING,
+        field: 'backEnvironment',
+        sort: 'backEnvironment',
+        translation: 'support.BackEnvironment',
+        isUnaccent: true,
+    },
+    {
+        type: ColumnDataType.STRING,
         field: 'backVersion',
         sort: 'backVersion',
         translation: 'support.BackVersion',
@@ -60,23 +60,9 @@ export const issueColumnsConfig: (properties?: {
     },
     {
         type: ColumnDataType.STRING,
-        field: 'environment',
-        sort: 'environment',
-        translation: 'support.Environment',
-        isUnaccent: true,
-    },
-    {
-        type: ColumnDataType.STRING,
         field: 'subject',
         sort: 'subject',
         translation: 'support.Subject',
-        isUnaccent: true,
-    },
-    {
-        type: ColumnDataType.STRING,
-        field: 'description',
-        sort: 'description',
-        translation: 'support.Description',
         isUnaccent: true,
     },
     {

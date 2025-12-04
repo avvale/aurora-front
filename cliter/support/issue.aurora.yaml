@@ -45,17 +45,21 @@ aggregateProperties:
     type: varchar
     maxLength: 128
     nullable: true
+  - name: frontEnvironment
+    type: varchar
+    maxLength: 36
+    nullable: true
   - name: frontVersion
     type: varchar
     maxLength: 16
     nullable: true
+  - name: backEnvironment
+    type: varchar
+    maxLength: 36
+    nullable: true
   - name: backVersion
     type: varchar
     maxLength: 16
-    nullable: true
-  - name: environment
-    type: varchar
-    maxLength: 36
     nullable: true
   - name: subject
     type: varchar

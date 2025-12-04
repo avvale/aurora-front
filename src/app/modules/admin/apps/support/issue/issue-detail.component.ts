@@ -16,13 +16,15 @@ import {
     Action,
     Crumb,
     defaultDetailImports,
+    EnvironmentsInformation,
+    EnvironmentsInformationService,
     log,
     mapActions,
     SnackBarInvalidFormComponent,
     uuid,
     ViewDetailComponent,
 } from '@aurora';
-import { lastValueFrom, takeUntil } from 'rxjs';
+import { firstValueFrom, lastValueFrom, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'support-issue-detail',
@@ -54,6 +56,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
     constructor(
         private readonly issueService: IssueService,
         private readonly commentService: CommentService,
+        private readonly environmentsInformationService: EnvironmentsInformationService,
         private readonly dialog: MatDialog,
     ) {
         super();
@@ -162,8 +165,9 @@ export class IssueDetailComponent extends ViewDetailComponent {
             ],
             accountUsername: ['', [Validators.maxLength(128)]],
             frontVersion: ['', [Validators.maxLength(16)]],
+            frontEnvironment: ['', [Validators.maxLength(36)]],
             backVersion: ['', [Validators.maxLength(16)]],
-            environment: ['', [Validators.maxLength(36)]],
+            backEnvironment: ['', [Validators.maxLength(36)]],
             subject: ['', [Validators.required, Validators.maxLength(510)]],
             description: ['', [Validators.required]],
             attachments: null,
@@ -198,9 +202,22 @@ export class IssueDetailComponent extends ViewDetailComponent {
 
             case 'support::issue.detail.create':
                 try {
+                    const environments: EnvironmentsInformation =
+                        await firstValueFrom(
+                            this.environmentsInformationService
+                                .environmentsInformation$,
+                        );
+
                     await lastValueFrom(
                         this.issueService.create<SupportIssue>({
-                            object: this.fg.value,
+                            object: {
+                                ...this.fg.value,
+                                frontVersion: environments.front.version,
+                                frontEnvironment:
+                                    environments.front.environment,
+                                backVersion: environments.back.version,
+                                backEnvironment: environments.back.environment,
+                            },
                         }),
                     );
 
@@ -266,7 +283,22 @@ export class IssueDetailComponent extends ViewDetailComponent {
                             object: this.commentFg.value,
                         }),
                     );
+
+                    // update comment in the list
+                    this.comments.update((comments) => {
+                        return comments.map((comment) => {
+                            if (comment.id === this.commentFg.value.id) {
+                                return {
+                                    ...comment,
+                                    ...this.commentFg.value,
+                                };
+                            }
+                            return comment;
+                        });
+                    });
+
                     this.isNewComment = false;
+                    this.commentFg.reset();
 
                     this.snackBar.open(
                         `${this.translocoService.translate('support.Comment')} ${this.translocoService.translate('Created.M')}`,
@@ -320,8 +352,35 @@ export class IssueDetailComponent extends ViewDetailComponent {
                             duration: 3000,
                         },
                     );
+                } catch (error) {
+                    log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
+                }
+                break;
 
-                    //this.router.navigate(['support/comment']);
+            case 'support::issue.detail.deleteComment':
+                try {
+                    await lastValueFrom(
+                        this.commentService.deleteById({
+                            id: action.meta.comment.id,
+                        }),
+                    );
+
+                    // update comment in the list
+                    this.comments.update((comments) => {
+                        return comments.filter(
+                            (comment) => comment.id !== action.meta.comment.id,
+                        );
+                    });
+                    this.commentFg.reset();
+
+                    this.snackBar.open(
+                        `${this.translocoService.translate('support.Comment')} ${this.translocoService.translate('Deleted.M')}`,
+                        undefined,
+                        {
+                            verticalPosition: 'top',
+                            duration: 3000,
+                        },
+                    );
                 } catch (error) {
                     log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
                 }

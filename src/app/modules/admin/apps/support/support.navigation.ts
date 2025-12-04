@@ -30,5 +30,12 @@ export const supportNavigation: FuseNavigationItem = {
                 permission: 'support.config.access',
             },
         },
+        {
+            id: 'comments',
+            title: 'Comment',
+            type: 'basic',
+            icon: 'comment',
+            link: '/support/comment',
+        },
     ],
 };

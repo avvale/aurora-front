@@ -22,9 +22,10 @@ export const fields = `
     }
     accountUsername
     displayName
+    frontEnvironment
     frontVersion
+    backEnvironment
     backVersion
-    environment
     subject
     description
     attachments

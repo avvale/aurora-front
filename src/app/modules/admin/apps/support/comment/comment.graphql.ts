@@ -4,38 +4,7 @@ export const fields = `
     rowId
     externalId
     issueId
-    issue {
-        id
-        rowId
-        externalId
-        externalStatus
-        accountUsername
-        displayName
-        frontVersion
-        backVersion
-        environment
-        subject
-        description
-        attachments
-        screenRecording
-        meta
-    }
     accountId
-    account {
-        id
-        rowId
-        type
-        code
-        email
-        username
-        isActive
-        tags
-        scopes
-        dApplicationCodes
-        dPermissions
-        dTenants
-        meta
-    }
     accountUsername
     displayName
     description

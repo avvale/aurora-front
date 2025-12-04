@@ -149,115 +149,118 @@
             </form>
         </div>
 
-        <div>
-            <button
-                type="button"
-                [disabled]="commentFg.value?.id"
-                mat-flat-button
-                color="accent"
-                (click)="
-                    actionService.action({
-                        id: 'support::issue.detail.newComment',
-                        isViewAction: false,
-                    })
-                "
-            >
-                <mat-icon class="mr-2 icon-size-5">comment</mat-icon>
-                {{ t('Create') }}
-            </button>
-            <button
-                class="ml-3"
-                [disabled]="commentFg.value?.id"
-                mat-flat-button
-                color="accent"
-                (click)="
-                    actionService.action({
-                        id: 'support::issue.detail.openRecordingScreen',
-                        isViewAction: false,
-                    })
-                "
-            >
-                <mat-icon
-                    class="mr-2 icon-size-5"
-                    svgIcon="mat_solid:videocam"
-                ></mat-icon>
-                {{ t('New.M') }} with Video
-            </button>
-            <form
-                [formGroup]="commentFg"
-                novalidate
-                (ngSubmit)="onSubmitComment($event)"
-            >
-                @for (comment of comments(); track comment.id) {
-                    @if (comment.id === commentFg.value?.id) {
-                        <div class="mt-4 rounded-lg border p-4">
-                            <mat-form-field
-                                appearance="outline"
-                                class="w-full"
-                            >
-                                <mat-label>
-                                    {{ t('support.Comment') }}
-                                </mat-label>
-                                <textarea
-                                    matInput
-                                    formControlName="description"
-                                ></textarea>
-                                <mat-error>
-                                    {{ formErrors?.description | async }}
-                                </mat-error>
-                            </mat-form-field>
-                            <button
-                                type="submit"
-                                class="mt-2"
-                                mat-flat-button
-                                color="accent"
-                            >
-                                {{ t('Save') }}
-                            </button>
-                            <button
-                                type="button"
-                                class="mt-2"
-                                mat-flat-button
-                                color="accent"
-                                (click)="
-                                    actionService.action({
-                                        id: 'support::issue.detail.cancelComment',
-                                        isViewAction: false,
-                                    })
-                                "
-                            >
-                                {{ t('Cancel') }}
-                            </button>
-                        </div>
-                    } @else {
-                        <div class="mt-4 rounded-lg border p-4">
-                            <div class="font-bold">
-                                {{ comment.displayName }}
+        @if (currentViewAction.id !== 'support::issue.detail.new') {
+            <div>
+                <button
+                    type="button"
+                    [disabled]="commentFg.value?.id"
+                    mat-flat-button
+                    color="accent"
+                    (click)="
+                        actionService.action({
+                            id: 'support::issue.detail.newComment',
+                            isViewAction: false,
+                        })
+                    "
+                >
+                    <mat-icon class="mr-2 icon-size-5">comment</mat-icon>
+                    {{ t('Create') }}
+                </button>
+                <form
+                    [formGroup]="commentFg"
+                    novalidate
+                    (ngSubmit)="onSubmitComment($event)"
+                >
+                    @for (comment of comments(); track comment.id) {
+                        @if (comment.id === commentFg.value?.id) {
+                            <div class="mt-4 rounded-lg border p-4">
+                                <mat-form-field
+                                    appearance="outline"
+                                    class="w-full"
+                                >
+                                    <mat-label>
+                                        {{ t('support.Comment') }}
+                                    </mat-label>
+                                    <textarea
+                                        matInput
+                                        formControlName="description"
+                                    ></textarea>
+                                    <mat-error>
+                                        {{ formErrors?.description | async }}
+                                    </mat-error>
+                                </mat-form-field>
+                                <button
+                                    type="submit"
+                                    class="mt-2"
+                                    mat-flat-button
+                                    color="accent"
+                                >
+                                    {{ t('Save') }}
+                                </button>
+                                <button
+                                    type="button"
+                                    class="mt-2"
+                                    mat-flat-button
+                                    color="accent"
+                                    (click)="
+                                        actionService.action({
+                                            id: 'support::issue.detail.cancelComment',
+                                            isViewAction: false,
+                                        })
+                                    "
+                                >
+                                    {{ t('Cancel') }}
+                                </button>
                             </div>
-                            <div
-                                class="text-sm text-gray-600 dark:text-gray-400"
-                            >
-                                {{ comment.createdAt | date: 'medium' }}
+                        } @else {
+                            <div class="mt-4 rounded-lg border p-4">
+                                <div class="font-bold">
+                                    {{ comment.displayName }}
+                                </div>
+                                <div
+                                    class="text-sm text-gray-600 dark:text-gray-400"
+                                >
+                                    {{ comment.createdAt | date: 'medium' }}
+                                </div>
+                                <div class="mt-2">
+                                    {{ comment.description }}
+                                </div>
+                                <button
+                                    aria-label="Edit comment"
+                                    type="button"
+                                    mat-icon-button
+                                    (click)="
+                                        actionService.action({
+                                            id: 'support::issue.detail.editComment',
+                                            meta: { comment },
+                                        })
+                                    "
+                                >
+                                    <mat-icon
+                                        svgIcon="mat_solid:edit"
+                                    ></mat-icon>
+                                </button>
+                                <button
+                                    aria-label="Delete comment"
+                                    type="button"
+                                    mat-icon-button
+                                    (click)="
+                                        actionService.action({
+                                            id: 'support::issue.detail.deleteComment',
+                                            meta: { comment },
+                                        })
+                                    "
+                                >
+                                    <mat-icon
+                                        svgIcon="mat_solid:delete"
+                                    ></mat-icon>
+                                </button>
                             </div>
-                            <div class="mt-2">{{ comment.description }}</div>
-                            <button
-                                aria-label="Edit comment"
-                                type="button"
-                                mat-icon-button
-                                (click)="
-                                    actionService.action({
-                                        id: 'support::issue.detail.editComment',
-                                        meta: { comment },
-                                    })
-                                "
-                            >
-                                <mat-icon svgIcon="mat_solid:edit"></mat-icon>
-                            </button>
-                        </div>
+                        }
                     }
-                }
-            </form>
-        </div>
+                </form>
+            </div>
+        }
     </div>
     <!-- / Main -->
 </div>

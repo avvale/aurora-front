@@ -1,1 +1,1 @@
-export * from '@aurora/components/environments-information/public-api';
+export * from './public-api';
