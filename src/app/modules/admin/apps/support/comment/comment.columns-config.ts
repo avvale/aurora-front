@@ -1,13 +1,19 @@
 import { ColumnConfig, ColumnDataType } from '@aurora';
 import { TranslocoService } from '@jsverse/transloco';
 
-export const issueColumnsConfig: (properties?: {
+export const commentColumnsConfig: (properties?: {
     translator?: TranslocoService;
 }) => ColumnConfig[] = ({
     translator = null,
 }: {
     translator?: TranslocoService;
 } = {}): ColumnConfig[] => [
+    {
+        type: ColumnDataType.NUMBER,
+        field: 'rowId',
+        sort: 'rowId',
+        translation: 'support.RowId',
+    },
     {
         type: ColumnDataType.STRING,
         field: 'externalId',
@@ -17,9 +23,10 @@ export const issueColumnsConfig: (properties?: {
     },
     {
         type: ColumnDataType.STRING,
-        field: 'externalStatus',
-        sort: 'externalStatus',
-        translation: 'support.ExternalStatus',
+        field: 'issue.name',
+        searchableField: '$issue.name$',
+        sort: 'issue.name',
+        translation: 'Name',
         isUnaccent: true,
     },
     {
@@ -42,34 +49,6 @@ export const issueColumnsConfig: (properties?: {
         field: 'displayName',
         sort: 'displayName',
         translation: 'support.DisplayName',
-        isUnaccent: true,
-    },
-    {
-        type: ColumnDataType.STRING,
-        field: 'frontVersion',
-        sort: 'frontVersion',
-        translation: 'support.FrontVersion',
-        isUnaccent: true,
-    },
-    {
-        type: ColumnDataType.STRING,
-        field: 'backVersion',
-        sort: 'backVersion',
-        translation: 'support.BackVersion',
-        isUnaccent: true,
-    },
-    {
-        type: ColumnDataType.STRING,
-        field: 'environment',
-        sort: 'environment',
-        translation: 'support.Environment',
-        isUnaccent: true,
-    },
-    {
-        type: ColumnDataType.STRING,
-        field: 'subject',
-        sort: 'subject',
-        translation: 'support.Subject',
         isUnaccent: true,
     },
     {

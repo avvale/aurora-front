@@ -3,7 +3,23 @@ import gql from 'graphql-tag';
 export const fields = `
     rowId
     externalId
-    externalStatus
+    issueId
+    issue {
+        id
+        rowId
+        externalId
+        externalStatus
+        accountUsername
+        displayName
+        frontVersion
+        backVersion
+        environment
+        subject
+        description
+        attachments
+        screenRecording
+        meta
+    }
     accountId
     account {
         id
@@ -22,20 +38,9 @@ export const fields = `
     }
     accountUsername
     displayName
-    frontVersion
-    backVersion
-    environment
-    subject
     description
     attachments
     screenRecording
-    comments {
-        id
-        issueId
-        displayName
-        description
-        createdAt
-    }
     meta
     createdAt
     updatedAt
@@ -46,11 +51,11 @@ export const relationsFields = `
 
 // default methods
 export const paginationQuery = gql`
-    query SupportPaginateIssues(
+    query SupportPaginateComments(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        pagination: supportPaginateIssues(
+        pagination: supportPaginateComments(
             query: $query
             constraint: $constraint
         ) {
@@ -62,11 +67,11 @@ export const paginationQuery = gql`
 `;
 
 export const getQuery = gql`
-    query SupportGetIssues(
+    query SupportGetComments(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        objects: supportGetIssues(query: $query, constraint: $constraint) {
+        objects: supportGetComments(query: $query, constraint: $constraint) {
             id
             #FIELDS
         }
@@ -74,8 +79,8 @@ export const getQuery = gql`
 `;
 
 export const findByIdQuery = gql`
-    query SupportFindIssueById($id: ID, $constraint: QueryStatement) {
-        object: supportFindIssueById(id: $id, constraint: $constraint) {
+    query SupportFindCommentById($id: ID, $constraint: QueryStatement) {
+        object: supportFindCommentById(id: $id, constraint: $constraint) {
             id
             #FIELDS
         }
@@ -83,11 +88,11 @@ export const findByIdQuery = gql`
 `;
 
 export const findQuery = gql`
-    query SupportFindIssue(
+    query SupportFindComment(
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        object: supportFindIssue(query: $query, constraint: $constraint) {
+        object: supportFindComment(query: $query, constraint: $constraint) {
             id
             #FIELDS
         }
@@ -95,10 +100,10 @@ export const findQuery = gql`
 `;
 
 export const createMutation = gql`
-    mutation SupportCreateIssue (
-        $payload: SupportCreateIssueInput!
+    mutation SupportCreateComment (
+        $payload: SupportCreateCommentInput!
     ) {
-        supportCreateIssue (
+        supportCreateComment (
             payload: $payload
         ) {
             ${fields}
@@ -107,17 +112,17 @@ export const createMutation = gql`
 `;
 
 export const insertMutation = gql`
-    mutation SupportCreateIssues($payload: [SupportCreateIssueInput]!) {
-        supportCreateIssues(payload: $payload)
+    mutation SupportCreateComments($payload: [SupportCreateCommentInput]!) {
+        supportCreateComments(payload: $payload)
     }
 `;
 
 export const updateByIdMutation = gql`
-    mutation SupportUpdateIssueById (
-        $payload: SupportUpdateIssueByIdInput!
+    mutation SupportUpdateCommentById (
+        $payload: SupportUpdateCommentByIdInput!
         $constraint: QueryStatement
     ) {
-        supportUpdateIssueById (
+        supportUpdateCommentById (
             payload: $payload
             constraint: $constraint
         ) {
@@ -127,12 +132,12 @@ export const updateByIdMutation = gql`
 `;
 
 export const updateMutation = gql`
-    mutation SupportUpdateIssues (
-        $payload: SupportUpdateIssuesInput!
+    mutation SupportUpdateComments (
+        $payload: SupportUpdateCommentsInput!
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        supportUpdateIssues (
+        supportUpdateComments (
             payload: $payload
             query: $query
             constraint: $constraint
@@ -143,11 +148,11 @@ export const updateMutation = gql`
 `;
 
 export const deleteByIdMutation = gql`
-    mutation SupportDeleteIssueById (
+    mutation SupportDeleteCommentById (
         $id: ID!
         $constraint: QueryStatement
     ) {
-        supportDeleteIssueById (
+        supportDeleteCommentById (
             id: $id
             constraint: $constraint
         ) {
@@ -157,33 +162,15 @@ export const deleteByIdMutation = gql`
 `;
 
 export const deleteMutation = gql`
-    mutation SupportDeleteIssues (
+    mutation SupportDeleteComments (
         $query: QueryStatement
         $constraint: QueryStatement
     ) {
-        supportDeleteIssues (
+        supportDeleteComments (
             query: $query
             constraint: $constraint
         ) {
             ${fields}
         }
-    }
-`;
-
-// Mutation additionalApis
-export const createWebhookConfigMutation = gql`
-    mutation SupportCreateWebhookConfig {
-        supportCreateWebhookConfig {
-            id
-            name
-            service
-            externalId
-        }
-    }
-`;
-
-export const deleteWebhookConfigMutation = gql`
-    mutation SupportDeleteWebhookConfig {
-        supportDeleteWebhookConfig
     }
 `;

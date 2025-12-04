@@ -11,11 +11,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue-detail.component.html",
-            "integrity": "sha1:b3b0fe780cd6d1324b4ba4e793f0785d7a776c50"
+            "integrity": "sha1:685034d4cc263ab1d8f924bd38e9cf86d570251f"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue-detail.component.ts",
-            "integrity": "sha1:ff189566b73c9f13db76102d616e3ed6c12e5b53"
+            "integrity": "sha1:4e1d189954c28980e707cac2ed06da9450861e67"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue-list.component.html",
@@ -27,11 +27,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue.columns-config.ts",
-            "integrity": "sha1:37252b02e3b7102fd27053e43e3d7a4c1b2bc8de"
+            "integrity": "sha1:b0cc3991ed9ea1e42130c6e3e2a6073333310a37"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue.graphql.ts",
-            "integrity": "sha1:7f950312889f85e48dd701f1f4731ed29b0ca32f"
+            "integrity": "sha1:a7c2c705fe0fc6f51c3c979abe1c02706181ae13"
         },
         {
             "path": "src/app/modules/admin/apps/support/issue/issue.resolvers.ts",

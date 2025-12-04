@@ -152,6 +152,7 @@
         <div>
             <button
                 type="button"
+                [disabled]="commentFg.value?.id"
                 mat-flat-button
                 color="accent"
                 (click)="
@@ -166,6 +167,7 @@
             </button>
             <button
                 class="ml-3"
+                [disabled]="commentFg.value?.id"
                 mat-flat-button
                 color="accent"
                 (click)="
@@ -187,7 +189,7 @@
                 (ngSubmit)="onSubmitComment($event)"
             >
                 @for (comment of comments(); track comment.id) {
-                    @if (comment.edit) {
+                    @if (comment.id === commentFg.value?.id) {
                         <div class="mt-4 rounded-lg border p-4">
                             <mat-form-field
                                 appearance="outline"
@@ -198,10 +200,10 @@
                                 </mat-label>
                                 <textarea
                                     matInput
-                                    formControlName="content"
+                                    formControlName="description"
                                 ></textarea>
                                 <mat-error>
-                                    {{ formErrors?.content | async }}
+                                    {{ formErrors?.description | async }}
                                 </mat-error>
                             </mat-form-field>
                             <button
@@ -212,16 +214,32 @@
                             >
                                 {{ t('Save') }}
                             </button>
+                            <button
+                                type="button"
+                                class="mt-2"
+                                mat-flat-button
+                                color="accent"
+                                (click)="
+                                    actionService.action({
+                                        id: 'support::issue.detail.cancelComment',
+                                        isViewAction: false,
+                                    })
+                                "
+                            >
+                                {{ t('Cancel') }}
+                            </button>
                         </div>
                     } @else {
                         <div class="mt-4 rounded-lg border p-4">
-                            <div class="font-bold">{{ comment.author }}</div>
+                            <div class="font-bold">
+                                {{ comment.displayName }}
+                            </div>
                             <div
                                 class="text-sm text-gray-600 dark:text-gray-400"
                             >
-                                {{ comment.date | date: 'medium' }}
+                                {{ comment.createdAt | date: 'medium' }}
                             </div>
-                            <div class="mt-2">{{ comment.content }}</div>
+                            <div class="mt-2">{{ comment.description }}</div>
                             <button
                                 aria-label="Edit comment"
                                 type="button"

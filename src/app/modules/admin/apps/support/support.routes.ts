@@ -10,6 +10,9 @@ import {
     issuePaginationResolver,
 } from './issue/issue.resolvers';
 import { SupportComponent } from './support.component';
+import { CommentListComponent } from './comment/comment-list.component';
+import { CommentDetailComponent } from './comment/comment-detail.component';
+import { commentEditResolver, commentNewResolver, commentPaginationResolver } from './comment/comment.resolvers';
 
 export default [
     {
@@ -40,6 +43,9 @@ export default [
                 resolve: { data: configEditResolver },
                 data: { permission: 'support.config.get' },
             },
+            { path: 'comment', component: CommentListComponent, resolve: { data: commentPaginationResolver }, data: { permission: 'support.comment.get' }},
+            { path: 'comment/new', component: CommentDetailComponent, resolve: { data: commentNewResolver }, data: { permission: 'support.comment.create' }},
+            { path: 'comment/edit/:id', component: CommentDetailComponent, resolve: { data: commentEditResolver }, data: { permission: 'support.comment.get' }},
         ],
         providers: [
             {

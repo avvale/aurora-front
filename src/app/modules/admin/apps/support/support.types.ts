@@ -14,6 +14,7 @@ export interface SupportIssue {
     description: string;
     attachments?: any;
     screenRecording?: any;
+    comments?: SupportComment[];
     meta?: any;
     createdAt?: string;
     updatedAt?: string;
@@ -104,4 +105,52 @@ export interface SupportUpdateConfigs {
     rowId?: number;
     apiKey?: string;
     listId?: string;
+}
+
+export interface SupportComment {
+    id: string;
+    rowId?: number;
+    issueId?: string;
+    issue?: SupportIssue;
+    externalId?: string;
+    description: string;
+    attachments?: any;
+    screenRecording?: any;
+    meta?: any;
+    createdAt?: string;
+    updatedAt?: string;
+    deletedAt?: string;
+}
+
+export interface SupportCreateComment {
+    id: string;
+    rowId: number;
+    issueId?: string;
+    externalId?: string;
+    description: string;
+    attachments?: any;
+    screenRecording?: any;
+    meta?: any;
+}
+
+export interface SupportUpdateCommentById {
+    id: string;
+    rowId?: number;
+    issueId?: string;
+    externalId?: string;
+    description?: string;
+    attachments?: any;
+    screenRecording?: any;
+    meta?: any;
+}
+
+export interface SupportUpdateComments {
+    id?: string;
+    rowId?: number;
+    issueId?: string;
+    externalId?: string;
+    description?: string;
+    attachments?: any;
+    screenRecording?: any;
+    meta?: any;
 }

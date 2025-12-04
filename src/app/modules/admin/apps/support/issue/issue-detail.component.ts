@@ -9,7 +9,8 @@ import {
 import { FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { RecordingPreviewDialogComponent } from '@apps/screen-recording';
-import { SupportIssue } from '@apps/support';
+import { SupportComment, SupportIssue } from '@apps/support';
+import { CommentService } from '@apps/support/comment';
 import { IssueService } from '@apps/support/issue';
 import {
     Action,
@@ -34,22 +35,8 @@ import { lastValueFrom, takeUntil } from 'rxjs';
 export class IssueDetailComponent extends ViewDetailComponent {
     // ---- customizations ----
     commentFg: FormGroup;
-    comments: WritableSignal<any[]> = signal([
-        {
-            id: '1',
-            author: 'John Doe',
-            date: new Date(),
-            content: 'This is a sample comment.',
-            edit: false,
-        },
-        {
-            id: '2',
-            author: 'John Doe3',
-            date: new Date(),
-            content: 'This is a sample comment3.',
-            edit: false,
-        },
-    ]);
+    comments: WritableSignal<SupportComment[]> = signal([]);
+    isNewComment: boolean = false;
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -66,6 +53,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
 
     constructor(
         private readonly issueService: IssueService,
+        private readonly commentService: CommentService,
         private readonly dialog: MatDialog,
     ) {
         super();
@@ -145,9 +133,13 @@ export class IssueDetailComponent extends ViewDetailComponent {
         }
 
         this.actionService.action({
-            id: 'support::issue.detail.updateComment',
+            id: mapActions(this.currentAction.id, {
+                'support::issue.detail.newComment':
+                    'support::issue.detail.createComment',
+                'support::issue.detail.editComment':
+                    'support::issue.detail.updateComment',
+            }),
             isViewAction: false,
-            meta: { comment: this.commentFg.value },
         });
     }
 
@@ -179,7 +171,9 @@ export class IssueDetailComponent extends ViewDetailComponent {
 
         this.commentFg = this.fb.group({
             id: null,
-            content: ['', [Validators.required]],
+            issueId: null,
+            externalId: null,
+            description: ['', [Validators.required]],
         });
         /* eslint-enable key-spacing */
     }
@@ -198,6 +192,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
                     .subscribe((item) => {
                         this.managedObject.set(item);
                         this.fg.patchValue(item);
+                        this.comments.set(item.comments || []);
                     });
                 break;
 
@@ -248,6 +243,105 @@ export class IssueDetailComponent extends ViewDetailComponent {
                 break;
             /* #endregion common actions */
 
+            /* #region comment actions */
+            case 'support::issue.detail.newComment':
+                if (this.commentFg.value?.id) return;
+
+                const newComment = {
+                    id: uuid(),
+                    issueId: this.managedObject().id,
+                    externalId: null,
+                    description: '',
+                };
+                this.isNewComment = true;
+
+                this.comments.update((comments) => [newComment, ...comments]);
+                this.commentFg.patchValue(newComment);
+                break;
+
+            case 'support::issue.detail.createComment':
+                try {
+                    await lastValueFrom(
+                        this.commentService.create<SupportComment>({
+                            object: this.commentFg.value,
+                        }),
+                    );
+                    this.isNewComment = false;
+
+                    this.snackBar.open(
+                        `${this.translocoService.translate('support.Comment')} ${this.translocoService.translate('Created.M')}`,
+                        undefined,
+                        {
+                            verticalPosition: 'top',
+                            duration: 3000,
+                        },
+                    );
+                } catch (error) {
+                    log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
+                }
+                break;
+
+            case 'support::issue.detail.editComment':
+                for (const comment of this.comments()) {
+                    if (comment.id === action.meta.comment.id) {
+                        this.commentFg.patchValue(comment);
+                        break;
+                    }
+                }
+                break;
+
+            case 'support::issue.detail.updateComment':
+                try {
+                    await lastValueFrom(
+                        this.commentService.updateById<SupportComment>({
+                            object: this.commentFg.value,
+                        }),
+                    );
+
+                    // update comment in the list
+                    this.comments.update((comments) => {
+                        return comments.map((comment) => {
+                            if (comment.id === this.commentFg.value.id) {
+                                return {
+                                    ...comment,
+                                    ...this.commentFg.value,
+                                };
+                            }
+                            return comment;
+                        });
+                    });
+                    this.commentFg.reset();
+
+                    this.snackBar.open(
+                        `${this.translocoService.translate('support.Comment')} ${this.translocoService.translate('Saved.M')}`,
+                        undefined,
+                        {
+                            verticalPosition: 'top',
+                            duration: 3000,
+                        },
+                    );
+
+                    //this.router.navigate(['support/comment']);
+                } catch (error) {
+                    log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
+                }
+                break;
+
+            case 'support::issue.detail.cancelComment':
+                // delete comment from the list if it is a new comment
+                if (this.isNewComment) {
+                    this.comments.update((comments) => {
+                        return comments.filter(
+                            (comment) =>
+                                comment.id !== this.commentFg.value?.id,
+                        );
+                    });
+                }
+                this.commentFg.reset();
+                this.isNewComment = false;
+                break;
+            /* #endregion comment actions */
+
             /* #region custom actions */
             case 'support::issue.detail.openPreviewVideoDialog':
                 this.dialog.open(RecordingPreviewDialogComponent, {
@@ -258,25 +352,9 @@ export class IssueDetailComponent extends ViewDetailComponent {
                     maxWidth: '90vw',
                 });
                 break;
-            case 'support::issue.detail.newComment':
-                console.log('New comment action');
-                break;
+
             case 'support::issue.detail.openRecordingScreen':
                 console.log('Open recording screen action');
-                break;
-            case 'support::issue.detail.editComment':
-                console.log('Edit comment action', action.meta.comment);
-                for (const comment of this.comments()) {
-                    if (comment.id === action.meta.comment.id) {
-                        comment.edit = true;
-                        this.commentFg.patchValue(comment);
-                        continue;
-                    }
-                    comment.edit = false;
-                }
-                break;
-            case 'support::issue.detail.updateComment':
-                console.log('Update comment action', action.meta.comment);
                 break;
             /* #endregion custom actions */
         }

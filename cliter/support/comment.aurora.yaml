@@ -1,14 +1,14 @@
 version: 0.0.1
 boundedContextName: support
-moduleName: issue
-moduleNames: issues
-aggregateName: SupportIssue
+moduleName: comment
+moduleNames: comments
+aggregateName: SupportComment
 hasOAuth: true
 hasTenant: false
 hasAuditing: true
 front:
-  solidIcon: bug_report
-  outlineIcon: bug_report
+  solidIcon: comment
+  outlineIcon: comment
 aggregateProperties:
   - name: id
     type: id
@@ -23,10 +23,16 @@ aggregateProperties:
     type: varchar
     maxLength: 64
     nullable: true
-  - name: externalStatus
-    type: varchar
-    maxLength: 36
+  - name: issueId
+    type: id
     nullable: true
+    relationship:
+      type: many-to-one
+      aggregateName: SupportIssue
+      modulePath: support/issue
+      key: id
+      field: issue
+      avoidConstraint: true
   - name: accountId
     type: id
     nullable: true
@@ -45,22 +51,6 @@ aggregateProperties:
     type: varchar
     maxLength: 128
     nullable: true
-  - name: frontVersion
-    type: varchar
-    maxLength: 16
-    nullable: true
-  - name: backVersion
-    type: varchar
-    maxLength: 16
-    nullable: true
-  - name: environment
-    type: varchar
-    maxLength: 36
-    nullable: true
-  - name: subject
-    type: varchar
-    maxLength: 510
-    nullable: false
   - name: description
     type: text
     nullable: false
@@ -70,15 +60,6 @@ aggregateProperties:
   - name: screenRecording
     type: jsonb
     nullable: true
-  - name: comments
-    type: relationship
-    nullable: true
-    relationship:
-      type: one-to-many
-      singularName: comment
-      aggregateName: SupportComment
-      modulePath: support/comment
-      avoidConstraint: true
   - name: meta
     type: jsonb
     nullable: true
@@ -91,13 +72,6 @@ aggregateProperties:
   - name: deletedAt
     type: timestamp
     nullable: true
-additionalApis:
-  - path: support/config/create-webhook
-    resolverType: mutation
-    httpMethod: post
-  - path: support/config/delete-webhook
-    resolverType: mutation
-    httpMethod: post
 excludedOperations:
   - count
   - createBatch

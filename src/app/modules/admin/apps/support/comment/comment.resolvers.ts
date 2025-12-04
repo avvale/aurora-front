@@ -4,8 +4,8 @@ import {
     ResolveFn,
     RouterStateSnapshot,
 } from '@angular/router';
-import { SupportIssue } from '@apps/support';
-import { issueColumnsConfig, IssueService } from '@apps/support/issue';
+import { SupportComment } from '@apps/support';
+import { commentColumnsConfig, CommentService } from '@apps/support/comment';
 import {
     Action,
     ActionService,
@@ -15,29 +15,29 @@ import {
     queryStatementHandler,
 } from '@aurora';
 
-export const issuePaginationResolver: ResolveFn<GridData<SupportIssue>> = (
+export const commentPaginationResolver: ResolveFn<GridData<SupportComment>> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
     const actionService = inject(ActionService);
     const gridFiltersStorageService = inject(GridFiltersStorageService);
     const gridStateService = inject(GridStateService);
-    const issueService = inject(IssueService);
+    const commentService = inject(CommentService);
 
     actionService.action({
-        id: 'support::issue.list.view',
+        id: 'support::comment.list.view',
         isViewAction: true,
     });
 
-    const gridId = 'support::issue.list.mainGridList';
+    const gridId = 'support::comment.list.mainGridList';
     gridStateService.setPaginationActionId(
         gridId,
-        'support::issue.list.pagination',
+        'support::comment.list.pagination',
     );
-    gridStateService.setExportActionId(gridId, 'support::issue.list.export');
+    gridStateService.setExportActionId(gridId, 'support::comment.list.export');
 
-    return issueService.pagination({
-        query: queryStatementHandler({ columnsConfig: issueColumnsConfig() })
+    return commentService.pagination({
+        query: queryStatementHandler({ columnsConfig: commentColumnsConfig() })
             .setColumFilters(
                 gridFiltersStorageService.getColumnFilterState(gridId),
             )
@@ -48,37 +48,30 @@ export const issuePaginationResolver: ResolveFn<GridData<SupportIssue>> = (
     });
 };
 
-export const issueNewResolver: ResolveFn<Action> = (
+export const commentNewResolver: ResolveFn<Action> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
     const actionService = inject(ActionService);
 
     return actionService.action({
-        id: 'support::issue.detail.new',
+        id: 'support::comment.detail.new',
         isViewAction: true,
     });
 };
 
-export const issueEditResolver: ResolveFn<{
-    object: SupportIssue;
+export const commentEditResolver: ResolveFn<{
+    object: SupportComment;
 }> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const actionService = inject(ActionService);
-    const issueService = inject(IssueService);
+    const commentService = inject(CommentService);
 
     actionService.action({
-        id: 'support::issue.detail.edit',
+        id: 'support::comment.detail.edit',
         isViewAction: true,
     });
 
-    return issueService.findById({
+    return commentService.findById({
         id: route.paramMap.get('id'),
-        constraint: {
-            include: [
-                {
-                    association: 'comments',
-                },
-            ],
-        },
     });
 };
