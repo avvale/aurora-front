@@ -1,19 +1,28 @@
 <div
     *transloco="let t"
-    class="w-auto flex-col px-2 py-0"
+    class="relative flex w-64 flex-col px-2 pb-2 pt-5"
     matSnackBarActions
 >
+    <button
+        class="absolute -left-4 -top-3 !h-8 !w-8 !min-h-8"
+        mat-icon-button
+        (click)="dismiss()"
+    >
+        <mat-icon class="icon-size-4 text-white">close</mat-icon>
+    </button>
+
     <form
         id="screenRecordingConfigSnackbarForm"
-        class="flex w-auto flex-col"
+        class="flex w-full flex-col gap-3"
         [formGroup]="fg"
         novalidate
         (ngSubmit)="onSubmit($event)"
     >
         <mat-form-field
             appearance="outline"
-            class="col-12"
             tiny
+            class="w-full"
+            subscriptSizing="dynamic"
         >
             <mat-label>{{ t('support.Display') }}</mat-label>
             <mat-select
@@ -30,13 +39,15 @@
                     {{ t('support.FullScreen') }}
                 </mat-option>
             </mat-select>
-            <mat-icon matSuffix>airplay</mat-icon>
-            <mat-error>{{ formErrors?.displaySurface | async }}</mat-error>
+            <mat-icon class="icon-size-5" matSuffix>airplay</mat-icon>
+            <!-- Error hidden effectively by subscriptSizing="dynamic" when invalid but touched, saves space -->
         </mat-form-field>
+
         <mat-form-field
             appearance="outline"
-            class="col-12"
             tiny
+            class="w-full"
+            subscriptSizing="dynamic"
         >
             <mat-label>{{ t('support.Audio') }}</mat-label>
             <mat-select
@@ -55,29 +66,20 @@
                     </mat-option>
                 }
             </mat-select>
-            <mat-icon matSuffix>mic</mat-icon>
-            <mat-error>{{ formErrors?.audioDeviceId | async }}</mat-error>
+            <mat-icon class="icon-size-5" matSuffix>mic</mat-icon>
         </mat-form-field>
-        <div>
-            <button
-                type="submit"
-                class="px-3 text-sm leading-8"
-                mat-flat-button
-                form="screenRecordingConfigSnackbarForm"
-                color="warn"
-            >
-                <mat-icon fontSet="material-symbols-outlined">
-                    screen_record
-                </mat-icon>
-                {{ t('support.RecordClip') }}
-            </button>
-            <button
-                class="ml-2"
-                matIconButton
-                (click)="dismiss()"
-            >
-                <mat-icon>close</mat-icon>
-            </button>
-        </div>
+
+        <button
+            type="submit"
+            class="w-full !h-8 !min-h-8 text-xs font-medium !rounded-full"
+            mat-flat-button
+            form="screenRecordingConfigSnackbarForm"
+            color="warn"
+        >
+            <mat-icon class="icon-size-4">
+                screen_record
+            </mat-icon>
+            {{ t('support.RecordClip') }}
+        </button>
     </form>
 </div>
