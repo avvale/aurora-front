@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -15,6 +14,7 @@ import { IssueService } from '@apps/support/issue';
 import {
     Action,
     Crumb,
+    DateFormatPipe,
     defaultDetailImports,
     EnvironmentsInformation,
     EnvironmentsInformationService,
@@ -33,7 +33,7 @@ import { firstValueFrom, lastValueFrom, takeUntil } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [...defaultDetailImports, DatePipe],
+    imports: [...defaultDetailImports, DateFormatPipe],
 })
 export class IssueDetailComponent extends ViewDetailComponent {
     // ---- customizations ----
@@ -366,32 +366,69 @@ export class IssueDetailComponent extends ViewDetailComponent {
                 break;
 
             case 'support::issue.detail.deleteComment':
-                try {
-                    await lastValueFrom(
-                        this.commentService.deleteById({
-                            id: action.meta.comment.id,
-                        }),
-                    );
-
-                    // update comment in the list
-                    this.comments.update((comments) => {
-                        return comments.filter(
-                            (comment) => comment.id !== action.meta.comment.id,
-                        );
-                    });
-                    this.commentFg.reset();
-
-                    this.snackBar.open(
-                        `${this.translocoService.translate('support.Comment')} ${this.translocoService.translate('Deleted.M')}`,
-                        undefined,
+                const confirmation = this.confirmationService.open({
+                    title: `${this.translocoService.translate('Delete')} ${this.translocoService.translate('support.Comment')}`,
+                    message: this.translocoService.translate(
+                        'DeletionWarning',
                         {
-                            verticalPosition: 'top',
-                            duration: 3000,
+                            entity: this.translocoService.translate(
+                                'support.Comment',
+                            ),
                         },
-                    );
-                } catch (error) {
-                    log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
-                }
+                    ),
+                    icon: {
+                        show: true,
+                        name: 'heroicons_outline:exclamation-triangle',
+                        color: 'warn',
+                    },
+                    actions: {
+                        confirm: {
+                            show: true,
+                            label: this.translocoService.translate('Remove'),
+                            color: 'warn',
+                        },
+                        cancel: {
+                            show: true,
+                            label: this.translocoService.translate('Cancel'),
+                        },
+                    },
+                    dismissible: true,
+                });
+
+                confirmation.afterClosed().subscribe(async (result) => {
+                    if (result === 'confirmed') {
+                        try {
+                            await lastValueFrom(
+                                this.commentService.deleteById({
+                                    id: action.meta.comment.id,
+                                }),
+                            );
+
+                            // update comment in the list
+                            this.comments.update((comments) => {
+                                return comments.filter(
+                                    (comment) =>
+                                        comment.id !== action.meta.comment.id,
+                                );
+                            });
+                            this.commentFg.reset();
+
+                            this.snackBar.open(
+                                `${this.translocoService.translate('support.Comment')} ${this.translocoService.translate('Deleted.M')}`,
+                                undefined,
+                                {
+                                    verticalPosition: 'top',
+                                    duration: 3000,
+                                },
+                            );
+                        } catch (error) {
+                            log(
+                                `[DEBUG] Catch error in ${action.id} action: ${error}`,
+                            );
+                        }
+                    }
+                });
+
                 break;
 
             case 'support::issue.detail.cancelComment':

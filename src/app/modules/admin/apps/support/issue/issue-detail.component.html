@@ -84,153 +84,159 @@
     <!-- / Header -->
 
     <!-- Main -->
-    <div
-        class="flex-auto overflow-y-auto px-6 pt-6 sm:px-10 sm:pt-10"
-        cdkScrollable
-    >
-        <div class="form-card">
-            <form
-                id="supportIssueFormDetail"
-                [formGroup]="fg"
-                novalidate
-                (ngSubmit)="onSubmit($event)"
-            >
-                <div class="layout__container">
-                    @if (managedObject()?.screenRecording?.url) {
-                        <div class="col-12 mb-4">
-                            <button
-                                type="button"
-                                mat-flat-button
-                                color="warn"
-                                (click)="
-                                    actionService.action({
-                                        id: 'support::issue.detail.openPreviewVideoDialog',
-                                        isViewAction: false,
-                                    })
-                                "
-                            >
-                                <mat-icon
-                                    class="icon-size-5"
-                                    fontSet="material-symbols-outlined"
+    <div class="flex flex-col md:flex-row flex-auto overflow-y-auto md:overflow-hidden bg-gray-100 dark:bg-gray-900">
+        <!-- Left Column: Form -->
+        <div
+            class="flex-auto md:overflow-y-auto px-6 pt-6 md:px-10 md:pt-10"
+            cdkScrollable
+        >
+            <div class="bg-card mb-8 rounded-2xl p-8 shadow">
+                <form
+                    id="supportIssueFormDetail"
+                    [formGroup]="fg"
+                    novalidate
+                    (ngSubmit)="onSubmit($event)"
+                >
+                    <div class="grid grid-cols-1 gap-6">
+                        @if (managedObject()?.screenRecording?.url) {
+                            <div class="col-span-1">
+                                <button
+                                    type="button"
+                                    mat-flat-button
+                                    color="warn"
+                                    (click)="
+                                        actionService.action({
+                                            id: 'support::issue.detail.openPreviewVideoDialog',
+                                            isViewAction: false,
+                                        })
+                                    "
                                 >
-                                    video_file
-                                </mat-icon>
-                                {{ t('support.ShowScreenRecording') }}
-                            </button>
-                        </div>
-                    }
-
-                    @if (
-                        currentViewAction.id === 'support::issue.detail.edit'
-                    ) {
-                        <div class="col-12 font-bold">
-                            <div class="col-6">
-                                {{ managedObject()?.displayName }}
-                                {{
-                                    managedObject()?.createdAt | date: 'medium'
-                                }}
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        fontSet="material-symbols-outlined"
+                                    >
+                                        video_file
+                                    </mat-icon>
+                                    {{ t('support.ShowScreenRecording') }}
+                                </button>
                             </div>
-                            <div class="col-6"></div>
-                        </div>
-                        <div
-                            class="col-12 text-secondary flex items-center text-md leading-5"
-                        >
-                            {{ managedObject()?.frontVersion }}
-                            {{ managedObject()?.frontEnvironment }}
-                            {{ managedObject()?.backVersion }}
-                            {{ managedObject()?.backEnvironment }}
-                        </div>
-                    }
+                        }
 
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('support.Subject') }}</mat-label>
-                        <input
-                            matInput
-                            formControlName="subject"
-                            maxlength="510"
-                            required
-                        />
-                        <mat-error>{{ formErrors?.subject | async }}</mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-12"
-                    >
-                        <mat-label>{{ t('support.Description') }}</mat-label>
-                        <textarea
-                            matInput
-                            formControlName="description"
-                        ></textarea>
-                        <mat-error>
-                            {{ formErrors?.description | async }}
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-            </form>
+                        @if (
+                            currentViewAction.id ===
+                            'support::issue.detail.edit'
+                        ) {
+                            <div class="col-span-1">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-lg font-bold">
+                                        {{ managedObject()?.displayName }}
+                                    </div>
+                                    <div class="text-secondary text-sm">
+                                        {{
+                                            managedObject()?.createdAt
+                                                | dateFormat: 'D MMMM YYYY, HH:mm'
+                                        }}
+                                    </div>
+                                </div>
+                                <div
+                                    class="text-secondary mt-1 flex flex-wrap gap-x-4 text-sm"
+                                >
+                                    <span>
+                                        Front:
+                                        {{ managedObject()?.frontVersion }}
+                                        ({{
+                                            managedObject()?.frontEnvironment
+                                        }})
+                                    </span>
+                                    <span>
+                                        Back: {{ managedObject()?.backVersion }}
+                                        ({{ managedObject()?.backEnvironment }})
+                                    </span>
+                                </div>
+                            </div>
+                        }
+
+                        <mat-form-field appearance="outline" class="w-full">
+                            <mat-label>{{ t('support.Subject') }}</mat-label>
+                            <input
+                                matInput
+                                formControlName="subject"
+                                maxlength="510"
+                                required
+                            />
+                            <mat-error>
+                                {{ formErrors?.subject | async }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="w-full">
+                            <mat-label>
+                                {{ t('support.Description') }}
+                            </mat-label>
+                            <textarea
+                                matInput
+                                formControlName="description"
+                                class="min-h-32"
+                            ></textarea>
+                            <mat-error>
+                                {{ formErrors?.description | async }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+            </div>
         </div>
 
+        <!-- Right Column: Comments -->
         @if (currentViewAction.id !== 'support::issue.detail.new') {
-            <div>
-                <button
-                    type="button"
-                    class="mt-5"
-                    [disabled]="commentFg.value?.id"
-                    mat-button
-                    (click)="
-                        actionService.action({
-                            id: 'support::issue.detail.newComment',
-                            isViewAction: false,
-                        })
-                    "
-                >
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:chat-bubble-left-ellipsis'"
-                    ></mat-icon>
-                    <span class="ml-2">{{ t('New.M') }}</span>
-                </button>
+            <div
+                class="bg-card w-full flex-none md:overflow-y-auto border-t md:border-t-0 md:border-l p-6 md:w-96 dark:bg-transparent"
+            >
+                <div class="mb-6 flex items-center justify-between">
+                    <h3 class="text-lg font-bold">Activity</h3>
+                    <button
+                        type="button"
+                        mat-stroked-button
+                        [disabled]="commentFg.value?.id"
+                        (click)="
+                            actionService.action({
+                                id: 'support::issue.detail.newComment',
+                                isViewAction: false,
+                            })
+                        "
+                    >
+                        <mat-icon
+                            class="icon-size-5 mr-2"
+                            svgIcon="heroicons_solid:chat-bubble-left-ellipsis"
+                        ></mat-icon>
+                        {{ t('New.M') }}
+                    </button>
+                </div>
+
+                <!-- New/Edit Comment Form -->
                 <form
                     [formGroup]="commentFg"
                     novalidate
                     (ngSubmit)="onSubmitComment($event)"
                 >
-                    @for (comment of comments(); track comment.id) {
-                        @if (comment.id === commentFg.value?.id) {
-                            <div class="mt-4 rounded-lg border p-4">
-                                <mat-form-field
-                                    appearance="outline"
-                                    class="w-full"
-                                >
-                                    <mat-label>
-                                        {{ t('support.Comment') }}
-                                    </mat-label>
-                                    <textarea
-                                        matInput
-                                        formControlName="description"
-                                    ></textarea>
-                                    <mat-error>
-                                        {{ formErrors?.description | async }}
-                                    </mat-error>
-                                </mat-form-field>
-                                <button
-                                    type="submit"
-                                    class="mr-1"
-                                    mat-button
-                                >
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="
-                                            'heroicons_solid:chat-bubble-left-ellipsis'
-                                        "
-                                    ></mat-icon>
-                                    <span class="ml-2">{{ t('Save') }}</span>
-                                </button>
+                    @if (commentFg.value?.id) {
+                        <div class="bg-gray-50 mb-6 rounded-xl border p-3">
+                            <mat-form-field
+                                appearance="outline"
+                                class="w-full"
+                                subscriptSizing="dynamic"
+                            >
+                                <textarea
+                                    matInput
+                                    formControlName="description"
+                                    rows="3"
+                                    [placeholder]="t('support.Comment')"
+                                ></textarea>
+                            </mat-form-field>
+                            <div class="mt-2 flex justify-end gap-3">
                                 <button
                                     type="button"
-                                    class="mr-1"
+                                    class="!h-8 !min-h-8 !px-4 !text-xs !rounded-full"
                                     mat-button
                                     (click)="
                                         actionService.action({
@@ -239,64 +245,97 @@
                                         })
                                     "
                                 >
-                                    <mat-icon
-                                        class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:x-mark'"
-                                    ></mat-icon>
-                                    <span class="ml-2">{{ t('Cancel') }}</span>
+                                    {{ t('Cancel') }}
+                                </button>
+                                <button
+                                    type="submit"
+                                    class="!h-8 !min-h-8 !px-4 !text-xs !rounded-full"
+                                    mat-flat-button
+                                    color="primary"
+                                >
+                                    {{ t('Save') }}
                                 </button>
                             </div>
-                        } @else {
-                            <div class="mt-4 rounded-lg border p-4">
-                                <div class="font-bold">
-                                    {{ comment.displayName }}
-                                </div>
-                                <div
-                                    class="text-sm text-gray-600 dark:text-gray-400"
-                                >
-                                    {{ comment.createdAt | date: 'medium' }}
-                                </div>
-                                <div class="mt-2">
-                                    {{ comment.description }}
-                                </div>
-                                @if (iamService.me.id === comment.accountId) {
-                                    <button
-                                        aria-label="Edit comment"
-                                        type="button"
-                                        mat-icon-button
-                                        (click)="
-                                            actionService.action({
-                                                id: 'support::issue.detail.editComment',
-                                                meta: { comment },
-                                            })
-                                        "
-                                    >
-                                        <mat-icon
-                                            class="icon-size-4"
-                                            svgIcon="mat_solid:edit"
-                                        ></mat-icon>
-                                    </button>
-                                    <button
-                                        aria-label="Delete comment"
-                                        type="button"
-                                        mat-icon-button
-                                        (click)="
-                                            actionService.action({
-                                                id: 'support::issue.detail.deleteComment',
-                                                meta: { comment },
-                                            })
-                                        "
-                                    >
-                                        <mat-icon
-                                            class="icon-size-4"
-                                            svgIcon="mat_solid:delete"
-                                        ></mat-icon>
-                                    </button>
-                                }
-                            </div>
-                        }
+                        </div>
                     }
                 </form>
+
+                <!-- Comments List -->
+                <div class="flex flex-col gap-6">
+                    @for (comment of comments(); track comment.id) {
+                        <div class="group relative flex gap-4">
+                            <!-- Avatar Placeholder or Icon -->
+                            <div
+                                class="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-300"
+                            >
+                                <mat-icon class="icon-size-5">person</mat-icon>
+                            </div>
+
+                            <div class="flex-auto">
+                                <div
+                                    class="flex items-baseline justify-between gap-2"
+                                >
+                                    <span class="font-semibold">
+                                        {{ comment.displayName }}
+                                    </span>
+                                    <span class="text-secondary text-xs">
+                                        {{
+                                            comment.createdAt | dateFormat: 'D MMM YYYY, HH:mm'
+                                        }}
+                                    </span>
+                                </div>
+                                <div
+                                    class="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-gray-600 dark:text-gray-300"
+                                >
+                                    {{ comment.description }}
+                                </div>
+
+                                <!-- Actions -->
+                                @if (iamService.me.id === comment.accountId) {
+                                    <div
+                                        class="mt-2 text-xs opacity-0 transition-opacity group-hover:opacity-100"
+                                    >
+                                        <button
+                                            aria-label="Edit comment"
+                                            type="button"
+                                            class="!h-8 !min-h-8 !w-8 mr-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                            mat-icon-button
+                                            (click)="
+                                                actionService.action({
+                                                    id: 'support::issue.detail.editComment',
+                                                    isViewAction: false,
+                                                    meta: { comment },
+                                                })
+                                            "
+                                        >
+                                            <mat-icon
+                                                class="icon-size-4"
+                                                svgIcon="mat_solid:edit"
+                                            ></mat-icon>
+                                        </button>
+                                        <button
+                                            aria-label="Delete comment"
+                                            type="button"
+                                            class="!h-8 !min-h-8 !w-8 text-gray-500 hover:text-warn dark:text-gray-400"
+                                            mat-icon-button
+                                            (click)="
+                                                actionService.action({
+                                                    id: 'support::issue.detail.deleteComment',
+                                                    meta: { comment },
+                                                })
+                                            "
+                                        >
+                                            <mat-icon
+                                                class="icon-size-4"
+                                                svgIcon="mat_solid:delete"
+                                            ></mat-icon>
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
         }
     </div>
