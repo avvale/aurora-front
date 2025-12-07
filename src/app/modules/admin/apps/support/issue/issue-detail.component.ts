@@ -1,3 +1,4 @@
+import { UpperCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -13,6 +14,7 @@ import { CommentService } from '@apps/support/comment';
 import { IssueService } from '@apps/support/issue';
 import {
     Action,
+    ChipComponent,
     Crumb,
     DateFormatPipe,
     defaultDetailImports,
@@ -33,7 +35,7 @@ import { firstValueFrom, lastValueFrom, takeUntil } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [...defaultDetailImports, DateFormatPipe],
+    imports: [...defaultDetailImports, ChipComponent, DateFormatPipe, UpperCasePipe],
 })
 export class IssueDetailComponent extends ViewDetailComponent {
     // ---- customizations ----

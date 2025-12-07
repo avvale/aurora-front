@@ -1,6 +1,7 @@
 {
     "AccountId": "AccountId",
     "AccountUsername": "Username",
+    "Activity": "Activity",
     "ApiKey": "ApiKey",
     "Attachments": "Attachments",
     "Audio": "Audio",
@@ -17,6 +18,7 @@
     "Display": "Display",
     "DisplayName": "Created by",
     "Environment": "Environment",
+    "ExternalColorStatus": "ExternalColorStatus",
     "ExternalId": "ExternalId",
     "ExternalStatus": "Status",
     "FolderId": "Folder",

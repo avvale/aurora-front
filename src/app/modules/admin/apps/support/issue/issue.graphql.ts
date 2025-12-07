@@ -4,6 +4,7 @@ export const fields = `
     rowId
     externalId
     externalStatus
+    externalColorStatus
     accountId
     account {
         id

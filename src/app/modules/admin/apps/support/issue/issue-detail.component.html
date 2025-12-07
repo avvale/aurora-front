@@ -14,6 +14,15 @@
                     svgIcon="bug_report"
                 ></mat-icon>
                 {{ t('support.Issue') }}
+                @if (currentViewAction.id === 'support::issue.detail.edit') {
+                    <au-chip
+                        [color]="managedObject().externalColorStatus"
+                        class="ml-4"
+                        size="tiny"
+                    >
+                        {{ managedObject().externalStatus | uppercase }}
+                    </au-chip>
+                }
             </au-title>
         </div>
 
@@ -193,7 +202,7 @@
                 class="bg-card w-full flex-none md:overflow-y-auto border-t md:border-t-0 md:border-l p-6 md:w-96 dark:bg-transparent"
             >
                 <div class="mb-6 flex items-center justify-between">
-                    <h3 class="text-lg font-bold">Activity</h3>
+                    <h3 class="text-lg font-bold">{{ t('support.Activity') }}</h3>
                     <button
                         type="button"
                         mat-stroked-button

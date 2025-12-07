@@ -1,6 +1,7 @@
 {
     "AccountId": "AccountId",
     "AccountUsername": "Usuario",
+    "Activity": "Actividad",
     "ApiKey": "ApiKey",
     "Attachments": "Adjuntos",
     "Audio": "Audio",
@@ -17,6 +18,7 @@
     "Display": "Pantalla",
     "DisplayName": "Creado por",
     "Environment": "Entorno",
+    "ExternalColorStatus": "ExternalColorStatus",
     "ExternalId": "ExternalId",
     "ExternalStatus": "Estado",
     "FolderId": "Carpeta",

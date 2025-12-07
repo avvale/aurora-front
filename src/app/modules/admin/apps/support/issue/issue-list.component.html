@@ -88,12 +88,13 @@
                 field="externalStatus"
                 let-externalStatus
                 let-columnConfig="columnConfig"
+                let-row="row"
             >
                 @if (externalStatus) {
                     <div class="inline-block">
                         <au-chip
-                            color="#524488"
-                            size="small"
+                            [color]="row.externalColorStatus"
+                            size="tiny"
                         >
                             {{ externalStatus | uppercase }}
                         </au-chip>
