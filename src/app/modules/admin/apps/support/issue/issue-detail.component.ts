@@ -18,6 +18,7 @@ import {
     defaultDetailImports,
     EnvironmentsInformation,
     EnvironmentsInformationService,
+    IamService,
     log,
     mapActions,
     SnackBarInvalidFormComponent,
@@ -58,6 +59,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
         private readonly commentService: CommentService,
         private readonly environmentsInformationService: EnvironmentsInformationService,
         private readonly dialog: MatDialog,
+        public readonly iamService: IamService,
     ) {
         super();
     }
@@ -177,6 +179,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
             id: null,
             issueId: null,
             externalId: null,
+            accountId: null,
             description: ['', [Validators.required]],
         });
         /* eslint-enable key-spacing */
@@ -284,13 +287,18 @@ export class IssueDetailComponent extends ViewDetailComponent {
                         }),
                     );
 
+                    const commentCreated = await lastValueFrom(
+                        this.commentService.findById({
+                            id: this.commentFg.value.id,
+                        }),
+                    );
+
                     // update comment in the list
                     this.comments.update((comments) => {
                         return comments.map((comment) => {
                             if (comment.id === this.commentFg.value.id) {
                                 return {
-                                    ...comment,
-                                    ...this.commentFg.value,
+                                    ...commentCreated.object,
                                 };
                             }
                             return comment;

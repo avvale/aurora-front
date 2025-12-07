@@ -33,6 +33,7 @@ export const fields = `
     comments {
         id
         issueId
+        accountId
         displayName
         description
         createdAt

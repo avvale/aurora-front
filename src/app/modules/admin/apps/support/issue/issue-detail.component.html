@@ -119,6 +119,29 @@
                             </button>
                         </div>
                     }
+
+                    @if (
+                        currentViewAction.id === 'support::issue.detail.edit'
+                    ) {
+                        <div class="col-12 font-bold">
+                            <div class="col-6">
+                                {{ managedObject()?.displayName }}
+                                {{
+                                    managedObject()?.createdAt | date: 'medium'
+                                }}
+                            </div>
+                            <div class="col-6"></div>
+                        </div>
+                        <div
+                            class="col-12 text-secondary flex items-center text-md leading-5"
+                        >
+                            {{ managedObject()?.frontVersion }}
+                            {{ managedObject()?.frontEnvironment }}
+                            {{ managedObject()?.backVersion }}
+                            {{ managedObject()?.backEnvironment }}
+                        </div>
+                    }
+
                     <mat-form-field
                         appearance="outline"
                         class="col-12"
@@ -153,9 +176,9 @@
             <div>
                 <button
                     type="button"
+                    class="mt-5"
                     [disabled]="commentFg.value?.id"
-                    mat-flat-button
-                    color="accent"
+                    mat-button
                     (click)="
                         actionService.action({
                             id: 'support::issue.detail.newComment',
@@ -163,8 +186,11 @@
                         })
                     "
                 >
-                    <mat-icon class="mr-2 icon-size-5">comment</mat-icon>
-                    {{ t('Create') }}
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:chat-bubble-left-ellipsis'"
+                    ></mat-icon>
+                    <span class="ml-2">{{ t('New.M') }}</span>
                 </button>
                 <form
                     [formGroup]="commentFg"
@@ -191,17 +217,21 @@
                                 </mat-form-field>
                                 <button
                                     type="submit"
-                                    class="mt-2"
-                                    mat-flat-button
-                                    color="accent"
+                                    class="mr-1"
+                                    mat-button
                                 >
-                                    {{ t('Save') }}
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="
+                                            'heroicons_solid:chat-bubble-left-ellipsis'
+                                        "
+                                    ></mat-icon>
+                                    <span class="ml-2">{{ t('Save') }}</span>
                                 </button>
                                 <button
                                     type="button"
-                                    class="mt-2"
-                                    mat-flat-button
-                                    color="accent"
+                                    class="mr-1"
+                                    mat-button
                                     (click)="
                                         actionService.action({
                                             id: 'support::issue.detail.cancelComment',
@@ -209,7 +239,11 @@
                                         })
                                     "
                                 >
-                                    {{ t('Cancel') }}
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:x-mark'"
+                                    ></mat-icon>
+                                    <span class="ml-2">{{ t('Cancel') }}</span>
                                 </button>
                             </div>
                         } @else {
@@ -225,36 +259,40 @@
                                 <div class="mt-2">
                                     {{ comment.description }}
                                 </div>
-                                <button
-                                    aria-label="Edit comment"
-                                    type="button"
-                                    mat-icon-button
-                                    (click)="
-                                        actionService.action({
-                                            id: 'support::issue.detail.editComment',
-                                            meta: { comment },
-                                        })
-                                    "
-                                >
-                                    <mat-icon
-                                        svgIcon="mat_solid:edit"
-                                    ></mat-icon>
-                                </button>
-                                <button
-                                    aria-label="Delete comment"
-                                    type="button"
-                                    mat-icon-button
-                                    (click)="
-                                        actionService.action({
-                                            id: 'support::issue.detail.deleteComment',
-                                            meta: { comment },
-                                        })
-                                    "
-                                >
-                                    <mat-icon
-                                        svgIcon="mat_solid:delete"
-                                    ></mat-icon>
-                                </button>
+                                @if (iamService.me.id === comment.accountId) {
+                                    <button
+                                        aria-label="Edit comment"
+                                        type="button"
+                                        mat-icon-button
+                                        (click)="
+                                            actionService.action({
+                                                id: 'support::issue.detail.editComment',
+                                                meta: { comment },
+                                            })
+                                        "
+                                    >
+                                        <mat-icon
+                                            class="icon-size-4"
+                                            svgIcon="mat_solid:edit"
+                                        ></mat-icon>
+                                    </button>
+                                    <button
+                                        aria-label="Delete comment"
+                                        type="button"
+                                        mat-icon-button
+                                        (click)="
+                                            actionService.action({
+                                                id: 'support::issue.detail.deleteComment',
+                                                meta: { comment },
+                                            })
+                                        "
+                                    >
+                                        <mat-icon
+                                            class="icon-size-4"
+                                            svgIcon="mat_solid:delete"
+                                        ></mat-icon>
+                                    </button>
+                                }
                             </div>
                         }
                     }
