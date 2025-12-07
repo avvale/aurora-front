@@ -277,7 +277,6 @@ export class IssueDetailComponent extends ViewDetailComponent {
                 };
                 this.isNewComment = true;
 
-                this.comments.update((comments) => [newComment, ...comments]);
                 this.commentFg.patchValue(newComment);
                 break;
 
@@ -296,16 +295,7 @@ export class IssueDetailComponent extends ViewDetailComponent {
                     );
 
                     // update comment in the list
-                    this.comments.update((comments) => {
-                        return comments.map((comment) => {
-                            if (comment.id === this.commentFg.value.id) {
-                                return {
-                                    ...commentCreated.object,
-                                };
-                            }
-                            return comment;
-                        });
-                    });
+                    this.comments.update((comments) => [commentCreated.object, ...comments]);
 
                     this.isNewComment = false;
                     this.commentFg.reset();
