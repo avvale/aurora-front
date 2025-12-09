@@ -35,7 +35,12 @@ import { firstValueFrom, lastValueFrom, takeUntil } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [...defaultDetailImports, ChipComponent, DateFormatPipe, UpperCasePipe],
+    imports: [
+        ...defaultDetailImports,
+        ChipComponent,
+        DateFormatPipe,
+        UpperCasePipe,
+    ],
 })
 export class IssueDetailComponent extends ViewDetailComponent {
     // ---- customizations ----
@@ -163,15 +168,17 @@ export class IssueDetailComponent extends ViewDetailComponent {
             ],
             externalId: ['', [Validators.maxLength(64)]],
             externalStatus: ['', [Validators.maxLength(36)]],
+            externalColorStatus: ['', [Validators.maxLength(16)]],
             accountId: [
                 null,
                 [Validators.minLength(36), Validators.maxLength(36)],
             ],
             accountUsername: ['', [Validators.maxLength(128)]],
-            frontVersion: ['', [Validators.maxLength(16)]],
+            displayName: ['', [Validators.maxLength(128)]],
             frontEnvironment: ['', [Validators.maxLength(36)]],
-            backVersion: ['', [Validators.maxLength(16)]],
+            frontVersion: ['', [Validators.maxLength(16)]],
             backEnvironment: ['', [Validators.maxLength(36)]],
+            backVersion: ['', [Validators.maxLength(16)]],
             subject: ['', [Validators.required, Validators.maxLength(510)]],
             description: ['', [Validators.required]],
             attachments: null,
@@ -295,7 +302,10 @@ export class IssueDetailComponent extends ViewDetailComponent {
                     );
 
                     // update comment in the list
-                    this.comments.update((comments) => [commentCreated.object, ...comments]);
+                    this.comments.update((comments) => [
+                        commentCreated.object,
+                        ...comments,
+                    ]);
 
                     this.isNewComment = false;
                     this.commentFg.reset();

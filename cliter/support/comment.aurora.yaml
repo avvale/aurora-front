@@ -23,6 +23,7 @@ aggregateProperties:
     type: varchar
     maxLength: 64
     nullable: true
+    index: index
   - name: issueId
     type: id
     nullable: true
@@ -81,6 +82,5 @@ excludedOperations:
   - min
   - rawSql
   - sum
-  - update
   - updateAndIncrement
   - upsert

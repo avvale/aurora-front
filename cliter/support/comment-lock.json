@@ -31,7 +31,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/support/comment/comment.graphql.ts",
-            "integrity": "sha1:cea77be2cc2c7a17a0fa18f8ae5a0eea46dc3b5d"
+            "integrity": "sha1:a3f17370a5eaabf68ca7b3db85babffcc506f652"
         },
         {
             "path": "src/app/modules/admin/apps/support/comment/comment.resolvers.ts",
