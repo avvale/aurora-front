@@ -9,6 +9,7 @@ const fse = require('fs-extra');
 const jeditor = require('gulp-json-editor');
 const path = require('node:path');
 const ts = require('typescript');
+const ImportDriver = require('./helpers/drivers/import.driver').ImportDriver;
 
 function cleanSourceDirectory(cb) {
     cp.exec('find . -name ".DS_Store" -delete', () => cb());
@@ -17,8 +18,7 @@ function cleanSourceDirectory(cb) {
 /**
  * Copy application files to publish folder
  */
-function copyApplication()
-{
+function copyApplication() {
     // by default don't copy hidden files
     return src(
         [
@@ -43,6 +43,8 @@ function copyApplication()
             '!src/app/modules/admin/apps/search-engine/**',
             '!src/app/modules/admin/apps/message/**',
             '!src/app/modules/admin/apps/settings/**',
+            '!src/app/modules/admin/apps/screen-recording/**',
+            '!src/app/modules/admin/apps/support/**',
             '!src/app/modules/admin/apps/tools/**',
             '!src/app/modules/admin/kitchen-sink/**',
             '!src/app/modules/azure-ad/**',
@@ -61,15 +63,14 @@ function copyApplication()
             '!package.json',
             '!package-lock.json',
         ],
-        { encoding: false,  base: '.' }
+        { encoding: false, base: '.' },
     ).pipe(dest('publish/'));
 }
 
 /**
  * Clean dependencies that will not used in application
  */
-function editPackageJson()
-{
+function editPackageJson() {
     return src(['package.json'])
         .pipe(
             jeditor(function (json) {
@@ -82,13 +83,12 @@ function editPackageJson()
                 delete json.devDependencies['ts-morph'];
 
                 return json;
-            })
+            }),
         )
         .pipe(dest('publish'));
 }
 
-async function cleanAppRoutes()
-{
+async function cleanAppRoutes() {
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
@@ -99,12 +99,12 @@ async function cleanAppRoutes()
 
     const appRoutes = sourceFile.getVariableDeclarationOrThrow('appRoutes');
     const appRoutesArray = appRoutes.getInitializerIfKindOrThrow(
-        ts.SyntaxKind.ArrayLiteralExpression
+        ts.SyntaxKind.ArrayLiteralExpression,
     );
     const objectRoute = appRoutesArray.getElements()[5]; // Admin routes
     const childrenRoutes = objectRoute.getPropertyOrThrow('children');
     const childrenRoutesArray = childrenRoutes?.getInitializerIfKindOrThrow(
-        ts.SyntaxKind.ArrayLiteralExpression
+        ts.SyntaxKind.ArrayLiteralExpression,
     );
 
     codeWriter.removeItemsFromObjectArrayAccordPropertyValue(
@@ -114,21 +114,21 @@ async function cleanAppRoutes()
             'auditing',
             'common',
             'iam',
+            'kitchen-sink',
+            'message',
             'o-auth',
             'queue-manager',
             'search-engine',
-            'message',
-            'kitchen-sink',
             'settings',
+            'support',
             'tools',
-        ]
+        ],
     );
 
     sourceFile.saveSync();
 }
 
-async function cleanAdminNavigation()
-{
+async function cleanAdminNavigation() {
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
@@ -142,15 +142,28 @@ async function cleanAdminNavigation()
     codeWriter.removeImport(sourceFile, '@apps/auditing/auditing.navigation');
     codeWriter.removeImport(sourceFile, '@apps/common/common.navigation');
     codeWriter.removeImport(sourceFile, '@apps/iam/iam.navigation');
-    codeWriter.removeImport(sourceFile, '@apps/o-auth/o-auth.navigation');
-    codeWriter.removeImport(sourceFile, '@apps/queue-manager/queue-manager.navigation');
-    codeWriter.removeImport(sourceFile, '@apps/search-engine/search-engine.navigation');
     codeWriter.removeImport(sourceFile, '@apps/message/message.navigation');
+    codeWriter.removeImport(sourceFile, '@apps/o-auth/o-auth.navigation');
+    codeWriter.removeImport(
+        sourceFile,
+        '@apps/queue-manager/queue-manager.navigation',
+    );
+    codeWriter.removeImport(
+        sourceFile,
+        '@apps/search-engine/search-engine.navigation',
+    );
+    codeWriter.removeImport(sourceFile, '@apps/support/support.navigation');
     codeWriter.removeImport(sourceFile, '@apps/tools/tools.navigation');
-    codeWriter.removeImport(sourceFile, './kitchen-sink/kitchen-sink.navigation');
+    codeWriter.removeImport(
+        sourceFile,
+        './kitchen-sink/kitchen-sink.navigation',
+    );
 
-    const adminNavigation = sourceFile.getVariableDeclarationOrThrow('adminNavigation');
-    const adminNavigationArray = adminNavigation.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrayLiteralExpression);
+    const adminNavigation =
+        sourceFile.getVariableDeclarationOrThrow('adminNavigation');
+    const adminNavigationArray = adminNavigation.getInitializerIfKindOrThrow(
+        ts.SyntaxKind.ArrayLiteralExpression,
+    );
 
     codeWriter.removeArrayItemsAccordValue(adminNavigationArray, [
         'auditingNavigation',
@@ -161,14 +174,14 @@ async function cleanAdminNavigation()
         'searchEngineNavigation',
         'kitchenSinkNavigation',
         'messageNavigation',
+        'supportNavigation',
         'toolsNavigation',
     ]);
 
     sourceFile.saveSync();
 }
 
-async function cleanAppResolvers()
-{
+async function cleanAppResolvers() {
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
@@ -180,24 +193,34 @@ async function cleanAppResolvers()
     codeWriter.removeImport(sourceFile, '@apps/message/inbox');
 
     // delete const inboxService = inject(InboxService);
-    const variableThatContainsAnonymousFunction = sourceFile.getVariableDeclarationOrThrow('initialDataResolver');
-    const anonymousFunction = variableThatContainsAnonymousFunction.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrowFunction);
-    const variableToDelete = anonymousFunction.getVariableDeclarationOrThrow('inboxService');
+    const variableThatContainsAnonymousFunction =
+        sourceFile.getVariableDeclarationOrThrow('initialDataResolver');
+    const anonymousFunction =
+        variableThatContainsAnonymousFunction.getInitializerIfKindOrThrow(
+            ts.SyntaxKind.ArrowFunction,
+        );
+    const variableToDelete =
+        anonymousFunction.getVariableDeclarationOrThrow('inboxService');
     variableToDelete.remove();
 
     // find return statement
-    const returnStatement = variableThatContainsAnonymousFunction.getDescendantsOfKind(ts.SyntaxKind.ReturnStatement)[0];
+    const returnStatement =
+        variableThatContainsAnonymousFunction.getDescendantsOfKind(
+            ts.SyntaxKind.ReturnStatement,
+        )[0];
 
     // get .pipe(...) statement
-    const pipeCall = returnStatement.getDescendantsOfKind(ts.SyntaxKind.CallExpression).find(call => call.getExpression().getText().includes('pipe'));
+    const pipeCall = returnStatement
+        .getDescendantsOfKind(ts.SyntaxKind.CallExpression)
+        .find((call) => call.getExpression().getText().includes('pipe'));
 
-    const forkJoinCall = pipeCall.getDescendantsOfKind(ts.SyntaxKind.CallExpression).find(call => call.getExpression().getText().includes('forkJoin'));
+    const forkJoinCall = pipeCall
+        .getDescendantsOfKind(ts.SyntaxKind.CallExpression)
+        .find((call) => call.getExpression().getText().includes('forkJoin'));
 
     const argumentsForkJoinArray = forkJoinCall.getArguments()[0];
-    for (const argument of argumentsForkJoinArray.getElements())
-    {
-        if (argument.getText().includes('inboxService.checkMessagesInbox()'))
-        {
+    for (const argument of argumentsForkJoinArray.getElements()) {
+        if (argument.getText().includes('inboxService.checkMessagesInbox()')) {
             argumentsForkJoinArray.removeElement(argument);
         }
     }
@@ -205,8 +228,7 @@ async function cleanAppResolvers()
     sourceFile.saveSync();
 }
 
-async function cleanClassyComponent()
-{
+async function cleanClassyComponent() {
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
@@ -225,14 +247,13 @@ async function cleanClassyComponent()
         'ClassyLayoutComponent',
         'Component',
         'imports',
-        'MessageQuickViewComponent'
+        'MessageQuickViewComponent',
     );
 
     sourceFile.saveSync();
 }
 
-async function cleanClassyTemplate()
-{
+async function cleanClassyTemplate() {
     let html = fs.readFileSync(
         path.join(
             'publish',
@@ -242,9 +263,9 @@ async function cleanClassyTemplate()
             'layouts',
             'vertical',
             'classy',
-            'classy.component.html'
+            'classy.component.html',
         ),
-        'utf8'
+        'utf8',
     );
     const tag = 'au-message-quick-view';
     const regex = new RegExp(`<${tag}[^>]*>(.*?)</${tag}>`, 'gs');
@@ -258,14 +279,13 @@ async function cleanClassyTemplate()
             'layouts',
             'vertical',
             'classy',
-            'classy.component.html'
+            'classy.component.html',
         ),
-        html
+        html,
     );
 }
 
-async function cleanUserComponent()
-{
+async function cleanUserComponent() {
     let html = fs.readFileSync(
         path.join(
             'publish',
@@ -274,9 +294,9 @@ async function cleanUserComponent()
             'layout',
             'common',
             'user',
-            'user.component.html'
+            'user.component.html',
         ),
-        'utf8'
+        'utf8',
     );
     const regex =
         /<button\s+mat-menu-item\s+\[routerLink\]="\['settings', 'account'\]"\s*>\s*<mat-icon svgIcon="heroicons_outline:cog-8-tooth"><\/mat-icon>\s*<span>{{ t\('Settings'\) }}<\/span>\s*<\/button>/gi;
@@ -289,14 +309,13 @@ async function cleanUserComponent()
             'layout',
             'common',
             'user',
-            'user.component.html'
+            'user.component.html',
         ),
-        html
+        html,
     );
 }
 
-async function cleanAuroraProvider()
-{
+async function cleanAuroraProvider() {
     const project = codeWriter.createProject(['publish', 'tsconfig.json']);
     const sourceFile = codeWriter.createSourceFile(project, [
         'publish',
@@ -306,17 +325,24 @@ async function cleanAuroraProvider()
     ]);
 
     // get provideAurora return array
-    const provideAurora = sourceFile.getVariableDeclarationOrThrow('provideAurora');
-    const provideAuroraFunction = provideAurora.getInitializerIfKindOrThrow(ts.SyntaxKind.ArrowFunction);
-    const returnFunction = provideAuroraFunction.getDescendantsOfKind(ts.SyntaxKind.ReturnStatement)[0];
-    const returnArray = returnFunction.getDescendantsOfKind(ts.SyntaxKind.ArrayLiteralExpression)[0];
+    const provideAurora =
+        sourceFile.getVariableDeclarationOrThrow('provideAurora');
+    const provideAuroraFunction = provideAurora.getInitializerIfKindOrThrow(
+        ts.SyntaxKind.ArrowFunction,
+    );
+    const returnFunction = provideAuroraFunction.getDescendantsOfKind(
+        ts.SyntaxKind.ReturnStatement,
+    )[0];
+    const returnArray = returnFunction.getDescendantsOfKind(
+        ts.SyntaxKind.ArrayLiteralExpression,
+    )[0];
 
     // change source of UserMetaStorageService
     codeWriter.removeImport(sourceFile, 'app/modules/admin/apps/iam');
     codeWriter.changeProviderArray(
         returnArray,
         'UserMetaStorageService',
-        'UserMetaStorageLocalStorageAdapterService'
+        'UserMetaStorageLocalStorageAdapterService',
     );
 
     // remove AzureModule
@@ -336,31 +362,31 @@ async function cleanAuroraProvider()
     // remove Azure AuthorizationService
     codeWriter.removeImport(
         sourceFile,
-        './modules/azure-ad/authorization-azure-ad-adapter.service'
+        './modules/azure-ad/authorization-azure-ad-adapter.service',
     );
     codeWriter.deleteProviderArray(returnArray, 'AuthorizationService');
 
     // remove Azure AuthenticationService
     codeWriter.removeImport(
         sourceFile,
-        './modules/azure-ad/authentication-azure-ad-adapter.service'
+        './modules/azure-ad/authentication-azure-ad-adapter.service',
     );
 
     codeWriter.changeProviderArray(
         returnArray,
         'AuthenticationService',
-        'AuthenticationMockAdapterService'
+        'AuthenticationMockAdapterService',
     );
 
     // change IamService
     codeWriter.removeImport(
         sourceFile,
-        './modules/azure-ad/iam-azure-ad-adapter.service'
+        './modules/azure-ad/iam-azure-ad-adapter.service',
     );
     codeWriter.changeProviderArray(
         returnArray,
         'IamService',
-        'IamMockAdapterService'
+        'IamMockAdapterService',
     );
 
     // add EnvironmentsInformationMockAdapterService to disable environment information service
@@ -371,8 +397,10 @@ async function cleanAuroraProvider()
 {
     provide : EnvironmentsInformationService,
     useClass: EnvironmentsInformationMockAdapterService
-}`
+}`,
     );
+
+    ImportDriver.createImportItems(sourceFile, '@core/auth', ['AuthGuard']);
 
     // add AuthenticationDisabledAdapterGuard to disable AuthGuard
     // AuthGuard has implementation
@@ -382,7 +410,7 @@ async function cleanAuroraProvider()
 {
     provide : AuthGuard,
     useClass: AuthenticationDisabledAdapterGuard
-}`
+}`,
     );
 
     // add AuthenticationDisabledAdapterGuard to disable AuthGuard
@@ -393,7 +421,7 @@ async function cleanAuroraProvider()
 {
     provide : AuthorizationService,
     useClass: AuthorizationDisabledService
-}`
+}`,
     );
 
     sourceFile.saveSync();
@@ -420,7 +448,7 @@ async function cleanEnvironments() {
     codeWriter.removeObjectProperty(
         environmentProdFile,
         'environment',
-        'azureAd'
+        'azureAd',
     );
     environmentProdFile.saveSync();
 
@@ -433,7 +461,7 @@ async function cleanEnvironments() {
     codeWriter.removeObjectProperty(
         environmentLocalFile,
         'environment',
-        'azureAd'
+        'azureAd',
     );
     environmentLocalFile.saveSync();
 
@@ -446,13 +474,12 @@ async function cleanEnvironments() {
     codeWriter.removeObjectProperty(
         environmentDevFile,
         'environment',
-        'azureAd'
+        'azureAd',
     );
     environmentDevFile.saveSync();
 }
 
-function copyToCLI()
-{
+function copyToCLI() {
     // remove old cli application files
     fs.rmSync('../aurora-cli/src/templates/front/application', {
         recursive: true,
@@ -463,7 +490,7 @@ function copyToCLI()
     return fse.copy(
         'publish',
         '../aurora-cli/src/templates/front/application',
-        { overwrite: true }
+        { overwrite: true },
     );
 }
 
@@ -485,5 +512,5 @@ exports.publishApplication = series(
     cleanAuroraProvider,
     cleanEnvironments,
     copyToCLI,
-    clean
+    clean,
 );
