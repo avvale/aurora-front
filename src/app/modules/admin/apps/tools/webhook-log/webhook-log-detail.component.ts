@@ -15,10 +15,12 @@ import {
     defaultDetailImports,
     log,
     mapActions,
+    MatFormFieldAppearanceComponent,
     SnackBarInvalidFormComponent,
     uuid,
     ViewDetailComponent,
 } from '@aurora';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { lastValueFrom, takeUntil } from 'rxjs';
 
 @Component({
@@ -26,7 +28,11 @@ import { lastValueFrom, takeUntil } from 'rxjs';
     templateUrl: './webhook-log-detail.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [...defaultDetailImports],
+    imports: [
+        ...defaultDetailImports,
+        MatFormFieldAppearanceComponent,
+        NgxJsonViewerModule,
+    ],
 })
 @ActionScope('tools::webhookLog.detail')
 export class WebhookLogDetailComponent extends ViewDetailComponent {

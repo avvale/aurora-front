@@ -115,6 +115,26 @@
                         />
                         <mat-error>{{ formErrors?.url | async }}</mat-error>
                     </mat-form-field>
+                    <au-mat-form-field-appearance
+                        class="col-12"
+                        [label]="t('tools.HeaderRequest')"
+                    >
+                        <ngx-json-viewer
+                            class="m-4"
+                            [json]="managedObject().headerRequest"
+                            [expanded]="false"
+                        ></ngx-json-viewer>
+                    </au-mat-form-field-appearance>
+                    <au-mat-form-field-appearance
+                        class="col-12"
+                        [label]="t('tools.BodyRequest')"
+                    >
+                        <ngx-json-viewer
+                            class="m-4"
+                            [json]="managedObject().bodyRequest"
+                            [expanded]="false"
+                        ></ngx-json-viewer>
+                    </au-mat-form-field-appearance>
                 </div>
             </form>
         </div>
