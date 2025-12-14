@@ -47,7 +47,7 @@ export const toolsNavigation: FuseNavigationItem = {
             title: 'Webhook',
             type: 'basic',
             iconFontSet: 'material-symbols-outlined',
-            icon: 'phishing',
+            icon: 'webhook',
             link: '/tools/webhook',
             meta: {
                 permission: 'tools.webhook.access',
@@ -59,6 +59,9 @@ export const toolsNavigation: FuseNavigationItem = {
             type: 'basic',
             icon: 'library_books',
             link: '/tools/webhook-log',
+            meta: {
+                permission: 'tools.webhookLog.access',
+            },
         },
     ],
 };

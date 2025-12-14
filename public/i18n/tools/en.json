@@ -47,7 +47,7 @@
     "Value": "Value",
     "Version": "Version",
     "Webhook": "Webhook",
-    "WebhookLog": "WebhookLog",
-    "WebhookLogs": "WebhookLogs",
+    "WebhookLog": "Webhook Log",
+    "WebhookLogs": "Webhook Logs",
     "Webhooks": "Webhooks"
 }
