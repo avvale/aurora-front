@@ -4,8 +4,11 @@ import {
     ResolveFn,
     RouterStateSnapshot,
 } from '@angular/router';
-import { ToolsKeyValue } from '@apps/tools';
-import { keyValueColumnsConfig, KeyValueService } from '@apps/tools/key-value';
+import { ToolsWebhookLog } from '@apps/tools';
+import {
+    webhookLogColumnsConfig,
+    WebhookLogService,
+} from '@apps/tools/webhook-log';
 import {
     Action,
     ActionService,
@@ -15,29 +18,30 @@ import {
     queryStatementHandler,
 } from '@aurora';
 
-export const keyValuePaginationResolver: ResolveFn<GridData<ToolsKeyValue>> = (
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
-) => {
+export const webhookLogPaginationResolver: ResolveFn<
+    GridData<ToolsWebhookLog>
+> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const actionService = inject(ActionService);
     const gridFiltersStorageService = inject(GridFiltersStorageService);
     const gridStateService = inject(GridStateService);
-    const keyValueService = inject(KeyValueService);
+    const webhookLogService = inject(WebhookLogService);
 
     actionService.action({
-        id: 'tools::keyValue.list.view',
+        id: 'tools::webhookLog.list.view',
         isViewAction: true,
     });
 
-    const gridId = 'tools::keyValue.list.mainGridList';
+    const gridId = 'tools::webhookLog.list.mainGridList';
     gridStateService.setPaginationActionId(
         gridId,
-        'tools::keyValue.list.pagination',
+        'tools::webhookLog.list.pagination',
     );
-    gridStateService.setExportActionId(gridId, 'tools::keyValue.list.export');
+    gridStateService.setExportActionId(gridId, 'tools::webhookLog.list.export');
 
-    return keyValueService.pagination({
-        query: queryStatementHandler({ columnsConfig: keyValueColumnsConfig() })
+    return webhookLogService.pagination({
+        query: queryStatementHandler({
+            columnsConfig: webhookLogColumnsConfig(),
+        })
             .setColumFilters(
                 gridFiltersStorageService.getColumnFilterState(gridId),
             )
@@ -48,30 +52,30 @@ export const keyValuePaginationResolver: ResolveFn<GridData<ToolsKeyValue>> = (
     });
 };
 
-export const keyValueNewResolver: ResolveFn<Action> = (
+export const webhookLogNewResolver: ResolveFn<Action> = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ) => {
     const actionService = inject(ActionService);
 
     return actionService.action({
-        id: 'tools::keyValue.detail.new',
+        id: 'tools::webhookLog.detail.new',
         isViewAction: true,
     });
 };
 
-export const keyValueEditResolver: ResolveFn<{
-    object: ToolsKeyValue;
+export const webhookLogEditResolver: ResolveFn<{
+    object: ToolsWebhookLog;
 }> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const actionService = inject(ActionService);
-    const keyValueService = inject(KeyValueService);
+    const webhookLogService = inject(WebhookLogService);
 
     actionService.action({
-        id: 'tools::keyValue.detail.edit',
+        id: 'tools::webhookLog.detail.edit',
         isViewAction: true,
     });
 
-    return keyValueService.findById({
+    return webhookLogService.findById({
         id: route.paramMap.get('id'),
     });
 };

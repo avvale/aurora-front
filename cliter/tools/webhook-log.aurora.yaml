@@ -1,16 +1,16 @@
 version: 0.0.1
 boundedContextName: tools
-moduleName: webhook
-moduleNames: webhooks
-aggregateName: ToolsWebhook
+moduleName: webhook-log
+moduleNames: webhook-logs
+aggregateName: ToolsWebhookLog
 hasOAuth: true
 hasTenant: false
-hasAuditing: true
+hasAuditing: false
 front:
   outlineFontSetIcon: material-symbols-outlined
-  outlineIcon: webhook
+  outlineIcon: library_books
   solidFontSetIcon: material-symbols-outlined
-  solidIcon: webhook
+  solidIcon: library_books
 aggregateProperties:
   - name: id
     type: id
@@ -21,48 +21,26 @@ aggregateProperties:
     index: unique
     autoIncrement: true
     nullable: false
-  - name: name
+  - name: url
     type: varchar
-    maxLength: 255
+    maxLength: 2046
     nullable: false
-  - name: service
-    type: varchar
-    maxLength: 255
-    nullable: false
-  - name: endpoint
-    type: varchar
-    maxLength: 255
-    nullable: false
-  - name: externalId
-    type: varchar
-    maxLength: 64
+  - name: headerRequest
+    type: jsonb
     nullable: true
-    index: index
-  - name: events
-    type: array
-    arrayOptions:
-      type: varchar
-    nullable: true
-  - name: secret
-    type: varchar
-    maxLength: 128
-    nullable: true
-  - name: meta
+  - name: bodyRequest
     type: jsonb
     nullable: true
   - name: createdAt
     type: timestamp
     nullable: true
+    index: index
   - name: updatedAt
     type: timestamp
     nullable: true
   - name: deletedAt
     type: timestamp
     nullable: true
-additionalApis:
-  - path: tools/webhook/digest
-    resolverType: mutation
-    httpMethod: post
 excludedOperations:
   - count
   - getRaw

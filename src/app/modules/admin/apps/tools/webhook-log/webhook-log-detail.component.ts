@@ -6,10 +6,8 @@ import {
     WritableSignal,
 } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select';
-import { ToolsKeyValue } from '@apps/tools';
-import { KeyValueService } from '@apps/tools/key-value';
+import { ToolsWebhookLog } from '@apps/tools';
+import { WebhookLogService } from '@apps/tools/webhook-log';
 import {
     Action,
     ActionScope,
@@ -24,14 +22,14 @@ import {
 import { lastValueFrom, takeUntil } from 'rxjs';
 
 @Component({
-    selector: 'tools-key-value-detail',
-    templateUrl: './key-value-detail.component.html',
+    selector: 'tools-webhook-log-detail',
+    templateUrl: './webhook-log-detail.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [...defaultDetailImports, MatCheckboxModule, MatSelectModule],
+    imports: [...defaultDetailImports],
 })
-@ActionScope('tools::keyValue.detail')
-export class KeyValueDetailComponent extends ViewDetailComponent {
+@ActionScope('tools::webhookLog.detail')
+export class WebhookLogDetailComponent extends ViewDetailComponent {
     // ---- customizations ----
     // ..
 
@@ -39,16 +37,19 @@ export class KeyValueDetailComponent extends ViewDetailComponent {
     // it should only be used to obtain uninitialized
     // data in the form, such as relations, etc.
     // It should not be used habitually, since the source of truth is the form.
-    managedObject: WritableSignal<ToolsKeyValue> = signal(null);
+    managedObject: WritableSignal<ToolsWebhookLog> = signal(null);
 
     // breadcrumb component definition
     breadcrumb: Crumb[] = [
         { translation: 'App' },
-        { translation: 'tools.KeyValues', routerLink: ['/tools/key-value'] },
-        { translation: 'tools.KeyValue' },
+        {
+            translation: 'tools.WebhookLogs',
+            routerLink: ['/tools/webhook-log'],
+        },
+        { translation: 'tools.WebhookLog' },
     ];
 
-    constructor(private readonly keyValueService: KeyValueService) {
+    constructor(private readonly webhookLogService: WebhookLogService) {
         super();
     }
 
@@ -89,8 +90,10 @@ export class KeyValueDetailComponent extends ViewDetailComponent {
 
         this.actionService.action({
             id: mapActions(this.currentViewAction.id, {
-                'tools::keyValue.detail.new': 'tools::keyValue.detail.create',
-                'tools::keyValue.detail.edit': 'tools::keyValue.detail.update',
+                'tools::webhookLog.detail.new':
+                    'tools::webhookLog.detail.create',
+                'tools::webhookLog.detail.edit':
+                    'tools::webhookLog.detail.update',
             }),
             isViewAction: false,
         });
@@ -107,12 +110,9 @@ export class KeyValueDetailComponent extends ViewDetailComponent {
                     Validators.maxLength(36),
                 ],
             ],
-            key: ['', [Validators.required, Validators.maxLength(64)]],
-            type: [null, [Validators.required]],
-            value: '',
-            isCached: [false, [Validators.required]],
-            isActive: [true, [Validators.required]],
-            description: '',
+            url: ['', [Validators.required, Validators.maxLength(2046)]],
+            headerRequest: null,
+            bodyRequest: null,
         });
         /* eslint-enable key-spacing */
     }
@@ -121,12 +121,12 @@ export class KeyValueDetailComponent extends ViewDetailComponent {
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id) {
             /* #region common actions */
-            case 'tools::keyValue.detail.new':
+            case 'tools::webhookLog.detail.new':
                 this.fg.get('id').setValue(uuid());
                 break;
 
-            case 'tools::keyValue.detail.edit':
-                this.keyValueService.keyValue$
+            case 'tools::webhookLog.detail.edit':
+                this.webhookLogService.webhookLog$
                     .pipe(takeUntil(this.unsubscribeAll$))
                     .subscribe((item) => {
                         this.managedObject.set(item);
@@ -134,16 +134,16 @@ export class KeyValueDetailComponent extends ViewDetailComponent {
                     });
                 break;
 
-            case 'tools::keyValue.detail.create':
+            case 'tools::webhookLog.detail.create':
                 try {
                     await lastValueFrom(
-                        this.keyValueService.create<ToolsKeyValue>({
+                        this.webhookLogService.create<ToolsWebhookLog>({
                             object: this.fg.value,
                         }),
                     );
 
                     this.snackBar.open(
-                        `${this.translocoService.translate('tools.KeyValue')} ${this.translocoService.translate('Created.M')}`,
+                        `${this.translocoService.translate('tools.WebhookLog')} ${this.translocoService.translate('Created.M')}`,
                         undefined,
                         {
                             verticalPosition: 'top',
@@ -151,22 +151,22 @@ export class KeyValueDetailComponent extends ViewDetailComponent {
                         },
                     );
 
-                    this.router.navigate(['tools/key-value']);
+                    this.router.navigate(['tools/webhook-log']);
                 } catch (error) {
                     log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
                 }
                 break;
 
-            case 'tools::keyValue.detail.update':
+            case 'tools::webhookLog.detail.update':
                 try {
                     await lastValueFrom(
-                        this.keyValueService.updateById<ToolsKeyValue>({
+                        this.webhookLogService.updateById<ToolsWebhookLog>({
                             object: this.fg.value,
                         }),
                     );
 
                     this.snackBar.open(
-                        `${this.translocoService.translate('tools.KeyValue')} ${this.translocoService.translate('Saved.M')}`,
+                        `${this.translocoService.translate('tools.WebhookLog')} ${this.translocoService.translate('Saved.M')}`,
                         undefined,
                         {
                             verticalPosition: 'top',
@@ -174,7 +174,7 @@ export class KeyValueDetailComponent extends ViewDetailComponent {
                         },
                     );
 
-                    this.router.navigate(['tools/key-value']);
+                    this.router.navigate(['tools/webhook-log']);
                 } catch (error) {
                     log(`[DEBUG] Catch error in ${action.id} action: ${error}`);
                 }

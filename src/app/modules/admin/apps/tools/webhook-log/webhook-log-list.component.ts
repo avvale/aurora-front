@@ -3,8 +3,11 @@ import {
     Component,
     ViewEncapsulation,
 } from '@angular/core';
-import { ToolsKeyValue } from '@apps/tools';
-import { keyValueColumnsConfig, KeyValueService } from '@apps/tools/key-value';
+import { ToolsWebhookLog } from '@apps/tools';
+import {
+    webhookLogColumnsConfig,
+    WebhookLogService,
+} from '@apps/tools/webhook-log';
 import {
     Action,
     ActionScope,
@@ -24,26 +27,26 @@ import {
 } from '@aurora';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 
-export const keyValueMainGridListId = 'tools::keyValue.list.mainGridList';
+export const webhookLogMainGridListId = 'tools::webhookLog.list.mainGridList';
 
 @Component({
-    selector: 'tools-key-value-list',
-    templateUrl: './key-value-list.component.html',
+    selector: 'tools-webhook-log-list',
+    templateUrl: './webhook-log-list.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [...defaultListImports],
 })
-@ActionScope('tools::keyValue.list')
-export class KeyValueListComponent extends ViewBaseComponent {
+@ActionScope('tools::webhookLog.list')
+export class WebhookLogListComponent extends ViewBaseComponent {
     // ---- customizations ----
     // ..
 
     breadcrumb: Crumb[] = [
         { translation: 'App', routerLink: ['/'] },
-        { translation: 'tools.KeyValues' },
+        { translation: 'tools.WebhookLogs' },
     ];
-    gridId: string = keyValueMainGridListId;
-    gridData$: Observable<GridData<ToolsKeyValue>>;
+    gridId: string = webhookLogMainGridListId;
+    gridData$: Observable<GridData<ToolsWebhookLog>>;
     gridState: GridState = {};
     columnsConfig$: Observable<ColumnConfig[]>;
     originColumnsConfig: ColumnConfig[] = [
@@ -54,12 +57,12 @@ export class KeyValueListComponent extends ViewBaseComponent {
             actions: (row) => {
                 return [
                     {
-                        id: 'tools::keyValue.list.edit',
+                        id: 'tools::webhookLog.list.edit',
                         translation: 'edit',
                         icon: 'mode_edit',
                     },
                     {
-                        id: 'tools::keyValue.list.delete',
+                        id: 'tools::webhookLog.list.delete',
                         translation: 'delete',
                         icon: 'delete',
                     },
@@ -72,14 +75,14 @@ export class KeyValueListComponent extends ViewBaseComponent {
             translation: 'Selects',
             sticky: true,
         },
-        ...keyValueColumnsConfig({ translator: this.translocoService }),
+        ...webhookLogColumnsConfig({ translator: this.translocoService }),
     ];
 
     constructor(
         private readonly gridColumnsConfigStorageService: GridColumnsConfigStorageService,
         private readonly gridFiltersStorageService: GridFiltersStorageService,
         private readonly gridStateService: GridStateService,
-        private readonly keyValueService: KeyValueService,
+        private readonly webhookLogService: WebhookLogService,
     ) {
         super();
     }
@@ -94,7 +97,7 @@ export class KeyValueListComponent extends ViewBaseComponent {
         // add optional chaining (?.) to avoid first call where behaviour subject is undefined
         switch (action?.id) {
             /* #region common actions */
-            case 'tools::keyValue.list.view':
+            case 'tools::webhookLog.list.view':
                 this.columnsConfig$ = this.gridColumnsConfigStorageService
                     .getColumnsConfig(this.gridId, this.originColumnsConfig)
                     .pipe(takeUntil(this.unsubscribeAll$));
@@ -109,16 +112,16 @@ export class KeyValueListComponent extends ViewBaseComponent {
                     search: this.gridStateService.getSearchState(this.gridId),
                 };
 
-                this.gridData$ = this.keyValueService.pagination$;
+                this.gridData$ = this.webhookLogService.pagination$;
                 break;
 
-            case 'tools::keyValue.list.pagination':
+            case 'tools::webhookLog.list.pagination':
                 await lastValueFrom(
-                    this.keyValueService.pagination({
+                    this.webhookLogService.pagination({
                         query: action.meta.query
                             ? action.meta.query
                             : queryStatementHandler({
-                                  columnsConfig: keyValueColumnsConfig(),
+                                  columnsConfig: webhookLogColumnsConfig(),
                               })
                                   .setColumFilters(
                                       this.gridFiltersStorageService.getColumnFilterState(
@@ -145,21 +148,21 @@ export class KeyValueListComponent extends ViewBaseComponent {
                 );
                 break;
 
-            case 'tools::keyValue.list.edit':
+            case 'tools::webhookLog.list.edit':
                 this.router.navigate([
-                    'tools/key-value/edit',
+                    'tools/webhook-log/edit',
                     action.meta.row.id,
                 ]);
                 break;
 
-            case 'tools::keyValue.list.delete':
+            case 'tools::webhookLog.list.delete':
                 const deleteDialogRef = this.confirmationService.open({
-                    title: `${this.translocoService.translate('Delete')} ${this.translocoService.translate('tools.KeyValue')}`,
+                    title: `${this.translocoService.translate('Delete')} ${this.translocoService.translate('tools.WebhookLog')}`,
                     message: this.translocoService.translate(
                         'DeletionWarning',
                         {
                             entity: this.translocoService.translate(
-                                'tools.KeyValue',
+                                'tools.WebhookLog',
                             ),
                         },
                     ),
@@ -186,13 +189,15 @@ export class KeyValueListComponent extends ViewBaseComponent {
                     if (result === 'confirmed') {
                         try {
                             await lastValueFrom(
-                                this.keyValueService.deleteById<ToolsKeyValue>({
-                                    id: action.meta.row.id,
-                                }),
+                                this.webhookLogService.deleteById<ToolsWebhookLog>(
+                                    {
+                                        id: action.meta.row.id,
+                                    },
+                                ),
                             );
 
                             this.actionService.action({
-                                id: 'tools::keyValue.list.pagination',
+                                id: 'tools::webhookLog.list.pagination',
                                 isViewAction: false,
                             });
                         } catch (error) {
@@ -204,26 +209,26 @@ export class KeyValueListComponent extends ViewBaseComponent {
                 });
                 break;
 
-            case 'tools::keyValue.list.export':
+            case 'tools::webhookLog.list.export':
                 const rows = await lastValueFrom(
-                    this.keyValueService.get({
+                    this.webhookLogService.get({
                         query: action.meta.query,
                     }),
                 );
 
-                const columns: string[] = keyValueColumnsConfig().map(
-                    (keyValueColumnConfig) => keyValueColumnConfig.field,
+                const columns: string[] = webhookLogColumnsConfig().map(
+                    (webhookLogColumnConfig) => webhookLogColumnConfig.field,
                 );
-                const headers: string[] = keyValueColumnsConfig().map(
-                    (keyValueColumnConfig) =>
+                const headers: string[] = webhookLogColumnsConfig().map(
+                    (webhookLogColumnConfig) =>
                         this.translocoService.translate(
-                            keyValueColumnConfig.translation,
+                            webhookLogColumnConfig.translation,
                         ),
                 );
 
                 exportRows(
                     rows.objects,
-                    'keyValues.' + action.meta.format,
+                    'webhookLogs.' + action.meta.format,
                     columns,
                     headers,
                     action.meta.format,

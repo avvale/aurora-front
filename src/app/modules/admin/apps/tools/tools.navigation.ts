@@ -53,5 +53,12 @@ export const toolsNavigation: FuseNavigationItem = {
                 permission: 'tools.webhook.access',
             },
         },
+        {
+            id: 'webhookLogs',
+            title: 'WebhookLog',
+            type: 'basic',
+            icon: 'library_books',
+            link: '/tools/webhook-log',
+        },
     ],
 };
