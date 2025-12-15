@@ -12,7 +12,7 @@ export const webhookLogColumnsConfig: (properties?: {
         type: ColumnDataType.NUMBER,
         field: 'rowId',
         sort: 'rowId',
-        translation: 'tools.RowId',
+        translation: 'RowId',
     },
     {
         type: ColumnDataType.STRING,
@@ -22,17 +22,10 @@ export const webhookLogColumnsConfig: (properties?: {
         isUnaccent: true,
     },
     {
-        type: ColumnDataType.JSONB,
-        field: 'headerRequest',
-        sort: 'headerRequest',
-        translation: 'tools.HeaderRequest',
-        isUnaccent: true,
-    },
-    {
-        type: ColumnDataType.JSONB,
-        field: 'bodyRequest',
-        sort: 'bodyRequest',
-        translation: 'tools.BodyRequest',
+        type: ColumnDataType.DATE,
+        field: 'createdAt',
+        sort: 'createdAt',
+        translation: 'Created.M',
         isUnaccent: true,
     },
 ];

@@ -43,25 +43,37 @@ export const toolsNavigation: FuseNavigationItem = {
             },
         },
         {
-            id: 'webhooks',
-            title: 'Webhook',
-            type: 'basic',
+            id: 'webhooksGroup',
+            title: 'Webhooks',
+            type: 'collapsable',
             iconFontSet: 'material-symbols-outlined',
             icon: 'webhook',
-            link: '/tools/webhook',
             meta: {
-                permission: 'tools.webhook.access',
+                permission: 'tools.webhooks.access',
             },
-        },
-        {
-            id: 'webhookLogs',
-            title: 'WebhookLog',
-            type: 'basic',
-            icon: 'library_books',
-            link: '/tools/webhook-log',
-            meta: {
-                permission: 'tools.webhookLog.access',
-            },
+            children: [
+                {
+                    id: 'webhooks',
+                    title: 'Webhook',
+                    type: 'basic',
+                    iconFontSet: 'material-symbols-outlined',
+                    icon: 'webhook',
+                    link: '/tools/webhook',
+                    meta: {
+                        permission: 'tools.webhook.access',
+                    },
+                },
+                {
+                    id: 'webhookLogs',
+                    title: 'WebhookLog',
+                    type: 'basic',
+                    icon: 'library_books',
+                    link: '/tools/webhook-log',
+                    meta: {
+                        permission: 'tools.webhookLog.access',
+                    },
+                },
+            ],
         },
     ],
 };
