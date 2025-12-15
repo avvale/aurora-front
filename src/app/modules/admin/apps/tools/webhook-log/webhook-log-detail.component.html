@@ -20,71 +20,7 @@
         </div>
 
         <!-- Actions -->
-        <div class="mt-6 flex flex-shrink-0 items-center sm:ml-4 sm:mt-0">
-            @if (currentViewAction.id === 'tools::webhookLog.detail.edit') {
-                <button
-                    type="submit"
-                    class="ml-3"
-                    [disabled]="
-                        fg.pristine ||
-                        ('tools::webhookLog.detail.update'
-                            | getActionStatus
-                            | async)
-                    "
-                    mat-flat-button
-                    form="toolsWebhookLogFormDetail"
-                    color="accent"
-                >
-                    @if (
-                        'tools::webhookLog.detail.update'
-                            | getActionStatus
-                            | async
-                    ) {
-                        <mat-icon>
-                            <mat-spinner diameter="20"></mat-spinner>
-                        </mat-icon>
-                    } @else {
-                        <mat-icon
-                            class="mr-2 icon-size-5"
-                            svgIcon="mat_solid:edit"
-                        ></mat-icon>
-                    }
-                    {{ t('Update') }}
-                </button>
-            }
-
-            @if (currentViewAction.id === 'tools::webhookLog.detail.new') {
-                <button
-                    type="submit"
-                    class="ml-3"
-                    [disabled]="
-                        fg.pristine ||
-                        ('tools::webhookLog.detail.create'
-                            | getActionStatus
-                            | async)
-                    "
-                    mat-flat-button
-                    form="toolsWebhookLogFormDetail"
-                    color="accent"
-                >
-                    @if (
-                        'tools::webhookLog.detail.create'
-                            | getActionStatus
-                            | async
-                    ) {
-                        <mat-icon>
-                            <mat-spinner diameter="20"></mat-spinner>
-                        </mat-icon>
-                    } @else {
-                        <mat-icon
-                            class="mr-2 icon-size-5"
-                            svgIcon="mat_solid:save"
-                        ></mat-icon>
-                    }
-                    {{ t('Create') }}
-                </button>
-            }
-        </div>
+        <div class="mt-6 flex flex-shrink-0 items-center sm:ml-4 sm:mt-0"></div>
         <!-- / Actions -->
     </div>
     <!-- / Header -->
@@ -117,21 +53,21 @@
                     </mat-form-field>
                     <au-mat-form-field-appearance
                         class="col-12"
-                        [label]="t('tools.HeaderRequest')"
-                    >
-                        <ngx-json-viewer
-                            class="m-4"
-                            [json]="managedObject().headerRequest"
-                            [expanded]="false"
-                        ></ngx-json-viewer>
-                    </au-mat-form-field-appearance>
-                    <au-mat-form-field-appearance
-                        class="col-12"
                         [label]="t('tools.BodyRequest')"
                     >
                         <ngx-json-viewer
                             class="m-4"
                             [json]="managedObject().bodyRequest"
+                            [expanded]="false"
+                        ></ngx-json-viewer>
+                    </au-mat-form-field-appearance>
+                    <au-mat-form-field-appearance
+                        class="col-12"
+                        [label]="t('tools.HeaderRequest')"
+                    >
+                        <ngx-json-viewer
+                            class="m-4"
+                            [json]="managedObject().headerRequest"
                             [expanded]="false"
                         ></ngx-json-viewer>
                     </au-mat-form-field-appearance>

@@ -137,6 +137,7 @@ export class WebhookLogDetailComponent extends ViewDetailComponent {
                     .subscribe((item) => {
                         this.managedObject.set(item);
                         this.fg.patchValue(item);
+                        this.fg.disable();
                     });
                 break;
 
