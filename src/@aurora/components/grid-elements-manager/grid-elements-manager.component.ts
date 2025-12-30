@@ -61,10 +61,6 @@ export class GridElementsManagerComponent {
     @Input() hasSearch: boolean = true;
     @Input() hasFilterButton: boolean = true;
 
-    hasPagination = input<boolean>(true);
-    pageSizeOptions = input<number[]>([10, 25, 50, 100]);
-    hasDragAndDrop = input<boolean>(true);
-
     // outputs
     @Output() action = new EventEmitter<Action>();
     @Output() columnFiltersChange = new EventEmitter<GridState>();
@@ -80,6 +76,9 @@ export class GridElementsManagerComponent {
     @Output() search = new EventEmitter<GridState>();
 
     rowDrop = output<CdkDragDrop<any>>();
+    hasPagination = input<boolean>(true);
+    pageSizeOptions = input<number[]>([10, 25, 50, 100]);
+    hasDragAndDrop = input<boolean>(true);
 
     // add custom buttons header
     @ContentChild(GridCustomButtonsHeaderDialogTemplateDirective)
@@ -95,6 +94,7 @@ export class GridElementsManagerComponent {
 
     @BlurActiveElement()
     handleElementDetailDialog(options?: any): void {
+        (document.activeElement as HTMLElement)?.blur();
         const elementDetailDialogRef = this.dialog.open(
             GridElementDetailDialogComponent,
             {
@@ -103,7 +103,8 @@ export class GridElementsManagerComponent {
                 maxWidth: this.dialogMaxWidth,
                 minWidth: this.dialogMinWidth,
                 height: this.dialogHeight,
-                autoFocus: false,
+                autoFocus: true,
+                restoreFocus: true,
                 data: {
                     options,
                     title: this.dialogTitle,
