@@ -13,12 +13,13 @@ import {
     QueryList,
 } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Action } from '@aurora/aurora.types';
 import {
+    Action,
+    BlurActiveElement,
     GridCellValueTemplateDirective,
     GridComponent,
     GridCustomHeaderTemplateDirective,
-} from '@aurora/components/grid';
+} from '@aurora';
 import { ColumnConfig, GridData, GridState } from '../grid/grid.types';
 import { GridCustomButtonsHeaderDialogTemplateDirective } from './directives/grid-custom-buttons-header-dialog-template.directive';
 import { GridElementsManagerCellValueTemplateDirective } from './directives/grid-elements-manager-cell-value-template.directive';
@@ -92,7 +93,8 @@ export class GridElementsManagerComponent {
 
     constructor(private readonly dialog: MatDialog) {}
 
-    handleElementDetailDialog(actionId: string): void {
+    @BlurActiveElement()
+    handleElementDetailDialog(options?: any): void {
         const elementDetailDialogRef = this.dialog.open(
             GridElementDetailDialogComponent,
             {
@@ -103,11 +105,11 @@ export class GridElementsManagerComponent {
                 height: this.dialogHeight,
                 autoFocus: false,
                 data: {
+                    options,
                     title: this.dialogTitle,
                     icon: this.dialogIcon,
                     svgIcon: this.dialogSvgIcon,
                     fontSet: this.dialogFontSet,
-                    currentActionId: actionId,
                     gridFormElementDetailDialogTemplate:
                         this.gridFormElementDetailDialogTemplate,
                 },
