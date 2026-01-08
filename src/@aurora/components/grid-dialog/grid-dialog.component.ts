@@ -69,6 +69,14 @@ export class GridDialogComponent
             selectedCheckboxRowModel: SelectionModel<any>;
             selectedRows: any[];
             title: string;
+
+            hasFilterButton?: boolean;
+            hasExportButton?: boolean;
+            hasSearch?: boolean;
+            hasColumnsConfigPropertiesButton?: boolean;
+            hasPagination?: boolean;
+            pageSizeOptions?: number[];
+            hasDragAndDrop?: boolean;
         },
     )
     {
