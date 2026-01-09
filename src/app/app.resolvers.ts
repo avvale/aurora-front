@@ -5,31 +5,38 @@ import { QuickChatService } from 'app/layout/common/quick-chat/quick-chat.servic
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
 import { forkJoin, from, switchMap } from 'rxjs';
 
-// ---- customizations ----
+/* #region customizations */
 import { InboxService } from '@apps/message/inbox';
-import { GridTranslationsTranslocoInitService, InitializerService } from '@aurora';
+import {
+    GridTranslationsTranslocoInitService,
+    InitializerService,
+} from '@aurora';
+/* #endregion customizations */
 
-export const initialDataResolver = () =>
-{
+export const initialDataResolver = () => {
     const initializerService = inject(InitializerService);
     const navigationService = inject(NavigationService);
     const notificationsService = inject(NotificationsService);
     const quickChatService = inject(QuickChatService);
     const shortcutsService = inject(ShortcutsService);
 
-    // ---- customizations ----
+    /* #region customizations */
     const inboxService = inject(InboxService);
-    const gridTranslationsTranslocoInitService = inject(GridTranslationsTranslocoInitService);
+    const gridTranslationsTranslocoInitService = inject(
+        GridTranslationsTranslocoInitService,
+    );
+    /* #endregion customizations */
 
-    return from(initializerService.resolverInitializer())
-        .pipe(
-            switchMap(() => forkJoin([
+    return from(initializerService.resolverInitializer()).pipe(
+        switchMap(() =>
+            forkJoin([
                 navigationService.get(),
                 notificationsService.getAll(),
                 quickChatService.getChats(),
                 shortcutsService.getAll(),
                 inboxService.checkMessagesInbox(),
                 gridTranslationsTranslocoInitService.getAll(),
-            ])),
-        );
+            ]),
+        ),
+    );
 };
