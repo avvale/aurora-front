@@ -68,6 +68,8 @@
     "ForgotPassword": "Forgot password?",
     "ForgotPasswordDescription": "Enter your username or email to reset your password",
     "Forward": "Forward",
+    "Forwarded.F": "Forwarded",
+    "Forwarded.M": "Forwarded",
     "ForwardWarning": "You are going to forward record {{ entity }} {{ id }}",
     "GoTo": "Go to",
     "Id": "Id",

@@ -1,6 +1,8 @@
+import { SortDirection } from '@angular/material/sort';
 import {
     ColumnConfig,
     GridFiltersStorageService,
+    GridSortState,
     GridStateService,
     queryStatementHandler,
 } from '@aurora';
@@ -40,15 +42,20 @@ export const gridQueryHandler = ({
     const queryStatement = query
         ? query
         : queryStatementHandler({
-            columnsConfig: columnsConfig,
-        })
-            .setColumFilters(
-                gridFiltersStorageService.getColumnFilterState(gridId)
-            )
-            .setSort(gridStateService.getSort(gridId))
-            .setPage(gridStateService.getPage(gridId))
-            .setSearch(gridStateService.getSearchState(gridId))
-            .getQueryStatement();
+              columnsConfig: columnsConfig,
+          })
+              .setColumFilters(
+                  gridFiltersStorageService.getColumnFilterState(gridId),
+              )
+              .setSort(
+                  gridStateService.getSort(
+                      gridId,
+                      convertSequelizeSortToGridSortState(defaultSort),
+                  ),
+              )
+              .setPage(gridStateService.getPage(gridId))
+              .setSearch(gridStateService.getSearchState(gridId))
+              .getQueryStatement();
 
     if (
         queryStatement.order &&
@@ -65,4 +72,23 @@ export const gridQueryHandler = ({
     }
 
     return queryStatement;
+};
+
+/**
+ * Converts SequelizeSort parameter to GridSortState format.
+ *
+ * @param {any[]} defaultSort - The default sort in array format.
+ * @returns {GridSortState | undefined} The converted GridSortState or undefined if invalid.
+ */
+const convertSequelizeSortToGridSortState = (
+    defaultSort: Array<string | [string, string] | [string, string, string]>,
+): GridSortState | undefined => {
+    if (!Array.isArray(defaultSort) || defaultSort.length < 2) {
+        return undefined;
+    }
+
+    return {
+        active: defaultSort[0] as string,
+        direction: defaultSort[1] as SortDirection,
+    };
 };

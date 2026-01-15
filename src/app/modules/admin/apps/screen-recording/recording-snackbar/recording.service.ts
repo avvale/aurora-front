@@ -28,7 +28,6 @@ export class RecordingService {
     private stopPromise?: Promise<Blob>;
     private chosenMimeType = 'video/webm';
     private configRecordingSnackbarRef?: MatSnackBarRef<ConfigRecordingSnackbarComponent>;
-    private recordingSnackbarRef?: MatSnackBarRef<RecordingSnackbarComponent>;
 
     constructor(
         private readonly snackBar: MatSnackBar,

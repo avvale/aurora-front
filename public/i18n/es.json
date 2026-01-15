@@ -68,6 +68,8 @@
     "ForgotPassword": "¿Olvidó su contraseña?",
     "ForgotPasswordDescription": "Indique su ususario o email para restablecer su contraseña",
     "Forward": "Reenviar",
+    "Forwarded.F": "Reenviada",
+    "Forwarded.M": "Reenviado",
     "ForwardWarning": "Va a reenviar el registro {{ entity }} {{ id }}",
     "GoTo": "Ir a",
     "Id": "Id",
