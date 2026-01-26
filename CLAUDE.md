@@ -1,6 +1,35 @@
-# CLAUDE.md
+# Aurora FRONT Project
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Aurora es un meta-framework que genera aplicaciones Angular (front) desde
+definiciones YAML.
+
+## Technology stack
+
+- Typescript
+- Angular
+- Reactive forms
+- Material Angular
+- Tailwind
+- GraphQL
+- Apollo Angular
+- API RESTful
+- Prettier
+
+## Rules
+
+- IMPORTANT!! When completing a workflow, provide a summary table with two
+  columns: Skills Used and Role Performed.
+- Never build after changes.
+- Never use cat/grep/find/sed/ls. Use bat/rg/fd/sd/eza instead. Install via brew
+  if missing.
+- When asking user a question, STOP and wait for response. Never continue or
+  assume answers.
+- Never agree with user claims without verification. Say "dejame verificar" and
+  check code/docs first.
+- If user is wrong, explain WHY with evidence. If you were wrong, acknowledge
+  with proof.
+- Always propose alternatives with tradeoffs when relevant.
+- Verify technical claims before stating them. If unsure, investigate first.
 
 ## Commands
 
@@ -23,29 +52,44 @@ npm run commit          # Commitizen commit (conventional commits)
 
 ## Architecture
 
-This is an Angular 19 admin panel application (Aurora Front) built on top of the Fuse template. It uses a modular architecture with standalone components, GraphQL (Apollo), and Tailwind CSS.
+This is an Angular 19 admin panel application (Aurora Front) built on top of the
+Fuse template. It uses a modular architecture with standalone components,
+GraphQL (Apollo), and Tailwind CSS.
 
 ### Directory Structure
 
-- **src/@fuse/**: Fuse template library (animations, components, services, directives)
+- **src/@fuse/**: Fuse template library (animations, components, services,
+  directives)
 - **src/@aurora/**: Aurora framework library - reusable components and services
-  - `components/`: Grid, dialogs, form inputs (file-upload, image-input, slug, etc.)
-  - `modules/`: Authentication, authorization, GraphQL, IAM, ORM utilities
-  - `services/`: Action service, download service, initializer
-- **src/app/modules/admin/apps/**: Business domain modules (IAM, OAuth, message, tools, etc.)
-- **cliter/**: Aurora CLI definition files (`.aurora.yaml`) describing entity schemas
+    - `components/`: Grid, dialogs, form inputs (file-upload, image-input, slug,
+      etc.)
+    - `modules/`: Authentication, authorization, GraphQL, IAM, ORM utilities
+    - `services/`: Action service, download service, initializer
+- **src/app/modules/admin/apps/**: Business domain modules (IAM, OAuth, message,
+  tools, etc.)
+- **cliter/**: Aurora CLI definition files (`.aurora.yaml`) describing entity
+  schemas
 
 ### Key Patterns
 
-**Component Architecture**: Detail components extend `ViewDetailComponent`, list components use the `GridComponent` with column configurations. Actions flow through `ActionService`.
+**Component Architecture**: Detail components extend `ViewDetailComponent`, list
+components use the `GridComponent` with column configurations. Actions flow
+through `ActionService`.
 
-**GraphQL**: Apollo Client with typed queries/mutations. Each module has `.graphql.ts` files defining operations. Use `@aurora/modules/graphql/` utilities.
+**GraphQL**: Apollo Client with typed queries/mutations. Each module has
+`.graphql.ts` files defining operations. Use `@aurora/modules/graphql/`
+utilities.
 
-**Forms**: Reactive forms with RxwebValidators for complex validation. Form groups defined in `createForm()` method of detail components.
+**Forms**: Reactive forms with RxwebValidators for complex validation. Form
+groups defined in `createForm()` method of detail components.
 
-**Authentication**: Adapter pattern with `AuthenticationService` interface. Implementations: `AuthenticationAuroraAdapterService` (API auth), `AuthenticationMsEntraIdAdapterService` (Azure AD).
+**Authentication**: Adapter pattern with `AuthenticationService` interface.
+Implementations: `AuthenticationAuroraAdapterService` (API auth),
+`AuthenticationMsEntraIdAdapterService` (Azure AD).
 
-**Grid System**: Aurora grid component with column configs (`*.columns-config.ts`), filtering via Sequelize operators, and persistent grid state.
+**Grid System**: Aurora grid component with column configs
+(`*.columns-config.ts`), filtering via Sequelize operators, and persistent grid
+state.
 
 ### Path Aliases
 
@@ -74,8 +118,10 @@ This is an Angular 19 admin panel application (Aurora Front) built on top of the
 ## Aurora YAML Files
 
 Files in `cliter/` define entity schemas for code generation. Key properties:
+
 - `boundedContextName`, `moduleName`: Domain organization
-- `aggregateProperties`: Field definitions with types, validations, relationships
+- `aggregateProperties`: Field definitions with types, validations,
+  relationships
 - `hasOAuth`, `hasTenant`, `hasAuditing`: Feature flags
 
 ## Skills (Auto-invoke based on context)
@@ -86,16 +132,16 @@ standards.
 
 ### Available Skills
 
-| Context                                                        | Read this file                                     |
-| -------------------------------------------------------------- | -------------------------------------------------- |
-| Angular decorators, pipes, DI, signals, standalone components  | `.claude/skills/angular/SKILL.md`                  |
-| Analyzing or editing \*.aurora.yaml files, schema validation   | `.claude/skills/aurora-schema/SKILL.md`            |
-| Git commits, commit messages, conventional commits             | `.claude/skills/conventional-commits/SKILL.md`     |
-| Commit and push changes (/commit command)                      | `.claude/skills/commit/SKILL.md`                   |
-| Commit, push and create PR (/commit-pr command)                | `.claude/skills/commit-pr/SKILL.md`                |
-| Code formatting with Prettier (MANDATORY after edits)          | `.claude/skills/prettier/SKILL.md`                 |
-| Creating new skills, documenting AI patterns                   | `.claude/skills/skill-creator/SKILL.md`            |
-| TypeScript strict patterns (types, interfaces, generics)       | `.claude/skills/typescript/SKILL.md`               |
+| Context                                                       | Read this file                                 |
+| ------------------------------------------------------------- | ---------------------------------------------- |
+| Angular decorators, pipes, DI, signals, standalone components | `.claude/skills/angular/SKILL.md`              |
+| Analyzing or editing \*.aurora.yaml files, schema validation  | `.claude/skills/aurora-schema/SKILL.md`        |
+| Git commits, commit messages, conventional commits            | `.claude/skills/conventional-commits/SKILL.md` |
+| Commit and push changes (/commit command)                     | `.claude/skills/commit/SKILL.md`               |
+| Commit, push and create PR (/commit-pr command)               | `.claude/skills/commit-pr/SKILL.md`            |
+| Code formatting with Prettier (MANDATORY after edits)         | `.claude/skills/prettier/SKILL.md`             |
+| Creating new skills, documenting AI patterns                  | `.claude/skills/skill-creator/SKILL.md`        |
+| TypeScript strict patterns (types, interfaces, generics)      | `.claude/skills/typescript/SKILL.md`           |
 
 ### How to Use Skills
 
