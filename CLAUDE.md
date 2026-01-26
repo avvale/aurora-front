@@ -77,3 +77,29 @@ Files in `cliter/` define entity schemas for code generation. Key properties:
 - `boundedContextName`, `moduleName`: Domain organization
 - `aggregateProperties`: Field definitions with types, validations, relationships
 - `hasOAuth`, `hasTenant`, `hasAuditing`: Feature flags
+
+## Skills (Auto-invoke based on context)
+
+IMPORTANT: When you detect any of these contexts, IMMEDIATELY read the
+corresponding skill file BEFORE writing any code. These are your coding
+standards.
+
+### Available Skills
+
+| Context                                                        | Read this file                                     |
+| -------------------------------------------------------------- | -------------------------------------------------- |
+| Angular decorators, pipes, DI, signals, standalone components  | `.claude/skills/angular/SKILL.md`                  |
+| Analyzing or editing \*.aurora.yaml files, schema validation   | `.claude/skills/aurora-schema/SKILL.md`            |
+| Git commits, commit messages, conventional commits             | `.claude/skills/conventional-commits/SKILL.md`     |
+| Commit and push changes (/commit command)                      | `.claude/skills/commit/SKILL.md`                   |
+| Commit, push and create PR (/commit-pr command)                | `.claude/skills/commit-pr/SKILL.md`                |
+| Code formatting with Prettier (MANDATORY after edits)          | `.claude/skills/prettier/SKILL.md`                 |
+| Creating new skills, documenting AI patterns                   | `.claude/skills/skill-creator/SKILL.md`            |
+| TypeScript strict patterns (types, interfaces, generics)       | `.claude/skills/typescript/SKILL.md`               |
+
+### How to Use Skills
+
+1. Detect context from user request or current file being edited
+2. Read the relevant SKILL.md file(s) BEFORE writing code
+3. Apply ALL patterns and rules from the skill
+4. Multiple skills can apply (e.g., angular + typescript + aurora-schema)
