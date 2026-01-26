@@ -135,6 +135,7 @@ standards.
 | Context                                                       | Read this file                                 |
 | ------------------------------------------------------------- | ---------------------------------------------- |
 | Angular decorators, pipes, DI, signals, standalone components | `.claude/skills/angular/SKILL.md`              |
+| Tailwind CSS, styling, themes, dark mode, responsive design   | `.claude/skills/tailwind/SKILL.md`             |
 | Analyzing or editing \*.aurora.yaml files, schema validation  | `.claude/skills/aurora-schema/SKILL.md`        |
 | Git commits, commit messages, conventional commits            | `.claude/skills/conventional-commits/SKILL.md` |
 | Commit and push changes (/commit command)                     | `.claude/skills/commit/SKILL.md`               |
