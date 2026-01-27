@@ -140,6 +140,7 @@ standards.
 | Tailwind 4: CSS variables, cn(), dynamic styling              | `.claude/skills/tailwind-4/SKILL.md`               |
 | Analyzing or editing \*.aurora.yaml files, schema validation  | `.claude/skills/aurora-schema/SKILL.md`            |
 | Aurora CLI: regenerate modules, add packages, load front      | `.claude/skills/aurora-cli/SKILL.md`               |
+| Aurora development: components, forms, services, actions      | `.claude/skills/aurora-development/SKILL.md`       |
 | Project structure, folder organization, navigating codebase   | `.claude/skills/aurora-project-structure/SKILL.md` |
 | Sync Aurora YAML schemas with Google Sheets (push/pull)       | `.claude/skills/aurora-sheets-sync/SKILL.md`       |
 | Git commits, commit messages, conventional commits            | `.claude/skills/conventional-commits/SKILL.md`     |
