@@ -11,7 +11,7 @@
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner-detail.component.html",
-            "integrity": "sha1:d6907715e53cee052ba5c2f40844c5ee4ab485f6"
+            "integrity": "sha1:c99bd32e2b5ea86fd56fcdba019f770645051a4e"
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner-detail.component.ts",

@@ -227,22 +227,6 @@
                             {{ formErrors?.phoneCountryPrefix | async }}
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-8"
-                    >
-                        <mat-label>
-                            {{ t('businessPartnerPortal.PhoneSanitized') }}
-                        </mat-label>
-                        <input
-                            matInput
-                            formControlName="phoneSanitized"
-                            maxlength="64"
-                        />
-                        <mat-error>
-                            {{ formErrors?.phoneSanitized | async }}
-                        </mat-error>
-                    </mat-form-field>
                     <div class="col-4 pt-5">
                         <mat-checkbox formControlName="isActive">
                             {{ t('businessPartnerPortal.IsActive') }}

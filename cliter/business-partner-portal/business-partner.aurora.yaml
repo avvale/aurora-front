@@ -95,6 +95,8 @@ aggregateProperties:
     type: varchar
     maxLength: 64
     nullable: true
+    webComponent:
+      isDetailHidden: true
   - name: isActive
     type: boolean
     nullable: false
