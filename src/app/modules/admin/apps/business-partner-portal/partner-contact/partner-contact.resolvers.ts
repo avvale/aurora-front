@@ -8,10 +8,7 @@ import {
     ResolveFn,
     RouterStateSnapshot,
 } from '@angular/router';
-import {
-    BusinessPartnerPortalBusinessPartner,
-    BusinessPartnerPortalPartnerContact,
-} from '@apps/business-partner-portal';
+import { BusinessPartnerPortalPartnerContact } from '@apps/business-partner-portal';
 import {
     partnerContactColumnsConfig,
     PartnerContactService,
@@ -59,7 +56,6 @@ export const partnerContactPaginationResolver: ResolveFn<
 };
 
 export const partnerContactNewResolver: ResolveFn<{
-    businessPartnerPortalGetBusinessPartners: BusinessPartnerPortalBusinessPartner[];
     iamGetUsers: IamUser[];
 }> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const actionService = inject(ActionService);
@@ -74,7 +70,6 @@ export const partnerContactNewResolver: ResolveFn<{
 };
 
 export const partnerContactEditResolver: ResolveFn<{
-    businessPartnerPortalGetBusinessPartners: BusinessPartnerPortalBusinessPartner[];
     iamGetUsers: IamUser[];
     object: BusinessPartnerPortalPartnerContact;
 }> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {

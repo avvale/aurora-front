@@ -112,27 +112,6 @@
                 <div class="layout__container">
                     <mat-form-field
                         appearance="outline"
-                        class="col-6"
-                    >
-                        <mat-label>
-                            {{ t('businessPartnerPortal.BusinessPartnerId') }}
-                        </mat-label>
-                        <mat-select formControlName="businessPartnerId">
-                            @for (
-                                businessPartner of businessPartners$ | async;
-                                track businessPartner.id
-                            ) {
-                                <mat-option [value]="businessPartner.id">
-                                    {{ businessPartner.name }}
-                                </mat-option>
-                            }
-                        </mat-select>
-                        <mat-error>
-                            {{ formErrors?.businessPartnerId | async }}
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
                         class="col-12"
                     >
                         <mat-label>

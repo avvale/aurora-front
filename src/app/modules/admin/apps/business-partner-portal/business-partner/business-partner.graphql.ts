@@ -72,6 +72,32 @@ export const findByIdQuery = gql`
     }
 `;
 
+export const findByIdWithRelationsQuery = gql`
+    query BusinessPartnerPortalFindBusinessPartnerByIdWithRelations (
+        $id: ID
+        $constraint: QueryStatement
+        $queryPaginatePartnerContacts: QueryStatement
+        $constraintPaginatePartnerContacts: QueryStatement
+    ) {
+        object: businessPartnerPortalFindBusinessPartnerById (
+            id: $id
+            constraint: $constraint
+        ) {
+            id
+            #FIELDS
+        }
+        businessPartnerPortalPaginatePartnerContacts (
+            query: $queryPaginatePartnerContacts
+            constraint: $constraintPaginatePartnerContacts
+        ) {
+            total
+            rows
+            count
+        }
+        ${relationsFields}
+    }
+`;
+
 export const findQuery = gql`
     query BusinessPartnerPortalFindBusinessPartner(
         $query: QueryStatement

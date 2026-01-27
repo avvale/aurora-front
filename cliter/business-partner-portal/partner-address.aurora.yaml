@@ -39,8 +39,6 @@ aggregateProperties:
       avoidConstraint: false
     description: |
       Foreign key reference to the business partner this address belongs to. Each address is associated with exactly one partner organization. Required field establishing the many-to-one relationship. Indexed for efficient queries when loading all addresses for a specific partner. Constraint enforced to maintain referential integrity.
-    webComponent:
-      type: select
   - name: type
     type: enum
     enumOptions:

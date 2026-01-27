@@ -106,6 +106,8 @@ aggregateProperties:
   - name: contacts
     type: relationship
     nullable: true
+    webComponent:
+      type: grid-elements-manager
     relationship:
       type: one-to-many
       singularName: contact

@@ -974,3 +974,12 @@ export interface BusinessPartnerPortalUpdateBusinessPartners {
     paymentCollectionModes?: BusinessPartnerPortalPaymentCollectionMode[];
     meta?: any;
 }
+
+export enum BusinessPartnerPortalBusinessPartnerType {
+    CUSTOMER = 'CUSTOMER',
+    SUPPLIER = 'SUPPLIER',
+    VENDOR = 'VENDOR',
+    AFFILIATE = 'AFFILIATE',
+    PARTNER = 'PARTNER',
+    OTHER = 'OTHER',
+}

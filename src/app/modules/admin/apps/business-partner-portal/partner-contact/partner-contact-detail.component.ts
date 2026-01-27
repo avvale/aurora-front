@@ -12,11 +12,7 @@ import {
 import { Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
-import {
-    BusinessPartnerPortalBusinessPartner,
-    BusinessPartnerPortalPartnerContact,
-} from '@apps/business-partner-portal';
-import { BusinessPartnerService } from '@apps/business-partner-portal/business-partner';
+import { BusinessPartnerPortalPartnerContact } from '@apps/business-partner-portal';
 import { PartnerContactService } from '@apps/business-partner-portal/partner-contact';
 import { IamUser } from '@apps/iam';
 import { UserService } from '@apps/iam/user';
@@ -53,7 +49,6 @@ export class PartnerContactDetailComponent extends ViewDetailComponent {
         signal(null);
 
     // relationships
-    businessPartners$: Observable<BusinessPartnerPortalBusinessPartner[]>;
     users$: Observable<IamUser[]>;
 
     // breadcrumb component definition
@@ -67,7 +62,6 @@ export class PartnerContactDetailComponent extends ViewDetailComponent {
     ];
 
     constructor(
-        private readonly businessPartnerService: BusinessPartnerService,
         private readonly partnerContactService: PartnerContactService,
         private readonly userService: UserService,
     ) {
@@ -78,7 +72,6 @@ export class PartnerContactDetailComponent extends ViewDetailComponent {
     // the parent class you can use instead of ngOnInit
     init(): void {
         /**/
-        this.businessPartners$ = this.businessPartnerService.businessPartners$;
         this.users$ = this.userService.users$;
     }
 

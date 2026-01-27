@@ -41,25 +41,6 @@ export const fields = `
 `;
 
 export const relationsFields = `
-    businessPartnerPortalGetBusinessPartners (
-        query: $queryBusinessPartners
-        constraint: $constraintBusinessPartners
-    ) {
-        id
-        rowId
-        externalId
-        code
-        type
-        name
-        tin
-        email
-        website
-        phone
-        phoneCountryPrefix
-        phoneSanitized
-        isActive
-        meta
-    }
     iamGetUsers (
         query: $queryUsers
         constraint: $constraintUsers
@@ -113,8 +94,6 @@ export const getQuery = gql`
 
 export const getRelations = gql`
     query BusinessPartnerPortalGetPartnerContactsRelations (
-        $queryBusinessPartners: QueryStatement
-        $constraintBusinessPartners: QueryStatement
         $queryUsers: QueryStatement
         $constraintUsers: QueryStatement
     ) {
@@ -141,8 +120,6 @@ export const findByIdWithRelationsQuery = gql`
     query BusinessPartnerPortalFindPartnerContactByIdWithRelations (
         $id: ID
         $constraint: QueryStatement
-        $queryBusinessPartners: QueryStatement
-        $constraintBusinessPartners: QueryStatement
         $queryUsers: QueryStatement
         $constraintUsers: QueryStatement
     ) {

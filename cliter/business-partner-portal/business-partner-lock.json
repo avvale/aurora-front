@@ -11,11 +11,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner-detail.component.html",
-            "integrity": "sha1:c99bd32e2b5ea86fd56fcdba019f770645051a4e"
+            "integrity": "sha1:7d29e1343e2e4cb47982a6c49d0daf5d7f8e5c3a"
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner-detail.component.ts",
-            "integrity": "sha1:6a06f6e12c7a880b14d71354d8c8f540e8b4b3bb"
+            "integrity": "sha1:b8a4d0fc0305fd154f795c5f799bba8c2065e2ae"
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner-list.component.html",
@@ -31,15 +31,15 @@
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner.graphql.ts",
-            "integrity": "sha1:f60e956ae6d1bee050b3e079cb16654719832db5"
+            "integrity": "sha1:de22d6763b90c9049c4326f6655b4a421a8639da"
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner.resolvers.ts",
-            "integrity": "sha1:5ee7a3a1c37b0c99c92aae69e6d5fa3064a4bcb6"
+            "integrity": "sha1:f8de8ae24603f1e3eda79ca2c0a3c65b4b1e3880"
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner.service.ts",
-            "integrity": "sha1:c18a10e2521cb620c32be940c9ca0aeb17225770"
+            "integrity": "sha1:5b74bd694314c87678e63e3d844d3e3e86ea18ed"
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/index.ts",

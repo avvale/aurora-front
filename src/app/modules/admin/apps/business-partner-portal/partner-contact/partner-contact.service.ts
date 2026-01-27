@@ -5,13 +5,11 @@
 import { Injectable } from '@angular/core';
 import { DocumentNode, FetchResult } from '@apollo/client/core';
 import {
-    BusinessPartnerPortalBusinessPartner,
     BusinessPartnerPortalCreatePartnerContact,
     BusinessPartnerPortalPartnerContact,
     BusinessPartnerPortalUpdatePartnerContactById,
     BusinessPartnerPortalUpdatePartnerContacts,
 } from '@apps/business-partner-portal';
-import { BusinessPartnerService } from '@apps/business-partner-portal/business-partner';
 import {
     createMutation,
     deleteByIdMutation,
@@ -68,7 +66,6 @@ export class PartnerContactService {
     } = {};
 
     constructor(
-        private readonly businessPartnerService: BusinessPartnerService,
         private readonly graphqlService: GraphQLService,
         private readonly userService: UserService,
     ) {}
@@ -236,8 +233,6 @@ export class PartnerContactService {
         graphqlStatement = findByIdWithRelationsQuery,
         id = '',
         constraint = {},
-        queryBusinessPartners = {},
-        constraintBusinessPartners = {},
         queryUsers = {},
         constraintUsers = {},
         headers = {},
@@ -246,30 +241,24 @@ export class PartnerContactService {
         graphqlStatement?: DocumentNode;
         id?: string;
         constraint?: QueryStatement;
-        queryBusinessPartners?: QueryStatement;
-        constraintBusinessPartners?: QueryStatement;
         queryUsers?: QueryStatement;
         constraintUsers?: QueryStatement;
         headers?: GraphQLHeaders;
         scope?: string;
     } = {}): Observable<{
         object: BusinessPartnerPortalPartnerContact;
-        businessPartnerPortalGetBusinessPartners: BusinessPartnerPortalBusinessPartner[];
         iamGetUsers: IamUser[];
     }> {
         return this.graphqlService
             .client()
             .watchQuery<{
                 object: BusinessPartnerPortalPartnerContact;
-                businessPartnerPortalGetBusinessPartners: BusinessPartnerPortalBusinessPartner[];
                 iamGetUsers: IamUser[];
             }>({
                 query: parseGqlFields(graphqlStatement, fields, constraint),
                 variables: {
                     id,
                     constraint,
-                    queryBusinessPartners,
-                    constraintBusinessPartners,
                     queryUsers,
                     constraintUsers,
                 },
@@ -286,9 +275,6 @@ export class PartnerContactService {
                     } else {
                         this.partnerContactSubject$.next(data.object);
                     }
-                    this.businessPartnerService.businessPartnersSubject$.next(
-                        data.businessPartnerPortalGetBusinessPartners,
-                    );
                     this.userService.usersSubject$.next(data.iamGetUsers);
                 }),
             );
@@ -385,31 +371,23 @@ export class PartnerContactService {
     }
 
     getRelations({
-        queryBusinessPartners = {},
-        constraintBusinessPartners = {},
         queryUsers = {},
         constraintUsers = {},
         headers = {},
     }: {
-        queryBusinessPartners?: QueryStatement;
-        constraintBusinessPartners?: QueryStatement;
         queryUsers?: QueryStatement;
         constraintUsers?: QueryStatement;
         headers?: GraphQLHeaders;
     } = {}): Observable<{
-        businessPartnerPortalGetBusinessPartners: BusinessPartnerPortalBusinessPartner[];
         iamGetUsers: IamUser[];
     }> {
         return this.graphqlService
             .client()
             .watchQuery<{
-                businessPartnerPortalGetBusinessPartners: BusinessPartnerPortalBusinessPartner[];
                 iamGetUsers: IamUser[];
             }>({
                 query: getRelations,
                 variables: {
-                    queryBusinessPartners,
-                    constraintBusinessPartners,
                     queryUsers,
                     constraintUsers,
                 },
@@ -421,9 +399,6 @@ export class PartnerContactService {
                 first(),
                 map((result) => result.data),
                 tap((data) => {
-                    this.businessPartnerService.businessPartnersSubject$.next(
-                        data.businessPartnerPortalGetBusinessPartners,
-                    );
                     this.userService.usersSubject$.next(data.iamGetUsers);
                 }),
             );

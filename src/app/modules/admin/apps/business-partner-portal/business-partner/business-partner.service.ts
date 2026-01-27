@@ -7,6 +7,7 @@ import { DocumentNode, FetchResult } from '@apollo/client/core';
 import {
     BusinessPartnerPortalBusinessPartner,
     BusinessPartnerPortalCreateBusinessPartner,
+    BusinessPartnerPortalPartnerContact,
     BusinessPartnerPortalUpdateBusinessPartnerById,
     BusinessPartnerPortalUpdateBusinessPartners,
 } from '@apps/business-partner-portal';
@@ -16,6 +17,7 @@ import {
     deleteMutation,
     fields,
     findByIdQuery,
+    findByIdWithRelationsQuery,
     findQuery,
     getQuery,
     insertMutation,
@@ -23,6 +25,7 @@ import {
     updateByIdMutation,
     updateMutation,
 } from '@apps/business-partner-portal/business-partner';
+import { PartnerContactService } from '@apps/business-partner-portal/partner-contact';
 import {
     GraphQLHeaders,
     GraphQLService,
@@ -61,7 +64,10 @@ export class BusinessPartnerService {
         >;
     } = {};
 
-    constructor(private readonly graphqlService: GraphQLService) {}
+    constructor(
+        private readonly graphqlService: GraphQLService,
+        private readonly partnerContactService: PartnerContactService,
+    ) {}
 
     /**
      * Getters
@@ -221,6 +227,59 @@ export class BusinessPartnerService {
                         ? this.setScopeBusinessPartner(scope, data.object)
                         : this.businessPartnerSubject$.next(data.object),
                 ),
+            );
+    }
+
+    findByIdWithRelations({
+        graphqlStatement = findByIdWithRelationsQuery,
+        id = '',
+        constraint = {},
+        queryPaginatePartnerContacts = {},
+        constraintPaginatePartnerContacts = {},
+        headers = {},
+        scope,
+    }: {
+        graphqlStatement?: DocumentNode;
+        id?: string;
+        constraint?: QueryStatement;
+        queryPaginatePartnerContacts?: QueryStatement;
+        constraintPaginatePartnerContacts?: QueryStatement;
+        headers?: GraphQLHeaders;
+        scope?: string;
+    } = {}): Observable<{
+        object: BusinessPartnerPortalBusinessPartner;
+        businessPartnerPortalPaginatePartnerContacts: GridData<BusinessPartnerPortalPartnerContact>;
+    }> {
+        return this.graphqlService
+            .client()
+            .watchQuery<{
+                object: BusinessPartnerPortalBusinessPartner;
+                businessPartnerPortalPaginatePartnerContacts: GridData<BusinessPartnerPortalPartnerContact>;
+            }>({
+                query: parseGqlFields(graphqlStatement, fields, constraint),
+                variables: {
+                    id,
+                    constraint,
+                    queryPaginatePartnerContacts,
+                    constraintPaginatePartnerContacts,
+                },
+                context: {
+                    headers,
+                },
+            })
+            .valueChanges.pipe(
+                first(),
+                map((result) => result.data),
+                tap((data) => {
+                    if (scope) {
+                        this.setScopeBusinessPartner(scope, data.object);
+                    } else {
+                        this.businessPartnerSubject$.next(data.object);
+                    }
+                    this.partnerContactService.paginationSubject$.next(
+                        data.businessPartnerPortalPaginatePartnerContacts,
+                    );
+                }),
             );
     }
 
