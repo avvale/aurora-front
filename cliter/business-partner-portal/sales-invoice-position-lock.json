@@ -1,0 +1,53 @@
+{
+    "version": "0.0.1",
+    "files": [
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.html",
+            "integrity": "sha1:641238756a03b5609bcc8a83ea2e0f3b2558003d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.ts",
+            "integrity": "sha1:ebbee64d6174c70d6e85e9e861304799d432eca5"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-position/sales-invoice-position-detail.component.html",
+            "integrity": "sha1:14eb8919f802a06c77fb5da45133d4609aeccf02"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-position/sales-invoice-position-detail.component.ts",
+            "integrity": "sha1:4d110308eaa52bb1acaccc625b21154bf73bceb3"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-position/sales-invoice-position-list.component.html",
+            "integrity": "sha1:43b3934d9441ebaacef5d9044924e6db767015ea"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-position/sales-invoice-position-list.component.ts",
+            "integrity": "sha1:e9a761b8a87124546e4de39ee21f0237b6caca67"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-position/sales-invoice-position.columns-config.ts",
+            "integrity": "sha1:f37af296c4c236929a9b4a6c8b7576520b0d90f6"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-position/sales-invoice-position.graphql.ts",
+            "integrity": "sha1:92d4701f1258ea0207b63cdc9f5e94036b52a61b"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-position/sales-invoice-position.resolvers.ts",
+            "integrity": "sha1:89b87d49835d87df167238c684b726ea5c1e1e8a"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-position/sales-invoice-position.service.ts",
+            "integrity": "sha1:31777a5b4cb7bb488b2ee728c13b5bb75803e535"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-position/index.ts",
+            "integrity": "sha1:698762c64bc4beb5d4001a70a03a79464c756621"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-position/public-api.ts",
+            "integrity": "sha1:f63bb1608ecb3f0147ac9564cd10ce5a2f683ac2"
+        }
+    ]
+}

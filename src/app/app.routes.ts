@@ -92,6 +92,7 @@ export const appRoutes: Route[] = [
             { path: 'message', loadChildren: () => import('app/modules/admin/apps/message/message.routes') },
             { path: 'settings', loadChildren: () => import('@apps/settings/settings.routes') },
             { path: 'support', loadChildren: () => import('app/modules/admin/apps/support/support.routes') },
+            { path: 'business-partner-portal', loadChildren: () => import('app/modules/admin/apps/business-partner-portal/business-partner-portal.routes') },
         ],
     },
 

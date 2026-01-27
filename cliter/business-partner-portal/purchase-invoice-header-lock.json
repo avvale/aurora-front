@@ -1,0 +1,53 @@
+{
+    "version": "0.0.1",
+    "files": [
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.html",
+            "integrity": "sha1:641238756a03b5609bcc8a83ea2e0f3b2558003d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.ts",
+            "integrity": "sha1:ebbee64d6174c70d6e85e9e861304799d432eca5"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-header/purchase-invoice-header-detail.component.html",
+            "integrity": "sha1:36bac357935156ec9ed9445ad507b8f106ab51d1"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-header/purchase-invoice-header-detail.component.ts",
+            "integrity": "sha1:eebbf94a630e0c1937b1eca178188d84133cbad4"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-header/purchase-invoice-header-list.component.html",
+            "integrity": "sha1:7e50887bf3b4d1e7bd83e1104e0fbf91b2376006"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-header/purchase-invoice-header-list.component.ts",
+            "integrity": "sha1:8c8f0ce535e50b73cf62aff16935511c6f0c9321"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-header/purchase-invoice-header.columns-config.ts",
+            "integrity": "sha1:512a1735e6b2df181e211c82b9c35f0a2e5b37fb"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-header/purchase-invoice-header.graphql.ts",
+            "integrity": "sha1:8d387562ad8a3c93745991a6adcd51b96f897e58"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-header/purchase-invoice-header.resolvers.ts",
+            "integrity": "sha1:18fd17679a36a802653de8baa6c80419c51e1a6e"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-header/purchase-invoice-header.service.ts",
+            "integrity": "sha1:f0dd4fc06ce549ddb25cee7f8af9227fe2b21aaa"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-header/index.ts",
+            "integrity": "sha1:4d61004aba80b7a1c390e04d713fc5017be737eb"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-header/public-api.ts",
+            "integrity": "sha1:7f45737f76e1813871fb556fe50ea3bdb7faa79f"
+        }
+    ]
+}

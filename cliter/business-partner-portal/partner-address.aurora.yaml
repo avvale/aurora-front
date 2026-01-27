@@ -1,0 +1,209 @@
+version: 0.0.1
+boundedContextName: business-partner-portal
+moduleName: partner-address
+moduleNames: partner-addresses
+aggregateName: BusinessPartnerPortalPartnerAddress
+hasOAuth: true
+hasTenant: false
+hasAuditing: true
+front:
+  outlineIcon: mat_outline:location_on
+  solidIcon: mat_solid:location_on
+description: |
+  Physical locations and addresses associated with business partners. Manages shipping addresses, billing addresses, office locations, and warehouses for each partner. Each address belongs to exactly one business partner (many-to-one relationship). Supports multiple address types per partner and integrates with geographic data from the common bounded context. Related modules: business-partner (parent entity), common/country, common/administrative-area-level-1, common/administrative-area-level-2, common/administrative-area-level-3.
+aggregateProperties:
+  - name: id
+    type: id
+    primaryKey: true
+    nullable: false
+    description: |
+      Unique identifier for the partner address. UUID v4 format, generated automatically on creation. Used as primary key for referencing this address in shipping, billing, and logistics operations.
+  - name: rowId
+    type: bigint
+    index: unique
+    autoIncrement: true
+    nullable: false
+    description: |
+      Auto-incrementing sequential identifier for the partner address. Used for internal ordering, human-readable reference, and optimized queries. Not exposed in external APIs. Provides a stable identifier for database operations.
+  - name: businessPartnerId
+    type: id
+    nullable: false
+    index: index
+    indexName: bpp_partner_addr_bp_id
+    relationship:
+      type: many-to-one
+      aggregateName: BusinessPartnerPortalBusinessPartner
+      modulePath: business-partner-portal/business-partner
+      key: id
+      field: businessPartner
+      avoidConstraint: false
+    description: |
+      Foreign key reference to the business partner this address belongs to. Each address is associated with exactly one partner organization. Required field establishing the many-to-one relationship. Indexed for efficient queries when loading all addresses for a specific partner. Constraint enforced to maintain referential integrity.
+    webComponent:
+      type: select
+  - name: type
+    type: enum
+    enumOptions:
+      - BILLING
+      - SHIPPING
+      - OFFICE
+      - WAREHOUSE
+      - HEADQUARTERS
+      - OTHER
+    nullable: false
+    defaultValue: OFFICE
+    description: |
+      Classification of the address purpose. BILLING: Address for invoices and financial documents. SHIPPING: Address for delivering goods. OFFICE: General office location. WAREHOUSE: Storage or distribution center. HEADQUARTERS: Main company location. OTHER: Any other address type. Used to select appropriate address for different operations (e.g., invoice generation uses BILLING, delivery uses SHIPPING). Required field.
+  - name: label
+    type: varchar
+    maxLength: 128
+    nullable: true
+    description: |
+      User-friendly label or nickname for the address (e.g., "Main Office", "Seattle Warehouse", "European HQ"). Used for quick identification in dropdowns and reports. NULL indicates no label specified (system generates label from type and location). Makes it easier to distinguish between multiple addresses of the same type.
+  - name: addressLine1
+    type: varchar
+    maxLength: 255
+    nullable: false
+    description: |
+      Primary street address line. Should include street number, street name, and any primary location identifiers. Required field for a complete address. Used in shipping labels, maps, and official documents. Example: "123 Main Street" or "Av. Reforma 500, Col. Centro". Cannot be empty.
+  - name: addressLine2
+    type: varchar
+    maxLength: 255
+    nullable: true
+    description: |
+      Secondary street address line for additional location details. Can include apartment/suite/floor numbers, building names, or additional instructions (e.g., "Suite 200", "Building B, 3rd Floor", "c/o Receiving Department"). NULL indicates no additional address details needed. Used to ensure accurate delivery and location identification.
+  - name: city
+    type: varchar
+    maxLength: 128
+    nullable: false
+    description: |
+      City or municipality name. Required field for a complete address. Used in shipping, billing, and geographic analysis. Should be the official city name in local language. Examples: "New York", "Ciudad de México", "São Paulo". Combined with state/province and country for full location identification.
+  - name: postalCode
+    type: varchar
+    maxLength: 64
+    nullable: true
+    description: |
+      Postal code, ZIP code, or postcode. Format varies by country (e.g., "10001" in US, "28001" in Spain, "SW1A 1AA" in UK). NULL indicates no postal code available (some countries or rural areas). Used for shipping cost calculation, delivery routing, and geographic analysis. Not strictly validated to accommodate international formats.
+  - name: countryId
+    type: id
+    nullable: false
+    index: index
+    relationship:
+      type: many-to-one
+      aggregateName: CommonCountry
+      modulePath: common/country
+      key: id
+      field: country
+      avoidConstraint: true
+    description: |
+      Foreign key reference to the country from the common bounded context. Required field specifying which country this address is located in. Used for international shipping, tax calculations, and geographic reporting. Links to common/country module for standardized country data. Constraint avoided to prevent circular dependencies across bounded contexts.
+    webComponent:
+      type: select
+  - name: administrativeAreaLevel1Id
+    type: id
+    nullable: true
+    index: index
+    indexName: bpp_partner_addr_admin_area_lvl1_id
+    relationship:
+      type: many-to-one
+      aggregateName: CommonAdministrativeAreaLevel1
+      modulePath: common/administrative-area-level-1
+      key: id
+      field: administrativeAreaLevel1
+      avoidConstraint: true
+    description: |
+      Foreign key reference to the first-level administrative division (state, province, region) from the common bounded context. NULL indicates not specified or not applicable. Used for regional analysis, shipping zones, and tax calculations. Examples: California (US state), Ontario (Canadian province), Cataluña (Spanish autonomous community). Links to common/administrative-area-level-1 module.
+    webComponent:
+      type: select
+  - name: administrativeAreaLevel2Id
+    type: id
+    nullable: true
+    index: index
+    indexName: bpp_partner_addr_admin_area_lvl2_id
+    relationship:
+      type: many-to-one
+      aggregateName: CommonAdministrativeAreaLevel2
+      modulePath: common/administrative-area-level-2
+      key: id
+      field: administrativeAreaLevel2
+      avoidConstraint: true
+    description: |
+      Foreign key reference to the second-level administrative division (county, district, comarca) from the common bounded context. NULL indicates not specified or not applicable. Used for detailed regional analysis and local regulations. Examples: Los Angeles County (US), Greater London (UK). Links to common/administrative-area-level-2 module.
+    webComponent:
+      type: select
+  - name: administrativeAreaLevel3Id
+    type: id
+    nullable: true
+    index: index
+    indexName: bpp_partner_addr_admin_area_lvl3_id
+    relationship:
+      type: many-to-one
+      aggregateName: CommonAdministrativeAreaLevel3
+      modulePath: common/administrative-area-level-3
+      key: id
+      field: administrativeAreaLevel3
+      avoidConstraint: true
+    description: |
+      Foreign key reference to the third-level administrative division (municipality, township, city district) from the common bounded context. NULL indicates not specified or not applicable. Used for precise local identification and municipal-level regulations. Examples: Manhattan (NYC borough), Coyoacán (Mexico City borough). Links to common/administrative-area-level-3 module.
+    webComponent:
+      type: select
+  - name: latitude
+    type: decimal
+    decimals:
+      - 16
+      - 14
+    nullable: true
+    description: |
+      Geographic latitude coordinate in decimal degrees format. Range: -90 to +90. NULL indicates coordinates not geocoded. Used for mapping, distance calculations, and location-based services. Example: 40.7128 (New York City). High precision (14 decimals) for accurate positioning. Should be populated through geocoding services when possible.
+  - name: longitude
+    type: decimal
+    decimals:
+      - 17
+      - 14
+    nullable: true
+    description: |
+      Geographic longitude coordinate in decimal degrees format. Range: -180 to +180. NULL indicates coordinates not geocoded. Used for mapping, distance calculations, and route optimization. Example: -74.0060 (New York City). High precision (14 decimals) for accurate positioning. Should be populated through geocoding services when possible.
+  - name: isPrimary
+    type: boolean
+    nullable: false
+    defaultValue: false
+    description: |
+      Indicates if this is the primary address for the business partner. Primary address is used as default in documents and operations when no specific address type is requested. Only one address per partner should be primary. When true, this address is displayed first and used as fallback. Defaults to false. Required field.
+  - name: isActive
+    type: boolean
+    nullable: false
+    defaultValue: true
+    description: |
+      Indicates whether the address is currently valid and usable. When false, the address is no longer valid (e.g., partner moved, location closed) but preserved for historical records. Inactive addresses cannot be used in new transactions but existing references remain valid. Use instead of hard deletion to maintain audit trail. Required field, defaults to true.
+  - name: notes
+    type: text
+    nullable: true
+    description: |
+      Free-text field for additional address-specific notes or delivery instructions. Can include access codes, delivery time restrictions, special handling requirements, or any other relevant information. NULL indicates no notes. Examples: "Use loading dock entrance", "Call before delivery", "No deliveries on weekends". Not used for structured data or business logic.
+  - name: createdAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp when the address record was created. Automatically set on record creation. Part of the audit trail for tracking address history and partner location changes. Used for reporting on address management patterns.
+  - name: updatedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp of the last modification to this address record. Automatically updated on any field change. Used for tracking address data evolution, cache invalidation, and audit compliance. Important for monitoring data quality and identifying when addresses were last verified.
+  - name: deletedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Soft delete timestamp. NULL indicates an active address. When set, the address is hidden from normal queries but preserved for audit purposes and historical shipping/billing records. Deleted addresses cannot be used in new transactions but existing order and invoice history remains accessible. Used for compliance with data retention policies while maintaining referential integrity.
+excludedOperations:
+  - count
+  - createBatch
+  - delete
+  - getRaw
+  - max
+  - min
+  - rawSql
+  - sum
+  - update
+  - updateAndIncrement
+  - upsert

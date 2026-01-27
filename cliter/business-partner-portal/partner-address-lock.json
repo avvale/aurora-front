@@ -1,0 +1,53 @@
+{
+    "version": "0.0.1",
+    "files": [
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.html",
+            "integrity": "sha1:641238756a03b5609bcc8a83ea2e0f3b2558003d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.ts",
+            "integrity": "sha1:ebbee64d6174c70d6e85e9e861304799d432eca5"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-address/partner-address-detail.component.html",
+            "integrity": "sha1:008d6b9136857f1a09291c51bf70db8a4d84c07c"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-address/partner-address-detail.component.ts",
+            "integrity": "sha1:2506a2bdd9b16fc331dddf0ed372a8772549ba2c"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-address/partner-address-list.component.html",
+            "integrity": "sha1:411194c69f2d32f5a57fb7c851c323be0ff4bf32"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-address/partner-address-list.component.ts",
+            "integrity": "sha1:1e97e365ff02750faf9ef3d58a29bec66a9318aa"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-address/partner-address.columns-config.ts",
+            "integrity": "sha1:77de190cf4867336fed22cd692720f285d1e7c76"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-address/partner-address.graphql.ts",
+            "integrity": "sha1:a490e8a6c723dab88e23a9af317579de42ae636f"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-address/partner-address.resolvers.ts",
+            "integrity": "sha1:d532bf9f93e95012d0cb55deda0967e5e787c1d2"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-address/partner-address.service.ts",
+            "integrity": "sha1:fd2886405ce5472ddc5ee6e61988be1f05bb24e1"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-address/index.ts",
+            "integrity": "sha1:21e846da89211bc1b9c71f9e2c4ee42e4694c765"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-address/public-api.ts",
+            "integrity": "sha1:7b37e6c330e9494d9aaeefae0874e1dda6368908"
+        }
+    ]
+}

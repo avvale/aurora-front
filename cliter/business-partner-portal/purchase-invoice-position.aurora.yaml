@@ -1,0 +1,174 @@
+version: 0.0.1
+boundedContextName: business-partner-portal
+moduleName: purchase-invoice-position
+moduleNames: purchase-invoice-positions
+aggregateName: BusinessPartnerPortalPurchaseInvoicePosition
+hasOAuth: true
+hasTenant: false
+hasAuditing: true
+front:
+  outlineIcon: mat_outline:list_alt
+  solidIcon: mat_solid:list_alt
+description: |
+  Purchase invoice position module representing individual positions/items within a purchase invoice. Each position represents a product, service, or expense received from a supplier with its quantity, price, discounts, taxes, and expense categorization. Multiple positions belong to one purchase invoice and are used to calculate the invoice totals and track detailed expenses. Related modules: purchase-invoice-header (parent invoice), business-partner (supplier context).
+aggregateProperties:
+  - name: id
+    type: id
+    primaryKey: true
+    nullable: false
+    description: |
+      Unique identifier for the purchase invoice position. UUID v4 format, generated automatically on creation. Used as primary key for referencing this position across the system and in related operations (accounting entries, expense tracking, inventory receiving, reporting).
+  - name: rowId
+    type: bigint
+    index: unique
+    autoIncrement: true
+    nullable: false
+    description: |
+      Auto-incrementing sequential identifier for the purchase invoice position. Used for internal ordering, human-readable reference numbers, and optimized queries. Not exposed in external APIs. Provides a stable, predictable identifier for database operations.
+  - name: purchaseInvoiceHeaderId
+    type: id
+    nullable: false
+    index: index
+    indexName: bpp_pur_inv_pos_hdr_id
+    relationship:
+      type: many-to-one
+      field: purchaseInvoiceHeader
+      relationshipName: positions
+      aggregateName: BusinessPartnerPortalPurchaseInvoiceHeader
+      modulePath: business-partner-portal/purchase-invoice-header
+      key: id
+      avoidConstraint: false
+    description: |
+      Foreign key linking to the parent purchase invoice header. Required field - every position must belong to an invoice. Used to group positions by invoice, calculate invoice totals, and maintain referential integrity. Links to the purchase-invoice-header module. Deleting an invoice should cascade delete or handle its positions appropriately.
+  - name: positionNumber
+    type: smallint
+    unsigned: true
+    nullable: false
+    description: |
+      Sequential position number within the invoice (1, 2, 3, etc.). Used for display order and reference in communications and accounting. Required field. Should be unique within the same invoice. Helps staff identify specific positions when processing, reviewing, or querying the invoice. Typically matches the line numbering on the supplier's invoice document.
+  - name: description
+    type: varchar
+    maxLength: 510
+    nullable: false
+    description: |
+      Description of the product, service, or expense for this position. Should match or clarify what the supplier listed on their invoice. Required field. Used for expense tracking, accounting categorization, and reconciliation. May include product name, service description, specifications, or expense type. Max 510 characters to allow detailed descriptions while maintaining indexing efficiency.
+  - name: productCode
+    type: varchar
+    maxLength: 64
+    nullable: true
+    index: index
+    indexName: bpp_pur_inv_pos_prod_code
+    description: |
+      Product or service code/SKU for this position. May be our internal code or the supplier's product code. Used for inventory receiving, expense categorization, and analytics. NULL indicates a custom item or one-time expense without a standard product code. When set, can be used for automated expense classification and cost analysis. Indexed for fast product-based queries and reporting.
+  - name: quantity
+    type: decimal
+    decimals:
+      - 10
+      - 4
+    nullable: false
+    defaultValue: 1
+    description: |
+      Quantity of items or units received for this position. Supports up to 4 decimal places to handle fractional quantities (e.g., 2.5 hours, 1.75 kg, 0.5 units). Required field, defaults to 1.0000. Used to calculate position subtotal (quantity × unitPrice). Must be greater than zero. For service hours, weight-based pricing, bulk materials, or partial units. Decimal precision allows flexible purchase scenarios.
+  - name: unitPrice
+    type: decimal
+    decimals:
+      - 12
+      - 2
+    nullable: false
+    defaultValue: 0
+    description: |
+      Price per unit in the invoice currency charged by the supplier. Required field, defaults to 0.00 (for complimentary items or to be set later). Used to calculate position subtotal before discounts and taxes (quantity × unitPrice). Should match the unit price on the supplier's invoice. Used for cost analysis and price variance tracking. Stored with 2 decimal places for standard currency precision.
+  - name: discountPercent
+    type: decimal
+    decimals:
+      - 5
+      - 2
+    nullable: false
+    defaultValue: 0
+    description: |
+      Discount percentage applied by the supplier to this position (0.00 to 100.00). Required field, defaults to 0.00 (no discount). Used to calculate discountAmount (subtotalBeforeDiscount × discountPercent / 100). Reflects supplier pricing strategies, volume discounts, or promotional offers. Display as "10%" for 10.00 value. Max 100.00 for full discount (free item or promotional sample).
+  - name: discountAmount
+    type: decimal
+    decimals:
+      - 12
+      - 2
+    nullable: false
+    defaultValue: 0
+    description: |
+      Absolute discount amount in the invoice currency. Calculated from discountPercent or entered directly for fixed-amount discounts provided by supplier. Required field, defaults to 0.00. Subtracted from subtotalBeforeDiscount to calculate net subtotal. Used for both percentage-based and fixed-amount discounts. Should not exceed subtotalBeforeDiscount. Important for accurate cost tracking.
+  - name: taxPercent
+    type: decimal
+    decimals:
+      - 5
+      - 2
+    nullable: false
+    defaultValue: 0
+    description: |
+      Tax percentage applied to this position (e.g., VAT, sales tax, import duty). Required field, defaults to 0.00 (no tax or tax-exempt). Used to calculate taxAmount (subtotal after discount × taxPercent / 100). Tax rate depends on product type, location, and tax regulations. Display as "21%" for 21.00 value. Important for tax deduction claims and financial reporting. Multiple tax rates may apply to different positions in the same invoice.
+  - name: taxAmount
+    type: decimal
+    decimals:
+      - 12
+      - 2
+    nullable: false
+    defaultValue: 0
+    description: |
+      Tax amount in the invoice currency. Calculated from taxPercent applied to the net subtotal (after discount). Required field, defaults to 0.00. Used to calculate position total and contribute to invoice tax total. Should be calculated consistently based on applicable tax rules. May be recoverable/deductible depending on tax status. Part of the final cost for this position.
+  - name: subtotal
+    type: decimal
+    decimals:
+      - 12
+      - 2
+    nullable: false
+    defaultValue: 0
+    description: |
+      Position subtotal before discounts and taxes. Calculated as quantity × unitPrice. Required field, defaults to 0.00. Used as the base for applying discounts and taxes. Important for expense tracking and cost analysis. This is the gross cost before any adjustments. Part of invoice subtotal calculation. Used for comparing costs across time periods and suppliers.
+  - name: positionTotal
+    type: decimal
+    decimals:
+      - 12
+      - 2
+    nullable: false
+    defaultValue: 0
+    description: |
+      Final total for this position. Calculated as subtotal - discountAmount + taxAmount. Required field, defaults to 0.00. This is the actual cost contributed by this position to the invoice totalAmount. Used for displaying itemized costs and calculating invoice total. Sum of all position totals across the invoice should equal invoice totalAmount (plus any invoice-level adjustments). Critical for expense reporting.
+  - name: expenseCategory
+    type: varchar
+    maxLength: 128
+    nullable: true
+    index: index
+    indexName: bpp_pur_inv_pos_exp_cat
+    description: |
+      Expense category or account code for this position. Used for accounting classification, budget tracking, and financial reporting (e.g., "Office Supplies", "Marketing", "Travel", "Cost of Goods Sold"). NULL indicates category not yet assigned or not applicable. Should align with company chart of accounts. Indexed for fast expense reporting and analysis. Important for budget control and cost allocation.
+  - name: notes
+    type: text
+    nullable: true
+    description: |
+      Additional notes or comments about this specific position. Can include receiving notes, quality issues, special conditions, or reconciliation comments. NULL indicates no notes. Internal use only. Used for documentation, issue tracking, and providing context for accounting staff. May reference purchase orders, delivery receipts, or quality inspections.
+  - name: createdAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp when the purchase invoice position was created. Automatically set on record creation. Part of the audit trail for tracking position entry and processing. Used for reporting on data entry patterns, workflow analysis, and identifying processing delays.
+  - name: updatedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp of the last modification to this purchase invoice position. Automatically updated on any field change. Used for tracking position evolution, cache invalidation, and audit compliance. Important for monitoring invoice changes, corrections, and identifying modifications after initial entry. Critical for approval workflow tracking.
+  - name: deletedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Soft delete timestamp. NULL indicates an active position. When set, the position is hidden from normal queries but preserved for audit purposes and historical data integrity. Deleted positions are excluded from total calculations. Used for data retention policies while maintaining referential integrity. Typically deleted when parent invoice is deleted or when positions are removed during invoice correction or approval process.
+excludedOperations:
+  - count
+  - createBatch
+  - delete
+  - getRaw
+  - max
+  - min
+  - rawSql
+  - sum
+  - update
+  - updateAndIncrement
+  - upsert

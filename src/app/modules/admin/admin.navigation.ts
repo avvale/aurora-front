@@ -9,6 +9,7 @@ import { supportNavigation } from '@apps/support/support.navigation';
 import { toolsNavigation } from '@apps/tools/tools.navigation';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { kitchenSinkNavigation } from './kitchen-sink/kitchen-sink.navigation';
+import { businessPartnerPortalNavigation } from './apps/business-partner-portal/business-partner-portal.navigation';
 
 export const adminNavigation: FuseNavigationItem[] = [
     auditingNavigation,
@@ -21,4 +22,5 @@ export const adminNavigation: FuseNavigationItem[] = [
     searchEngineNavigation,
     supportNavigation,
     toolsNavigation,
+    businessPartnerPortalNavigation
 ];

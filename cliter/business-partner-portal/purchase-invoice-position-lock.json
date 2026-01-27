@@ -1,0 +1,53 @@
+{
+    "version": "0.0.1",
+    "files": [
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.html",
+            "integrity": "sha1:641238756a03b5609bcc8a83ea2e0f3b2558003d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.ts",
+            "integrity": "sha1:ebbee64d6174c70d6e85e9e861304799d432eca5"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-position/purchase-invoice-position-detail.component.html",
+            "integrity": "sha1:4b23a8b8c450f8ada5a8cbdac0ba4e5b75906995"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-position/purchase-invoice-position-detail.component.ts",
+            "integrity": "sha1:92eddc162ef045624a8358dc0a6f0eeb27ee6aa0"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-position/purchase-invoice-position-list.component.html",
+            "integrity": "sha1:fbbee0727f8ffa92dbaa6469e58822eeee69987e"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-position/purchase-invoice-position-list.component.ts",
+            "integrity": "sha1:7dff5c4285e42bf1cae1d8feebfa47ca8ec40ac3"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-position/purchase-invoice-position.columns-config.ts",
+            "integrity": "sha1:1fb6ea51898b522c6b219f92bd1fc13bd8a25da6"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-position/purchase-invoice-position.graphql.ts",
+            "integrity": "sha1:208575a55794f8c0ac8d846cbff115f2ddbe3e99"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-position/purchase-invoice-position.resolvers.ts",
+            "integrity": "sha1:65903ebd47c3c35b3ba5f3644bebfd4eceb54d71"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-position/purchase-invoice-position.service.ts",
+            "integrity": "sha1:6bbb3a6d2b2e4455e916e3705534ea8e7704b154"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-position/index.ts",
+            "integrity": "sha1:aa14651bb80caa0776c774eca38d919ed2b79d5d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/purchase-invoice-position/public-api.ts",
+            "integrity": "sha1:3335bad57236c70fe3a93f334daeda37f89fef91"
+        }
+    ]
+}

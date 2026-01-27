@@ -1,0 +1,172 @@
+version: 0.0.1
+boundedContextName: business-partner-portal
+moduleName: business-partner
+moduleNames: business-partners
+aggregateName: BusinessPartnerPortalBusinessPartner
+hasOAuth: true
+hasTenant: false
+hasAuditing: true
+front:
+  outlineIcon: mat_outline:business
+  solidIcon: mat_solid:business
+description: |
+  Core module representing external business partners, vendors, or affiliates. Manages partner identification, classification, contact information, and business relationships. Acts as the central entity linking partner contacts, addresses, and collection modes. Related modules: partner-contact (contact persons), partner-address (locations), payment-collection-mode (payment terms).
+aggregateProperties:
+  - name: id
+    type: id
+    primaryKey: true
+    nullable: false
+    description: |
+      Unique identifier for the business partner. UUID v4 format, generated automatically on creation. Used as primary key for referencing this partner across the system and in all related modules (contacts, addresses, collection modes).
+  - name: rowId
+    type: bigint
+    index: unique
+    autoIncrement: true
+    nullable: false
+    description: |
+      Auto-incrementing sequential identifier for the business partner. Used for internal ordering, human-readable reference numbers, and optimized queries. Not exposed in external APIs. Provides a stable, predictable identifier for database operations.
+  - name: externalId
+    type: varchar
+    maxLength: 64
+    nullable: true
+    index: index
+    description: |
+      External system identifier for the business partner. Used to link this record to the source ERP system (e.g., customer/vendor number in SAP, Oracle, or Dynamics). Enables bidirectional synchronization with external systems. NULL indicates standalone operation without ERP integration. Example: "CUST-00012345" or "0000001234" (SAP customer number).
+  - name: code
+    type: varchar
+    maxLength: 64
+    nullable: true
+    index: unique
+    description: |
+      Unique business partner code used for identification and reference. Can be alphanumeric and follow company-specific conventions (e.g., "BP-2024-001", "VENDOR-123"). Must be unique across all partners. Used in invoices, reports, and integrations. Cannot be changed once assigned to maintain referential integrity.
+  - name: type
+    type: array
+    arrayOptions:
+      type: enum
+      enumOptions:
+        - CUSTOMER
+        - SUPPLIER
+        - VENDOR
+        - AFFILIATE
+        - PARTNER
+        - OTHER
+    index: index
+    indexUsing: GIN
+    nullable: false
+    defaultValue:
+      - OTHER
+    description: |
+      Classification of the business partner relationship. CUSTOMER: Buys products/services. SUPPLIER: Provides goods to the company. VENDOR: Provides services to the company. AFFILIATE: Marketing or referral partner. PARTNER: Strategic business partner. OTHER: Any other relationship type. Used to filter partners and apply specific business rules based on relationship type.
+  - name: name
+    type: varchar
+    maxLength: 128
+    nullable: false
+    description: |
+      Legal or commercial name of the business partner. Used in official documents, contracts, and communications. Must be the complete registered business name for legal entities. For individuals, use full legal name. Required field for partner identification and documentation. Indexed for fast search operations.
+  - name: tin
+    type: varchar
+    maxLength: 64
+    nullable: true
+    index: index
+    description: |
+      Tax identification number or VAT number for the business partner. Format varies by country (e.g., EIN in US, VAT in EU, RFC in Mexico). Used for tax reporting, invoice generation, and legal compliance. NULL indicates no tax ID registered (may be required based on business rules). Must be validated against country-specific formats where applicable.
+  - name: email
+    type: varchar
+    maxLength: 128
+    nullable: true
+    index: index
+    description: |
+      Primary email address for official communications with the business partner. Used for sending invoices, contracts, notifications, and general correspondence. Should be a valid business email address. NULL indicates no email on record. Not necessarily the email of a specific contact person (use partner-contact for that).
+  - name: website
+    type: varchar
+    maxLength: 1022
+    nullable: true
+    description: |
+      Official website URL of the business partner. Used for reference and due diligence. Should be a complete URL including protocol (e.g., https://example.com). NULL indicates no website on record. Not validated for accessibility but should be a well-formed URL.
+  - name: phone
+    type: varchar
+    maxLength: 64
+    nullable: true
+  - name: phoneCountryPrefix
+    type: varchar
+    maxLength: 4
+    nullable: true
+  - name: phoneSanitized
+    type: varchar
+    maxLength: 64
+    nullable: true
+  - name: isActive
+    type: boolean
+    nullable: false
+    defaultValue: true
+    description: |
+      Indicates whether the business partner is currently active. When false, the partner is inactive and should not appear in normal operations (no new transactions, not visible in selection lists). Inactive partners are preserved for historical data and audit purposes. Use instead of hard deletion to maintain referential integrity. Required field, defaults to true.
+  - name: contacts
+    type: relationship
+    nullable: true
+    relationship:
+      type: one-to-many
+      singularName: contact
+      aggregateName: BusinessPartnerPortalPartnerContact
+      modulePath: business-partner-portal/partner-contact
+      key: businessPartnerId
+      field: businessPartner
+      avoidConstraint: false
+    description: |
+      One-to-many relationship with partner contacts. Represents all contact persons associated with this business partner. Each partner can have multiple contacts (e.g., sales representative, technical contact, billing contact). NULL or empty indicates no contacts registered. Used to manage communication channels and relationship points with the partner organization.
+  - name: addresses
+    type: relationship
+    nullable: true
+    relationship:
+      type: one-to-many
+      singularName: address
+      aggregateName: BusinessPartnerPortalPartnerAddress
+      modulePath: business-partner-portal/partner-address
+      key: businessPartnerId
+      field: businessPartner
+      avoidConstraint: false
+    description: |
+      One-to-many relationship with partner addresses. Represents all physical locations associated with this business partner (headquarters, warehouses, branches, billing address, shipping address). Each partner can have multiple addresses with different purposes. NULL or empty indicates no addresses registered. Used for shipping, billing, and visiting the partner.
+  - name: paymentCollectionModes
+    type: relationship
+    nullable: true
+    relationship:
+      type: one-to-many
+      singularName: paymentCollectionMode
+      aggregateName: BusinessPartnerPortalPaymentCollectionMode
+      modulePath: business-partner-portal/payment-collection-mode
+      key: businessPartnerId
+      field: businessPartner
+      avoidConstraint: false
+    description: |
+      One-to-many relationship with payment collection modes. Represents all configured payment collection methods for this business partner (bank accounts, credit cards, payment gateways). Each partner can have multiple payment collection modes for different payment scenarios. NULL or empty indicates no payment collection modes configured. Used during payment processing and invoice generation.
+  - name: meta
+    type: json
+    nullable: true
+  - name: createdAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp when the business partner record was created. Automatically set on record creation. Part of the audit trail for tracking partner lifecycle and onboarding history. Used for reporting on partner acquisition patterns.
+  - name: updatedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp of the last modification to this business partner record. Automatically updated on any field change. Used for tracking partner data evolution, cache invalidation, and audit compliance. Important for monitoring partner data quality and identifying stale records.
+  - name: deletedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Soft delete timestamp. NULL indicates an active partner. When set, the partner is hidden from normal queries but preserved for audit purposes and historical data integrity. Deleted partners cannot be used in new transactions but existing relationships and history remain accessible. Used for compliance with data retention policies while maintaining referential integrity.
+excludedOperations:
+  - count
+  - createBatch
+  - delete
+  - getRaw
+  - max
+  - min
+  - rawSql
+  - sum
+  - update
+  - updateAndIncrement
+  - upsert

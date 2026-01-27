@@ -1,0 +1,161 @@
+version: 0.0.1
+boundedContextName: business-partner-portal
+moduleName: payment-collection-mode
+moduleNames: payment-collection-modes
+aggregateName: BusinessPartnerPortalPaymentCollectionMode
+hasOAuth: true
+hasTenant: false
+hasAuditing: true
+front:
+  outlineIcon: mat_outline:account_balance
+  solidIcon: mat_solid:account_balance
+description: |
+  Payment collection configurations associated with business partners. Represents the specific payment collection methods configured for each partner, including bank account details, credit card information, or digital wallet identifiers. Each payment collection mode links a business partner with a payment mode (catalog) and stores the necessary credentials or identifiers for processing payments. Establishes many-to-one relationships with both business-partner (owner) and payment-mode (type). Related modules: business-partner (owner), payment-mode (method type).
+aggregateProperties:
+  - name: id
+    type: id
+    primaryKey: true
+    nullable: false
+    description: |
+      Unique identifier for the payment collection mode. UUID v4 format, generated automatically on creation. Used as primary key for referencing this collection configuration in payment processing, invoicing, and financial transactions.
+  - name: rowId
+    type: bigint
+    index: unique
+    autoIncrement: true
+    nullable: false
+    description: |
+      Auto-incrementing sequential identifier for the payment collection mode. Used for internal ordering, human-readable reference, and optimized queries. Not exposed in external APIs. Provides a stable identifier for database operations.
+  - name: businessPartnerId
+    type: id
+    nullable: false
+    index: index
+    indexName: bpp_pay_coll_mode_bp_id
+    relationship:
+      type: many-to-one
+      aggregateName: BusinessPartnerPortalBusinessPartner
+      modulePath: business-partner-portal/business-partner
+      key: id
+      field: businessPartner
+      avoidConstraint: false
+    description: |
+      Foreign key reference to the business partner this payment collection mode belongs to. Each payment collection mode is owned by exactly one partner. Required field establishing the many-to-one relationship. Indexed for efficient queries when loading all payment collection modes for a specific partner. Constraint enforced to maintain referential integrity. Partners can have multiple payment collection modes for different payment scenarios.
+    webComponent:
+      type: select
+  - name: paymentModeId
+    type: id
+    nullable: false
+    index: index
+    indexName: bpp_pay_coll_mode_payment_mode_id
+    relationship:
+      type: many-to-one
+      aggregateName: BusinessPartnerPortalPaymentMode
+      modulePath: business-partner-portal/payment-mode
+      key: id
+      field: paymentMode
+      avoidConstraint: false
+    description: |
+      Foreign key reference to the payment mode catalog defining the type of payment method (credit card, bank transfer, etc.). Required field establishing the many-to-one relationship. Indexed for efficient queries and reporting by payment type. Constraint enforced to ensure valid payment methods. Determines which fields are required (e.g., account number for bank transfer).
+    webComponent:
+      type: select
+  - name: label
+    type: varchar
+    maxLength: 128
+    nullable: true
+    description: |
+      User-friendly label or nickname for this payment collection mode (e.g., "Main Bank Account", "Business Credit Card", "Backup Payment Method"). Used for quick identification in selection lists and UI. NULL indicates no label specified (system generates label from payment mode and last digits). Makes it easier to distinguish between multiple payment collection modes of the same type.
+  - name: accountNumber
+    type: varchar
+    maxLength: 128
+    nullable: true
+    description: |
+      Bank account number, credit card number (last 4 digits only for security), or digital wallet identifier. Required when paymentMode.isAccountNumberRequired is true. Should be masked or partially hidden in UI for security (e.g., show only last 4 digits). NULL indicates not applicable for this payment mode. Used in payment processing. Format varies by payment mode and country.
+  - name: accountHolderName
+    type: varchar
+    maxLength: 128
+    nullable: true
+    description: |
+      Name of the account holder as it appears on bank statements or credit cards. Used for verification and matching during payment processing. Should match legal name or authorized user. NULL indicates not required or not applicable. Examples: "John Smith", "ABC Corporation", "John Smith DBA Smith's Shop". Important for avoiding payment rejections.
+  - name: bankName
+    type: varchar
+    maxLength: 128
+    nullable: true
+    description: |
+      Name of the financial institution or bank. Used for reference and documentation. NULL indicates not applicable (e.g., for digital wallets or credit cards). Examples: "Chase Bank", "HSBC", "Banco Santander". Useful for financial reporting and partner communication. Not used for routing (see routingNumber).
+  - name: routingNumber
+    type: varchar
+    maxLength: 64
+    nullable: true
+    description: |
+      Bank routing number, SWIFT code, sort code, or other routing identifier. Required when paymentMode.isRoutingInfoRequired is true. Format varies by country and payment network. NULL indicates not required or not applicable. Examples: "026009593" (US routing), "CHASUS33" (SWIFT), "20-00-00" (UK sort code). Critical for wire transfers and international payments.
+  - name: iban
+    type: varchar
+    maxLength: 34
+    nullable: true
+    description: |
+      International Bank Account Number (IBAN). ISO 13616 standard format, up to 34 alphanumeric characters. Used for SEPA and international transfers within Europe and supported countries. NULL indicates not applicable or not required. Example: DE89370400440532013000. Validated against checksum algorithm. Required for European bank transfers and recommended for international payments.
+  - name: swiftCode
+    type: varchar
+    maxLength: 11
+    nullable: true
+    description: |
+      SWIFT/BIC code for international wire transfers. 8 or 11 characters identifying the bank (ISO 9362 standard). Required for cross-border payments outside SEPA zone. NULL indicates not applicable or domestic-only account. Example: COBADEFFXXX. Used together with IBAN for international transfers or with accountNumber for non-IBAN countries.
+  - name: currencyCode
+    type: char
+    length: 3
+    nullable: true
+    description: |
+      ISO 4217 three-letter currency code for this payment collection mode (e.g., "USD", "EUR", "GBP", "MXN"). Indicates the currency in which payments will be processed. NULL indicates base system currency is used. Important for multi-currency operations and exchange rate calculations. Must be a valid, supported currency in the system.
+  - name: expirationDate
+    type: date
+    nullable: true
+    description: |
+      Expiration date for time-limited payment methods (credit cards, prepaid cards). NULL indicates no expiration or not applicable. Used to alert users about expiring payment methods and prevent failed transactions. Format: YYYY-MM-DD. System should warn before expiration and block use after expiration. Only month and year are typically relevant (day defaults to last day of month).
+  - name: isPrimary
+    type: boolean
+    nullable: false
+    defaultValue: false
+    description: |
+      Indicates if this is the primary payment collection mode for the business partner. Primary payment collection mode is used as default in payment processing when no specific method is requested. Only one payment collection mode per partner should be primary. When true, this method is displayed first and used as fallback. Defaults to false. Required field.
+  - name: isActive
+    type: boolean
+    nullable: false
+    defaultValue: true
+    description: |
+      Indicates whether the payment collection mode is currently valid and usable. When false, the payment method is disabled (e.g., expired card, closed account, payment method removed by partner) but preserved for historical records. Inactive payment collection modes cannot be used in new transactions but existing payment history remains valid. Use instead of hard deletion to maintain audit trail. Required field, defaults to true.
+  - name: notes
+    type: text
+    nullable: true
+    description: |
+      Free-text field for additional notes about this payment collection mode. Can include special instructions, limitations, processing notes, or verification details. NULL indicates no notes. Examples: "Use only for large transactions", "Requires 3D Secure verification", "Partner prefers this for recurring payments", "Contact before processing". Not used for structured data or business logic.
+  - name: lastUsedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp of the last successful payment processed using this payment collection mode. NULL indicates never used. Automatically updated when a payment is successfully processed. Used to identify unused payment methods, track payment patterns, and alert about stale configurations. Useful for cleanup and optimization of payment method records.
+  - name: createdAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp when the payment collection mode was created. Automatically set on record creation. Part of the audit trail for tracking payment method configuration history. Used for reporting on payment method setup patterns and partner onboarding analysis.
+  - name: updatedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp of the last modification to this payment collection mode. Automatically updated on any field change. Used for tracking payment configuration evolution, cache invalidation, and audit compliance. Important for monitoring changes to sensitive payment information and security audits.
+  - name: deletedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Soft delete timestamp. NULL indicates an active payment collection mode. When set, the payment collection mode is hidden from normal queries but preserved for audit purposes and historical payment records. Deleted payment collection modes cannot be used in new transactions but existing payment history and audit logs remain accessible. Used for compliance with data retention policies, PCI-DSS requirements, and maintaining referential integrity.
+excludedOperations:
+  - count
+  - createBatch
+  - delete
+  - getRaw
+  - max
+  - min
+  - rawSql
+  - sum
+  - update
+  - updateAndIncrement
+  - upsert

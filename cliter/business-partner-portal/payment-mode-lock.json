@@ -1,0 +1,53 @@
+{
+    "version": "0.0.1",
+    "files": [
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.html",
+            "integrity": "sha1:641238756a03b5609bcc8a83ea2e0f3b2558003d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.ts",
+            "integrity": "sha1:ebbee64d6174c70d6e85e9e861304799d432eca5"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-mode/payment-mode-detail.component.html",
+            "integrity": "sha1:7d0ac3f2d2ee6df82876a8267cdbd8fe2f3f2b66"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-mode/payment-mode-detail.component.ts",
+            "integrity": "sha1:734404a96d4540cae001cadf1ec5672b0794564a"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-mode/payment-mode-list.component.html",
+            "integrity": "sha1:623ef2e3568bb85aa23204ca7e61c0768503574d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-mode/payment-mode-list.component.ts",
+            "integrity": "sha1:b98b9a8e328fe6c87f26fb05ab739acc5d57f195"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-mode/payment-mode.columns-config.ts",
+            "integrity": "sha1:73d3677b24c457b2994e7df4865013279a6e1d46"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-mode/payment-mode.graphql.ts",
+            "integrity": "sha1:c4077ef29b1019c84eb41b5a0db3334126022558"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-mode/payment-mode.resolvers.ts",
+            "integrity": "sha1:2e795f812826c47258da1909808831b1030f5b0f"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-mode/payment-mode.service.ts",
+            "integrity": "sha1:cd72b849dbda3912256e4009c6edced1c36a45ad"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-mode/index.ts",
+            "integrity": "sha1:d5920bd301d699d942a80f26873c10d1c75669e1"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-mode/public-api.ts",
+            "integrity": "sha1:dcc11222ef909c9a2505235ad9aac068474da78b"
+        }
+    ]
+}

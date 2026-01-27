@@ -1,0 +1,53 @@
+{
+    "version": "0.0.1",
+    "files": [
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.html",
+            "integrity": "sha1:641238756a03b5609bcc8a83ea2e0f3b2558003d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.ts",
+            "integrity": "sha1:ebbee64d6174c70d6e85e9e861304799d432eca5"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-contact/partner-contact-detail.component.html",
+            "integrity": "sha1:323d7ba026fef117f9523ca089a43c67b81bbd40"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-contact/partner-contact-detail.component.ts",
+            "integrity": "sha1:7e136bffefc6b9ab5be4a5136459281ed8431cef"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-contact/partner-contact-list.component.html",
+            "integrity": "sha1:7b49329e36306ce0f91159d1f13a436c6ca9f8a6"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-contact/partner-contact-list.component.ts",
+            "integrity": "sha1:a6546311bb514e4e40f3d4cf25828445ce7db299"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-contact/partner-contact.columns-config.ts",
+            "integrity": "sha1:44953f1116623112b860adeff411341369f764c1"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-contact/partner-contact.graphql.ts",
+            "integrity": "sha1:5a224a790242bb57ffc942a5571392234a5280be"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-contact/partner-contact.resolvers.ts",
+            "integrity": "sha1:71190c2b8adf278cb7d4e9871dd57482804703c0"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-contact/partner-contact.service.ts",
+            "integrity": "sha1:f1abe9eceefc122b8de3e45b483c4d93d80c9337"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-contact/index.ts",
+            "integrity": "sha1:608ff614ce422056804024ff19c01d375d0f904e"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/partner-contact/public-api.ts",
+            "integrity": "sha1:80adae4db3c26a2c893bcd897987f8df9cedc6b9"
+        }
+    ]
+}

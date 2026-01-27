@@ -1,0 +1,250 @@
+version: 0.0.1
+boundedContextName: business-partner-portal
+moduleName: supplier-document
+moduleNames: supplier-documents
+aggregateName: BusinessPartnerPortalSupplierDocument
+hasOAuth: true
+hasTenant: false
+hasAuditing: true
+front:
+  outlineIcon: mat_outline:cloud_upload
+  solidIcon: mat_solid:cloud_upload
+description: |
+  Manages supplier invoice document uploads for automated processing via OCR and external invoice management systems. Each record represents a document (PDF, image) uploaded by a supplier that will be sent to an external system for OCR and automatic registration. The module tracks the complete lifecycle: upload, transmission to processing system, OCR processing, and linking with the resulting purchase invoice. Allows suppliers to view their submission status and the relationship with registered invoices. Related modules: business-partner (supplier), purchase-invoice-header (resulting invoice after processing).
+aggregateProperties:
+  - name: id
+    type: id
+    primaryKey: true
+    nullable: false
+    description: |
+      Unique identifier for the supplier document upload. UUID v4 format, generated automatically on creation. Used as primary key for tracking document lifecycle and referencing in external system integration callbacks.
+  - name: rowId
+    type: bigint
+    index: unique
+    autoIncrement: true
+    nullable: false
+    description: |
+      Auto-incrementing sequential identifier for the supplier document. Used for internal ordering, human-readable reference (e.g., "DOC-00001234"), and optimized queries. Not exposed in external APIs. Provides stable identifier for database operations.
+  - name: businessPartnerId
+    type: id
+    nullable: false
+    index: index
+    indexName: bpp_sup_doc_bp_id
+    relationship:
+      type: many-to-one
+      aggregateName: BusinessPartnerPortalBusinessPartner
+      modulePath: business-partner-portal/business-partner
+      key: id
+      field: businessPartner
+      avoidConstraint: false
+    description: |
+      Foreign key to the business partner (supplier) who uploaded this document. Required field - every document must be associated with a supplier. Used to filter documents by supplier in the portal view, validate upload permissions, and associate with supplier master data. Partner type should be SUPPLIER or VENDOR.
+    webComponent:
+      type: select
+  - name: documentNumber
+    type: varchar
+    maxLength: 64
+    nullable: true
+    index: unique
+    indexName: bpp_sup_doc_doc_number
+    description: |
+      Unique internal document number assigned on upload. Follows sequential format (e.g., "SDOC-2024-000001"). Used as primary reference in communications with supplier and integration logs. Cannot be changed after creation. Generated automatically by the system.
+  - name: documentType
+    type: enum
+    enumOptions:
+      - INVOICE
+      - CREDIT_NOTE
+      - DEBIT_NOTE
+      - PROFORMA
+      - OTHER
+    nullable: true
+    defaultValue: INVOICE
+    description: |
+      Classification of the uploaded document. INVOICE: Standard supplier invoice for goods/services. CREDIT_NOTE: Adjustment reducing amount owed. DEBIT_NOTE: Adjustment increasing amount owed. PROFORMA: Preliminary invoice for review. OTHER: Miscellaneous supporting documents. Used by the processing system to apply appropriate processing rules.
+  - name: status
+    type: enum
+    enumOptions:
+      - PENDING_UPLOAD
+      - UPLOADED
+      - VALIDATING
+      - SENT_FOR_PROCESSING
+      - PROCESSING
+      - PROCESSED
+      - LINKED
+      - ERROR
+      - REJECTED
+    nullable: false
+    defaultValue: PENDING_UPLOAD
+    index: index
+    description: |
+      Current processing status of the document. PENDING_UPLOAD: Upload initiated but file not yet received. UPLOADED: File received and stored successfully. VALIDATING: Basic validation in progress (format, size, virus scan). SENT_FOR_PROCESSING: Document transmitted to external system for OCR processing. PROCESSING: External system actively processing (OCR, data extraction). PROCESSED: Processing completed, data available. LINKED: Purchase invoice created and linked to this document. ERROR: Processing failed (see errorCode/errorMessage). REJECTED: Document rejected by external system or manually.
+  - name: file
+    type: jsonb
+    nullable: true
+    description: |
+      File metadata and storage information in JSON format. Contains file name, original name, MIME type, size in bytes, storage path/URL, and upload timestamp. Used for file retrieval, display in portal, and storage management. NULL if upload not completed. Structure: {fileName: string, originalName: string, mimeType: string, size: number, path: string, uploadedAt: timestamp}.
+  - name: fileHash
+    type: varchar
+    maxLength: 64
+    nullable: true
+    index: index
+    description: |
+      SHA-256 hash of the uploaded file content. Used for duplicate detection (prevent same invoice uploaded twice), integrity verification, and audit trail. Calculated server-side after upload completes. NULL during upload or if calculation fails. Indexed for fast duplicate lookups. 64 chars for hex-encoded SHA-256.
+  - name: supplierInvoiceNumber
+    type: varchar
+    maxLength: 64
+    nullable: true
+    index: index
+    indexName: bpp_sup_doc_sup_inv_number
+    description: |
+      Invoice number as provided by the supplier on upload or extracted from document by OCR. Used for reference before processing completes. May differ from OCR-extracted value (see ocrInvoiceNumber). NULL if not provided by supplier. Indexed for supplier lookups when checking upload status.
+  - name: supplierInvoiceDate
+    type: date
+    nullable: true
+    description: |
+      Invoice date as provided by the supplier on upload. Used for reference and initial validation before processing. May be corrected by OCR results. NULL if not provided by supplier. Helps prioritize processing by invoice age.
+  - name: supplierInvoiceAmount
+    type: decimal
+    decimals:
+      - 12
+      - 2
+    nullable: true
+    description: |
+      Total invoice amount as declared by supplier on upload. Used for initial validation and matching against OCR results. NULL if not provided. Discrepancies between declared and OCR-extracted amounts may trigger review workflow. Stored in supplier's declared currency.
+  - name: currencyCode
+    type: char
+    length: 3
+    nullable: true
+    description: |
+      ISO 4217 currency code for the invoice amount (e.g., "USD", "EUR", "MXN"). As declared by supplier or extracted by OCR. NULL if not specified. Used for amount validation and purchase invoice creation.
+  - name: externalDocumentId
+    type: varchar
+    maxLength: 64
+    nullable: true
+    index: index
+    indexName: bpp_sup_doc_ext_doc_id
+    description: |
+      Document ID assigned by the external processing system after successful processing. Format depends on external system configuration. NULL until processing completes. Used to query external system for processing results and link back. Primary reference for external integration. Indexed for fast lookups on webhook callbacks.
+  - name: externalCompanyCode
+    type: varchar
+    maxLength: 16
+    nullable: true
+    description: |
+      Company code in the external system where the invoice will be posted. Determined by business rules based on supplier and document type. NULL until external system assignment. Used for routing to correct instance in multi-company environments.
+  - name: externalProcessingStatus
+    type: varchar
+    maxLength: 64
+    nullable: true
+    description: |
+      Detailed processing status from the external system. Provides granular status beyond our simplified enum (e.g., "OCR_COMPLETE", "VALIDATION_PENDING", "POSTED", "PARKED"). NULL until external system begins processing. Updated via webhook or polling. Used for detailed status display and troubleshooting.
+  - name: purchaseInvoiceHeaderId
+    type: id
+    nullable: true
+    index: index
+    indexName: bpp_sup_doc_pur_inv_hdr_id
+    relationship:
+      type: many-to-one
+      aggregateName: BusinessPartnerPortalPurchaseInvoiceHeader
+      modulePath: business-partner-portal/purchase-invoice-header
+      key: id
+      field: purchaseInvoiceHeader
+      avoidConstraint: false
+    description: |
+      Foreign key to the purchase invoice header created from this document after processing. NULL until processing completes and invoice is created in our system. Establishes the link between uploaded document and registered invoice. Allows supplier to navigate from their upload to the resulting invoice record. Set when status transitions to LINKED.
+    webComponent:
+      type: select
+  - name: ocrConfidenceScore
+    type: decimal
+    decimals:
+      - 5
+      - 2
+    nullable: true
+    description: |
+      Overall OCR confidence score from the processing system (0.00 to 100.00). Indicates reliability of extracted data. NULL until OCR completes. Low scores may trigger manual review. Used for quality metrics and processing decisions. Display as percentage in UI. Scores below threshold (e.g., 80%) may require manual verification.
+  - name: ocrData
+    type: jsonb
+    nullable: true
+    description: |
+      Raw OCR extraction results from the processing system in JSON format. Contains structured data extracted from document: invoice number, date, line items, amounts, vendor info, tax details, etc. NULL until OCR completes. Used to create purchase invoice and for displaying extracted data to supplier for verification. Schema depends on processing system configuration.
+  - name: sentForProcessingAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp when document was transmitted to the external processing system. NULL until transmission occurs. Used for SLA tracking, processing time metrics, and troubleshooting delays. Set when status transitions to SENT_FOR_PROCESSING.
+  - name: processedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp when the external system completed processing (success or failure). NULL until processing completes. Used for SLA tracking, processing time metrics, and audit trail. Set when status transitions to PROCESSED, ERROR, or REJECTED. Processing time = processedAt - sentForProcessingAt.
+  - name: linkedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp when purchase invoice was created and linked to this document. NULL until linking occurs. Set when status transitions to LINKED. Represents the moment the supplier's invoice becomes a registered purchase invoice in the system.
+  - name: errorCode
+    type: varchar
+    maxLength: 64
+    nullable: true
+    index: index
+    description: |
+      Error code from the external processing system or internal validation when processing fails. NULL if no error. Standardized codes for programmatic handling (e.g., "OCR_FAILED", "INVALID_FORMAT", "DUPLICATE_INVOICE", "VENDOR_MISMATCH", "PROCESSING_TIMEOUT"). Indexed for error analysis and reporting. Used with errorMessage for full context.
+  - name: errorMessage
+    type: text
+    nullable: true
+    description: |
+      Human-readable error message when processing fails. NULL if no error. Provides detailed explanation for supplier and support staff. May contain technical details from external system or validation rules. Displayed in portal when status is ERROR or REJECTED. Not used for programmatic decisions (use errorCode instead).
+  - name: retryCount
+    type: smallint
+    unsigned: true
+    nullable: false
+    defaultValue: 0
+    description: |
+      Number of times processing has been retried after failure. Starts at 0. Incremented on each retry attempt. Used to limit automatic retries (e.g., max 3) and track problematic documents. High retry count indicates persistent issues requiring manual intervention.
+  - name: lastRetryAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp of the last retry attempt. NULL if never retried. Used for retry scheduling (exponential backoff), preventing too-frequent retries, and audit trail. Updated each time a retry is initiated.
+  - name: notes
+    type: text
+    nullable: true
+    description: |
+      Internal notes about the document processing. Can include manual review comments, special handling instructions, or resolution notes for errors. NULL indicates no notes. Not visible to supplier unless explicitly shared. Used by accounts payable staff for coordination and documentation.
+  - name: supplierNotes
+    type: text
+    nullable: true
+    description: |
+      Notes provided by the supplier during upload. Can include context about the invoice, special instructions, or references to related documents/POs. NULL if no notes provided. Visible to both supplier and internal staff. May be passed to the processing system as additional context.
+  - name: isArchived
+    type: boolean
+    nullable: false
+    defaultValue: false
+    description: |
+      Indicates if the document has been archived after successful processing. Archived documents may be moved to cold storage and excluded from active listings. Set to true after document is linked and retention period passes. Used for storage optimization and list filtering. Defaults to false.
+  - name: createdAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp when the document record was created (upload initiated). Automatically set on record creation. Part of audit trail for tracking document lifecycle. Used for reporting on upload patterns and SLA calculations.
+  - name: updatedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Timestamp of the last modification to this document record. Automatically updated on any field change. Used for tracking document state changes, cache invalidation, and audit compliance. Important for monitoring processing progress.
+  - name: deletedAt
+    type: timestamp
+    nullable: true
+    description: |
+      Soft delete timestamp. NULL indicates active document. When set, document is hidden from normal queries but preserved for audit purposes. Deleted documents remain accessible for compliance and historical queries. Physical file may be retained per retention policy even when record is soft-deleted.
+excludedOperations:
+  - count
+  - createBatch
+  - delete
+  - getRaw
+  - max
+  - min
+  - rawSql
+  - sum
+  - update
+  - updateAndIncrement
+  - upsert

@@ -1,0 +1,53 @@
+{
+    "version": "0.0.1",
+    "files": [
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.html",
+            "integrity": "sha1:641238756a03b5609bcc8a83ea2e0f3b2558003d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.ts",
+            "integrity": "sha1:ebbee64d6174c70d6e85e9e861304799d432eca5"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/supplier-document/supplier-document-detail.component.html",
+            "integrity": "sha1:4cbdad155d351b1ab3b84d1f1db1a6ef06223c1c"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/supplier-document/supplier-document-detail.component.ts",
+            "integrity": "sha1:e1c0b3ace0b3c51b117180dbf3d6cb60b41b504d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/supplier-document/supplier-document-list.component.html",
+            "integrity": "sha1:6a337c33c5e603f2909a2af68dc65076fb24f0e4"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/supplier-document/supplier-document-list.component.ts",
+            "integrity": "sha1:7368cacaf414698b9ccb76f04f756a4859a051df"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/supplier-document/supplier-document.columns-config.ts",
+            "integrity": "sha1:b7a61391ea927651cbc314a510b802098ce52ca6"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/supplier-document/supplier-document.graphql.ts",
+            "integrity": "sha1:be34a817d60bd0a7dd15da01ccfc01acc6caee05"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/supplier-document/supplier-document.resolvers.ts",
+            "integrity": "sha1:b723efeaa298add9ffef5ce4fcfa382173bd1049"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/supplier-document/supplier-document.service.ts",
+            "integrity": "sha1:7e02bfc700de0f596143ee5c359cdc4629996cbb"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/supplier-document/index.ts",
+            "integrity": "sha1:3f9b8f2e62263506df9df9a49205ad1ebcdd74fe"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/supplier-document/public-api.ts",
+            "integrity": "sha1:a3d108f5085763bb580e68cd837c3504befc05e7"
+        }
+    ]
+}

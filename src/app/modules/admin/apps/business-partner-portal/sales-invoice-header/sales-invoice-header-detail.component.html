@@ -1,0 +1,371 @@
+<!--
+  @aurora-generated
+  @source cliter/business-partner-portal/sales-invoice-header.aurora.yaml
+-->
+<div
+    *transloco="let t"
+    class="absolute inset-0 flex w-full flex-col overflow-hidden"
+>
+    <!-- Header -->
+    <div
+        class="bg-card flex flex-0 flex-col border-b p-6 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-4 dark:bg-transparent"
+    >
+        <div class="min-w-0 flex-1">
+            <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
+            <au-title>
+                <mat-icon
+                    class="mr-2 icon-size-8"
+                    svgIcon="mat_solid:receipt_long"
+                ></mat-icon>
+                {{ t('businessPartnerPortal.SalesInvoiceHeader') }}
+            </au-title>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-6 flex flex-shrink-0 items-center sm:ml-4 sm:mt-0">
+            @if (
+                currentViewAction.id ===
+                'businessPartnerPortal::salesInvoiceHeader.detail.edit'
+            ) {
+                <button
+                    type="submit"
+                    class="ml-3"
+                    [disabled]="
+                        fg.pristine ||
+                        ('businessPartnerPortal::salesInvoiceHeader.detail.update'
+                            | getActionStatus
+                            | async)
+                    "
+                    mat-flat-button
+                    form="businessPartnerPortalSalesInvoiceHeaderFormDetail"
+                    color="accent"
+                >
+                    @if (
+                        'businessPartnerPortal::salesInvoiceHeader.detail.update'
+                            | getActionStatus
+                            | async
+                    ) {
+                        <mat-icon>
+                            <mat-spinner diameter="20"></mat-spinner>
+                        </mat-icon>
+                    } @else {
+                        <mat-icon
+                            class="mr-2 icon-size-5"
+                            svgIcon="mat_solid:edit"
+                        ></mat-icon>
+                    }
+                    {{ t('Update') }}
+                </button>
+            }
+
+            @if (
+                currentViewAction.id ===
+                'businessPartnerPortal::salesInvoiceHeader.detail.new'
+            ) {
+                <button
+                    type="submit"
+                    class="ml-3"
+                    [disabled]="
+                        fg.pristine ||
+                        ('businessPartnerPortal::salesInvoiceHeader.detail.create'
+                            | getActionStatus
+                            | async)
+                    "
+                    mat-flat-button
+                    form="businessPartnerPortalSalesInvoiceHeaderFormDetail"
+                    color="accent"
+                >
+                    @if (
+                        'businessPartnerPortal::salesInvoiceHeader.detail.create'
+                            | getActionStatus
+                            | async
+                    ) {
+                        <mat-icon>
+                            <mat-spinner diameter="20"></mat-spinner>
+                        </mat-icon>
+                    } @else {
+                        <mat-icon
+                            class="mr-2 icon-size-5"
+                            svgIcon="mat_solid:save"
+                        ></mat-icon>
+                    }
+                    {{ t('Create') }}
+                </button>
+            }
+        </div>
+        <!-- / Actions -->
+    </div>
+    <!-- / Header -->
+
+    <!-- Main -->
+    <div
+        class="flex-auto overflow-y-auto px-6 pt-6 sm:px-10 sm:pt-10"
+        cdkScrollable
+    >
+        <div class="form-card">
+            <form
+                id="businessPartnerPortalSalesInvoiceHeaderFormDetail"
+                [formGroup]="fg"
+                novalidate
+                (ngSubmit)="onSubmit($event)"
+            >
+                <div class="layout__container">
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-8"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.InvoiceNumber') }}
+                        </mat-label>
+                        <input
+                            matInput
+                            formControlName="invoiceNumber"
+                            maxlength="64"
+                            required
+                        />
+                        <mat-error>
+                            {{ formErrors?.invoiceNumber | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-8"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.ExternalId') }}
+                        </mat-label>
+                        <input
+                            matInput
+                            formControlName="externalId"
+                            maxlength="64"
+                        />
+                        <mat-error>
+                            {{ formErrors?.externalId | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.ExternalSystemCode') }}
+                        </mat-label>
+                        <input
+                            matInput
+                            formControlName="externalSystemCode"
+                            maxlength="16"
+                        />
+                        <mat-error>
+                            {{ formErrors?.externalSystemCode | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="au-datepicker col-4"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.InvoiceDate') }}
+                        </mat-label>
+                        <input
+                            [auDatepickerSqlFormat]
+                            [matDatepicker]="invoiceDatePicker"
+                            matInput
+                            autocomplete="off"
+                            formControlName="invoiceDate"
+                        />
+                        <mat-datepicker-toggle
+                            [for]="invoiceDatePicker"
+                            matSuffix
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #invoiceDatePicker></mat-datepicker>
+                        <mat-error>
+                            {{ formErrors?.invoiceDate | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="au-datepicker col-4"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.DueDate') }}
+                        </mat-label>
+                        <input
+                            [auDatepickerSqlFormat]
+                            [matDatepicker]="dueDatePicker"
+                            matInput
+                            autocomplete="off"
+                            formControlName="dueDate"
+                        />
+                        <mat-datepicker-toggle
+                            [for]="dueDatePicker"
+                            matSuffix
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #dueDatePicker></mat-datepicker>
+                        <mat-error>{{ formErrors?.dueDate | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.Status') }}
+                        </mat-label>
+                        <mat-select formControlName="status">
+                            <mat-option value="DRAFT">DRAFT</mat-option>
+                            <mat-option value="SENT">SENT</mat-option>
+                            <mat-option value="PAID">PAID</mat-option>
+                            <mat-option value="PARTIALLY_PAID">
+                                PARTIALLY_PAID
+                            </mat-option>
+                            <mat-option value="OVERDUE">OVERDUE</mat-option>
+                            <mat-option value="CANCELLED">CANCELLED</mat-option>
+                            <mat-option value="REFUNDED">REFUNDED</mat-option>
+                        </mat-select>
+                        <mat-error>{{ formErrors?.status | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.Subtotal') }}
+                        </mat-label>
+                        <input
+                            type="number"
+                            matInput
+                            formControlName="subtotal"
+                        />
+                        <mat-error>
+                            {{ formErrors?.subtotal | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.TaxAmount') }}
+                        </mat-label>
+                        <input
+                            type="number"
+                            matInput
+                            formControlName="taxAmount"
+                        />
+                        <mat-error>
+                            {{ formErrors?.taxAmount | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.DiscountAmount') }}
+                        </mat-label>
+                        <input
+                            type="number"
+                            matInput
+                            formControlName="discountAmount"
+                        />
+                        <mat-error>
+                            {{ formErrors?.discountAmount | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.TotalAmount') }}
+                        </mat-label>
+                        <input
+                            type="number"
+                            matInput
+                            formControlName="totalAmount"
+                        />
+                        <mat-error>
+                            {{ formErrors?.totalAmount | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-4"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.PaidAmount') }}
+                        </mat-label>
+                        <input
+                            type="number"
+                            matInput
+                            formControlName="paidAmount"
+                        />
+                        <mat-error>
+                            {{ formErrors?.paidAmount | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-2"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.CurrencyCode') }}
+                        </mat-label>
+                        <input
+                            matInput
+                            formControlName="currencyCode"
+                            maxlength="3"
+                        />
+                        <mat-error>
+                            {{ formErrors?.currencyCode | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.PaymentTermDays') }}
+                        </mat-label>
+                        <input
+                            type="number"
+                            matInput
+                            formControlName="paymentTermDays"
+                        />
+                        <mat-error>
+                            {{ formErrors?.paymentTermDays | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.Notes') }}
+                        </mat-label>
+                        <textarea
+                            matInput
+                            formControlName="notes"
+                        ></textarea>
+                        <mat-error>{{ formErrors?.notes | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-12"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.CustomerNotes') }}
+                        </mat-label>
+                        <textarea
+                            matInput
+                            formControlName="customerNotes"
+                        ></textarea>
+                        <mat-error>
+                            {{ formErrors?.customerNotes | async }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- / Main -->
+</div>

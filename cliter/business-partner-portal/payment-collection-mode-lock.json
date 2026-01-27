@@ -1,0 +1,53 @@
+{
+    "version": "0.0.1",
+    "files": [
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.html",
+            "integrity": "sha1:641238756a03b5609bcc8a83ea2e0f3b2558003d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.ts",
+            "integrity": "sha1:ebbee64d6174c70d6e85e9e861304799d432eca5"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-collection-mode/payment-collection-mode-detail.component.html",
+            "integrity": "sha1:8c7e808d5a7047628d12d33a5aaa94845c97ceaf"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-collection-mode/payment-collection-mode-detail.component.ts",
+            "integrity": "sha1:7089739d2b0eb96f3d77098048a70d53c074e3d6"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-collection-mode/payment-collection-mode-list.component.html",
+            "integrity": "sha1:0e41575ad405911ddb07908bc6a1bde0ac768334"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-collection-mode/payment-collection-mode-list.component.ts",
+            "integrity": "sha1:78f4fd8f3118b9084de20ddec3095a0746cfdb2c"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-collection-mode/payment-collection-mode.columns-config.ts",
+            "integrity": "sha1:b30fa38a98f12ebba011aeefb0e02f806ea92fca"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-collection-mode/payment-collection-mode.graphql.ts",
+            "integrity": "sha1:d0ef410002be5a792660719a3e00640152d8548d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-collection-mode/payment-collection-mode.resolvers.ts",
+            "integrity": "sha1:8b72af6622d7f516e7b96d85aa4284862222c0cb"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-collection-mode/payment-collection-mode.service.ts",
+            "integrity": "sha1:6e12346634551690ee0679da029055c4ad54bdcb"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-collection-mode/index.ts",
+            "integrity": "sha1:4626b44a49ed30f56bd719cd5e306466c5cd9fbe"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/payment-collection-mode/public-api.ts",
+            "integrity": "sha1:2c64eb30db7accd4e7694c80ef85dad17ab67926"
+        }
+    ]
+}

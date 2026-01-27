@@ -1,0 +1,53 @@
+{
+    "version": "0.0.1",
+    "files": [
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.html",
+            "integrity": "sha1:641238756a03b5609bcc8a83ea2e0f3b2558003d"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/business-partner-portal.component.ts",
+            "integrity": "sha1:ebbee64d6174c70d6e85e9e861304799d432eca5"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-header/sales-invoice-header-detail.component.html",
+            "integrity": "sha1:1c7e82e3826d920c9f11210ea6fb05b9f77cb766"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-header/sales-invoice-header-detail.component.ts",
+            "integrity": "sha1:1905ce90b259e7495618a5a5ff60b031b0a051c0"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-header/sales-invoice-header-list.component.html",
+            "integrity": "sha1:88523143fd65c898de1a23c37096a7f0274035db"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-header/sales-invoice-header-list.component.ts",
+            "integrity": "sha1:3ccc8476bcf7316c759ad8a128c0840413e08cca"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-header/sales-invoice-header.columns-config.ts",
+            "integrity": "sha1:c8607e5826bb1ed604dafb84f5b7acab5137bd3b"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-header/sales-invoice-header.graphql.ts",
+            "integrity": "sha1:4e45847527b623b47e9af6ead4e5dd02f57d5382"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-header/sales-invoice-header.resolvers.ts",
+            "integrity": "sha1:eacc67f744ae4e3dc210626e5010cc8e0ec6b70e"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-header/sales-invoice-header.service.ts",
+            "integrity": "sha1:3028ee818f0b18d9d04d3237c95967d107bf2601"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-header/index.ts",
+            "integrity": "sha1:7d2736b1ccc791817c817442340302c49e9acdd4"
+        },
+        {
+            "path": "src/app/modules/admin/apps/business-partner-portal/sales-invoice-header/public-api.ts",
+            "integrity": "sha1:951cb30d538b293214bf55d36b5ed8520b84abef"
+        }
+    ]
+}
