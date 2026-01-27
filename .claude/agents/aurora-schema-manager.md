@@ -71,8 +71,8 @@ front:
     outlineIcon: mat_outline:local_police
     solidIcon: mat_solid:local_police
 description: >
-    Module containing the permissions associated with each bounded context, to be used
-    to manage access to each API.
+    Module containing the permissions associated with each bounded context, to
+    be used to manage access to each API.
 aggregateProperties: ...
 ```
 
@@ -120,6 +120,59 @@ description: >
     to product module for line items. Central to the sales workflow.
 ```
 
+## Mandatory Fields (REQUIRED in all modules)
+
+**IMPORTANTE: Todos los módulos DEBEN incluir estos campos obligatoriamente.**
+
+### 1. Campo rowId (después del id)
+
+```yaml
+- name: rowId
+  type: bigint
+  index: unique
+  autoIncrement: true
+  nullable: false
+  description: >
+      Auto-incrementing sequential identifier. Used for internal ordering and
+      legacy system compatibility. Unlike the UUID 'id', this provides a
+      human-readable sequential number.
+```
+
+### 2. Campos de marca de tiempo (al final del aggregateProperties)
+
+```yaml
+- name: createdAt
+  type: timestamp
+  nullable: true
+  description: >
+      Timestamp when the record was created. Automatically set on insertion.
+      Part of audit trail.
+
+- name: updatedAt
+  type: timestamp
+  nullable: true
+  description: >
+      Timestamp when the record was last modified. Automatically updated on any
+      field change. Part of audit trail.
+
+- name: deletedAt
+  type: timestamp
+  nullable: true
+  description: >
+      Soft delete timestamp. NULL indicates active record. When set, record is
+      excluded from normal queries but preserved for audit trail and potential
+      recovery.
+```
+
+### Orden de campos en aggregateProperties
+
+1. `id` (primaryKey)
+2. `rowId` (autoIncrement) ← **OBLIGATORIO**
+3. ... campos del módulo ...
+4. `createdAt` ← **OBLIGATORIO**
+5. `updatedAt` ← **OBLIGATORIO**
+6. `deletedAt` ← **OBLIGATORIO**
+
 ## Edition Operations
 
 ### Creating Fields
@@ -142,6 +195,8 @@ Cuando se te pida crear un campo:
 - [ ] No duplica un campo existente
 - [ ] Es consistente con campos similares en otros módulos
 - [ ] **Si es tipo `id`, NO incluir `length`**
+- [ ] **Si es un módulo nuevo, incluir `rowId` y campos de timestamp
+      (`createdAt`, `updatedAt`, `deletedAt`)**
 
 ### Editing Fields
 
@@ -276,10 +331,10 @@ aurora-schema-manager: Entendido. Voy a crear el campo siguiendo las convencione
 
 ```yaml
 # ❌ Bad
-- name: displayOrder  # Too verbose
-- name: order         # Ambiguous, conflicts with order entity
-- name: position      # Not standard
-- name: sortOrder     # Redundant
+- name: displayOrder # Too verbose
+- name: order # Ambiguous, conflicts with order entity
+- name: position # Not standard
+- name: sortOrder # Redundant
 
 # ✅ Good
 - name: sort
@@ -287,8 +342,8 @@ aurora-schema-manager: Entendido. Voy a crear el campo siguiendo las convencione
   unsigned: true
   nullable: true
   description: >
-      Sort order for displaying records in user interfaces. Lower numbers
-      appear first. NULL indicates no specific order preference.
+      Sort order for displaying records in user interfaces. Lower numbers appear
+      first. NULL indicates no specific order preference.
 ```
 
 **Clear IDs and references:**
@@ -450,6 +505,18 @@ Each YAML will be headed by the module definition:
 - Does the description add value beyond the moduleName?
 - Does it explain the module's role within its bounded context?
 
+### 2.1 Verify Mandatory Fields
+
+**IMPORTANTE: Verificar que el módulo incluya los campos obligatorios:**
+
+- [ ] ¿Tiene campo `rowId` (después de `id`)?
+- [ ] ¿Tiene campo `createdAt`?
+- [ ] ¿Tiene campo `updatedAt`?
+- [ ] ¿Tiene campo `deletedAt`?
+
+Si faltan campos obligatorios, incluirlos en el reporte de análisis y en la
+propuesta de YAML mejorado.
+
 ### 3. Analyze Each Field
 
 For each field in `aggregateProperties`, evaluate:
@@ -479,6 +546,15 @@ For each field in `aggregateProperties`, evaluate:
 Suggested description:
 
 > [Suggested description explaining purpose and role within bounded context]
+
+### Missing Mandatory Fields ❌ (if any)
+
+| Field     | Position          | Status  |
+| --------- | ----------------- | ------- |
+| rowId     | After id          | Missing |
+| createdAt | End of properties | Missing |
+| updatedAt | End of properties | Missing |
+| deletedAt | End of properties | Missing |
 
 ### Fields Without Description ❌
 
@@ -555,31 +631,36 @@ Generate the YAML with improvements applied so the user can compare.
 
 ### Varchar Length Standards (Byte-Optimized)
 
-**IMPORTANT: When defining varchar fields, ALWAYS use one of these standard lengths.**
+**IMPORTANT: When defining varchar fields, ALWAYS use one of these standard
+lengths.**
 
 These lengths are optimized for PostgreSQL byte storage efficiency:
 
-| Length | Use Case Examples                                      | Notes                                    |
-| ------ | ------------------------------------------------------ | ---------------------------------------- |
-| 1      | Single character flags, gender (M/F)                   | Minimum length                           |
-| 4      | Country codes (US, ES), file extensions                | ISO codes                                |
-| 8      | Short codes, abbreviations                             | Currency codes with margin               |
-| 16     | Short identifiers, codes                               | 2^4 bytes                                |
-| 36     | UUIDs in string format                                 | Standard UUID length (8-4-4-4-12)        |
-| 64     | Short names, usernames, slugs                          | 2^6 bytes                                |
-| 128    | Names, titles, email addresses                         | 2^7 bytes                                |
-| 255    | Standard text fields                                   | 2^8 - 1 (single byte length indicator)   |
-| 382    | Medium text, short descriptions                        | 1.5 × 255 (optimized for UTF-8)          |
-| 510    | Longer descriptions, addresses                         | 2 × 255                                  |
-| 1022   | Long text that needs indexing                          | ~4 × 255 (max recommended for indexes)   |
-| 2046   | URLs, very long text with length limit                 | Max practical URL length (~2048 limit)   |
+| Length | Use Case Examples                       | Notes                                  |
+| ------ | --------------------------------------- | -------------------------------------- |
+| 1      | Single character flags, gender (M/F)    | Minimum length                         |
+| 4      | Country codes (US, ES), file extensions | ISO codes                              |
+| 8      | Short codes, abbreviations              | Currency codes with margin             |
+| 16     | Short identifiers, codes                | 2^4 bytes                              |
+| 36     | UUIDs in string format                  | Standard UUID length (8-4-4-4-12)      |
+| 64     | Short names, usernames, slugs           | 2^6 bytes                              |
+| 128    | Names, titles, email addresses          | 2^7 bytes                              |
+| 255    | Standard text fields                    | 2^8 - 1 (single byte length indicator) |
+| 382    | Medium text, short descriptions         | 1.5 × 255 (optimized for UTF-8)        |
+| 510    | Longer descriptions, addresses          | 2 × 255                                |
+| 1022   | Long text that needs indexing           | ~4 × 255 (max recommended for indexes) |
+| 2046   | URLs, very long text with length limit  | Max practical URL length (~2048 limit) |
 
 **Why these specific lengths?**
 
-1. **Byte alignment**: PostgreSQL stores varchar with a length prefix. These values optimize storage blocks.
-2. **Index compatibility**: Lengths ≤ 2046 can be indexed efficiently in PostgreSQL.
-3. **UTF-8 consideration**: Lengths account for multi-byte characters (up to 4 bytes per char).
-4. **URL compatibility**: 2046 is just under the 2048 practical limit for URLs (IE/Edge limit, SEO sitemaps).
+1. **Byte alignment**: PostgreSQL stores varchar with a length prefix. These
+   values optimize storage blocks.
+2. **Index compatibility**: Lengths ≤ 2046 can be indexed efficiently in
+   PostgreSQL.
+3. **UTF-8 consideration**: Lengths account for multi-byte characters (up to 4
+   bytes per char).
+4. **URL compatibility**: 2046 is just under the 2048 practical limit for URLs
+   (IE/Edge limit, SEO sitemaps).
 
 **Selection guide:**
 
@@ -609,18 +690,18 @@ These lengths are optimized for PostgreSQL byte storage efficiency:
 
 **Quick reference for common fields:**
 
-| Field Type           | Recommended Length |
-| -------------------- | ------------------ |
-| UUID as string       | 36                 |
-| Username             | 64                 |
-| Email                | 128                |
-| Name/Title           | 128                |
-| Short description    | 255                |
-| Address line         | 255                |
-| Medium description   | 510                |
-| Long description     | 1022               |
-| URL/Link             | 2046               |
-| Extended text        | 2046               |
+| Field Type         | Recommended Length |
+| ------------------ | ------------------ |
+| UUID as string     | 36                 |
+| Username           | 64                 |
+| Email              | 128                |
+| Name/Title         | 128                |
+| Short description  | 255                |
+| Address line       | 255                |
+| Medium description | 510                |
+| Long description   | 1022               |
+| URL/Link           | 2046               |
+| Extended text      | 2046               |
 
 ### Numbers
 
@@ -700,12 +781,13 @@ These lengths are optimized for PostgreSQL byte storage efficiency:
   unsigned: true
   nullable: true
   description: >
-      Sort order for displaying records in user interfaces. Lower numbers
-      appear first. NULL indicates no specific order preference (alphabetical
+      Sort order for displaying records in user interfaces. Lower numbers appear
+      first. NULL indicates no specific order preference (alphabetical
       fallback). Used to prioritize items in selection lists and forms.
 ```
 
-**Note:** Always use `sort` instead of `displayOrder`, `order`, `position`, or `sortOrder`.
+**Note:** Always use `sort` instead of `displayOrder`, `order`, `position`, or
+`sortOrder`.
 
 ### Slugs and URLs
 
@@ -718,6 +800,36 @@ These lengths are optimized for PostgreSQL byte storage efficiency:
       URL-friendly identifier. Lowercase, hyphenated. Auto-generated from name
       if not provided. Example: "my-awesome-product"
 ```
+
+---
+
+## Index Names (63-char limit)
+
+PostgreSQL limits index names to **63 characters**. Aurora generates:
+`{boundedContext}_{module}_{fieldName}` (snake_case). If > 63 chars, Sequelize
+enters infinite loop.
+
+**Solution:** Add `indexName` with abbreviated name (< 63 chars):
+
+```yaml
+- name: administrativeAreaLevel1Id
+  type: id
+  index: index
+  indexName: bpp_partner_addr_admin_area_lvl1_id
+```
+
+**Abbreviation:** BC acronym + short module + short field
+
+| Bounded Context           | Abbrev |
+| ------------------------- | ------ |
+| `business-partner-portal` | `bpp`  |
+| `common`                  | `cmn`  |
+| `whatsapp`                | `wa`   |
+| `queue-manager`           | `qm`   |
+
+Words: `administrative` → `admin`, `address` → `addr`, `level` → `lvl`
+
+---
 
 ## Useful Commands
 
@@ -774,7 +886,8 @@ When making modifications, document them:
 
 ## TRACKING PROTOCOL
 
-Al finalizar tu ejecución (después de analizar o modificar YAMLs), DEBES invocar el skill `agent-logger`:
+Al finalizar tu ejecución (después de analizar o modificar YAMLs), DEBES invocar
+el skill `agent-logger`:
 
 ```
 useSkill('agent-logger', {
@@ -789,6 +902,7 @@ useSkill('agent-logger', {
 ```
 
 **Ejemplo para modo edición:**
+
 ```
 useSkill('agent-logger', {
   action: 'log',
@@ -802,6 +916,7 @@ useSkill('agent-logger', {
 ```
 
 **Ejemplo para modo análisis:**
+
 ```
 useSkill('agent-logger', {
   action: 'log',
@@ -815,10 +930,14 @@ useSkill('agent-logger', {
 ```
 
 **Qué incluir:**
+
 - **skillsUsed:** Normalmente `[]` (no consumes skills típicamente)
 - **subAgents:** Siempre `[]` (no coordinas otros agentes)
-- **filesModified:** Lista de archivos YAML que modificaste (modo edición) o `[]` (modo análisis)
-- **summary:** Resumen en una oración de lo que hiciste (campos creados/modificados/eliminados, o hallazgos del análisis)
+- **filesModified:** Lista de archivos YAML que modificaste (modo edición) o
+  `[]` (modo análisis)
+- **summary:** Resumen en una oración de lo que hiciste (campos
+  creados/modificados/eliminados, o hallazgos del análisis)
 - **status:** `'completed'` si todo salió bien, `'failed'` si hubo errores
 
-**IMPORTANTE:** Este paso es OBLIGATORIO al finalizar tu trabajo, antes de retornar control.
+**IMPORTANTE:** Este paso es OBLIGATORIO al finalizar tu trabajo, antes de
+retornar control.

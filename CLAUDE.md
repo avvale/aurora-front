@@ -135,8 +135,11 @@ standards.
 | Context                                                       | Read this file                                 |
 | ------------------------------------------------------------- | ---------------------------------------------- |
 | Angular decorators, pipes, DI, signals, standalone components | `.claude/skills/angular/SKILL.md`              |
+| Angular Material, CDK, custom form controls, theming          | `.claude/skills/angular-material/SKILL.md`     |
 | Tailwind CSS, styling, themes, dark mode, responsive design   | `.claude/skills/tailwind/SKILL.md`             |
 | Analyzing or editing \*.aurora.yaml files, schema validation  | `.claude/skills/aurora-schema/SKILL.md`        |
+| Project structure, folder organization, navigating codebase   | `.claude/skills/aurora-project-structure/SKILL.md` |
+| Sync Aurora YAML schemas with Google Sheets (push/pull)       | `.claude/skills/aurora-sheets-sync/SKILL.md`   |
 | Git commits, commit messages, conventional commits            | `.claude/skills/conventional-commits/SKILL.md` |
 | Commit and push changes (/commit command)                     | `.claude/skills/commit/SKILL.md`               |
 | Commit, push and create PR (/commit-pr command)               | `.claude/skills/commit-pr/SKILL.md`            |
