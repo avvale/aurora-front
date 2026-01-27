@@ -136,7 +136,8 @@ standards.
 | ------------------------------------------------------------- | -------------------------------------------------- |
 | Angular 19: signals, resource API, standalone, signal queries | `.claude/skills/angular-19/SKILL.md`               |
 | Angular Material 19: M3 theming, timepicker, 2D drag-drop     | `.claude/skills/angular-material-19/SKILL.md`      |
-| Tailwind CSS, styling, themes, dark mode, responsive design   | `.claude/skills/tailwind/SKILL.md`                 |
+| Tailwind 3: Aurora layout, Fuse theming, dark mode            | `.claude/skills/tailwind-3/SKILL.md`               |
+| Tailwind 4: CSS variables, cn(), dynamic styling              | `.claude/skills/tailwind-4/SKILL.md`               |
 | Analyzing or editing \*.aurora.yaml files, schema validation  | `.claude/skills/aurora-schema/SKILL.md`            |
 | Project structure, folder organization, navigating codebase   | `.claude/skills/aurora-project-structure/SKILL.md` |
 | Sync Aurora YAML schemas with Google Sheets (push/pull)       | `.claude/skills/aurora-sheets-sync/SKILL.md`       |
