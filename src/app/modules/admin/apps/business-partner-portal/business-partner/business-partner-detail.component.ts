@@ -43,10 +43,13 @@ import {
     GridStateService,
     log,
     mapActions,
+    phoneNumberFormat,
+    PhoneNumberFormatModule,
     SnackBarInvalidFormComponent,
     uuid,
     ViewDetailComponent,
 } from '@aurora';
+import { countryPrefixes } from '@public/data';
 import { lastValueFrom, Observable, takeUntil } from 'rxjs';
 
 @Component({
@@ -61,6 +64,7 @@ import { lastValueFrom, Observable, takeUntil } from 'rxjs';
         MatCheckboxModule,
         MatSelectModule,
         MatTabsModule,
+        PhoneNumberFormatModule,
     ],
 })
 @ActionScope('businessPartnerPortal::businessPartner.detail')
@@ -68,6 +72,7 @@ export class BusinessPartnerDetailComponent extends ViewDetailComponent {
     // ---- customizations ----
     businessPartnerPortalBusinessPartnerType =
         BusinessPartnerPortalBusinessPartnerType;
+    countryPrefixes = countryPrefixes;
 
     // Object retrieved from the database request,
     // it should only be used to obtain uninitialized
@@ -142,6 +147,13 @@ export class BusinessPartnerDetailComponent extends ViewDetailComponent {
         /**/
     }
 
+    handlePhoneNumberSanitized(
+        phoneNumber: string,
+        targetFormControlName: string,
+    ): void {
+        this.fg.get(targetFormControlName).setValue(phoneNumber);
+    }
+
     onSubmit($event): void {
         // we have two nested forms, we check that the submit comes from the button
         // that corresponds to the main form to the main form
@@ -193,8 +205,14 @@ export class BusinessPartnerDetailComponent extends ViewDetailComponent {
             tin: ['', [Validators.maxLength(64)]],
             email: ['', [Validators.maxLength(128)]],
             website: ['', [Validators.maxLength(1022)]],
-            phone: ['', [Validators.maxLength(64)]],
-            phoneCountryPrefix: ['', [Validators.maxLength(4)]],
+            phone: [
+                '',
+                [
+                    Validators.maxLength(64),
+                    phoneNumberFormat('phoneCountryPrefix'),
+                ],
+            ],
+            phoneCountryPrefix: ['ES', [Validators.maxLength(4)]],
             phoneSanitized: ['', [Validators.maxLength(64)]],
             isActive: [false, [Validators.required]],
         });
@@ -226,11 +244,23 @@ export class BusinessPartnerDetailComponent extends ViewDetailComponent {
             position: ['', [Validators.maxLength(128)]],
             department: ['', [Validators.maxLength(128)]],
             email: ['', [Validators.required, Validators.maxLength(128)]],
-            phone: ['', [Validators.maxLength(64)]],
-            phoneCountryPrefix: ['', [Validators.maxLength(4)]],
+            phone: [
+                '',
+                [
+                    Validators.maxLength(64),
+                    phoneNumberFormat('phoneCountryPrefix'),
+                ],
+            ],
+            phoneCountryPrefix: ['ES', [Validators.maxLength(4)]],
             phoneSanitized: ['', [Validators.maxLength(64)]],
-            mobile: ['', [Validators.maxLength(64)]],
-            mobileCountryPrefix: ['', [Validators.maxLength(4)]],
+            mobile: [
+                '',
+                [
+                    Validators.maxLength(64),
+                    phoneNumberFormat('mobileCountryPrefix'),
+                ],
+            ],
+            mobileCountryPrefix: ['ES', [Validators.maxLength(4)]],
             mobileSanitized: ['', [Validators.maxLength(64)]],
             isPrincipal: [false, [Validators.required]],
             isActive: [false, [Validators.required]],
@@ -268,6 +298,15 @@ export class BusinessPartnerDetailComponent extends ViewDetailComponent {
         });
 
         dialog.close();
+    }
+
+    handlePartnerContactPhoneNumberSanitized(
+        phoneNumber: string,
+        targetFormControlName: string,
+    ): void {
+        this.partnerContactDialogFg
+            .get(targetFormControlName)
+            .setValue(phoneNumber);
     }
     /* #endregion methods to manage PartnerContacts */
 

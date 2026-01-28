@@ -25,13 +25,6 @@ export const businessPartnerPortalNavigation: FuseNavigationItem = {
             link: '/business-partner-portal/partner-address',
         },
         {
-            id: 'partnerContacts',
-            title: 'PartnerContact',
-            type: 'basic',
-            icon: 'mat_outline:contact_page',
-            link: '/business-partner-portal/partner-contact',
-        },
-        {
             id: 'paymentModes',
             title: 'PaymentMode',
             type: 'basic',

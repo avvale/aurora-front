@@ -5,23 +5,24 @@
 Cuando el schema YAML tenga campos con este patrón:
 
 ```yaml
-- name: mobile
+- name: phone
   type: varchar
   maxLength: 64
   nullable: true
-- name: mobileCountryPrefix
+- name: phoneCountryPrefix
   type: varchar
   maxLength: 4
   nullable: true
-- name: mobileSanitized
+- name: phoneSanitized
   type: varchar
   maxLength: 64
   nullable: true
+  isDetailHidden: true
 ```
 
 O variantes como:
 
-- `phone`, `phoneCountryPrefix`, `phoneSanitized`
+- `mobile`, `mobileCountryPrefix`, `mobileSanitized`
 - `mobile1`, `mobile1CountryPrefix`, `mobile1Sanitized`
 - `whatsapp`, `whatsappCountryPrefix`, `whatsappSanitized`
 
@@ -36,20 +37,19 @@ O variantes como:
     appearance="outline"
     class="col-6 mobile-country-prefix-fix"
 >
-    <mat-label>{{ t('module.Mobile') }}</mat-label>
+    <mat-label>{{ t('module.Phone') }}</mat-label>
     <input
-        #mobileInput
+        #phoneInput
         matInput
-        formControlName="mobile"
+        formControlName="phone"
         maxlength="64"
     />
-    <mat-hint align="start">{{ t('module.MobileForWhatsapp') }}</mat-hint>
     <au-select-country-prefix
-        [phoneNumberInput]="mobileInput"
+        [phoneNumberInput]="phoneInput"
         matPrefix
-        formControlName="mobileCountryPrefix"
+        formControlName="phoneCountryPrefix"
         (phoneNumberSanitized)="
-            handlePhoneNumberSanitized($event, 'mobileSanitized')
+            handlePhoneNumberSanitized($event, 'phoneSanitized')
         "
     >
         @for (countryPrefix of countryPrefixes; track countryPrefix.prefix) {
@@ -63,7 +63,7 @@ O variantes como:
         }
     </au-select-country-prefix>
     <mat-error>
-        {{ (formErrors?.mobileCountryPrefix | async) || (formErrors?.mobile |
+        {{ (formErrors?.phoneCountryPrefix | async) || (formErrors?.phone |
         async) }}
     </mat-error>
 </mat-form-field>
@@ -73,9 +73,11 @@ O variantes como:
 
 ```typescript
 import {
-    SelectCountryPrefixComponent,
-    OptionCountryPrefixComponent,
-} from '@aurora/components/select-country-prefix';
+    // ... otros imports
+    phoneNumberFormat,
+    PhoneNumberFormatModule,
+} from '@aurora';
+import { countryPrefixes } from '@public/data';
 ```
 
 En el decorator `@Component`:
@@ -83,30 +85,88 @@ En el decorator `@Component`:
 ```typescript
 imports: [
     ...defaultDetailImports,
-    SelectCountryPrefixComponent,
-    OptionCountryPrefixComponent,
+    PhoneNumberFormatModule,
 ],
 ```
 
 ### Propiedades del Componente
 
 ```typescript
-// Lista de prefijos de país (cargar desde servicio o constante)
-countryPrefixes: CountryPrefix[] = [];
+// Lista de prefijos de país
+countryPrefixes = countryPrefixes;
 
 // Handler para el número sanitizado
-handlePhoneNumberSanitized(sanitizedNumber: string, fieldName: string): void {
-    this.fg.get(fieldName)?.setValue(sanitizedNumber);
+handlePhoneNumberSanitized(
+    phoneNumber: string,
+    targetFormControlName: string,
+): void {
+    this.fg.get(targetFormControlName).setValue(phoneNumber);
 }
 ```
 
-### Interfaz CountryPrefix
+### FormControl con Validador
 
 ```typescript
-interface CountryPrefix {
-    iso3166Alpha2: string; // Ej: 'ES', 'US', 'AR'
-    prefix: string; // Ej: '+34', '+1', '+54'
-    content: string; // Key de traducción del país
+createForm(): void {
+    this.fg = this.fb.group({
+        // ... otros campos
+        phone: [
+            '',
+            [Validators.maxLength(64), phoneNumberFormat('phoneCountryPrefix')],
+        ],
+        phoneCountryPrefix: ['ES', [Validators.maxLength(4)]], // Default: España
+        phoneSanitized: ['', [Validators.maxLength(64)]],
+    });
+}
+```
+
+---
+
+## Configuración de countryPrefixes
+
+Los prefijos de país se definen en `public/data/country-prefixes.ts`:
+
+```typescript
+import { CountryPrefixOption } from '@aurora';
+
+export const countryPrefixes: CountryPrefixOption[] = [
+    {
+        iso3166Alpha2: 'ES',
+        content: 'Spain',
+        prefix: '+34',
+        active: true,
+    },
+    {
+        iso3166Alpha2: 'PT',
+        content: 'Portugal',
+        prefix: '+351',
+        active: true,
+    },
+    {
+        iso3166Alpha2: 'AR',
+        content: 'Argentina',
+        prefix: '+54',
+        active: true,
+    },
+    // ... más países
+];
+```
+
+Y se exporta en `public/data/public-api.ts`:
+
+```typescript
+export * from './country-prefixes';
+```
+
+El path `@public/*` debe estar configurado en `tsconfig.json`:
+
+```json
+{
+    "compilerOptions": {
+        "paths": {
+            "@public/*": ["./../public/*"]
+        }
+    }
 }
 ```
 
@@ -119,16 +179,24 @@ interface CountryPrefix {
    (`isDetailHidden: true` en YAML).
 
 2. **Clase CSS `mobile-country-prefix-fix`**: Ajusta el ancho del prefijo en el
-   input.
+   input. Es necesaria para que el selector de país se vea correctamente.
 
-3. **Template reference `#mobileInput`**: Necesario para que el componente de
+3. **Template reference `#phoneInput`**: Necesario para que el componente de
    prefijo pueda leer/manipular el valor del input.
 
-4. **mat-hint**: Opcional, útil para indicar que el número se usa para WhatsApp
-   u otro propósito.
+4. **Validador `phoneNumberFormat`**: Valida que el número tenga formato
+   correcto según el país seleccionado. Recibe el nombre del campo de prefijo.
 
-5. **Ancho recomendado**: `col-6` para el campo completo (incluye el selector de
+5. **Valor default del prefijo**: Usar código ISO 3166-1 alpha-2 (ej: `'ES'`),
+   NO el prefijo numérico.
+
+6. **Ancho recomendado**: `col-6` para el campo completo (incluye el selector de
    prefijo).
+
+7. **mat-hint**: Opcional, útil para indicar que el número se usa para WhatsApp:
+    ```html
+    <mat-hint align="start">{{ t('module.MobileForWhatsapp') }}</mat-hint>
+    ```
 
 ---
 
@@ -208,3 +276,10 @@ interface CountryPrefix {
     </mat-error>
 </mat-form-field>
 ```
+
+---
+
+## Referencia: orion-front
+
+Ejemplo de implementación completa en:
+`/Users/carlos/Projects/orion/orion-front/src/app/modules/admin/apps/orion/contact/contact-detail-dialog.component.ts`

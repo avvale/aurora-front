@@ -230,38 +230,54 @@
                             </mat-form-field>
                             <mat-form-field
                                 appearance="outline"
-                                class="col-2"
-                            >
-                                <mat-label>
-                                    {{
-                                        t(
-                                            'businessPartnerPortal.PhoneCountryPrefix'
-                                        )
-                                    }}
-                                </mat-label>
-                                <input
-                                    matInput
-                                    formControlName="phoneCountryPrefix"
-                                    maxlength="4"
-                                />
-                                <mat-error>
-                                    {{ formErrors?.phoneCountryPrefix | async }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-3"
+                                class="col-5 mobile-country-prefix-fix"
                             >
                                 <mat-label>
                                     {{ t('businessPartnerPortal.Phone') }}
                                 </mat-label>
                                 <input
+                                    #phoneInput
                                     matInput
                                     formControlName="phone"
                                     maxlength="64"
                                 />
+                                <au-select-country-prefix
+                                    [phoneNumberInput]="phoneInput"
+                                    matPrefix
+                                    formControlName="phoneCountryPrefix"
+                                    (phoneNumberSanitized)="
+                                        handlePhoneNumberSanitized(
+                                            $event,
+                                            'phoneSanitized'
+                                        )
+                                    "
+                                >
+                                    @for (
+                                        countryPrefix of countryPrefixes;
+                                        track countryPrefix.prefix
+                                    ) {
+                                        <au-option-country-prefix
+                                            [iso3166Alpha2]="
+                                                countryPrefix.iso3166Alpha2
+                                            "
+                                            [prefix]="countryPrefix.prefix"
+                                        >
+                                            ({{ countryPrefix.prefix }})
+                                            {{
+                                                t(
+                                                    'CountryOptions.' +
+                                                        countryPrefix.content
+                                                )
+                                            }}
+                                        </au-option-country-prefix>
+                                    }
+                                </au-select-country-prefix>
                                 <mat-error>
-                                    {{ formErrors?.phone | async }}
+                                    {{
+                                        (formErrors?.phoneCountryPrefix
+                                            | async) ||
+                                            (formErrors?.phone | async)
+                                    }}
                                 </mat-error>
                             </mat-form-field>
                             <mat-form-field
@@ -504,30 +520,7 @@
                                                 </mat-form-field>
                                                 <mat-form-field
                                                     appearance="outline"
-                                                    class="col-2"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.PhoneCountryPrefix'
-                                                            )
-                                                        }}
-                                                    </mat-label>
-                                                    <input
-                                                        matInput
-                                                        formControlName="phoneCountryPrefix"
-                                                        maxlength="4"
-                                                    />
-                                                    <mat-error>
-                                                        {{
-                                                            formErrors?.phoneCountryPrefix
-                                                                | async
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-4"
+                                                    class="col-6 mobile-country-prefix-fix"
                                                 >
                                                     <mat-label>
                                                         {{
@@ -537,43 +530,60 @@
                                                         }}
                                                     </mat-label>
                                                     <input
+                                                        #partnerContactPhoneInput
                                                         matInput
                                                         formControlName="phone"
                                                         maxlength="64"
                                                     />
-                                                    <mat-error>
-                                                        {{
-                                                            formErrors?.phone
-                                                                | async
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-2"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.MobileCountryPrefix'
+                                                    <au-select-country-prefix
+                                                        [phoneNumberInput]="
+                                                            partnerContactPhoneInput
+                                                        "
+                                                        matPrefix
+                                                        formControlName="phoneCountryPrefix"
+                                                        (phoneNumberSanitized)="
+                                                            handlePartnerContactPhoneNumberSanitized(
+                                                                $event,
+                                                                'phoneSanitized'
                                                             )
-                                                        }}
-                                                    </mat-label>
-                                                    <input
-                                                        matInput
-                                                        formControlName="mobileCountryPrefix"
-                                                        maxlength="4"
-                                                    />
+                                                        "
+                                                    >
+                                                        @for (
+                                                            countryPrefix of countryPrefixes;
+                                                            track countryPrefix.prefix
+                                                        ) {
+                                                            <au-option-country-prefix
+                                                                [iso3166Alpha2]="
+                                                                    countryPrefix.iso3166Alpha2
+                                                                "
+                                                                [prefix]="
+                                                                    countryPrefix.prefix
+                                                                "
+                                                            >
+                                                                ({{
+                                                                    countryPrefix.prefix
+                                                                }})
+                                                                {{
+                                                                    t(
+                                                                        'CountryOptions.' +
+                                                                            countryPrefix.content
+                                                                    )
+                                                                }}
+                                                            </au-option-country-prefix>
+                                                        }
+                                                    </au-select-country-prefix>
                                                     <mat-error>
                                                         {{
-                                                            formErrors?.mobileCountryPrefix
-                                                                | async
+                                                            (formErrors?.phoneCountryPrefix
+                                                                | async) ||
+                                                                (formErrors?.phone
+                                                                    | async)
                                                         }}
                                                     </mat-error>
                                                 </mat-form-field>
                                                 <mat-form-field
                                                     appearance="outline"
-                                                    class="col-4"
+                                                    class="col-6 mobile-country-prefix-fix"
                                                 >
                                                     <mat-label>
                                                         {{
@@ -583,32 +593,59 @@
                                                         }}
                                                     </mat-label>
                                                     <input
+                                                        #partnerContactMobileInput
                                                         matInput
                                                         formControlName="mobile"
                                                         maxlength="64"
                                                     />
+                                                    <au-select-country-prefix
+                                                        [phoneNumberInput]="
+                                                            partnerContactMobileInput
+                                                        "
+                                                        matPrefix
+                                                        formControlName="mobileCountryPrefix"
+                                                        (phoneNumberSanitized)="
+                                                            handlePartnerContactPhoneNumberSanitized(
+                                                                $event,
+                                                                'mobileSanitized'
+                                                            )
+                                                        "
+                                                    >
+                                                        @for (
+                                                            countryPrefix of countryPrefixes;
+                                                            track countryPrefix.prefix
+                                                        ) {
+                                                            <au-option-country-prefix
+                                                                [iso3166Alpha2]="
+                                                                    countryPrefix.iso3166Alpha2
+                                                                "
+                                                                [prefix]="
+                                                                    countryPrefix.prefix
+                                                                "
+                                                            >
+                                                                ({{
+                                                                    countryPrefix.prefix
+                                                                }})
+                                                                {{
+                                                                    t(
+                                                                        'CountryOptions.' +
+                                                                            countryPrefix.content
+                                                                    )
+                                                                }}
+                                                            </au-option-country-prefix>
+                                                        }
+                                                    </au-select-country-prefix>
                                                     <mat-error>
                                                         {{
-                                                            formErrors?.mobile
-                                                                | async
+                                                            (formErrors?.mobileCountryPrefix
+                                                                | async) ||
+                                                                (formErrors?.mobile
+                                                                    | async)
                                                         }}
                                                     </mat-error>
                                                 </mat-form-field>
                                                 <div
-                                                    class="col-4 flex items-center pt-2"
-                                                >
-                                                    <mat-checkbox
-                                                        formControlName="isPrincipal"
-                                                    >
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.IsPrincipal'
-                                                            )
-                                                        }}
-                                                    </mat-checkbox>
-                                                </div>
-                                                <div
-                                                    class="col-4 flex items-center pt-2"
+                                                    class="col-4 col-start-1 flex items-center pt-2"
                                                 >
                                                     <mat-checkbox
                                                         formControlName="isActive"
@@ -629,6 +666,19 @@
                                                         {{
                                                             t(
                                                                 'businessPartnerPortal.IsUser'
+                                                            )
+                                                        }}
+                                                    </mat-checkbox>
+                                                </div>
+                                                <div
+                                                    class="col-4 flex items-center pt-2"
+                                                >
+                                                    <mat-checkbox
+                                                        formControlName="isPrincipal"
+                                                    >
+                                                        {{
+                                                            t(
+                                                                'businessPartnerPortal.IsPrincipal'
                                                             )
                                                         }}
                                                     </mat-checkbox>
