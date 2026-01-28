@@ -10,6 +10,24 @@ Usar este skill cuando:
 - Necesites saber qué componentes están disponibles para formularios
 - Quieras usar un componente específico de Aurora (no Material estándar)
 - Estés creando o mejorando formularios de detalle
+- Detectes patrones específicos en archivos YAML que requieran componentes
+  especiales
+
+---
+
+## Patrones por Contexto YAML
+
+Cuando detectes estos patrones en archivos `.aurora.yaml`, usa los componentes
+específicos documentados en la carpeta `examples/`.
+
+| Patrón YAML                                          | Componente                 | Documentación                             |
+| ---------------------------------------------------- | -------------------------- | ----------------------------------------- |
+| `phone` + `phoneCountryPrefix` + `phoneSanitized`    | `au-select-country-prefix` | [phone-field.md](examples/phone-field.md) |
+| `mobile` + `mobileCountryPrefix` + `mobileSanitized` | `au-select-country-prefix` | [phone-field.md](examples/phone-field.md) |
+| `*` + `*CountryPrefix` + `*Sanitized` (teléfonos)    | `au-select-country-prefix` | [phone-field.md](examples/phone-field.md) |
+
+> **IMPORTANTE**: Antes de implementar campos que coincidan con estos patrones,
+> LEE la documentación completa del ejemplo correspondiente.
 
 ---
 
@@ -144,9 +162,26 @@ import { DatepickerComponent } from '@aurora/components/datepicker';
 
 ---
 
-### phone-number-format
+### au-select-country-prefix
 
-Componente para números telefónicos internacionales con validación.
+Selector de prefijo de país para campos de teléfono. **RECOMENDADO** para campos
+con patrón `phone` + `phoneCountryPrefix` + `phoneSanitized`.
+
+```typescript
+import {
+    SelectCountryPrefixComponent,
+    OptionCountryPrefixComponent,
+} from '@aurora/components/select-country-prefix';
+```
+
+> 📖 **Ver documentación completa**:
+> [examples/phone-field.md](examples/phone-field.md)
+
+---
+
+### phone-number-format (legacy)
+
+Módulo alternativo para números telefónicos internacionales.
 
 ```typescript
 import { PhoneNumberFormatModule } from '@aurora/components/phone-number-format';
@@ -157,6 +192,8 @@ Incluye:
 - Componente de input con prefijo de país
 - Pipe `get-country-prefix`
 - Validadores de formato
+
+> ⚠️ Preferir `au-select-country-prefix` para nuevos desarrollos.
 
 ---
 
@@ -509,11 +546,21 @@ this.snackBar.openFromComponent(SnackBarInvalidFormComponent, {
 
 ## Resumen por Categoría
 
-| Categoría      | Componentes                                                  |
-| -------------- | ------------------------------------------------------------ |
-| **Inputs**     | file-upload, image-input, slug, version, datepicker, phone   |
-| **Grillas**    | grid-select-element, grid-select-multiple, grid-manager      |
-| **Archivos**   | attachments, file-preview, image-preview                     |
-| **Diálogos**   | dialog, template-dialog, date-range-selector                 |
-| **Visual**     | breadcrumb, chip, dot, kpi-card, split-button, chat-timeline |
-| **Utilidades** | validation-messages, snack-bar-invalid-form                  |
+| Categoría      | Componentes                                                                |
+| -------------- | -------------------------------------------------------------------------- |
+| **Inputs**     | file-upload, image-input, slug, version, datepicker, select-country-prefix |
+| **Grillas**    | grid-select-element, grid-select-multiple, grid-manager                    |
+| **Archivos**   | attachments, file-preview, image-preview                                   |
+| **Diálogos**   | dialog, template-dialog, date-range-selector                               |
+| **Visual**     | breadcrumb, chip, dot, kpi-card, split-button, chat-timeline               |
+| **Utilidades** | validation-messages, snack-bar-invalid-form                                |
+
+---
+
+## Ejemplos Detallados
+
+Para patrones complejos, consultar la carpeta `examples/`:
+
+| Archivo                                   | Descripción                                |
+| ----------------------------------------- | ------------------------------------------ |
+| [phone-field.md](examples/phone-field.md) | Campos de teléfono con selector de prefijo |
