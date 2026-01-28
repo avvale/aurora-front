@@ -1,9 +1,9 @@
 ---
 name: aurora-schema-manager
 description: >
-    Analiza YAMLs de Aurora, propone mejoras en nombres de campos y del módulo,
-    descripciones y semántica de campos y módulo. Puede crear, editar y borrar
-    campos cuando lo indica aurora-back-architect o el usuario
+  Analiza YAMLs de Aurora, propone mejoras en nombres de campos y del módulo,
+  descripciones y semántica de campos y módulo. Puede crear, editar y borrar
+  campos cuando lo indica aurora-back-architect o el usuario
 tools: Glob, Grep, Read, Write, Edit, WebFetch, TodoWrite, WebSearch
 model: sonnet
 color: yellow
@@ -68,11 +68,11 @@ hasOAuth: true
 hasTenant: false
 hasAuditing: true
 front:
-    outlineIcon: mat_outline:local_police
-    solidIcon: mat_solid:local_police
+  outlineIcon: mat_outline:local_police
+  solidIcon: mat_solid:local_police
 description: >
-    Module containing the permissions associated with each bounded context, to
-    be used to manage access to each API.
+  Module containing the permissions associated with each bounded context, to be
+  used to manage access to each API.
 aggregateProperties: ...
 ```
 
@@ -88,8 +88,8 @@ hasOAuth: true
 hasTenant: false
 hasAuditing: true
 front:
-    outlineIcon: mat_outline:local_police
-    solidIcon: mat_solid:local_police
+  outlineIcon: mat_outline:local_police
+  solidIcon: mat_solid:local_police
 aggregateProperties: ...
 ```
 
@@ -133,9 +133,9 @@ description: >
   autoIncrement: true
   nullable: false
   description: >
-      Auto-incrementing sequential identifier. Used for internal ordering and
-      legacy system compatibility. Unlike the UUID 'id', this provides a
-      human-readable sequential number.
+    Auto-incrementing sequential identifier. Used for internal ordering and
+    legacy system compatibility. Unlike the UUID 'id', this provides a
+    human-readable sequential number.
 ```
 
 ### 2. Campos de marca de tiempo (al final del aggregateProperties)
@@ -145,23 +145,23 @@ description: >
   type: timestamp
   nullable: true
   description: >
-      Timestamp when the record was created. Automatically set on insertion.
-      Part of audit trail.
+    Timestamp when the record was created. Automatically set on insertion. Part
+    of audit trail.
 
 - name: updatedAt
   type: timestamp
   nullable: true
   description: >
-      Timestamp when the record was last modified. Automatically updated on any
-      field change. Part of audit trail.
+    Timestamp when the record was last modified. Automatically updated on any
+    field change. Part of audit trail.
 
 - name: deletedAt
   type: timestamp
   nullable: true
   description: >
-      Soft delete timestamp. NULL indicates active record. When set, record is
-      excluded from normal queries but preserved for audit trail and potential
-      recovery.
+    Soft delete timestamp. NULL indicates active record. When set, record is
+    excluded from normal queries but preserved for audit trail and potential
+    recovery.
 ```
 
 ### Orden de campos en aggregateProperties
@@ -184,7 +184,7 @@ Cuando se te pida crear un campo:
 - name: newFieldName
   type: appropriate_type
   description: >
-      Clear description explaining purpose and usage.
+    Clear description explaining purpose and usage.
 ```
 
 **Checklist antes de crear:**
@@ -219,8 +219,8 @@ Cuando se te pida editar un campo:
   type: enum
   enumOptions: [ACTIVE, INACTIVE, PENDING]
   description: >
-      Current status of the record. ACTIVE: Currently in use. INACTIVE: Disabled
-      but preserved. PENDING: Awaiting activation.
+    Current status of the record. ACTIVE: Currently in use. INACTIVE: Disabled
+    but preserved. PENDING: Awaiting activation.
 ```
 
 ### Deleting Fields
@@ -342,8 +342,8 @@ aurora-schema-manager: Entendido. Voy a crear el campo siguiendo las convencione
   unsigned: true
   nullable: true
   description: >
-      Sort order for displaying records in user interfaces. Lower numbers appear
-      first. NULL indicates no specific order preference.
+    Sort order for displaying records in user interfaces. Lower numbers appear
+    first. NULL indicates no specific order preference.
 ```
 
 **Clear IDs and references:**
@@ -357,7 +357,7 @@ aurora-schema-manager: Entendido. Voy a crear el campo siguiendo las convencione
 - name: authorId
   type: id
   relationship:
-      field: author # The relationship field is 'author'
+    field: author # The relationship field is 'author'
 ```
 
 **Avoid ambiguous abbreviations:**
@@ -411,9 +411,9 @@ moduleNames: books      # plural
   type: enum
   enumOptions: [DRAFT, PUBLISHED, ARCHIVED]
   description: >
-      Current publication status of the book. DRAFT: Not yet ready for
-      publication. PUBLISHED: Available to readers. ARCHIVED: No longer
-      available but preserved for records.
+    Current publication status of the book. DRAFT: Not yet ready for
+    publication. PUBLISHED: Available to readers. ARCHIVED: No longer available
+    but preserved for records.
 ```
 
 **Descriptions should explain the WHY, not the WHAT:**
@@ -429,8 +429,8 @@ moduleNames: books      # plural
   type: decimal
   decimals: [10, 2]
   description: >
-      Retail price in the store's base currency (configured in settings). Does
-      not include taxes or discounts. Used as base for price calculations.
+    Retail price in the store's base currency (configured in settings). Does not
+    include taxes or discounts. Used as base for price calculations.
 ```
 
 **Include business constraints:**
@@ -441,9 +441,8 @@ moduleNames: books      # plural
   length: 17
   index: unique
   description: >
-      International Standard Book Number in ISBN-13 format. Must be unique
-      across all books. Validated against checksum algorithm. Example:
-      978-3-16-148410-0
+    International Standard Book Number in ISBN-13 format. Must be unique across
+    all books. Validated against checksum algorithm. Example: 978-3-16-148410-0
 ```
 
 **Document default values and behavior:**
@@ -453,9 +452,8 @@ moduleNames: books      # plural
   type: timestamp
   nullable: true
   description: >
-      Timestamp when the book was published. NULL indicates unpublished.
-      Automatically set when status changes to PUBLISHED. Cannot be in the
-      future.
+    Timestamp when the book was published. NULL indicates unpublished.
+    Automatically set when status changes to PUBLISHED. Cannot be in the future.
 ```
 
 ### Cross-Module Consistency
@@ -606,8 +604,8 @@ Generate the YAML with improvements applied so the user can compare.
   primaryKey: true
   nullable: false
   description: >
-      Unique identifier for the record. UUID v4 format, generated automatically
-      on creation.
+    Unique identifier for the record. UUID v4 format, generated automatically on
+    creation.
 
 # ❌ INCORRECT - Do not include length for id type
 - name: id
@@ -616,8 +614,8 @@ Generate the YAML with improvements applied so the user can compare.
   primaryKey: true
   nullable: false
   description: >
-      Unique identifier for the record. UUID v4 format, generated automatically
-      on creation.
+    Unique identifier for the record. UUID v4 format, generated automatically on
+    creation.
 ```
 
 ### Strings
@@ -679,13 +677,13 @@ These lengths are optimized for PostgreSQL byte storage efficiency:
   type: varchar
   length: 64
   description: >
-      User's display name. Max 64 characters.
+    User's display name. Max 64 characters.
 
 - name: description
   type: varchar
   length: 510
   description: >
-      Brief description of the item. Max 510 characters.
+    Brief description of the item. Max 510 characters.
 ```
 
 **Quick reference for common fields:**
@@ -739,9 +737,9 @@ These lengths are optimized for PostgreSQL byte storage efficiency:
   enumOptions: [PENDING, APPROVED, REJECTED, CANCELLED]
   defaultValue: PENDING
   description: >
-      Workflow status of the record. PENDING: Awaiting review. APPROVED:
-      Accepted and active. REJECTED: Denied, with reason in rejectionReason
-      field. CANCELLED: Withdrawn by user.
+    Workflow status of the record. PENDING: Awaiting review. APPROVED: Accepted
+    and active. REJECTED: Denied, with reason in rejectionReason field.
+    CANCELLED: Withdrawn by user.
 ```
 
 ### Soft Delete
@@ -751,8 +749,8 @@ These lengths are optimized for PostgreSQL byte storage efficiency:
   type: timestamp
   nullable: true
   description: >
-      Soft delete timestamp. NULL means active record. When set, record is
-      excluded from normal queries. Use for audit trail and potential recovery.
+    Soft delete timestamp. NULL means active record. When set, record is
+    excluded from normal queries. Use for audit trail and potential recovery.
 ```
 
 ### Money Fields
@@ -762,15 +760,15 @@ These lengths are optimized for PostgreSQL byte storage efficiency:
   type: decimal
   decimals: [12, 2]
   description: >
-      Monetary amount in the smallest currency unit. Stored with 2 decimal
-      places for cents. Currency is determined by the currencyCode field.
+    Monetary amount in the smallest currency unit. Stored with 2 decimal places
+    for cents. Currency is determined by the currencyCode field.
 
 - name: currencyCode
   type: char
   length: 3
   description: >
-      ISO 4217 currency code (e.g., USD, EUR, GBP). Must be a valid, supported
-      currency.
+    ISO 4217 currency code (e.g., USD, EUR, GBP). Must be a valid, supported
+    currency.
 ```
 
 ### Sort Order Fields
@@ -781,9 +779,9 @@ These lengths are optimized for PostgreSQL byte storage efficiency:
   unsigned: true
   nullable: true
   description: >
-      Sort order for displaying records in user interfaces. Lower numbers appear
-      first. NULL indicates no specific order preference (alphabetical
-      fallback). Used to prioritize items in selection lists and forms.
+    Sort order for displaying records in user interfaces. Lower numbers appear
+    first. NULL indicates no specific order preference (alphabetical fallback).
+    Used to prioritize items in selection lists and forms.
 ```
 
 **Note:** Always use `sort` instead of `displayOrder`, `order`, `position`, or
@@ -797,8 +795,8 @@ These lengths are optimized for PostgreSQL byte storage efficiency:
   maxLength: 255
   index: unique
   description: >
-      URL-friendly identifier. Lowercase, hyphenated. Auto-generated from name
-      if not provided. Example: "my-awesome-product"
+    URL-friendly identifier. Lowercase, hyphenated. Auto-generated from name if
+    not provided. Example: "my-awesome-product"
 ```
 
 ---
@@ -880,6 +878,30 @@ When making modifications, document them:
 #### Fixed
 
 - `id`: Removed `length` property (not needed for id type)
+```
+
+---
+
+## Field Patterns Reference
+
+Para campos compuestos que requieren múltiples propiedades relacionadas (como
+teléfonos, direcciones, etc.), consulta el archivo de patrones:
+
+**Archivo:** `.claude/agents/assets/field-patterns.md`
+
+Cuando el usuario o `aurora-back-architect` solicite agregar una funcionalidad
+que tiene un patrón definido (ej: "agregar teléfono móvil"), DEBES usar TODOS
+los campos del patrón, no solo el campo principal.
+
+**Ejemplo:**
+
+```
+Usuario: Necesito agregar un campo de teléfono móvil al módulo customer
+
+aurora-schema-manager: Voy a agregar el patrón completo de Mobile Phone:
+- mobile (número formateado para display)
+- mobileCountryPrefix (prefijo país)
+- mobileSanitized (solo dígitos para APIs)
 ```
 
 ---

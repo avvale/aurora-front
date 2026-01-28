@@ -143,6 +143,7 @@ standards.
 | Aurora custom components: file-upload, grid-select, dialogs   | `.claude/skills/aurora-components/SKILL.md`        |
 | Aurora development: components, forms, services, actions      | `.claude/skills/aurora-development/SKILL.md`       |
 | Aurora layout: grid system, sections, form patterns           | `.claude/skills/aurora-layout/SKILL.md`            |
+| Aurora UX: field ordering, form flow, user experience         | `.claude/skills/aurora-ux/SKILL.md`                |
 | Project structure, folder organization, navigating codebase   | `.claude/skills/aurora-project-structure/SKILL.md` |
 | Sync Aurora YAML schemas with Google Sheets (push/pull)       | `.claude/skills/aurora-sheets-sync/SKILL.md`       |
 | Git commits, commit messages, conventional commits            | `.claude/skills/conventional-commits/SKILL.md`     |

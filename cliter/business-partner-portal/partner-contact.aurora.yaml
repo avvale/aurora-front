@@ -75,15 +75,31 @@ aggregateProperties:
     type: varchar
     maxLength: 64
     nullable: true
-    description: |
-      Direct phone number for the contact person. Should include extension if applicable (e.g., "+1-555-0100 ext. 123"). NULL indicates no direct phone available. Used for urgent communications or when email is not suitable. Format is not strictly validated to allow for various international formats and extensions.
+  - name: phoneCountryPrefix
+    type: varchar
+    maxLength: 4
+    nullable: true
+  - name: phoneSanitized
+    type: varchar
+    maxLength: 64
+    nullable: true
+    webComponent:
+      isDetailHidden: true
   - name: mobile
     type: varchar
     maxLength: 64
     nullable: true
-    description: |
-      Mobile phone number for the contact person. Should include country code for international contacts (e.g., "+1-555-0100"). NULL indicates no mobile number on record. Used for urgent communications, SMS notifications, or when contact is not at their desk. Particularly useful for field representatives or executives.
-  - name: isPrimary
+  - name: mobileCountryPrefix
+    type: varchar
+    maxLength: 4
+    nullable: true
+  - name: mobileSanitized
+    type: varchar
+    maxLength: 64
+    nullable: true
+    webComponent:
+      isDetailHidden: true
+  - name: isPrincipal
     type: boolean
     nullable: false
     defaultValue: false
