@@ -11,11 +11,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner-detail.component.html",
-            "integrity": "sha1:7d29e1343e2e4cb47982a6c49d0daf5d7f8e5c3a"
+            "integrity": "sha1:78a01f6b20eb753847ff2439d690859cff12885d"
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner-detail.component.ts",
-            "integrity": "sha1:b8a4d0fc0305fd154f795c5f799bba8c2065e2ae"
+            "integrity": "sha1:75cff7e9ac3df6a7c27737c8093aaa7a7a9b7114"
         },
         {
             "path": "src/app/modules/admin/apps/business-partner-portal/business-partner/business-partner-list.component.html",

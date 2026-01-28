@@ -207,6 +207,22 @@
                     </mat-form-field>
                     <mat-form-field
                         appearance="outline"
+                        class="col-2"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.PhoneCountryPrefix') }}
+                        </mat-label>
+                        <input
+                            matInput
+                            formControlName="phoneCountryPrefix"
+                            maxlength="4"
+                        />
+                        <mat-error>
+                            {{ formErrors?.phoneCountryPrefix | async }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
                         class="col-8"
                     >
                         <mat-label>
@@ -219,9 +235,25 @@
                         />
                         <mat-error>{{ formErrors?.mobile | async }}</mat-error>
                     </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
+                        class="col-2"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.MobileCountryPrefix') }}
+                        </mat-label>
+                        <input
+                            matInput
+                            formControlName="mobileCountryPrefix"
+                            maxlength="4"
+                        />
+                        <mat-error>
+                            {{ formErrors?.mobileCountryPrefix | async }}
+                        </mat-error>
+                    </mat-form-field>
                     <div class="col-4 pt-5">
-                        <mat-checkbox formControlName="isPrimary">
-                            {{ t('businessPartnerPortal.IsPrimary') }}
+                        <mat-checkbox formControlName="isPrincipal">
+                            {{ t('businessPartnerPortal.IsPrincipal') }}
                         </mat-checkbox>
                     </div>
                     <div class="col-4 pt-5">

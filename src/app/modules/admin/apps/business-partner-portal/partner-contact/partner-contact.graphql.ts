@@ -29,8 +29,12 @@ export const fields = `
     department
     email
     phone
+    phoneCountryPrefix
+    phoneSanitized
     mobile
-    isPrimary
+    mobileCountryPrefix
+    mobileSanitized
+    isPrincipal
     isActive
     isUser
     userId

@@ -227,6 +227,20 @@
                     </mat-form-field>
                     <mat-form-field
                         appearance="outline"
+                        class="col-8"
+                    >
+                        <mat-label>
+                            {{ t('businessPartnerPortal.Phone') }}
+                        </mat-label>
+                        <input
+                            matInput
+                            formControlName="phone"
+                            maxlength="64"
+                        />
+                        <mat-error>{{ formErrors?.phone | async }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                        appearance="outline"
                         class="col-2"
                     >
                         <mat-label>
@@ -241,21 +255,7 @@
                             {{ formErrors?.phoneCountryPrefix | async }}
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field
-                        appearance="outline"
-                        class="col-4"
-                    >
-                        <mat-label>
-                            {{ t('businessPartnerPortal.Phone') }}
-                        </mat-label>
-                        <input
-                            matInput
-                            formControlName="phone"
-                            maxlength="64"
-                        />
-                        <mat-error>{{ formErrors?.phone | async }}</mat-error>
-                    </mat-form-field>
-                    <div class="col-3 flex items-center pt-2">
+                    <div class="col-4 pt-5">
                         <mat-checkbox formControlName="isActive">
                             {{ t('businessPartnerPortal.IsActive') }}
                         </mat-checkbox>
@@ -431,7 +431,126 @@
                                         </mat-form-field>
                                         <mat-form-field
                                             appearance="outline"
-                                            class="col-3"
+                                            class="col-8"
+                                        >
+                                            <mat-label>
+                                                {{
+                                                    t(
+                                                        'businessPartnerPortal.Phone'
+                                                    )
+                                                }}
+                                            </mat-label>
+                                            <input
+                                                matInput
+                                                formControlName="phone"
+                                                maxlength="64"
+                                            />
+                                            <mat-error>
+                                                {{ formErrors?.phone | async }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field
+                                            appearance="outline"
+                                            class="col-2"
+                                        >
+                                            <mat-label>
+                                                {{
+                                                    t(
+                                                        'businessPartnerPortal.PhoneCountryPrefix'
+                                                    )
+                                                }}
+                                            </mat-label>
+                                            <input
+                                                matInput
+                                                formControlName="phoneCountryPrefix"
+                                                maxlength="4"
+                                            />
+                                            <mat-error>
+                                                {{
+                                                    formErrors?.phoneCountryPrefix
+                                                        | async
+                                                }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field
+                                            appearance="outline"
+                                            class="col-8"
+                                        >
+                                            <mat-label>
+                                                {{
+                                                    t(
+                                                        'businessPartnerPortal.Mobile'
+                                                    )
+                                                }}
+                                            </mat-label>
+                                            <input
+                                                matInput
+                                                formControlName="mobile"
+                                                maxlength="64"
+                                            />
+                                            <mat-error>
+                                                {{ formErrors?.mobile | async }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field
+                                            appearance="outline"
+                                            class="col-2"
+                                        >
+                                            <mat-label>
+                                                {{
+                                                    t(
+                                                        'businessPartnerPortal.MobileCountryPrefix'
+                                                    )
+                                                }}
+                                            </mat-label>
+                                            <input
+                                                matInput
+                                                formControlName="mobileCountryPrefix"
+                                                maxlength="4"
+                                            />
+                                            <mat-error>
+                                                {{
+                                                    formErrors?.mobileCountryPrefix
+                                                        | async
+                                                }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <div class="col-4 pt-5">
+                                            <mat-checkbox
+                                                formControlName="isPrincipal"
+                                            >
+                                                {{
+                                                    t(
+                                                        'businessPartnerPortal.IsPrincipal'
+                                                    )
+                                                }}
+                                            </mat-checkbox>
+                                        </div>
+                                        <div class="col-4 pt-5">
+                                            <mat-checkbox
+                                                formControlName="isActive"
+                                            >
+                                                {{
+                                                    t(
+                                                        'businessPartnerPortal.IsActive'
+                                                    )
+                                                }}
+                                            </mat-checkbox>
+                                        </div>
+                                        <div class="col-4 pt-5">
+                                            <mat-checkbox
+                                                formControlName="isUser"
+                                            >
+                                                {{
+                                                    t(
+                                                        'businessPartnerPortal.IsUser'
+                                                    )
+                                                }}
+                                            </mat-checkbox>
+                                        </div>
+                                        <mat-form-field
+                                            appearance="outline"
+                                            class="col-2"
                                         >
                                             <mat-label>
                                                 {{
@@ -452,85 +571,6 @@
                                                 }}
                                             </mat-error>
                                         </mat-form-field>
-                                        <div
-                                            class="col-3 flex items-center pt-2"
-                                        >
-                                            <mat-checkbox
-                                                formControlName="isPrimary"
-                                            >
-                                                {{
-                                                    t(
-                                                        'businessPartnerPortal.IsPrimary'
-                                                    )
-                                                }}
-                                            </mat-checkbox>
-                                        </div>
-                                        <mat-form-field
-                                            appearance="outline"
-                                            class="col-6"
-                                        >
-                                            <mat-label>
-                                                {{
-                                                    t(
-                                                        'businessPartnerPortal.Phone'
-                                                    )
-                                                }}
-                                            </mat-label>
-                                            <input
-                                                matInput
-                                                formControlName="phone"
-                                                maxlength="64"
-                                            />
-                                            <mat-error>
-                                                {{ formErrors?.phone | async }}
-                                            </mat-error>
-                                        </mat-form-field>
-                                        <mat-form-field
-                                            appearance="outline"
-                                            class="col-6"
-                                        >
-                                            <mat-label>
-                                                {{
-                                                    t(
-                                                        'businessPartnerPortal.Mobile'
-                                                    )
-                                                }}
-                                            </mat-label>
-                                            <input
-                                                matInput
-                                                formControlName="mobile"
-                                                maxlength="64"
-                                            />
-                                            <mat-error>
-                                                {{ formErrors?.mobile | async }}
-                                            </mat-error>
-                                        </mat-form-field>
-                                        <div
-                                            class="col-4 flex items-center pt-2"
-                                        >
-                                            <mat-checkbox
-                                                formControlName="isActive"
-                                            >
-                                                {{
-                                                    t(
-                                                        'businessPartnerPortal.IsActive'
-                                                    )
-                                                }}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div
-                                            class="col-4 flex items-center pt-2"
-                                        >
-                                            <mat-checkbox
-                                                formControlName="isUser"
-                                            >
-                                                {{
-                                                    t(
-                                                        'businessPartnerPortal.IsUser'
-                                                    )
-                                                }}
-                                            </mat-checkbox>
-                                        </div>
                                         <mat-form-field
                                             appearance="outline"
                                             class="col-12"
