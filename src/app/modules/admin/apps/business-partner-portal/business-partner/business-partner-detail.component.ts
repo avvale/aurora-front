@@ -14,6 +14,7 @@ import {
 import { FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 import {
     BusinessPartnerPortalBusinessPartner,
     BusinessPartnerPortalBusinessPartnerType,
@@ -59,6 +60,7 @@ import { lastValueFrom, Observable, takeUntil } from 'rxjs';
         KeyValuePipe,
         MatCheckboxModule,
         MatSelectModule,
+        MatTabsModule,
     ],
 })
 @ActionScope('businessPartnerPortal::businessPartner.detail')
