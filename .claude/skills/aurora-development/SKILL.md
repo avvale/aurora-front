@@ -892,6 +892,9 @@ export const countryEditResolver: ResolveFn<CommonCountry> = (
 - Don't forget to call `Utils.uuid()` for new entities
 - Don't use `@ViewChild` decorators (use `viewChild()` signal)
 - Don't subscribe without cleanup (use `takeUntil`)
+- Don't use `subscribe()` in methods that can be called multiple times — use
+  `lastValueFrom()` instead (memory leak: each call creates a subscription that
+  lives until component destroy)
 - Don't use raw `grid-cols-*` in forms (use `col-*`)
 - Don't modify generated files (marked in lock files)
 
