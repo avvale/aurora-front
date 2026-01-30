@@ -1,16 +1,18 @@
 ---
 name: aurora-origin-merge
 description: >
-  Handles .origin.ts file merges after Aurora CLI regeneration in front-end
-  projects. Provides step-by-step workflow to surgically merge new schema code
-  into Angular files with custom modifications, preserving all business logic.
-  Trigger: After aurora load front module creates .origin files, or when merging
-  regenerated code with custom modifications.
+    Handles .origin.ts file merges after Aurora CLI regeneration in front-end
+    projects. Provides step-by-step workflow to surgically merge new schema code
+    into Angular files with custom modifications, preserving all business logic.
+    Trigger: After aurora load front module creates .origin files, or when
+    merging regenerated code with custom modifications.
 license: MIT
 metadata:
-  author: aurora
-  version: '1.0'
-  auto_invoke: 'origin file merge, .origin.ts, merge after regeneration, load front module'
+    author: aurora
+    version: '1.1'
+    auto_invoke:
+        'origin file merge, .origin.ts, merge after regeneration, load front
+        module'
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, Task
 ---
 
@@ -76,30 +78,46 @@ bat path/to/file.ts
 bat path/to/file.origin.ts
 ```
 
-### Step 3: Identify the Delta
+### Step 3: Cross-reference with YAML Delta (MANDATORY)
 
-Compare to find ONLY what's NEW in `.origin` due to schema changes:
+**You MUST have completed Step 0 before this step.** Use the YAML delta to
+classify every difference between .origin and custom file:
 
-- **New imports** (new types, services, modules)
-- **New form controls** in `createForm()` method
-- **New fields** in GraphQL `fields` template literal
-- **New relation queries** in `relationsFields`
-- **New column definitions** in columns-config
-- **New service injections** in constructor
-- **New observable declarations** in class properties
-- **New resolver data** in resolver return types
-- **New query parameters** in `getRelations` or `findByIdWithRelations`
+- **Field in .origin but NOT in custom** → Check YAML diff:
+    - Field is NEW in YAML → **ADD it** (copy implementation from .origin)
+    - Field is NOT new in YAML → Developer intentionally removed it → **SKIP**
+- **Field in custom but NOT in .origin** → Custom addition → **PRESERVE**
+- **Field in BOTH but different** → Custom modification → **PRESERVE custom
+  version** (but check if YAML changed its type/validators)
 
-### Step 4: Merge Surgically
+### Step 4: Merge Using .origin as Implementation Guide
 
-**GOLDEN RULE: Copy ONLY new schema code from .origin -> existing file. NEVER
-overwrite custom logic.**
+**GOLDEN RULE: The .origin shows HOW Aurora implements each field. Copy that
+pattern into the custom file, respecting all custom code.**
 
-Apply changes in this order:
+For each NEW field (from YAML diff):
 
-1. Add new imports (alphabetical order)
-2. Add new fields/parameters in the correct position
-3. Preserve ALL custom code untouched
+1. Look at how .origin implements it (imports, form control, template, etc.)
+2. Replicate that implementation in the custom file
+3. Respect custom code: disabled states, validators, layout classes, custom
+   logic
+
+For each DELETED field (from YAML diff):
+
+1. Remove all traces from the custom file (imports, form control, template,
+   column config, resolver type, GraphQL field)
+
+Apply in this order:
+
+1. Add/remove imports (alphabetical order)
+2. Add/remove service injections in constructor
+3. Add/remove observable properties and `init()` assignments
+4. Add/remove form controls in `createForm()`
+5. Add/remove template elements in .html
+6. Add/remove column entries in columns-config
+7. Add/remove GraphQL fields and relation queries
+8. Add/remove resolver return types and imports
+9. Preserve ALL custom code untouched
 
 ### Step 5: Delete the .origin File
 
@@ -420,26 +438,126 @@ existing file.
 
 ---
 
-## Detecting Intentional Removals vs Missing Fields
+## MANDATORY Step 0: Detect YAML Schema Delta via Git (CRITICAL)
 
-When the custom file is MISSING something that the `.origin` has, determine:
+**Before touching ANY `.origin` file, you MUST determine what changed in the
+YAML schema.** This tells you exactly what to merge and — equally important —
+what NOT to merge (fields intentionally removed from certain files by the
+developer).
+
+### Detect Developer Workflow
+
+Developers follow one of two workflows:
+
+- **Flujo A:** Edit YAML → regenerate → commit (YAML not yet committed)
+- **Flujo B:** Edit YAML → commit → regenerate (YAML already committed)
+
+```bash
+# Check if YAML has uncommitted changes
+git diff HEAD -- cliter/<bc>/<module>.aurora.yaml
+```
+
+- **If diff exists** → Flujo A → `HEAD` has the old version
+- **If no diff** → Flujo B → `HEAD` already has the new version
+
+### Get the Previous YAML Version
+
+```bash
+# Flujo A: YAML not committed yet — HEAD has the old version
+git show HEAD:cliter/<bc>/<module>.aurora.yaml > /tmp/old-schema.yaml
+
+# Flujo B: YAML already committed — get the commit before the latest change
+PREV_COMMIT=$(git log -2 --format="%H" -- cliter/<bc>/<module>.aurora.yaml | tail -1)
+git show $PREV_COMMIT:cliter/<bc>/<module>.aurora.yaml > /tmp/old-schema.yaml
+```
+
+### Compare Old vs Current YAML
+
+```bash
+diff /tmp/old-schema.yaml cliter/<bc>/<module>.aurora.yaml
+```
+
+### Build Three Lists from the Delta
+
+1. **NEW fields** (`+  - name: fieldName`) → Must be ADDED to all files
+2. **MODIFIED fields** (changed type, nullable, validators) → Must be UPDATED
+3. **DELETED fields** (`-  - name: fieldName`) → Must be REMOVED from all files
+
+### WHY This Matters
+
+Without the YAML delta, you cannot distinguish between:
+
+- A field that is **new** (must be merged from `.origin`)
+- A field that was **intentionally removed** from a specific file by the
+  developer (e.g., `code` removed from the creation form because it's
+  auto-generated by a database trigger, or a relation removed from GraphQL
+  `fields` because it's not needed in the list view)
+
+**RULE: If a field exists in `.origin` but NOT in the existing file, and the
+YAML delta does NOT show that field as new → it was intentionally removed. Do
+NOT re-add it.**
+
+---
+
+## How to Merge: The .origin Is Your Implementation Guide
+
+The `.origin` file shows **exactly how Aurora would implement** the new/modified
+fields. Use it as a reference for the implementation pattern, then replicate
+that pattern into the custom file.
 
 ```
-Field exists in .origin but NOT in custom file?
+For each NEW field from YAML diff:
     |
-    Was it in the PREVIOUS .origin / generated version?
+    1. Find how .origin implements it (imports, form controls, template, etc.)
+    2. Copy that implementation into the custom file
+    3. Respect all custom code (disabled fields, validators, layout, logic)
+
+For each DELETED field from YAML diff:
     |
-    YES -> Developer INTENTIONALLY removed it. Do NOT re-add.
+    1. Find and REMOVE the field's implementation from the custom file
+    2. Remove: imports, form controls, template elements, column configs,
+       resolver types, GraphQL fields, i18n keys, service references
+
+For fields in .origin but NOT new/modified/deleted in YAML:
     |
-    NO  -> It's a NEW field from schema change. ADD it.
+    These are fields that existed BEFORE the schema change.
+    If the custom file doesn't have them → developer intentionally removed them.
+    Do NOT re-add.
 ```
 
-**How to tell:** If the field name matches something in the YAML that was
-recently added (check git log for `.aurora.yaml` changes), it's new. If it's an
-existing field that the custom file deliberately omitted, don't re-add it.
+### Propagation checklist for a NEW field
 
-**When in doubt:** Ask the developer before re-adding a field that exists in
-`.origin` but not in the custom file.
+When a new field is added to the YAML, it MUST be propagated to ALL of these
+(check the `.origin` to see how Aurora implements each one):
+
+- [ ] **GraphQL** (`fields` template, `relationsFields` if relationship, query
+      variable params)
+- [ ] **Resolvers** (imports, `ResolveFn<{}>` return types)
+- [ ] **Component .ts** (imports, service injection, observable property, form
+      control in `createForm()`, observable assignment in `init()`)
+- [ ] **Component .html** (mat-form-field with mat-select/input/datepicker)
+- [ ] **Columns config** (new column entry with appropriate type)
+- [ ] **i18n** (en.json and es.json translation keys)
+
+**CRITICAL: If you add a field to ONE file, you MUST add it to ALL files. A
+partial merge causes runtime errors.**
+
+### Propagation checklist for a DELETED field
+
+- [ ] Remove from GraphQL `fields` and `relationsFields`
+- [ ] Remove relation query params from GraphQL queries
+- [ ] Remove import and return type from resolvers
+- [ ] Remove import, service, observable, form control from component .ts
+- [ ] Remove mat-form-field from component .html
+- [ ] Remove column entry from columns config
+- [ ] Remove i18n keys (optional, harmless to leave)
+
+### When in doubt
+
+**NEVER assume a field was intentionally removed without checking the YAML delta
+first.** If the diff shows the field is new → ADD it. If the diff doesn't
+mention the field → it was intentionally removed by the developer. If you can't
+determine from the diff, ASK the developer.
 
 ---
 
@@ -456,6 +574,25 @@ existing field that the custom file deliberately omitted, don't re-add it.
 2. Insert those controls into YOUR customized `createForm()`
 3. Keep your disabled states and custom validators intact
 
+### Scenario: Field exists in .origin but NOT in existing file
+
+**This is the most dangerous case in front-end merges.** Before adding anything,
+check the YAML delta from Step 0:
+
+- **Field IS in the YAML delta (new)** → Merge it from `.origin`
+- **Field is NOT in the YAML delta (existed before)** → It was intentionally
+  removed. **DO NOT add it.**
+
+**Real-world examples from this project:**
+
+- `code` and `year` are in the YAML but removed from the creation form's
+  `onSubmit()` via `this.fg.removeControl('code')` because they are
+  auto-generated by a database trigger
+- `productionCenter` relation is in the YAML but removed from certain GraphQL
+  `fields` exports because it's not needed in list views
+- Relationship fields may be absent from resolver return types because the
+  developer only loads specific relations via custom `constraint.include`
+
 ### Scenario: Multiple .origin files from one regeneration
 
 Process them ALL. Order doesn't matter since each .origin corresponds to exactly
@@ -469,8 +606,8 @@ one existing file. Recommended processing order:
 
 ### Scenario: .origin file for a file you don't recognize
 
-Read both files. If the existing file has no meaningful custom code (just a stale
-hash), you can safely replace it entirely with the .origin content.
+Read both files. If the existing file has no meaningful custom code (just a
+stale hash), you can safely replace it entirely with the .origin content.
 
 ---
 
@@ -491,17 +628,19 @@ After merging ALL .origin files:
 
 ## Common Mistakes
 
-| Mistake | Consequence | Prevention |
-| --- | --- | --- |
-| Replacing existing file with .origin entirely | Custom code LOST | Always compare first |
-| Re-adding intentionally removed fields/relations | Unnecessary data fetching, broken UX | Check if field was deliberately removed |
-| Forgetting to add new import | TypeScript compilation error | Check .origin imports section |
-| Wrong field order in `createForm()` | Form layout mismatch with template | Match YAML field order |
-| Leaving .origin files in codebase | Confuses future regenerations | Always delete after merge |
-| Missing field in GraphQL but added in component | Runtime null errors | Update GraphQL first, then component |
-| Forgetting i18n keys for new fields | UI shows raw translation keys | Add to en.json and es.json |
-| Not running Prettier after merge | Inconsistent formatting | Run prettier on modified files |
-| Answering `n` to origin files prompt | .origin files not created, can't merge | Always answer `Y` |
+| Mistake                                                    | Consequence                                                     | Prevention                                           |
+| ---------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------- |
+| Skipping YAML delta detection (Step 0)                     | Re-adding intentionally removed fields                          | ALWAYS diff YAML via git before merging              |
+| Adding a field from .origin that was intentionally removed | Breaks custom logic (e.g., `removeControl('code')` in onSubmit) | Check YAML delta — if field is NOT new, don't add it |
+| Replacing existing file with .origin entirely              | Custom code LOST                                                | Always compare first                                 |
+| Re-adding intentionally removed fields/relations           | Unnecessary data fetching, broken UX                            | Check if field was deliberately removed              |
+| Forgetting to add new import                               | TypeScript compilation error                                    | Check .origin imports section                        |
+| Wrong field order in `createForm()`                        | Form layout mismatch with template                              | Match YAML field order                               |
+| Leaving .origin files in codebase                          | Confuses future regenerations                                   | Always delete after merge                            |
+| Missing field in GraphQL but added in component            | Runtime null errors                                             | Update GraphQL first, then component                 |
+| Forgetting i18n keys for new fields                        | UI shows raw translation keys                                   | Add to en.json and es.json                           |
+| Not running Prettier after merge                           | Inconsistent formatting                                         | Run prettier on modified files                       |
+| Answering `n` to origin files prompt                       | .origin files not created, can't merge                          | Always answer `Y`                                    |
 
 ---
 
@@ -557,10 +696,10 @@ Does the existing file have custom logic?
 
 ## Related Skills
 
-| Skill | When to Use Together |
-| --- | --- |
-| `aurora-cli` | Triggers regeneration that creates .origin files |
-| `aurora-development` | Understand component patterns and editable zones |
-| `aurora-schema` | Understanding YAML field order for parameter positioning |
-| `prettier` | Format files after merge |
-| `conventional-commits` | Commit after successful merge |
+| Skill                  | When to Use Together                                     |
+| ---------------------- | -------------------------------------------------------- |
+| `aurora-cli`           | Triggers regeneration that creates .origin files         |
+| `aurora-development`   | Understand component patterns and editable zones         |
+| `aurora-schema`        | Understanding YAML field order for parameter positioning |
+| `prettier`             | Format files after merge                                 |
+| `conventional-commits` | Commit after successful merge                            |

@@ -46,6 +46,35 @@ Aurora tracks file modifications via hash. Files with custom changes are
 - With `-f`: All files are overwritten (use with caution)
 - With `-w`: Only interfaces are overwritten
 
+### CRITICAL: Handling `.origin` files after regeneration
+
+When Aurora detects that a file was manually modified (different hash), it
+creates `.origin.ts` (and `.origin.html`) files instead of overwriting. The CLI
+asks: `Do you want to manage origin files? (Y/n)`.
+
+**Non-interactive execution (from Claude Code or scripts):**
+
+The CLI enters an interactive arrow-key menu that cannot be automated with
+pipes. Use `expect` to answer `Y` and then `Ctrl+C` to exit the menu, preserving
+the `.origin` files on disk:
+
+```bash
+expect -c '
+spawn aurora load front module -n=<bc>/<module> -fw
+expect "Do you want to manage origin files?"
+send "Y\r"
+expect "Select file to manage"
+send "\x03"
+expect eof
+'
+```
+
+**IMPORTANT:** Do NOT answer `n` — that **deletes** all `.origin` files.
+
+**After the CLI finishes, invoke the `aurora-origin-merge` skill** to handle all
+`.origin` files. That skill contains the complete merge workflow, rules by file
+type, and conflict resolution.
+
 ---
 
 ## Execution Flow
@@ -122,6 +151,11 @@ Summary:
 > **IMPORTANT:** If `.origin.ts` files are created after regeneration, you MUST
 > invoke the `aurora-origin-merge` skill to merge the schema delta into the
 > existing files. Run `fd ".origin.ts"` to check.
+>
+> **Before invoking the merge skill**, run
+> `git diff HEAD -- cliter/<bc>/<module>.aurora.yaml` to identify NEW, MODIFIED,
+> and DELETED fields. The merge skill's Step 0 requires this YAML diff to
+> distinguish schema changes from intentional custom removals.
 
 ---
 
@@ -241,9 +275,13 @@ aurora load front module -n=common/country
 # 3. If you need to update interfaces too
 aurora load front module -n=common/country -w
 
-# 4. Check for .origin files and merge them
+# 4. Check YAML diff to know what changed
+git diff HEAD -- cliter/<bc>/<module>.aurora.yaml
+
+# 5. Check for .origin files and merge them
 fd ".origin.ts"
 # If any .origin files exist -> invoke aurora-origin-merge skill
+# Pass the YAML diff context (new/modified/deleted fields) to the merge
 ```
 
 ### Adding New Package
