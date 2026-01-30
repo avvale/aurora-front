@@ -108,10 +108,20 @@ Preserved Files (modified hash):
   - src/app/modules/admin/apps/common/country/country-detail.component.ts
   (These files have custom modifications and were not overwritten)
 
+Origin Files Created:
+  - src/app/modules/admin/apps/common/country/country-detail.component.origin.ts
+  - src/app/modules/admin/apps/common/country/country.graphql.origin.ts
+  (These require manual merge — invoke `aurora-origin-merge` skill)
+
 Summary:
   - X files regenerated
   - Y files preserved
+  - Z .origin files created (need merge)
 ```
+
+> **IMPORTANT:** If `.origin.ts` files are created after regeneration, you MUST
+> invoke the `aurora-origin-merge` skill to merge the schema delta into the
+> existing files. Run `fd ".origin.ts"` to check.
 
 ---
 
@@ -230,6 +240,10 @@ aurora load front module -n=common/country
 
 # 3. If you need to update interfaces too
 aurora load front module -n=common/country -w
+
+# 4. Check for .origin files and merge them
+fd ".origin.ts"
+# If any .origin files exist -> invoke aurora-origin-merge skill
 ```
 
 ### Adding New Package
@@ -253,11 +267,12 @@ aurora load front module -n=common/country -f
 
 ## Related Skills
 
-| Skill                      | When to Use Together                 |
-| -------------------------- | ------------------------------------ |
-| `aurora-schema`            | Before regenerating, validate YAML   |
-| `aurora-project-structure` | Understand where files are generated |
-| `conventional-commits`     | Commit after successful regeneration |
+| Skill                      | When to Use Together                     |
+| -------------------------- | ---------------------------------------- |
+| `aurora-schema`            | Before regenerating, validate YAML       |
+| `aurora-origin-merge`      | After regeneration creates .origin files |
+| `aurora-project-structure` | Understand where files are generated     |
+| `conventional-commits`     | Commit after successful regeneration     |
 
 ---
 
