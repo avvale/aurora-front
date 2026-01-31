@@ -54,9 +54,9 @@ asks: `Do you want to manage origin files? (Y/n)`.
 
 **Non-interactive execution (from Claude Code or scripts):**
 
-The CLI enters an interactive arrow-key menu that cannot be automated with
-pipes. Use `expect` to answer `Y` and then `Ctrl+C` to exit the menu, preserving
-the `.origin` files on disk:
+The CLI enters an interactive arrow-key menu that cannot be automated with pipes.
+Use `expect` to answer `Y` and then `Ctrl+C` to exit the menu, preserving the
+`.origin` files on disk:
 
 ```bash
 expect -c '
@@ -152,10 +152,9 @@ Summary:
 > invoke the `aurora-origin-merge` skill to merge the schema delta into the
 > existing files. Run `fd ".origin.ts"` to check.
 >
-> **Before invoking the merge skill**, run
-> `git diff HEAD -- cliter/<bc>/<module>.aurora.yaml` to identify NEW, MODIFIED,
-> and DELETED fields. The merge skill's Step 0 requires this YAML diff to
-> distinguish schema changes from intentional custom removals.
+> **Before invoking the merge skill**, run `git diff HEAD -- cliter/<bc>/<module>.aurora.yaml`
+> to identify NEW, MODIFIED, and DELETED fields. The merge skill's Step 0
+> requires this YAML diff to distinguish schema changes from intentional custom removals.
 
 ---
 
@@ -305,8 +304,8 @@ aurora load front module -n=common/country -f
 
 ## Related Skills
 
-| Skill                      | When to Use Together                     |
-| -------------------------- | ---------------------------------------- |
+| Skill                      | When to Use Together                 |
+| -------------------------- | ------------------------------------ |
 | `aurora-schema`            | Before regenerating, validate YAML       |
 | `aurora-origin-merge`      | After regeneration creates .origin files |
 | `aurora-project-structure` | Understand where files are generated     |
