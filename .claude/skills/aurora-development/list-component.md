@@ -137,3 +137,56 @@ export const countryColumnsConfig: () => ColumnConfig[] = () => [
     { type: ColumnDataType.BOOLEAN, field: 'isActive', sort: 'isActive', translation: 'IsActive' },
 ];
 ```
+
+## Custom Grid Actions with Translations
+
+When adding **custom actions** (beyond the default edit/delete), the `translation` property
+in the action object is a **short key**, NOT a full i18n path. The `au-grid` component resolves
+action labels internally via `<au-grid-translations [actionsMenu]>`.
+
+### Step 1: Column config — use a short key
+
+```typescript
+actions: (row) => {
+    const actions = [
+        { id: 'productionPlanning::productionOrderHeader.list.edit', translation: 'edit', icon: 'mode_edit' },
+        { id: 'productionPlanning::productionOrderHeader.list.delete', translation: 'delete', icon: 'delete' },
+    ];
+
+    // Conditional custom action
+    if (row.status === ProductionPlanningProductionOrderHeaderStatus.PENDING) {
+        actions.push({
+            id: 'productionPlanning::productionOrderHeader.list.provision',
+            translation: 'provision',  // ← SHORT KEY, not 'productionPlanning.Provision'
+            icon: 'inventory_2',
+        });
+    }
+
+    return actions;
+},
+```
+
+### Step 2: Template — map the key to the real translation
+
+```html
+<au-grid-translations
+    [for]="gridId"
+    [actionsMenu]="{
+        provision: t('productionPlanning.Provision'),
+    }"
+>
+</au-grid-translations>
+```
+
+The `[actionsMenu]` input adds translation entries so `au-grid` can resolve the short key
+`'provision'` → the actual translated string.
+
+### ⚠️ Common mistake
+
+```typescript
+// ❌ WRONG — au-grid won't resolve the full i18n path
+{ translation: 'productionPlanning.Provision', icon: 'inventory_2' }
+
+// ✅ CORRECT — short key mapped via au-grid-translations
+{ translation: 'provision', icon: 'inventory_2' }
+```

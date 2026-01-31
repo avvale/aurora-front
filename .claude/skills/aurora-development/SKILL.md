@@ -30,15 +30,11 @@ Use this skill when:
 
 **Reference files** (loaded on demand):
 
-- [detail-component.md](detail-component.md) — Full detail component, template,
-  and form patterns
-- [list-component.md](list-component.md) — Full list component, template, column
-  config, and export
-- [service-patterns.md](service-patterns.md) — GraphQL service, resolver, and
-  validation patterns
+- [detail-component.md](detail-component.md) — Full detail component, template, and form patterns
+- [list-component.md](list-component.md) — Full list component, template, column config, and export
+- [service-patterns.md](service-patterns.md) — GraphQL service, resolver, and validation patterns
 
-**Always combine with:** `prettier`, `typescript`, `angular-19`,
-`angular-material-19`, `tailwind-3`
+**Always combine with:** `prettier`, `typescript`, `angular-19`, `angular-material-19`, `tailwind-3`
 
 ---
 
@@ -59,13 +55,13 @@ npx prettier --write <file-path>
 **Detail Components** MUST extend `ViewDetailComponent`:
 
 ```typescript
-export class CountryDetailComponent extends ViewDetailComponent {}
+export class CountryDetailComponent extends ViewDetailComponent { }
 ```
 
 **List Components** MUST extend `ViewBaseComponent`:
 
 ```typescript
-export class CountryListComponent extends ViewBaseComponent {}
+export class CountryListComponent extends ViewBaseComponent { }
 ```
 
 ---
@@ -101,16 +97,13 @@ async handleAction(action: Action): Promise<void>
 
 ### ⚠️ Enum Handling (CRITICAL!)
 
-**When working with enum fields, ALWAYS use TypeScript enums — NEVER raw
-strings.**
+**When working with enum fields, ALWAYS use TypeScript enums — NEVER raw strings.**
 
 Before using any enum value:
 
 1. Check the module's `.aurora.yaml` for the `enumOptions` definition
-2. Check the module's types file (`*.types.ts` in `@apps/<bounded-context>/`)
-   for the existing TypeScript enum
-3. If the enum does NOT exist in the types file → **CREATE IT** with all options
-   from the YAML schema
+2. Check the module's types file (`*.types.ts` in `@apps/<bounded-context>/`) for the existing TypeScript enum
+3. If the enum does NOT exist in the types file → **CREATE IT** with all options from the YAML schema
 4. Import and use the enum in your code
 
 ```typescript
@@ -123,11 +116,27 @@ if (row.status === ProductionPlanningProductionOrderHeaderStatus.PENDING) { ... 
 if (row.status === 'PENDING') { ... }
 ```
 
-**Enum naming convention:** `{BoundedContext}{ModuleName}{FieldName}` Example:
-`ProductionPlanningProductionOrderHeaderStatus`
+**Enum naming convention:** `{BoundedContext}{ModuleName}{FieldName}`
+Example: `ProductionPlanningProductionOrderHeaderStatus`
 
-**Where enums live:**
-`src/app/modules/admin/apps/{bounded-context}/{bounded-context}.types.ts`
+**Where enums live:** `src/app/modules/admin/apps/{bounded-context}/{bounded-context}.types.ts`
+
+---
+
+### ⚠️ Grid Action Translations (CRITICAL!)
+
+**Custom grid actions use SHORT KEYS for `translation`, NOT full i18n paths.**
+
+The `au-grid` resolves action labels via `<au-grid-translations [actionsMenu]>`, not directly from the i18n file. See [list-component.md](list-component.md) for full pattern.
+
+```typescript
+// ✅ CORRECT: short key + au-grid-translations mapping
+{ translation: 'provision', icon: 'inventory_2' }
+// In template: [actionsMenu]="{ provision: t('productionPlanning.Provision') }"
+
+// ❌ WRONG: full i18n path (au-grid won't resolve it)
+{ translation: 'productionPlanning.Provision', icon: 'inventory_2' }
+```
 
 ---
 
@@ -201,8 +210,8 @@ Examples:
 - Use signals for managed objects: `managedObject = signal(null)`
 - Follow action ID naming convention
 - Use `layout__container` with `col-*` for form layouts
-- Use TypeScript enums for enum fields (check YAML schema + types file, create
-  if missing)
+- Use TypeScript enums for enum fields (check YAML schema + types file, create if missing)
+- Use short keys for custom grid action `translation` + map via `<au-grid-translations [actionsMenu]>`
 
 ### ❌ DON'T
 
@@ -210,11 +219,11 @@ Examples:
 - Don't forget to call `Utils.uuid()` for new entities
 - Don't use `@ViewChild` decorators (use `viewChild()` signal)
 - Don't subscribe without cleanup (use `takeUntil`)
-- Don't use `subscribe()` in methods called multiple times — use
-  `lastValueFrom()` (memory leak)
+- Don't use `subscribe()` in methods called multiple times — use `lastValueFrom()` (memory leak)
 - Don't use raw `grid-cols-*` in forms (use `col-*`)
 - Don't modify generated files (marked in lock files)
 - Don't compare enum values with raw strings — always use the typed enum
+- Don't use full i18n paths in grid action `translation` — use short keys + `[actionsMenu]`
 
 ---
 
@@ -257,5 +266,4 @@ What am I implementing?
 - **Base Components**: `src/@aurora/foundations/`
 - **Default Imports**: `src/@aurora/foundations/default-imports.ts`
 - **Grid Component**: `src/@aurora/components/grid/`
-- **Example Modules**: `src/app/modules/admin/apps/iam/`,
-  `src/app/modules/admin/apps/common/`
+- **Example Modules**: `src/app/modules/admin/apps/iam/`, `src/app/modules/admin/apps/common/`
