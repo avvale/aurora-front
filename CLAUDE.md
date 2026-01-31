@@ -156,7 +156,27 @@ standards.
 
 ### How to Use Skills
 
-1. Detect context from user request or current file being edited
-2. Read the relevant SKILL.md file(s) BEFORE writing code
-3. Apply ALL patterns and rules from the skill
-4. Multiple skills can apply (e.g., angular-19 + typescript + aurora-schema)
+MANDATORY WORKFLOW — follow these steps IN ORDER before writing ANY code:
+
+1. **Detect context**: Identify which skills apply from the table above based on
+   the user request and files involved. When implementing components, forms,
+   services, or actions → `aurora-development` ALWAYS applies.
+
+2. **Read the SKILL.md**: Read each relevant skill file completely. Do NOT skim.
+
+3. **Read reference files**: If the skill links to reference files (e.g.,
+   `detail-component.md`, `list-component.md`, `service-patterns.md`), read the
+   ones relevant to your task. These contain the detailed patterns and examples.
+
+4. **Verify before writing**: Review every section marked CRITICAL or IMPORTANT
+   in the skills you read. Confirm your planned code follows each one. If a
+   skill defines enums, patterns, or conventions — use them, don't reinvent.
+
+5. **Write code**: Only now write code, applying ALL patterns from the skills.
+
+6. **Multiple skills stack**: e.g., angular-19 + typescript + aurora-development
+    - prettier all apply simultaneously.
+
+⚠️ CRITICAL: Skipping steps 2-3 leads to violations of documented rules. The
+skills contain CRITICAL sections that MUST be followed — they are not optional
+guidelines.
