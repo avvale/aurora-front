@@ -1,16 +1,16 @@
 ---
 name: aurora-development
 description: >
-  Expert Angular development for Aurora projects. Covers detail components, list
-  components, forms, GraphQL services, action handling, grid configuration, and
-  resolvers. Trigger: When implementing Angular components, forms, services, or
-  custom logic in Aurora projects.
+    Expert Angular development for Aurora projects. Covers detail components,
+    list components, forms, GraphQL services, action handling, grid
+    configuration, and resolvers. Trigger: When implementing Angular components,
+    forms, services, or custom logic in Aurora projects.
 license: MIT
 metadata:
-  author: aurora
-  version: '3.0'
-  auto_invoke:
-    'Implementing Angular/Aurora components, forms, services, actions, grids'
+    author: aurora
+    version: '3.0'
+    auto_invoke:
+        'Implementing Angular/Aurora components, forms, services, actions, grids'
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, WebFetch, WebSearch, Task
 ---
 
@@ -31,7 +31,7 @@ bindings) that CANNOT be guessed — skipping them guarantees mistakes.
 Match EACH file you plan to edit against this table. Call `Read` on ALL its
 references. Do NOT skip any file — each has its own rules.
 
-| Target file pattern       | ⛔ Read BEFORE editing                                                      |
+| Target file pattern       | ⛔ Read BEFORE editing                                                     |
 | ------------------------- | -------------------------------------------------------------------------- |
 | `*-list.component.ts`     | [au-grid.md](au-grid.md), [confirmation-dialog.md](confirmation-dialog.md) |
 | `*-list.component.html`   | [au-grid.md](au-grid.md)                                                   |
@@ -42,7 +42,7 @@ references. Do NOT skip any file — each has its own rules.
 
 #### 1b. Additional references by feature
 
-| Using...                                                                              | ⛔ Read BEFORE editing                            |
+| Using...                                                                              | ⛔ Read BEFORE editing                           |
 | ------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | `au-grid` (columns, actions, row actions, custom actions, actionsMenu, column config) | [au-grid.md](au-grid.md)                         |
 | Adding custom actions to `au-grid`                                                    | [au-grid.md](au-grid.md)                         |
@@ -66,8 +66,8 @@ Before comparing or assigning ANY enum value:
 
 ```typescript
 // ✅ CORRECT
-import { ProductionPlanningProductionOrderHeaderStatus } from '@apps/production-planning';
-if (row.status === ProductionPlanningProductionOrderHeaderStatus.PENDING) { ... }
+import { ProductionPlanningProductionOrderHeaderStatusEnum } from '@apps/production-planning';
+if (row.status === ProductionPlanningProductionOrderHeaderStatusEnum.PENDING) { ... }
 
 // ❌ WRONG — will be rejected
 if (row.status === 'PENDING') { ... }
