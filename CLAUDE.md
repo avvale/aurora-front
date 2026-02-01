@@ -180,3 +180,7 @@ MANDATORY WORKFLOW — follow these steps IN ORDER before writing ANY code:
 ⚠️ CRITICAL: Skipping steps 2-3 leads to violations of documented rules. The
 skills contain CRITICAL sections that MUST be followed — they are not optional
 guidelines.
+
+<!-- SKILLS-INDEX-START -->
+[Project Skills Index]|root:.claude|IMPORTANT:Prefer retrieval-led reasoning over pre-training.Read SKILL.md first,then related files.|skills/angular-19:{SKILL.md,resource-api.md,signals-api.md,template-syntax.md}|skills/angular-material-19:{SKILL.md,cdk-patterns.md,custom-controls.md,theming.md,timepicker.md}|skills/aurora-cli:{SKILL.md}|skills/aurora-components:{SKILL.md,components-catalog.md,phone-field.md}|skills/aurora-development:{SKILL.md,au-form.md,au-grid-select.md,au-grid.md,confirmation-dialog.md,graphql-service.md}|skills/aurora-layout:{SKILL.md}|skills/aurora-origin-merge:{SKILL.md,merge-by-file-type.md}|skills/aurora-project-structure:{SKILL.md}|skills/aurora-schema:{SKILL.md,examples.md,type-reference.md}|skills/aurora-sheets-sync:{SKILL.md}|skills/aurora-ux:{SKILL.md}|skills/commit:{SKILL.md}|skills/commit-pr:{SKILL.md}|skills/conventional-commits:{SKILL.md}|skills/prettier:{SKILL.md}|skills/skill-creator:{SKILL.md,SKILL-TEMPLATE.md}|skills/tailwind-3:{SKILL.md}|skills/tailwind-4:{SKILL.md}|skills/typescript:{SKILL.md}|commands:{create-schema.md,create-skill.md}|agents:{aurora-schema-manager.md}|agents/assets:{field-patterns.md,phone-patterns.md}|output-styles:{gentleman.md}
+<!-- SKILLS-INDEX-END -->
