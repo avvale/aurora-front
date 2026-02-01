@@ -1,6 +1,6 @@
 # GraphQL Service & Resolver Patterns
 
-## GraphQL Service Pattern
+## Service Class
 
 ```typescript
 import { Injectable } from '@angular/core';
@@ -13,8 +13,12 @@ export class CountryService {
     countrySubject$: BehaviorSubject<CommonCountry | null> = new BehaviorSubject(null);
     private readonly graphqlService = inject(GraphQLService);
 
-    get pagination$(): Observable<GridData<CommonCountry>> { return this.paginationSubject$.asObservable(); }
-    get country$(): Observable<CommonCountry> { return this.countrySubject$.asObservable(); }
+    get pagination$(): Observable<GridData<CommonCountry>> {
+        return this.paginationSubject$.asObservable();
+    }
+    get country$(): Observable<CommonCountry> {
+        return this.countrySubject$.asObservable();
+    }
 
     pagination({ query = {}, constraint = {} } = {}): Observable<GridData<CommonCountry>> {
         return this.graphqlService.client()
@@ -39,20 +43,60 @@ export class CountryService {
     }
 
     create<T>({ object = null } = {}): Observable<T> {
-        return this.graphqlService.client().mutate({ mutation: createMutation, variables: { payload: object } });
+        return this.graphqlService.client().mutate({
+            mutation: createMutation, variables: { payload: object },
+        });
     }
 
     updateById<T>({ object = null } = {}): Observable<T> {
-        return this.graphqlService.client().mutate({ mutation: updateByIdMutation, variables: { payload: object } });
+        return this.graphqlService.client().mutate({
+            mutation: updateByIdMutation, variables: { payload: object },
+        });
     }
 
     deleteById<T>({ id = null } = {}): Observable<T> {
-        return this.graphqlService.client().mutate({ mutation: deleteByIdMutation, variables: { id } });
+        return this.graphqlService.client().mutate({
+            mutation: deleteByIdMutation, variables: { id },
+        });
     }
 }
 ```
 
-## Route Resolver Pattern
+## Adding Custom Mutations
+
+When the backend exposes additional APIs (e.g., `provision`, `approve`):
+
+### 1. GraphQL file — add the mutation
+
+```typescript
+export const provisionMutation = gql`
+    mutation ProductionPlanningProvisionProductionOrderHeader($id: ID!) {
+        productionPlanningProvisionProductionOrderHeader(id: $id)
+    }
+`;
+```
+
+### 2. Service — add the method
+
+```typescript
+provision<T>({
+    graphqlStatement = provisionMutation,
+    id = null,
+    headers = {},
+}: {
+    graphqlStatement?: DocumentNode;
+    id?: string;
+    headers?: GraphQLHeaders;
+} = {}): Observable<FetchResult<T>> {
+    return this.graphqlService.client().mutate({
+        mutation: graphqlStatement,
+        variables: { id },
+        context: { headers },
+    });
+}
+```
+
+## Route Resolvers
 
 ```typescript
 import { inject } from '@angular/core';
@@ -72,14 +116,4 @@ export const countryEditResolver: ResolveFn<CommonCountry> = (route) => {
     actionService.action({ id: 'common::country.detail.edit', isViewAction: true });
     return countryService.findById({ id: route.paramMap.get('id') });
 };
-```
-
-## Async Validators
-
-```typescript
-// Set async validator for unique check
-this.fg.get('email').setAsyncValidators(
-    uniqueEmailValidator(this.accountService, [existingEmail]),
-);
-this.fg.get('email').updateValueAndValidity();
 ```

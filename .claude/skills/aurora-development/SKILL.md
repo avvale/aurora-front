@@ -1,48 +1,79 @@
 ---
 name: aurora-development
 description: >
-    Expert Angular development for Aurora projects. Covers detail components,
-    list components, forms, GraphQL services, action handling, grid
-    configuration, and resolvers. Trigger: When implementing Angular components,
-    forms, services, or custom logic in Aurora projects.
+  Expert Angular development for Aurora projects. Covers detail components, list
+  components, forms, GraphQL services, action handling, grid configuration, and
+  resolvers. Trigger: When implementing Angular components, forms, services, or
+  custom logic in Aurora projects.
 license: MIT
 metadata:
-    author: aurora
-    version: '2.0'
-    auto_invoke:
-        'Implementing Angular/Aurora components, forms, services, actions, grids'
+  author: aurora
+  version: '3.0'
+  auto_invoke:
+    'Implementing Angular/Aurora components, forms, services, actions, grids'
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash, WebFetch, WebSearch, Task
 ---
 
-## When to Use
+## ⛔ PRE-FLIGHT CHECKLIST — MANDATORY BEFORE WRITING ANY CODE
 
-**This is the PRIMARY skill for IMPLEMENTING code in Aurora/Angular projects.**
+**STOP. Complete EVERY step before writing a single line of code.**
 
-Use this skill when:
+### 1. Read the reference files for what you're about to use
 
-- **Writing detail components** (forms, validations, CRUD operations)
-- **Writing list components** (grids, pagination, filters)
-- **Implementing custom form logic** (validators, transformations)
-- **Creating GraphQL services** (queries, mutations)
-- **Handling actions** (new, edit, create, update, delete)
-- **Configuring grid columns** (filters, sorting, search)
-- **Creating route resolvers** (data initialization)
+⛔ **BLOCKING RULE**: You MUST use the `Read` tool to open and read every
+reference file listed below BEFORE writing or editing ANY code. If you have not
+called `Read` on the required reference files, **STOP and read them now**. The
+reference files contain CRITICAL patterns (translations, enums, template
+bindings) that CANNOT be guessed — skipping them guarantees mistakes.
 
-**Reference files** (loaded on demand):
+#### 1a. Mandatory references by file type
 
-- [detail-component.md](detail-component.md) — Full detail component, template, and form patterns
-- [list-component.md](list-component.md) — Full list component, template, column config, and export
-- [service-patterns.md](service-patterns.md) — GraphQL service, resolver, and validation patterns
+Match EACH file you plan to edit against this table. Call `Read` on ALL its
+references. Do NOT skip any file — each has its own rules.
 
-**Always combine with:** `prettier`, `typescript`, `angular-19`, `angular-material-19`, `tailwind-3`
+| Target file pattern       | ⛔ Read BEFORE editing                                                      |
+| ------------------------- | -------------------------------------------------------------------------- |
+| `*-list.component.ts`     | [au-grid.md](au-grid.md), [confirmation-dialog.md](confirmation-dialog.md) |
+| `*-list.component.html`   | [au-grid.md](au-grid.md)                                                   |
+| `*-detail.component.ts`   | [au-form.md](au-form.md), [confirmation-dialog.md](confirmation-dialog.md) |
+| `*-detail.component.html` | [au-form.md](au-form.md)                                                   |
+| `*.service.ts`            | [graphql-service.md](graphql-service.md)                                   |
+| `*.graphql.ts`            | [graphql-service.md](graphql-service.md)                                   |
 
----
+#### 1b. Additional references by feature
 
-## Critical Patterns
+| Using...                                                                              | ⛔ Read BEFORE editing                            |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `au-grid` (columns, actions, row actions, custom actions, actionsMenu, column config) | [au-grid.md](au-grid.md)                         |
+| Adding custom actions to `au-grid`                                                    | [au-grid.md](au-grid.md)                         |
+| `au-grid-select` (single/multi)                                                       | [au-grid-select.md](au-grid-select.md)           |
+| Forms (layout, validation)                                                            | [au-form.md](au-form.md)                         |
+| Confirmation dialogs                                                                  | [confirmation-dialog.md](confirmation-dialog.md) |
+| GraphQL service, resolvers                                                            | [graphql-service.md](graphql-service.md)         |
 
-### ⚠️ Code Formatting (CRITICAL!)
+**Example**: List component with a custom action + delete confirmation →
+`Read au-grid.md` + `Read confirmation-dialog.md` BEFORE any `Edit` or `Write`.
 
-**MANDATORY: Run Prettier after EVERY file modification**
+### 2. Enum check — NEVER use raw strings for enum values
+
+Before comparing or assigning ANY enum value:
+
+1. Open
+   `src/app/modules/admin/apps/{bounded-context}/{bounded-context}.types.ts`
+2. Search for the enum `{BoundedContext}{ModuleName}{FieldName}`
+3. **If it does NOT exist → CREATE IT** with all values from the `.aurora.yaml`
+4. Import and use the enum constant
+
+```typescript
+// ✅ CORRECT
+import { ProductionPlanningProductionOrderHeaderStatus } from '@apps/production-planning';
+if (row.status === ProductionPlanningProductionOrderHeaderStatus.PENDING) { ... }
+
+// ❌ WRONG — will be rejected
+if (row.status === 'PENDING') { ... }
+```
+
+### 3. Run Prettier after EVERY file modification
 
 ```bash
 npx prettier --write <file-path>
@@ -50,200 +81,12 @@ npx prettier --write <file-path>
 
 ---
 
-### ⚠️ Component Inheritance (CRITICAL!)
+## When to Use
 
-**Detail Components** MUST extend `ViewDetailComponent`:
+**This is the PRIMARY skill for IMPLEMENTING code in Aurora/Angular projects.**
 
-```typescript
-export class CountryDetailComponent extends ViewDetailComponent { }
-```
-
-**List Components** MUST extend `ViewBaseComponent`:
-
-```typescript
-export class CountryListComponent extends ViewBaseComponent { }
-```
-
----
-
-### ⚠️ Action Handling (CRITICAL!)
-
-**ALL business logic goes in `handleAction()` method:**
-
-```typescript
-async handleAction(action: Action): Promise<void>
-{
-    switch (action?.id)
-    {
-        case 'common::country.detail.new':
-            this.fg.get('id').setValue(Utils.uuid());
-            break;
-
-        case 'common::country.detail.edit':
-            this.countryService.country$
-                .pipe(takeUntil(this.unsubscribeAll$))
-                .subscribe(country => {
-                    this.managedObject.set(country);
-                    this.fg.patchValue(country);
-                });
-            break;
-    }
-}
-```
-
-**❌ NEVER put business logic in constructor or ngOnInit**
-
----
-
-### ⚠️ Enum Handling (CRITICAL!)
-
-**When working with enum fields, ALWAYS use TypeScript enums — NEVER raw strings.**
-
-Before using any enum value:
-
-1. Check the module's `.aurora.yaml` for the `enumOptions` definition
-2. Check the module's types file (`*.types.ts` in `@apps/<bounded-context>/`) for the existing TypeScript enum
-3. If the enum does NOT exist in the types file → **CREATE IT** with all options from the YAML schema
-4. Import and use the enum in your code
-
-```typescript
-// ✅ CORRECT: Use typed enum
-import { ProductionPlanningProductionOrderHeaderStatus } from '@apps/production-planning';
-
-if (row.status === ProductionPlanningProductionOrderHeaderStatus.PENDING) { ... }
-
-// ❌ WRONG: Raw string comparison
-if (row.status === 'PENDING') { ... }
-```
-
-**Enum naming convention:** `{BoundedContext}{ModuleName}{FieldName}`
-Example: `ProductionPlanningProductionOrderHeaderStatus`
-
-**Where enums live:** `src/app/modules/admin/apps/{bounded-context}/{bounded-context}.types.ts`
-
----
-
-### ⚠️ Grid Action Translations (CRITICAL!)
-
-**Custom grid actions use SHORT KEYS for `translation`, NOT full i18n paths.**
-
-The `au-grid` resolves action labels via `<au-grid-translations [actionsMenu]>`, not directly from the i18n file. See [list-component.md](list-component.md) for full pattern.
-
-```typescript
-// ✅ CORRECT: short key + au-grid-translations mapping
-{ translation: 'provision', icon: 'inventory_2' }
-// In template: [actionsMenu]="{ provision: t('productionPlanning.Provision') }"
-
-// ❌ WRONG: full i18n path (au-grid won't resolve it)
-{ translation: 'productionPlanning.Provision', icon: 'inventory_2' }
-```
-
----
-
-## Base Classes
-
-### ViewBaseComponent
-
-Base for ALL view components. Provides:
-
-- `actionService`, `router`, `activatedRoute`, `translocoService`
-- `confirmationService`, `snackBar`, `unsubscribeAll$`
-
-**Key Methods:** `handleAction(action)`, `init()`
-
-### ViewDetailComponent (extends ViewFormComponent)
-
-For detail/form components. Adds:
-
-- `fg: FormGroup`, `fb: FormBuilder`, `validationMessagesService`
-
-**Key Methods:** `createForm()`
-
----
-
-## Action ID Naming Convention
-
-```
-[bounded-context]::[module].[view].[action]
-
-Examples:
-- common::country.list.view        // List view initialized
-- common::country.list.pagination  // Pagination requested
-- common::country.list.edit        // Edit button clicked
-- common::country.list.delete      // Delete button clicked
-- common::country.list.export      // Export requested
-- common::country.detail.new       // New form initialized
-- common::country.detail.edit      // Edit form initialized
-- common::country.detail.create    // Create mutation
-- common::country.detail.update    // Update mutation
-```
-
----
-
-## Column Data Types
-
-| Type        | Use For               |
-| ----------- | --------------------- |
-| `ACTIONS`   | Row action buttons    |
-| `CHECKBOX`  | Row selection         |
-| `STRING`    | Text fields           |
-| `NUMBER`    | Numeric fields        |
-| `BOOLEAN`   | Boolean/toggle fields |
-| `DATE`      | Date fields           |
-| `TIMESTAMP` | DateTime fields       |
-| `ARRAY`     | Array/relation fields |
-| `ENUM`      | Enum values           |
-| `UUID`      | UUID fields           |
-
----
-
-## Best Practices
-
-### ✅ DO
-
-- Extend `ViewDetailComponent` for detail forms
-- Extend `ViewBaseComponent` for list views
-- Put ALL business logic in `handleAction()` method
-- Use `takeUntil(this.unsubscribeAll$)` for subscriptions
-- Use `lastValueFrom()` for mutations
-- Use `inject()` function for dependency injection
-- Use signals for managed objects: `managedObject = signal(null)`
-- Follow action ID naming convention
-- Use `layout__container` with `col-*` for form layouts
-- Use TypeScript enums for enum fields (check YAML schema + types file, create if missing)
-- Use short keys for custom grid action `translation` + map via `<au-grid-translations [actionsMenu]>`
-
-### ❌ DON'T
-
-- Don't put logic in constructor or ngOnInit
-- Don't forget to call `Utils.uuid()` for new entities
-- Don't use `@ViewChild` decorators (use `viewChild()` signal)
-- Don't subscribe without cleanup (use `takeUntil`)
-- Don't use `subscribe()` in methods called multiple times — use `lastValueFrom()` (memory leak)
-- Don't use raw `grid-cols-*` in forms (use `col-*`)
-- Don't modify generated files (marked in lock files)
-- Don't compare enum values with raw strings — always use the typed enum
-- Don't use full i18n paths in grid action `translation` — use short keys + `[actionsMenu]`
-
----
-
-## Decision Tree
-
-```
-What am I implementing?
-│
-├─ Form for create/edit entity?
-│  └─ ✅ Extend ViewDetailComponent → see detail-component.md
-│
-├─ List with grid/table?
-│  └─ ✅ Extend ViewBaseComponent → see list-component.md
-│
-├─ GraphQL operations?
-│  └─ ✅ Create/modify Service → see service-patterns.md
-│
-└─ Custom validation?
-   └─ ✅ Add to createForm() → see service-patterns.md
-```
+**Always combine with:** `prettier`, `typescript`, `angular-19`,
+`angular-material-19`, `tailwind-3`
 
 ---
 
@@ -266,4 +109,5 @@ What am I implementing?
 - **Base Components**: `src/@aurora/foundations/`
 - **Default Imports**: `src/@aurora/foundations/default-imports.ts`
 - **Grid Component**: `src/@aurora/components/grid/`
-- **Example Modules**: `src/app/modules/admin/apps/iam/`, `src/app/modules/admin/apps/common/`
+- **Example Modules**: `src/app/modules/admin/apps/iam/`,
+  `src/app/modules/admin/apps/common/`
