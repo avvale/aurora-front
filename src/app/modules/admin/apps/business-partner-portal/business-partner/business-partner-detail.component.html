@@ -3,773 +3,631 @@
   @source cliter/business-partner-portal/business-partner.aurora.yaml
 -->
 <div
-    *transloco="let t"
-    class="absolute inset-0 flex w-full flex-col overflow-hidden"
+  *transloco="let t"
+  class="absolute inset-0 flex w-full flex-col overflow-hidden"
 >
-    <!-- Header -->
-    <div
-        class="bg-card flex flex-0 flex-col border-b p-6 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-4 dark:bg-transparent"
-    >
-        <div class="min-w-0 flex-1">
-            <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
-            <au-title>
-                <mat-icon
-                    class="mr-2 icon-size-8"
-                    svgIcon="mat_solid:business"
-                ></mat-icon>
-                {{ t('businessPartnerPortal.BusinessPartner') }}
-            </au-title>
-        </div>
+  <!-- Header -->
+  <div
+    class="bg-card flex flex-0 flex-col border-b p-6 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-4 dark:bg-transparent"
+  >
+    <div class="min-w-0 flex-1">
+      <au-breadcrumb [data]="breadcrumb"></au-breadcrumb>
+      <au-title>
+        <mat-icon
+          class="mr-2 icon-size-8"
+          svgIcon="mat_solid:business"
+        ></mat-icon>
+        {{ t('businessPartnerPortal.BusinessPartner') }}
+      </au-title>
+    </div>
 
-        <!-- Actions -->
-        <div class="mt-6 flex flex-shrink-0 items-center sm:ml-4 sm:mt-0">
-            @if (
+    <!-- Actions -->
+    <div class="mt-6 flex flex-shrink-0 items-center sm:ml-4 sm:mt-0">
+      @if (
+        currentViewAction.id ===
+        'businessPartnerPortal::businessPartner.detail.edit'
+      ) {
+        <button
+          type="submit"
+          class="ml-3"
+          [disabled]="
+            fg.pristine ||
+            ('businessPartnerPortal::businessPartner.detail.update'
+              | getActionStatus
+              | async)
+          "
+          mat-flat-button
+          form="businessPartnerPortalBusinessPartnerFormDetail"
+          color="accent"
+        >
+          @if (
+            'businessPartnerPortal::businessPartner.detail.update'
+              | getActionStatus
+              | async
+          ) {
+            <mat-icon>
+              <mat-spinner diameter="20"></mat-spinner>
+            </mat-icon>
+          } @else {
+            <mat-icon
+              class="mr-2 icon-size-5"
+              svgIcon="mat_solid:edit"
+            ></mat-icon>
+          }
+          {{ t('Update') }}
+        </button>
+      }
+
+      @if (
+        currentViewAction.id ===
+        'businessPartnerPortal::businessPartner.detail.new'
+      ) {
+        <button
+          type="submit"
+          class="ml-3"
+          [disabled]="
+            fg.pristine ||
+            ('businessPartnerPortal::businessPartner.detail.create'
+              | getActionStatus
+              | async)
+          "
+          mat-flat-button
+          form="businessPartnerPortalBusinessPartnerFormDetail"
+          color="accent"
+        >
+          @if (
+            'businessPartnerPortal::businessPartner.detail.create'
+              | getActionStatus
+              | async
+          ) {
+            <mat-icon>
+              <mat-spinner diameter="20"></mat-spinner>
+            </mat-icon>
+          } @else {
+            <mat-icon
+              class="mr-2 icon-size-5"
+              svgIcon="mat_solid:save"
+            ></mat-icon>
+          }
+          {{ t('Create') }}
+        </button>
+      }
+    </div>
+    <!-- / Actions -->
+  </div>
+  <!-- / Header -->
+
+  <!-- Main -->
+  <div
+    class="flex-auto overflow-y-auto px-6 pt-6 sm:px-10 sm:pt-10"
+    cdkScrollable
+  >
+    <div class="form-card">
+      <form
+        id="businessPartnerPortalBusinessPartnerFormDetail"
+        [formGroup]="fg"
+        novalidate
+        (ngSubmit)="onSubmit($event)"
+      >
+        <mat-tab-group>
+          <!-- Tab: Identification -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="mr-2">badge</mat-icon>
+              {{ t('Identification') }}
+            </ng-template>
+            <div class="layout__container pt-4">
+              <mat-form-field
+                appearance="outline"
+                class="col-8"
+              >
+                <mat-label>
+                  {{ t('businessPartnerPortal.Name') }}
+                </mat-label>
+                <input
+                  matInput
+                  formControlName="name"
+                  maxlength="128"
+                  required
+                />
+                <mat-error>
+                  {{ formErrors?.name | async }}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                class="col-4"
+              >
+                <mat-label>
+                  {{ t('businessPartnerPortal.Code') }}
+                </mat-label>
+                <input
+                  matInput
+                  formControlName="code"
+                  maxlength="64"
+                />
+                <mat-error>
+                  {{ formErrors?.code | async }}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                class="col-4"
+              >
+                <mat-label>
+                  {{ t('businessPartnerPortal.ExternalId') }}
+                </mat-label>
+                <input
+                  matInput
+                  formControlName="externalId"
+                  maxlength="64"
+                />
+                <mat-error>
+                  {{ formErrors?.externalId | async }}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                class="col-4"
+              >
+                <mat-label>
+                  {{ t('businessPartnerPortal.Tin') }}
+                </mat-label>
+                <input
+                  matInput
+                  formControlName="tin"
+                  maxlength="64"
+                />
+                <mat-error>
+                  {{ formErrors?.tin | async }}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                class="col-4"
+              >
+                <mat-label>
+                  {{ t('businessPartnerPortal.Type') }}
+                </mat-label>
+                <mat-select
+                  formControlName="type"
+                  multiple
+                >
+                  @for (
+                    type of businessPartnerPortalBusinessPartnerType | keyvalue;
+                    track type.key
+                  ) {
+                    <mat-option [value]="type.key">
+                      {{
+                        t(
+                          'businessPartnerPortal.BusinessPartnerType.' +
+                            type.value
+                        )
+                      }}
+                    </mat-option>
+                  }
+                </mat-select>
+                <mat-error>
+                  {{ formErrors?.type | async }}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                class="col-4"
+              >
+                <mat-label>
+                  {{ t('businessPartnerPortal.Email') }}
+                </mat-label>
+                <mat-icon matPrefix>alternate_email</mat-icon>
+                <input
+                  matInput
+                  formControlName="email"
+                  maxlength="128"
+                />
+                <mat-error>
+                  {{ formErrors?.email | async }}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                class="col-5 mobile-country-prefix-fix"
+              >
+                <mat-label>
+                  {{ t('businessPartnerPortal.Phone') }}
+                </mat-label>
+                <input
+                  #phoneInput
+                  matInput
+                  formControlName="phone"
+                  maxlength="64"
+                />
+                <au-select-country-prefix
+                  [phoneNumberInput]="phoneInput"
+                  matPrefix
+                  formControlName="phoneCountryPrefix"
+                  (phoneNumberSanitized)="
+                    handlePhoneNumberSanitized($event, 'phoneSanitized')
+                  "
+                >
+                  @for (
+                    countryPrefix of countryPrefixes;
+                    track countryPrefix.prefix
+                  ) {
+                    <au-option-country-prefix
+                      [iso3166Alpha2]="countryPrefix.iso3166Alpha2"
+                      [prefix]="countryPrefix.prefix"
+                    >
+                      ({{ countryPrefix.prefix }})
+                      {{ t('CountryOptions.' + countryPrefix.content) }}
+                    </au-option-country-prefix>
+                  }
+                </au-select-country-prefix>
+                <mat-error>
+                  {{
+                    (formErrors?.phoneCountryPrefix | async) ||
+                      (formErrors?.phone | async)
+                  }}
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                class="col-3"
+              >
+                <mat-label>
+                  {{ t('businessPartnerPortal.Website') }}
+                </mat-label>
+                <mat-icon matPrefix>globe</mat-icon>
+                <input
+                  matInput
+                  formControlName="website"
+                  maxlength="1022"
+                />
+                <mat-error>
+                  {{ formErrors?.website | async }}
+                </mat-error>
+              </mat-form-field>
+              <div class="col-4 flex items-center pt-2">
+                <mat-checkbox formControlName="isActive">
+                  {{ t('businessPartnerPortal.IsActive') }}
+                </mat-checkbox>
+              </div>
+            </div>
+          </mat-tab>
+
+          <!-- Tab: Contacts -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="mr-2">contacts</mat-icon>
+              {{ t('businessPartnerPortal.PartnerContacts') }}
+            </ng-template>
+            <div class="layout__container pt-4">
+              <!-- #region component to manage partnerContacts -->
+              @if (
                 currentViewAction.id ===
                 'businessPartnerPortal::businessPartner.detail.edit'
-            ) {
-                <button
-                    type="submit"
-                    class="ml-3"
-                    [disabled]="
-                        fg.pristine ||
-                        ('businessPartnerPortal::businessPartner.detail.update'
-                            | getActionStatus
-                            | async)
-                    "
-                    mat-flat-button
-                    form="businessPartnerPortalBusinessPartnerFormDetail"
-                    color="accent"
+              ) {
+                <au-grid-elements-manager
+                  #partnerContactsGridElementsManager
+                  class="col-12 mb-5"
+                  [columnsConfig]="partnerContactsColumnsConfig$ | async"
+                  [dialogTitle]="t('businessPartnerPortal.PartnerContact')"
+                  [gridData]="partnerContactsGridData$ | async"
+                  [gridState]="partnerContactsGridState"
+                  [id]="partnerContactsGridId"
+                  [label]="t('businessPartnerPortal.PartnerContacts')"
+                  [originColumnsConfig]="originPartnerContactsColumnsConfig"
                 >
-                    @if (
-                        'businessPartnerPortal::businessPartner.detail.update'
-                            | getActionStatus
-                            | async
-                    ) {
-                        <mat-icon>
-                            <mat-spinner diameter="20"></mat-spinner>
-                        </mat-icon>
-                    } @else {
-                        <mat-icon
-                            class="mr-2 icon-size-5"
-                            svgIcon="mat_solid:edit"
-                        ></mat-icon>
-                    }
-                    {{ t('Update') }}
-                </button>
-            }
-
-            @if (
-                currentViewAction.id ===
-                'businessPartnerPortal::businessPartner.detail.new'
-            ) {
-                <button
-                    type="submit"
-                    class="ml-3"
-                    [disabled]="
-                        fg.pristine ||
-                        ('businessPartnerPortal::businessPartner.detail.create'
-                            | getActionStatus
-                            | async)
-                    "
-                    mat-flat-button
-                    form="businessPartnerPortalBusinessPartnerFormDetail"
-                    color="accent"
-                >
-                    @if (
-                        'businessPartnerPortal::businessPartner.detail.create'
-                            | getActionStatus
-                            | async
-                    ) {
-                        <mat-icon>
-                            <mat-spinner diameter="20"></mat-spinner>
-                        </mat-icon>
-                    } @else {
-                        <mat-icon
-                            class="mr-2 icon-size-5"
-                            svgIcon="mat_solid:save"
-                        ></mat-icon>
-                    }
-                    {{ t('Create') }}
-                </button>
-            }
-        </div>
-        <!-- / Actions -->
-    </div>
-    <!-- / Header -->
-
-    <!-- Main -->
-    <div
-        class="flex-auto overflow-y-auto px-6 pt-6 sm:px-10 sm:pt-10"
-        cdkScrollable
-    >
-        <div class="form-card">
-            <form
-                id="businessPartnerPortalBusinessPartnerFormDetail"
-                [formGroup]="fg"
-                novalidate
-                (ngSubmit)="onSubmit($event)"
-            >
-                <mat-tab-group>
-                    <!-- Tab: Identification -->
-                    <mat-tab>
-                        <ng-template mat-tab-label>
-                            <mat-icon class="mr-2">badge</mat-icon>
-                            {{ t('Identification') }}
-                        </ng-template>
-                        <div class="layout__container pt-4">
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-8"
-                            >
-                                <mat-label>
-                                    {{ t('businessPartnerPortal.Name') }}
-                                </mat-label>
-                                <input
-                                    matInput
-                                    formControlName="name"
-                                    maxlength="128"
-                                    required
-                                />
-                                <mat-error>
-                                    {{ formErrors?.name | async }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-4"
-                            >
-                                <mat-label>
-                                    {{ t('businessPartnerPortal.Code') }}
-                                </mat-label>
-                                <input
-                                    matInput
-                                    formControlName="code"
-                                    maxlength="64"
-                                />
-                                <mat-error>
-                                    {{ formErrors?.code | async }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-4"
-                            >
-                                <mat-label>
-                                    {{ t('businessPartnerPortal.ExternalId') }}
-                                </mat-label>
-                                <input
-                                    matInput
-                                    formControlName="externalId"
-                                    maxlength="64"
-                                />
-                                <mat-error>
-                                    {{ formErrors?.externalId | async }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-4"
-                            >
-                                <mat-label>
-                                    {{ t('businessPartnerPortal.Tin') }}
-                                </mat-label>
-                                <input
-                                    matInput
-                                    formControlName="tin"
-                                    maxlength="64"
-                                />
-                                <mat-error>
-                                    {{ formErrors?.tin | async }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-4"
-                            >
-                                <mat-label>
-                                    {{ t('businessPartnerPortal.Type') }}
-                                </mat-label>
-                                <mat-select
-                                    formControlName="type"
-                                    multiple
-                                >
-                                    @for (
-                                        type of businessPartnerPortalBusinessPartnerType
-                                            | keyvalue;
-                                        track type.key
-                                    ) {
-                                        <mat-option [value]="type.key">
-                                            {{
-                                                t(
-                                                    'businessPartnerPortal.BusinessPartnerType.' +
-                                                        type.value
-                                                )
-                                            }}
-                                        </mat-option>
-                                    }
-                                </mat-select>
-                                <mat-error>
-                                    {{ formErrors?.type | async }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-4"
-                            >
-                                <mat-label>
-                                    {{ t('businessPartnerPortal.Email') }}
-                                </mat-label>
-                                <input
-                                    matInput
-                                    formControlName="email"
-                                    maxlength="128"
-                                />
-                                <mat-error>
-                                    {{ formErrors?.email | async }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-5 mobile-country-prefix-fix"
-                            >
-                                <mat-label>
-                                    {{ t('businessPartnerPortal.Phone') }}
-                                </mat-label>
-                                <input
-                                    #phoneInput
-                                    matInput
-                                    formControlName="phone"
-                                    maxlength="64"
-                                />
-                                <au-select-country-prefix
-                                    [phoneNumberInput]="phoneInput"
-                                    matPrefix
-                                    formControlName="phoneCountryPrefix"
-                                    (phoneNumberSanitized)="
-                                        handlePhoneNumberSanitized(
-                                            $event,
-                                            'phoneSanitized'
-                                        )
-                                    "
-                                >
-                                    @for (
-                                        countryPrefix of countryPrefixes;
-                                        track countryPrefix.prefix
-                                    ) {
-                                        <au-option-country-prefix
-                                            [iso3166Alpha2]="
-                                                countryPrefix.iso3166Alpha2
-                                            "
-                                            [prefix]="countryPrefix.prefix"
-                                        >
-                                            ({{ countryPrefix.prefix }})
-                                            {{
-                                                t(
-                                                    'CountryOptions.' +
-                                                        countryPrefix.content
-                                                )
-                                            }}
-                                        </au-option-country-prefix>
-                                    }
-                                </au-select-country-prefix>
-                                <mat-error>
-                                    {{
-                                        (formErrors?.phoneCountryPrefix
-                                            | async) ||
-                                            (formErrors?.phone | async)
-                                    }}
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field
-                                appearance="outline"
-                                class="col-3"
-                            >
-                                <mat-label>
-                                    {{ t('businessPartnerPortal.Website') }}
-                                </mat-label>
-                                <input
-                                    matInput
-                                    formControlName="website"
-                                    maxlength="1022"
-                                />
-                                <mat-error>
-                                    {{ formErrors?.website | async }}
-                                </mat-error>
-                            </mat-form-field>
-                            <div class="col-4 flex items-center pt-2">
-                                <mat-checkbox formControlName="isActive">
-                                    {{ t('businessPartnerPortal.IsActive') }}
-                                </mat-checkbox>
-                            </div>
-                        </div>
-                    </mat-tab>
-
-                    <!-- Tab: Contacts -->
-                    <mat-tab>
-                        <ng-template mat-tab-label>
-                            <mat-icon class="mr-2">contacts</mat-icon>
-                            {{ t('businessPartnerPortal.PartnerContacts') }}
-                        </ng-template>
-                        <div class="layout__container pt-4">
-                            <!-- #region component to manage partnerContacts -->
-                            @if (
-                                currentViewAction.id ===
-                                'businessPartnerPortal::businessPartner.detail.edit'
+                  <ng-template auGridCustomButtonsHeaderDialogTemplate>
+                    <button
+                      type="button"
+                      class="ml-2"
+                      mat-flat-button
+                      (click)="
+                        actionService.action({
+                          id: 'businessPartnerPortal::businessPartner.detail.newPartnerContact',
+                          isViewAction: false,
+                        })
+                      "
+                    >
+                      <mat-icon class="mr-2">add</mat-icon>
+                      {{ t('New.M') }}
+                    </button>
+                  </ng-template>
+                  <ng-template
+                    auGridFormElementDetailDialogTemplate
+                    let-dialog
+                  >
+                    <form
+                      id="partnerContactDetailDialogForm"
+                      [formGroup]="partnerContactDialogFg"
+                      novalidate
+                      (ngSubmit)="
+                        handleSubmitPartnerContactForm($event, dialog)
+                      "
+                    >
+                      <div class="layout__container">
+                        <mat-form-field
+                          appearance="outline"
+                          class="col-6"
+                        >
+                          <mat-label>
+                            {{ t('businessPartnerPortal.FirstName') }}
+                          </mat-label>
+                          <input
+                            matInput
+                            formControlName="firstName"
+                            maxlength="128"
+                            required
+                          />
+                          <mat-error>
+                            {{ formErrors?.firstName | async }}
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field
+                          appearance="outline"
+                          class="col-6"
+                        >
+                          <mat-label>
+                            {{ t('businessPartnerPortal.LastName') }}
+                          </mat-label>
+                          <input
+                            matInput
+                            formControlName="lastName"
+                            maxlength="128"
+                            required
+                          />
+                          <mat-error>
+                            {{ formErrors?.lastName | async }}
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field
+                          appearance="outline"
+                          class="col-6"
+                        >
+                          <mat-label>
+                            {{ t('businessPartnerPortal.Position') }}
+                          </mat-label>
+                          <input
+                            matInput
+                            formControlName="position"
+                            maxlength="128"
+                          />
+                          <mat-error>
+                            {{ formErrors?.position | async }}
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field
+                          appearance="outline"
+                          class="col-6"
+                        >
+                          <mat-label>
+                            {{ t('businessPartnerPortal.Department') }}
+                          </mat-label>
+                          <input
+                            matInput
+                            formControlName="department"
+                            maxlength="128"
+                          />
+                          <mat-error>
+                            {{ formErrors?.department | async }}
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field
+                          appearance="outline"
+                          class="col-4"
+                        >
+                          <mat-label>
+                            {{ t('businessPartnerPortal.Email') }}
+                          </mat-label>
+                          <input
+                            matInput
+                            formControlName="email"
+                            maxlength="128"
+                            required
+                          />
+                          <mat-error>
+                            {{ formErrors?.email | async }}
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field
+                          appearance="outline"
+                          class="col-2"
+                        >
+                          <mat-label>
+                            {{ t('businessPartnerPortal.PreferredLanguage') }}
+                          </mat-label>
+                          <input
+                            matInput
+                            formControlName="preferredLanguage"
+                            maxlength="2"
+                          />
+                          <mat-error>
+                            {{ formErrors?.preferredLanguage | async }}
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field
+                          appearance="outline"
+                          class="col-6 mobile-country-prefix-fix"
+                        >
+                          <mat-label>
+                            {{ t('businessPartnerPortal.Phone') }}
+                          </mat-label>
+                          <input
+                            #partnerContactPhoneInput
+                            matInput
+                            formControlName="phone"
+                            maxlength="64"
+                          />
+                          <au-select-country-prefix
+                            [phoneNumberInput]="partnerContactPhoneInput"
+                            matPrefix
+                            formControlName="phoneCountryPrefix"
+                            (phoneNumberSanitized)="
+                              handlePartnerContactPhoneNumberSanitized(
+                                $event,
+                                'phoneSanitized'
+                              )
+                            "
+                          >
+                            @for (
+                              countryPrefix of countryPrefixes;
+                              track countryPrefix.prefix
                             ) {
-                                <au-grid-elements-manager
-                                    #partnerContactsGridElementsManager
-                                    class="col-12 mb-5"
-                                    [columnsConfig]="
-                                        partnerContactsColumnsConfig$ | async
-                                    "
-                                    [dialogTitle]="
-                                        t(
-                                            'businessPartnerPortal.PartnerContact'
-                                        )
-                                    "
-                                    [gridData]="
-                                        partnerContactsGridData$ | async
-                                    "
-                                    [gridState]="partnerContactsGridState"
-                                    [id]="partnerContactsGridId"
-                                    [label]="
-                                        t(
-                                            'businessPartnerPortal.PartnerContacts'
-                                        )
-                                    "
-                                    [originColumnsConfig]="
-                                        originPartnerContactsColumnsConfig
-                                    "
-                                >
-                                    <ng-template
-                                        auGridCustomButtonsHeaderDialogTemplate
-                                    >
-                                        <button
-                                            type="button"
-                                            class="ml-2"
-                                            mat-flat-button
-                                            (click)="
-                                                actionService.action({
-                                                    id: 'businessPartnerPortal::businessPartner.detail.newPartnerContact',
-                                                    isViewAction: false,
-                                                })
-                                            "
-                                        >
-                                            <mat-icon class="mr-2">
-                                                add
-                                            </mat-icon>
-                                            {{ t('New.M') }}
-                                        </button>
-                                    </ng-template>
-                                    <ng-template
-                                        auGridFormElementDetailDialogTemplate
-                                        let-dialog
-                                    >
-                                        <form
-                                            id="partnerContactDetailDialogForm"
-                                            [formGroup]="partnerContactDialogFg"
-                                            novalidate
-                                            (ngSubmit)="
-                                                handleSubmitPartnerContactForm(
-                                                    $event,
-                                                    dialog
-                                                )
-                                            "
-                                        >
-                                            <div class="layout__container">
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-6"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.FirstName'
-                                                            )
-                                                        }}
-                                                    </mat-label>
-                                                    <input
-                                                        matInput
-                                                        formControlName="firstName"
-                                                        maxlength="128"
-                                                        required
-                                                    />
-                                                    <mat-error>
-                                                        {{
-                                                            formErrors?.firstName
-                                                                | async
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-6"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.LastName'
-                                                            )
-                                                        }}
-                                                    </mat-label>
-                                                    <input
-                                                        matInput
-                                                        formControlName="lastName"
-                                                        maxlength="128"
-                                                        required
-                                                    />
-                                                    <mat-error>
-                                                        {{
-                                                            formErrors?.lastName
-                                                                | async
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-6"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.Position'
-                                                            )
-                                                        }}
-                                                    </mat-label>
-                                                    <input
-                                                        matInput
-                                                        formControlName="position"
-                                                        maxlength="128"
-                                                    />
-                                                    <mat-error>
-                                                        {{
-                                                            formErrors?.position
-                                                                | async
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-6"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.Department'
-                                                            )
-                                                        }}
-                                                    </mat-label>
-                                                    <input
-                                                        matInput
-                                                        formControlName="department"
-                                                        maxlength="128"
-                                                    />
-                                                    <mat-error>
-                                                        {{
-                                                            formErrors?.department
-                                                                | async
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-4"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.Email'
-                                                            )
-                                                        }}
-                                                    </mat-label>
-                                                    <input
-                                                        matInput
-                                                        formControlName="email"
-                                                        maxlength="128"
-                                                        required
-                                                    />
-                                                    <mat-error>
-                                                        {{
-                                                            formErrors?.email
-                                                                | async
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-2"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.PreferredLanguage'
-                                                            )
-                                                        }}
-                                                    </mat-label>
-                                                    <input
-                                                        matInput
-                                                        formControlName="preferredLanguage"
-                                                        maxlength="2"
-                                                    />
-                                                    <mat-error>
-                                                        {{
-                                                            formErrors?.preferredLanguage
-                                                                | async
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-6 mobile-country-prefix-fix"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.Phone'
-                                                            )
-                                                        }}
-                                                    </mat-label>
-                                                    <input
-                                                        #partnerContactPhoneInput
-                                                        matInput
-                                                        formControlName="phone"
-                                                        maxlength="64"
-                                                    />
-                                                    <au-select-country-prefix
-                                                        [phoneNumberInput]="
-                                                            partnerContactPhoneInput
-                                                        "
-                                                        matPrefix
-                                                        formControlName="phoneCountryPrefix"
-                                                        (phoneNumberSanitized)="
-                                                            handlePartnerContactPhoneNumberSanitized(
-                                                                $event,
-                                                                'phoneSanitized'
-                                                            )
-                                                        "
-                                                    >
-                                                        @for (
-                                                            countryPrefix of countryPrefixes;
-                                                            track countryPrefix.prefix
-                                                        ) {
-                                                            <au-option-country-prefix
-                                                                [iso3166Alpha2]="
-                                                                    countryPrefix.iso3166Alpha2
-                                                                "
-                                                                [prefix]="
-                                                                    countryPrefix.prefix
-                                                                "
-                                                            >
-                                                                ({{
-                                                                    countryPrefix.prefix
-                                                                }})
-                                                                {{
-                                                                    t(
-                                                                        'CountryOptions.' +
-                                                                            countryPrefix.content
-                                                                    )
-                                                                }}
-                                                            </au-option-country-prefix>
-                                                        }
-                                                    </au-select-country-prefix>
-                                                    <mat-error>
-                                                        {{
-                                                            (formErrors?.phoneCountryPrefix
-                                                                | async) ||
-                                                                (formErrors?.phone
-                                                                    | async)
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-6 mobile-country-prefix-fix"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.Mobile'
-                                                            )
-                                                        }}
-                                                    </mat-label>
-                                                    <input
-                                                        #partnerContactMobileInput
-                                                        matInput
-                                                        formControlName="mobile"
-                                                        maxlength="64"
-                                                    />
-                                                    <au-select-country-prefix
-                                                        [phoneNumberInput]="
-                                                            partnerContactMobileInput
-                                                        "
-                                                        matPrefix
-                                                        formControlName="mobileCountryPrefix"
-                                                        (phoneNumberSanitized)="
-                                                            handlePartnerContactPhoneNumberSanitized(
-                                                                $event,
-                                                                'mobileSanitized'
-                                                            )
-                                                        "
-                                                    >
-                                                        @for (
-                                                            countryPrefix of countryPrefixes;
-                                                            track countryPrefix.prefix
-                                                        ) {
-                                                            <au-option-country-prefix
-                                                                [iso3166Alpha2]="
-                                                                    countryPrefix.iso3166Alpha2
-                                                                "
-                                                                [prefix]="
-                                                                    countryPrefix.prefix
-                                                                "
-                                                            >
-                                                                ({{
-                                                                    countryPrefix.prefix
-                                                                }})
-                                                                {{
-                                                                    t(
-                                                                        'CountryOptions.' +
-                                                                            countryPrefix.content
-                                                                    )
-                                                                }}
-                                                            </au-option-country-prefix>
-                                                        }
-                                                    </au-select-country-prefix>
-                                                    <mat-error>
-                                                        {{
-                                                            (formErrors?.mobileCountryPrefix
-                                                                | async) ||
-                                                                (formErrors?.mobile
-                                                                    | async)
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                                <div
-                                                    class="col-4 col-start-1 flex items-center pt-2"
-                                                >
-                                                    <mat-checkbox
-                                                        formControlName="isActive"
-                                                    >
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.IsActive'
-                                                            )
-                                                        }}
-                                                    </mat-checkbox>
-                                                </div>
-                                                <div
-                                                    class="col-4 flex items-center pt-2"
-                                                >
-                                                    <mat-checkbox
-                                                        formControlName="isUser"
-                                                    >
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.IsUser'
-                                                            )
-                                                        }}
-                                                    </mat-checkbox>
-                                                </div>
-                                                <div
-                                                    class="col-4 flex items-center pt-2"
-                                                >
-                                                    <mat-checkbox
-                                                        formControlName="isPrincipal"
-                                                    >
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.IsPrincipal'
-                                                            )
-                                                        }}
-                                                    </mat-checkbox>
-                                                </div>
-                                                <mat-form-field
-                                                    appearance="outline"
-                                                    class="col-12"
-                                                >
-                                                    <mat-label>
-                                                        {{
-                                                            t(
-                                                                'businessPartnerPortal.Notes'
-                                                            )
-                                                        }}
-                                                    </mat-label>
-                                                    <textarea
-                                                        matInput
-                                                        formControlName="notes"
-                                                    ></textarea>
-                                                    <mat-error>
-                                                        {{
-                                                            formErrors?.notes
-                                                                | async
-                                                        }}
-                                                    </mat-error>
-                                                </mat-form-field>
-                                            </div>
-                                        </form>
-                                        <div class="flex justify-end">
-                                            <button
-                                                class="ml-3"
-                                                mat-flat-button
-                                                mat-dialog-close
-                                                color="basic"
-                                            >
-                                                <mat-icon
-                                                    class="mr-2 icon-size-5"
-                                                    svgIcon="mat_solid:close"
-                                                ></mat-icon>
-                                                {{ t('Cancel') }}
-                                            </button>
-                                            <button
-                                                type="submit"
-                                                class="ml-3"
-                                                [disabled]="
-                                                    partnerContactDialogFg.pristine
-                                                "
-                                                mat-flat-button
-                                                form="partnerContactDetailDialogForm"
-                                                color="accent"
-                                            >
-                                                <mat-icon
-                                                    class="mr-2 icon-size-5"
-                                                    svgIcon="mat_solid:mode_edit"
-                                                ></mat-icon>
-                                                {{ t('Save') }}
-                                            </button>
-                                        </div>
-                                    </ng-template>
-                                    <au-grid-translations
-                                        [for]="partnerContactsGridId"
-                                        [actionsMenu]="{
-                                            cancel: t('Cancel'),
-                                            close: t('Close'),
-                                        }"
-                                    >
-                                        @for (
-                                            columnConfig of originPartnerContactsColumnsConfig;
-                                            track columnConfig.field
-                                        ) {
-                                            <au-grid-column-translation
-                                                [field]="columnConfig.field"
-                                            >
-                                                {{
-                                                    t(
-                                                        columnConfig.translation
-                                                            ? columnConfig.translation
-                                                            : columnConfig.field.toPascalCase()
-                                                    )
-                                                }}
-                                            </au-grid-column-translation>
-                                        }
-                                    </au-grid-translations>
-                                </au-grid-elements-manager>
+                              <au-option-country-prefix
+                                [iso3166Alpha2]="countryPrefix.iso3166Alpha2"
+                                [prefix]="countryPrefix.prefix"
+                              >
+                                ({{ countryPrefix.prefix }})
+                                {{
+                                  t('CountryOptions.' + countryPrefix.content)
+                                }}
+                              </au-option-country-prefix>
                             }
-                            <!-- #endregion component to manage partnerContacts -->
+                          </au-select-country-prefix>
+                          <mat-error>
+                            {{
+                              (formErrors?.phoneCountryPrefix | async) ||
+                                (formErrors?.phone | async)
+                            }}
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field
+                          appearance="outline"
+                          class="col-6 mobile-country-prefix-fix"
+                        >
+                          <mat-label>
+                            {{ t('businessPartnerPortal.Mobile') }}
+                          </mat-label>
+                          <input
+                            #partnerContactMobileInput
+                            matInput
+                            formControlName="mobile"
+                            maxlength="64"
+                          />
+                          <au-select-country-prefix
+                            [phoneNumberInput]="partnerContactMobileInput"
+                            matPrefix
+                            formControlName="mobileCountryPrefix"
+                            (phoneNumberSanitized)="
+                              handlePartnerContactPhoneNumberSanitized(
+                                $event,
+                                'mobileSanitized'
+                              )
+                            "
+                          >
+                            @for (
+                              countryPrefix of countryPrefixes;
+                              track countryPrefix.prefix
+                            ) {
+                              <au-option-country-prefix
+                                [iso3166Alpha2]="countryPrefix.iso3166Alpha2"
+                                [prefix]="countryPrefix.prefix"
+                              >
+                                ({{ countryPrefix.prefix }})
+                                {{
+                                  t('CountryOptions.' + countryPrefix.content)
+                                }}
+                              </au-option-country-prefix>
+                            }
+                          </au-select-country-prefix>
+                          <mat-error>
+                            {{
+                              (formErrors?.mobileCountryPrefix | async) ||
+                                (formErrors?.mobile | async)
+                            }}
+                          </mat-error>
+                        </mat-form-field>
+                        <div class="col-4 col-start-1 flex items-center pt-2">
+                          <mat-checkbox formControlName="isActive">
+                            {{ t('businessPartnerPortal.IsActive') }}
+                          </mat-checkbox>
                         </div>
-                    </mat-tab>
-                </mat-tab-group>
-            </form>
-        </div>
+                        <div class="col-4 flex items-center pt-2">
+                          <mat-checkbox formControlName="isUser">
+                            {{ t('businessPartnerPortal.IsUser') }}
+                          </mat-checkbox>
+                        </div>
+                        <div class="col-4 flex items-center pt-2">
+                          <mat-checkbox formControlName="isPrincipal">
+                            {{ t('businessPartnerPortal.IsPrincipal') }}
+                          </mat-checkbox>
+                        </div>
+                        <mat-form-field
+                          appearance="outline"
+                          class="col-12"
+                        >
+                          <mat-label>
+                            {{ t('businessPartnerPortal.Notes') }}
+                          </mat-label>
+                          <textarea
+                            matInput
+                            formControlName="notes"
+                          ></textarea>
+                          <mat-error>
+                            {{ formErrors?.notes | async }}
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </form>
+                    <div class="flex justify-end">
+                      <button
+                        class="ml-3"
+                        mat-flat-button
+                        mat-dialog-close
+                        color="basic"
+                      >
+                        <mat-icon
+                          class="mr-2 icon-size-5"
+                          svgIcon="mat_solid:close"
+                        ></mat-icon>
+                        {{ t('Cancel') }}
+                      </button>
+                      <button
+                        type="submit"
+                        class="ml-3"
+                        [disabled]="partnerContactDialogFg.pristine"
+                        mat-flat-button
+                        form="partnerContactDetailDialogForm"
+                        color="accent"
+                      >
+                        <mat-icon
+                          class="mr-2 icon-size-5"
+                          svgIcon="mat_solid:mode_edit"
+                        ></mat-icon>
+                        {{ t('Save') }}
+                      </button>
+                    </div>
+                  </ng-template>
+                  <au-grid-translations
+                    [for]="partnerContactsGridId"
+                    [actionsMenu]="{
+                      cancel: t('Cancel'),
+                      close: t('Close'),
+                    }"
+                  >
+                    @for (
+                      columnConfig of originPartnerContactsColumnsConfig;
+                      track columnConfig.field
+                    ) {
+                      <au-grid-column-translation [field]="columnConfig.field">
+                        {{
+                          t(
+                            columnConfig.translation
+                              ? columnConfig.translation
+                              : columnConfig.field.toPascalCase()
+                          )
+                        }}
+                      </au-grid-column-translation>
+                    }
+                  </au-grid-translations>
+                </au-grid-elements-manager>
+              }
+              <!-- #endregion component to manage partnerContacts -->
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </form>
     </div>
-    <!-- / Main -->
+  </div>
+  <!-- / Main -->
 </div>
