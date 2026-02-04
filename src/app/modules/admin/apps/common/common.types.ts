@@ -427,3 +427,8 @@ export interface CommonUpdateAttachmentFamilies {
     sizes?: any;
     format?: string;
 }
+
+export enum CommonLangDirEnum {
+    LTR = 'LTR',
+    RTL = 'RTL'
+}
