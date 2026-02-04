@@ -1,10 +1,10 @@
 import { SortDirection } from '@angular/material/sort';
 import {
-    ColumnConfig,
-    GridFiltersStorageService,
-    GridSortState,
-    GridStateService,
-    queryStatementHandler,
+  ColumnConfig,
+  GridFiltersStorageService,
+  GridSortState,
+  GridStateService,
+  queryStatementHandler,
 } from '@aurora';
 import { QueryStatement } from './sql-statement';
 
@@ -25,53 +25,51 @@ import { QueryStatement } from './sql-statement';
  * @returns {QueryStatement} The configured query statement.
  */
 export const gridQueryHandler = ({
-    gridFiltersStorageService,
-    gridStateService,
-    gridId = null,
-    columnsConfig = [],
-    query = null,
-    defaultSort = ['rowId', 'desc'],
+  gridFiltersStorageService,
+  gridStateService,
+  gridId = null,
+  columnsConfig = [],
+  query = null,
+  defaultSort = ['rowId', 'desc'],
 }: {
-    gridFiltersStorageService?: GridFiltersStorageService;
-    gridStateService?: GridStateService;
-    gridId?: string;
-    columnsConfig?: ColumnConfig[];
-    query?: QueryStatement;
-    defaultSort?: Array<string | [string, string] | [string, string, string]>;
+  gridFiltersStorageService?: GridFiltersStorageService;
+  gridStateService?: GridStateService;
+  gridId?: string;
+  columnsConfig?: ColumnConfig[];
+  query?: QueryStatement;
+  defaultSort?: Array<string | [string, string] | [string, string, string]>;
 } = {}): QueryStatement => {
-    const queryStatement = query
-        ? query
-        : queryStatementHandler({
-              columnsConfig: columnsConfig,
-          })
-              .setColumFilters(
-                  gridFiltersStorageService.getColumnFilterState(gridId),
-              )
-              .setSort(
-                  gridStateService.getSort(
-                      gridId,
-                      convertSequelizeSortToGridSortState(defaultSort),
-                  ),
-              )
-              .setPage(gridStateService.getPage(gridId))
-              .setSearch(gridStateService.getSearchState(gridId))
-              .getQueryStatement();
+  const queryStatement = query
+    ? query
+    : queryStatementHandler({
+        columnsConfig: columnsConfig,
+      })
+        .setColumFilters(gridFiltersStorageService.getColumnFilterState(gridId))
+        .setSort(
+          gridStateService.getSort(
+            gridId,
+            convertSequelizeSortToGridSortState(defaultSort),
+          ),
+        )
+        .setPage(gridStateService.getPage(gridId))
+        .setSearch(gridStateService.getSearchState(gridId))
+        .getQueryStatement();
 
-    if (
-        queryStatement.order &&
-        Array.isArray(queryStatement.order) &&
-        queryStatement.order.length > 0
-    ) {
-        const primarySortDirection =
-            queryStatement.order[0][1] || defaultSort[1];
-        if (!queryStatement.order.some((sort) => sort[0] === defaultSort[0])) {
-            queryStatement.order.push([defaultSort[0], primarySortDirection]);
-        }
-    } else {
-        queryStatement.order = [defaultSort];
+  // Ensure deterministic sorting by adding default sort if not present
+  if (
+    queryStatement.order &&
+    Array.isArray(queryStatement.order) &&
+    queryStatement.order.length > 0
+  ) {
+    const primarySortDirection = queryStatement.order[0][1] || defaultSort[1];
+    if (!queryStatement.order.some((sort) => sort[0] === defaultSort[0])) {
+      queryStatement.order.push([defaultSort[0], primarySortDirection]);
     }
+  } else {
+    queryStatement.order = [defaultSort];
+  }
 
-    return queryStatement;
+  return queryStatement;
 };
 
 /**
@@ -81,14 +79,14 @@ export const gridQueryHandler = ({
  * @returns {GridSortState | undefined} The converted GridSortState or undefined if invalid.
  */
 const convertSequelizeSortToGridSortState = (
-    defaultSort: Array<string | [string, string] | [string, string, string]>,
+  defaultSort: Array<string | [string, string] | [string, string, string]>,
 ): GridSortState | undefined => {
-    if (!Array.isArray(defaultSort) || defaultSort.length < 2) {
-        return undefined;
-    }
+  if (!Array.isArray(defaultSort) || defaultSort.length < 2) {
+    return undefined;
+  }
 
-    return {
-        active: defaultSort[0] as string,
-        direction: defaultSort[1] as SortDirection,
-    };
+  return {
+    active: defaultSort[0] as string,
+    direction: defaultSort[1] as SortDirection,
+  };
 };
