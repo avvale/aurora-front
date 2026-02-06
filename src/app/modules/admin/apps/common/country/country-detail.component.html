@@ -312,8 +312,8 @@
               multiple
             >
               @for (
-                let administrativeArea of commonAdministrativeArea | keyvalue;
-                track: administrativeArea.key
+                administrativeArea of commonAdministrativeArea | keyvalue;
+                track administrativeArea.key
               ) {
                 <mat-option [value]="administrativeArea.key">
                   {{ administrativeArea.value }}
