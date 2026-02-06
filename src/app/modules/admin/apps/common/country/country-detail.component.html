@@ -291,12 +291,14 @@
           >
             <mat-label>{{ t('common.MapType') }}</mat-label>
             <mat-select formControlName="mapType">
-              <mat-option
-                *ngFor="let mapType of commonCountryMapType | keyvalue"
-                [value]="mapType.key"
-              >
-                {{ mapType.value }}
-              </mat-option>
+              @for (
+                mapType of commonCountryMapType | keyvalue;
+                track mapType.key
+              ) {
+                <mat-option [value]="mapType.key">
+                  {{ mapType.value }}
+                </mat-option>
+              }
             </mat-select>
             <mat-error>{{ formErrors?.mapType | async }}</mat-error>
           </mat-form-field>

@@ -63,6 +63,7 @@ export class CountryListComponent extends ViewBaseComponent {
             id: 'common::country.list.edit',
             translation: 'edit',
             icon: 'mode_edit',
+            meta: { lang: this.sessionService.get<CoreLang>('fallbackLang') },
           },
           {
             id: 'common::country.list.delete',
