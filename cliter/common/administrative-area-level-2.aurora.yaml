@@ -15,6 +15,13 @@ aggregateProperties:
     primaryKey: true
     length: 36
     nullable: false
+  - name: rowId
+    type: bigint
+    index: unique
+    autoIncrement: true
+    nullable: false
+    description: |
+      Auto-incrementing sequential identifier for the administrative area level 2. Used for internal ordering, human-readable reference numbers, and optimized queries. Not exposed in external APIs. Provides a stable, predictable identifier for database operations.
   - name: countryId
     type: id
     length: 36
