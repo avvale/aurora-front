@@ -432,3 +432,10 @@ export enum CommonLangDirEnum {
     LTR = 'LTR',
     RTL = 'RTL'
 }
+
+export enum CommonCountryMapTypeEnum {
+    ROADMAP = 'ROADMAP',
+    SATELLITE = 'SATELLITE',
+    HYBRID = 'HYBRID',
+    TERRAIN = 'TERRAIN'
+}
