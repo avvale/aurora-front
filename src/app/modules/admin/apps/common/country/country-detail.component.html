@@ -296,7 +296,7 @@
                 track mapType.key
               ) {
                 <mat-option [value]="mapType.key">
-                  {{ mapType.value }}
+                  {{ t('common.MapTypeEnum.' + mapType.value) }}
                 </mat-option>
               }
             </mat-select>
@@ -318,7 +318,12 @@
                 track administrativeArea.key
               ) {
                 <mat-option [value]="administrativeArea.key">
-                  {{ administrativeArea.value }}
+                  {{
+                    t(
+                      'common.AdministrativeAreasEnum.' +
+                        administrativeArea.value
+                    )
+                  }}
                 </mat-option>
               }
             </mat-select>
