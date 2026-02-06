@@ -54,6 +54,21 @@ export const administrativeAreaLevel2PaginationResolver: ResolveFn<
       gridId,
       columnsConfig: administrativeAreaLevel2ColumnsConfig(),
     }),
+    constraint: {
+      include: [
+        {
+          association: 'country',
+          include: [
+            {
+              association: 'countryI18n',
+            },
+          ],
+        },
+        {
+          association: 'administrativeAreaLevel1',
+        },
+      ],
+    },
   });
 };
 
