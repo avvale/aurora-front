@@ -13,12 +13,6 @@ export const administrativeAreaLevel2ColumnsConfig: (properties?: {
   translator?: TranslocoService;
 } = {}): ColumnConfig[] => [
   {
-    type: ColumnDataType.NUMBER,
-    field: 'rowId',
-    sort: 'rowId',
-    translation: 'common.RowId',
-  },
-  {
     type: ColumnDataType.STRING,
     field: 'country.name',
     searchableField: '$country.name$',

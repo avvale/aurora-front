@@ -11,7 +11,10 @@ import {
 } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-import { CommonAdministrativeAreaLevel2 } from '@apps/common';
+import {
+  CommonAdministrativeAreaLevel2,
+  CommonAdministrativeAreaLevel2MapTypeEnum,
+} from '@apps/common';
 import { AdministrativeAreaLevel2Service } from '@apps/common/administrative-area-level-2';
 import {
   Action,
@@ -36,7 +39,8 @@ import { lastValueFrom, takeUntil } from 'rxjs';
 @ActionScope('common::administrativeAreaLevel2.detail')
 export class AdministrativeAreaLevel2DetailComponent extends ViewDetailComponent {
   // ---- customizations ----
-  // ..
+  commonAdministrativeAreaLevel2MapTypeEnum =
+    CommonAdministrativeAreaLevel2MapTypeEnum;
 
   // Object retrieved from the database request,
   // it should only be used to obtain uninitialized
@@ -134,9 +138,9 @@ export class AdministrativeAreaLevel2DetailComponent extends ViewDetailComponent
         ],
       ],
       code: ['', [Validators.required, Validators.maxLength(8)]],
-      customCode: ['', [Validators.maxLength(63)]],
-      name: ['', [Validators.required, Validators.maxLength(127)]],
-      slug: ['', [Validators.required, Validators.maxLength(127)]],
+      customCode: ['', [Validators.maxLength(64)]],
+      name: ['', [Validators.required, Validators.maxLength(128)]],
+      slug: ['', [Validators.required, Validators.maxLength(128)]],
       latitude: null,
       longitude: null,
       zoom: [null, [Validators.maxLength(2)]],

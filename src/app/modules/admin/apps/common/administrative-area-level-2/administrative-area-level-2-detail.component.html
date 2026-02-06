@@ -129,7 +129,7 @@
             <input
               matInput
               formControlName="customCode"
-              maxlength="63"
+              maxlength="64"
             />
             <mat-error>
               {{ formErrors?.customCode | async }}
@@ -143,7 +143,7 @@
             <input
               matInput
               formControlName="name"
-              maxlength="127"
+              maxlength="128"
               required
             />
             <mat-error>{{ formErrors?.name | async }}</mat-error>
@@ -156,7 +156,7 @@
             <input
               matInput
               formControlName="slug"
-              maxlength="127"
+              maxlength="128"
               required
             />
             <mat-error>{{ formErrors?.slug | async }}</mat-error>
@@ -203,14 +203,18 @@
           </mat-form-field>
           <mat-form-field
             appearance="outline"
-            class="col-4"
+            class="col-3"
           >
             <mat-label>{{ t('common.MapType') }}</mat-label>
             <mat-select formControlName="mapType">
-              <mat-option value="ROADMAP">ROADMAP</mat-option>
-              <mat-option value="SATELLITE">SATELLITE</mat-option>
-              <mat-option value="HYBRID">HYBRID</mat-option>
-              <mat-option value="TERRAIN">TERRAIN</mat-option>
+              @for (
+                mapType of commonAdministrativeAreaLevel2MapTypeEnum | keyvalue;
+                track mapType.key
+              ) {
+                <mat-option [value]="mapType.key">
+                  {{ t('common.MapTypeEnum.' + mapType.value) }}
+                </mat-option>
+              }
             </mat-select>
             <mat-error>{{ formErrors?.mapType | async }}</mat-error>
           </mat-form-field>
