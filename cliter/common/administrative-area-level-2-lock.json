@@ -27,11 +27,11 @@
         },
         {
             "path": "src/app/modules/admin/apps/common/administrative-area-level-2/administrative-area-level-2.columns-config.ts",
-            "integrity": "sha1:b7d3ddf22fb237e9f3cbe4e6ce49408a4ed6140b"
+            "integrity": "sha1:1924b7fa22d7972926e9f8b893f7858de8e6baa1"
         },
         {
             "path": "src/app/modules/admin/apps/common/administrative-area-level-2/administrative-area-level-2.graphql.ts",
-            "integrity": "sha1:7141ef2f0e1d2f09c1f6caf820fd820ad55dbdc4"
+            "integrity": "sha1:dc6afcff69a66b888bc6dffafc8cd21cd1971df3"
         },
         {
             "path": "src/app/modules/admin/apps/common/administrative-area-level-2/administrative-area-level-2.resolvers.ts",

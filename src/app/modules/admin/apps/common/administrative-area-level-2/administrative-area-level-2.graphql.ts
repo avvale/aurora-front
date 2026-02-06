@@ -5,6 +5,7 @@
 import gql from 'graphql-tag';
 
 export const fields = `
+    rowId
     countryId
     country {
         id
