@@ -131,6 +131,18 @@ export class AdministrativeAreaLevel1ListComponent extends ViewBaseComponent {
               columnsConfig: administrativeAreaLevel1ColumnsConfig(),
               query: action.meta.query,
             }),
+            constraint: {
+              include: [
+                {
+                  association: 'country',
+                  include: [
+                    {
+                      association: 'countryI18n',
+                    },
+                  ],
+                },
+              ],
+            },
           }),
         );
         break;

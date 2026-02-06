@@ -15,6 +15,7 @@ export const administrativeAreaLevel1ColumnsConfig: (properties?: {
   {
     type: ColumnDataType.NUMBER,
     field: 'rowId',
+    searchableField: '$CommonAdministrativeAreaLevel1.rowId$',
     sort: 'rowId',
     translation: 'common.RowId',
   },
@@ -36,6 +37,7 @@ export const administrativeAreaLevel1ColumnsConfig: (properties?: {
   {
     type: ColumnDataType.STRING,
     field: 'customCode',
+    searchableField: '$CommonAdministrativeAreaLevel1.customCode$',
     sort: 'customCode',
     translation: 'common.CustomCode',
     isUnaccent: true,
@@ -43,6 +45,7 @@ export const administrativeAreaLevel1ColumnsConfig: (properties?: {
   {
     type: ColumnDataType.STRING,
     field: 'name',
+    searchableField: '$CommonAdministrativeAreaLevel1.name$',
     sort: 'name',
     translation: 'common.Name',
     isUnaccent: true,
@@ -50,6 +53,7 @@ export const administrativeAreaLevel1ColumnsConfig: (properties?: {
   {
     type: ColumnDataType.STRING,
     field: 'slug',
+    searchableField: '$CommonAdministrativeAreaLevel1.slug$',
     sort: 'slug',
     translation: 'common.Slug',
     isUnaccent: true,
@@ -57,24 +61,28 @@ export const administrativeAreaLevel1ColumnsConfig: (properties?: {
   {
     type: ColumnDataType.NUMBER,
     field: 'latitude',
+    searchableField: '$CommonAdministrativeAreaLevel1.latitude$',
     sort: 'latitude',
     translation: 'common.Latitude',
   },
   {
     type: ColumnDataType.NUMBER,
     field: 'longitude',
+    searchableField: '$CommonAdministrativeAreaLevel1.longitude$',
     sort: 'longitude',
     translation: 'common.Longitude',
   },
   {
     type: ColumnDataType.NUMBER,
     field: 'zoom',
+    searchableField: '$CommonAdministrativeAreaLevel1.zoom$',
     sort: 'zoom',
     translation: 'common.Zoom',
   },
   {
     type: ColumnDataType.ENUM,
     field: 'mapType',
+    searchableField: '$CommonAdministrativeAreaLevel1.mapType$',
     sort: 'mapType',
     translation: 'common.MapType',
   },
