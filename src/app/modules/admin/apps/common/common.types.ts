@@ -453,3 +453,10 @@ export enum CommonAdministrativeAreaLevel2MapTypeEnum {
     HYBRID = 'HYBRID',
     TERRAIN = 'TERRAIN'
 }
+
+export enum CommonAdministrativeAreaLevel3MapTypeEnum {
+    ROADMAP = 'ROADMAP',
+    SATELLITE = 'SATELLITE',
+    HYBRID = 'HYBRID',
+    TERRAIN = 'TERRAIN'
+}

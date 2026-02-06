@@ -2,6 +2,7 @@
  * @aurora-generated
  * @source cliter/common/administrative-area-level-2.aurora.yaml
  */
+import { KeyValuePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -34,7 +35,7 @@ import { lastValueFrom, takeUntil } from 'rxjs';
   templateUrl: './administrative-area-level-2-detail.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [...defaultDetailImports, MatSelectModule],
+  imports: [...defaultDetailImports, KeyValuePipe, MatSelectModule],
 })
 @ActionScope('common::administrativeAreaLevel2.detail')
 export class AdministrativeAreaLevel2DetailComponent extends ViewDetailComponent {
