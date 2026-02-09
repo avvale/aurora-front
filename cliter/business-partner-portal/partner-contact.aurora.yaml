@@ -75,30 +75,42 @@ aggregateProperties:
     type: varchar
     maxLength: 64
     nullable: true
+    description: |
+      Landline phone number of the contact with full formatting including country and area codes (e.g., +54 11 4567-8901). Used for display purposes in user-facing interfaces, partner directories, and printed communications. NULL indicates no landline number provided. Works together with phoneCountryPrefix and phoneSanitized to provide complete phone handling.
   - name: phoneCountryPrefix
     type: varchar
     maxLength: 4
     nullable: true
+    description: |
+      Country calling code for the landline number without the plus sign (e.g., 54 for Argentina, 1 for USA, 34 for Spain). Used to identify the country for call routing and phone number validation rules. NULL when no landline phone is provided. Must be consistent with the country prefix embedded in the phone field.
   - name: phoneSanitized
     type: varchar
     maxLength: 64
     nullable: true
     webComponent:
       isDetailHidden: true
+    description: |
+      Landline number stripped of all formatting characters, containing only digits (e.g., 541145678901). Used for telephony API integrations, automated dialing systems, and deduplication checks. Hidden from detail views to avoid displaying redundant phone information. NULL when no landline phone is provided. Automatically derived from the phone field during creation or update.
   - name: mobile
     type: varchar
     maxLength: 64
     nullable: true
+    description: |
+      Mobile phone number of the contact with full formatting including country prefix (e.g., +54 9 11 1234-5678). Used for display purposes in user-facing interfaces and partner directories. Preferred channel for urgent communications and SMS/WhatsApp notifications. NULL indicates no mobile number provided. Works together with mobileCountryPrefix and mobileSanitized to provide complete mobile handling.
   - name: mobileCountryPrefix
     type: varchar
     maxLength: 4
     nullable: true
+    description: |
+      Country calling code for the mobile number without the plus sign (e.g., 54 for Argentina, 1 for USA, 34 for Spain). Used to identify the country for SMS routing, WhatsApp Business API integration, and mobile number validation rules. NULL when no mobile phone is provided. Must be consistent with the country prefix embedded in the mobile field.
   - name: mobileSanitized
     type: varchar
     maxLength: 64
     nullable: true
     webComponent:
       isDetailHidden: true
+    description: |
+      Mobile number stripped of all formatting characters, containing only digits (e.g., 5491112345678). Used for SMS gateway integrations, WhatsApp Business API, and deduplication checks. Hidden from detail views to avoid displaying redundant phone information. NULL when no mobile phone is provided. Automatically derived from the mobile field during creation or update.
   - name: isPrincipal
     type: boolean
     nullable: false
@@ -132,12 +144,19 @@ aggregateProperties:
       Foreign key reference to the IAM user account for portal authentication. One-to-one relationship - each contact can have at most one user account. NULL when isUser is false (contact without portal access). When set, the contact can authenticate using the linked user's credentials. Unique index ensures no two contacts share the same user account. Constraint avoided to prevent circular dependencies across bounded contexts (iam ↔ business-partner-portal).
     webComponent:
       type: select
-  - name: preferredLanguage
-    type: char
-    length: 2
+  - name: langId
+    type: id
     nullable: true
+    index: index
+    relationship:
+      type: many-to-one
+      aggregateName: CommonLang
+      modulePath: common/lang
+      key: id
+      field: lang
+      avoidConstraint: true
     description: |
-      ISO 639-1 two-letter language code for the contact's preferred communication language (e.g., "en", "es", "fr", "de"). Used to send communications in the contact's preferred language. NULL indicates no preference specified (use system or partner default). Should match available languages in the system.
+      Foreign key reference to the preferred language of the contact (common/lang module). Many-to-one relationship - multiple contacts can share the same language preference. Used to determine the language for portal UI localization, email templates, document generation, and all communications addressed to this contact. NULL indicates no language preference specified, in which case the system defaults to the partner organization's language or the platform default. Constraint avoided to prevent cross-bounded-context dependencies (common ↔ business-partner-portal).
   - name: notes
     type: text
     nullable: true
